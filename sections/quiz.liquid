@@ -1,0 +1,194 @@
+{% schema %}
+{
+  "name": "Font Preview",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "font_arial",
+      "label": "Arial",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "font_courier_new",
+      "label": "Courier New",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "font_georgia",
+      "label": "Georgia",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "font_times_new_roman",
+      "label": "Times New Roman",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "font_verdana",
+      "label": "Verdana",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "font_roboto",
+      "label": "Roboto",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "font_open_sans",
+      "label": "Open Sans",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "font_lato",
+      "label": "Lato",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "font_montserrat",
+      "label": "Montserrat",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "font_poppins",
+      "label": "Poppins",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "additional_font_1",
+      "label": "Additional Font 1",
+      "default": "Roboto"
+    },
+    {
+      "type": "text",
+      "id": "additional_font_2",
+      "label": "Additional Font 2",
+      "default": "Open Sans"
+    },
+    {
+      "type": "text",
+      "id": "additional_font_3",
+      "label": "Additional Font 3",
+      "default": "Lato"
+    },
+    {
+      "type": "text",
+      "id": "additional_font_4",
+      "label": "Additional Font 4",
+      "default": "Montserrat"
+    },
+    {
+      "type": "text",
+      "id": "additional_font_5",
+      "label": "Additional Font 5",
+      "default": "Poppins"
+    },
+    {
+      "type": "text",
+      "id": "default_text",
+      "label": "Default Text",
+      "default": "The quick brown fox jumps over the lazy dog."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+<div class="font-preview">
+  <!-- Input for Custom Text -->
+  <input type="text" id="fontInput" placeholder="Type your text here..." value="{{ settings.default_text }}" />
+
+  <!-- Dropdown for Font Selection -->
+  <select id="fontSelect">
+    {% assign default_fonts = "Arial, Courier New, Georgia, Times New Roman, Verdana, Roboto, Open Sans, Lato, Montserrat, Poppins" | split: ", " %}
+    {% assign additional_fonts = "" | split: ", " %}
+    
+    {% if settings.additional_font_1 != blank %} {% assign additional_fonts = additional_fonts | push: settings.additional_font_1 %} {% endif %}
+    {% if settings.additional_font_2 != blank %} {% assign additional_fonts = additional_fonts | push: settings.additional_font_2 %} {% endif %}
+    {% if settings.additional_font_3 != blank %} {% assign additional_fonts = additional_fonts | push: settings.additional_font_3 %} {% endif %}
+    {% if settings.additional_font_4 != blank %} {% assign additional_fonts = additional_fonts | push: settings.additional_font_4 %} {% endif %}
+    {% if settings.additional_font_5 != blank %} {% assign additional_fonts = additional_fonts | push: settings.additional_font_5 %} {% endif %}
+
+    {% assign all_fonts = default_fonts | concat: additional_fonts %}
+    
+    {% for font in all_fonts %}
+      <option value="{{ font }}" {% if font == settings.default_font %}selected{% endif %}>{{ font }}</option>
+    {% endfor %}
+  </select>
+
+  <!-- Font Preview -->
+  <div class="font-preview-box">
+    <p id="previewText" style="font-family: {{ settings.default_font }};">
+      {{ settings.default_text }}
+    </p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var fontInput = document.getElementById('fontInput');
+    var fontSelect = document.getElementById('fontSelect');
+    var previewText = document.getElementById('previewText');
+
+    // Load the default font
+    loadFont(fontSelect.value);
+
+    // Update preview text on input
+    fontInput.addEventListener('input', function() {
+      previewText.textContent = fontInput.value || '{{ settings.default_text }}';
+    });
+
+    // Update font on dropdown change
+    fontSelect.addEventListener('change', function() {
+      loadFont(fontSelect.value);
+      previewText.style.fontFamily = fontSelect.value;
+    });
+
+    function loadFont(fontName) {
+      var link = document.createElement('link');
+      link.href = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(fontName) + '&display=swap';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+  });
+</script>
+
+<style>
+  .font-preview {
+    width: 80vw;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .font-preview-box {
+    margin-top: 20px;
+  }
+  #fontInput {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+  }
+  #fontSelect {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  #previewText {
+    font-size: 20px;
+  }
+</style>
