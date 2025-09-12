@@ -206,7 +206,7 @@
       {%- else -%}
         <span class="brand__logo--fallback" aria-hidden="true">{{ shop.name | slice: 0,1 | upcase }}</span>
       {%- endif -%}
-      <span class="brand__text">{{ section.settings.brand_text | default: shop.name | upcase }}</span>
+      <h2 class="brand__text">{{ section.settings.brand_text | default: shop.name | upcase }}</h2>
     </a>
   {%- if request.page_type == 'index' -%}</h1>{%- endif -%}
 {%- endif -%}
