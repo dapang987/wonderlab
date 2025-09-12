@@ -1,4 +1,4 @@
-{% comment %} Simple Footer: Newsletter (left) + Multi-Menu Columns (right, Plan A) {% endcomment %}
+{% comment %} Simple Footer (Dynamic Menus, 2 cols on all breakpoints) {% endcomment %}
 
 {{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
 
@@ -7,38 +7,28 @@
 .footer-simple{ padding: 36px 0; }
 .footer-simple__top{ display: grid; gap: 32px; }
 @media (min-width: 990px){
-  .footer-simple__top{ grid-template-columns: 1.1fr 1fr; }
+  .footer-simple__top{ grid-template-columns: 1.1fr 1fr; } /* 左订阅 / 右菜单 */
 }
 
 /* Newsletter card */
 .newsletter-card{
-  background:#fff; border:1px solid #e5e5e5; border-radius:8px;
-  padding:24px;
+  background:#fff; border:1px solid #e5e5e5; border-radius:8px; padding:24px;
 }
 .newsletter-title{ font-size:20px; font-weight:600; line-height:1.3; margin:0 0 8px; }
 .newsletter-desc{ font-size:14px; color:#555; line-height:1.5; margin:0 0 20px; }
 .newsletter-form label{ display:block; font-size:14px; margin:0 0 6px; color:#222; }
-.newsletter-input{
-  width:100%; padding:12px; margin:0 0 16px; border:1px solid #ccc; border-radius:6px; font-size:14px;
-}
+.newsletter-input{ width:100%; padding:12px; margin:0 0 16px; border:1px solid #ccc; border-radius:6px; font-size:14px; }
 .newsletter-input:focus{ outline:none; border-color:#111; }
-.btn-submit{
-  width:100%; background:#111; color:#fff; border:0; border-radius:6px; padding:14px; font-size:16px;
-}
+.btn-submit{ width:100%; background:#111; color:#fff; border:0; border-radius:6px; padding:14px; font-size:16px; }
 .btn-submit:hover{ background:#333; }
 .newsletter-message{ font-size:13px; margin-top:10px; }
 .newsletter-message.error{ color:#d00; }
 .newsletter-message.success{ color:#090; }
 
-/* Right: menu columns grid */
+/* Right: menus grid — always 2 columns */
 .footer-simple__cols{
   display:grid; gap:24px;
-  grid-template-columns: repeat(2, minmax(0,1fr)); /* 基础：2 列等宽 */
-}
-@media (min-width: 990px){
-  .footer-simple__cols{
-    grid-template-columns: repeat(2, minmax(0,1fr)); /* ≥990px：2列等宽 */
-  }
+  grid-template-columns: repeat(2, minmax(0,1fr)); /* 移动端/桌面端都为 2 列 */
 }
 .footer-block--menu{ }
 .footer-menu__parent{ font-weight:600; margin:0 0 12px; text-align:center; }
@@ -47,9 +37,7 @@
 
 /* Bottom: localization + payments */
 .footer-simple__bottom{ border-top:1px solid rgba(0,0,0,.08); margin-top:32px; padding-top:20px; }
-.footer-simple__bottom-inner{
-  display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap;
-}
+.footer-simple__bottom-inner{ display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
 {%- endstyle -%}
 
 <footer class="footer footer-simple color-{{ section.settings.color_scheme }} gradient">
@@ -59,40 +47,21 @@
     <section class="footer-block footer-block--newsletter" aria-labelledby="FooterNewsletterHeading">
       {%- if section.settings.newsletter_enable -%}
         <div class="newsletter-card">
-          <h3 id="FooterNewsletterHeading" class="newsletter-title">
-            {{ section.settings.newsletter_heading }}
-          </h3>
+          <h3 id="FooterNewsletterHeading" class="newsletter-title">{{ section.settings.newsletter_heading }}</h3>
           {%- if section.settings.newsletter_desc != blank -%}
             <p class="newsletter-desc">{{ section.settings.newsletter_desc }}</p>
           {%- endif -%}
 
           {%- form 'customer', id: 'FooterNewsletterForm', class: 'newsletter-form' -%}
             <input type="hidden" name="contact[tags]" value="newsletter">
-
             <label for="FooterNewsletterEmail">Your email</label>
-            <input
-              type="email"
-              id="FooterNewsletterEmail"
-              name="contact[email]"
-              class="newsletter-input"
-              value="{{ form.email }}"
-              required
-              placeholder="Value">
-
+            <input type="email" id="FooterNewsletterEmail" name="contact[email]" class="newsletter-input" value="{{ form.email }}" required placeholder="Value">
             <label for="FooterNewsletterPhone">Your mobile # (optional - save 15%)</label>
-            <input
-              type="tel"
-              id="FooterNewsletterPhone"
-              name="contact[phone]"
-              class="newsletter-input"
-              placeholder="Value">
-
+            <input type="tel" id="FooterNewsletterPhone" name="contact[phone]" class="newsletter-input" placeholder="Value">
             <button type="submit" class="btn-submit">Subscribe</button>
 
             {%- if form.errors -%}
-              <small class="newsletter-message error">
-                {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
-              </small>
+              <small class="newsletter-message error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</small>
             {%- endif -%}
             {%- if form.posted_successfully? -%}
               <p class="newsletter-message success">{{ 'newsletter.success' | t }}</p>
@@ -102,39 +71,38 @@
       {%- endif -%}
     </section>
 
-    {%- comment -%} RIGHT: Menus as separate grid items (Plan A) {%- endcomment -%}
+    {%- comment -%} RIGHT: Dynamic menu columns (blocks) {%- endcomment -%}
     <nav class="footer-simple__cols" aria-label="Footer navigation">
-
-      {%- comment -%} Shop 列 {%- endcomment -%}
-      {% if section.settings.menu_shop != blank %}
-        <div class="footer-block footer-block--menu">
-          <ul class="list-unstyled">
-            {% for link in section.settings.menu_shop.links %}
-              <li>
-                <!-- 父链接 -->
-                <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
-                  <span class="footer-menu__parent">{{ link.title }}</span>
-                </a>
-                <!-- 子链接 -->
-                {% if link.links != blank %}
-                  <ul class="footer-submenu list-unstyled">
-                    {% for child_link in link.links %}
-                      <li>
-                        <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
-                          {{ child_link.title }}
-                        </a>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-
-
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'menu_column' and block.settings.menu != blank -%}
+          <div class="footer-block footer-block--menu" {{ block.shopify_attributes }}>
+            <ul class="list-unstyled">
+              {%- for link in block.settings.menu.links -%}
+                <li>
+                  <!-- 父链接 -->
+                  <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
+                    <span class="footer-menu__parent">{{ link.title }}</span>
+                  </a>
+                  <!-- 子链接（存在才渲染） -->
+                  {%- if link.links != blank -%}
+                    <ul class="footer-submenu list-unstyled">
+                      {%- for child_link in link.links -%}
+                        <li>
+                          <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
+                            {{ child_link.title }}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
     </nav>
+
   </div>
 
   {%- comment -%} Bottom: localization + payments {%- endcomment -%}
@@ -177,14 +145,28 @@
     { "type": "inline_richtext", "id": "newsletter_heading", "label": "Title", "default": "Stay Up To Date" },
     { "type": "richtext", "id": "newsletter_desc", "label": "Description", "default": "<p>By submitting this form, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from {{ shop.name }} at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg and data rates may apply. View Terms &amp; Privacy.</p>" },
 
-    { "type": "header", "content": "Menus (each renders parent + its children)" },
-    { "type": "link_list", "id": "menu_shop", "label": "Shop menu" },
     { "type": "header", "content": "Localization & payments" },
     { "type": "checkbox", "id": "enable_country_selector", "label": "Show country selector", "default": true },
     { "type": "checkbox", "id": "enable_language_selector", "label": "Show language selector", "default": true },
     { "type": "checkbox", "id": "payment_enable", "label": "Show payment icons", "default": true }
   ],
-  "blocks": [],
-  "presets": [{ "name": "Footer: Newsletter + Multi-Menu" }]
+  "blocks": [
+    {
+      "type": "menu_column",
+      "name": "Menu column",
+      "settings": [
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer: Dynamic 2-col menus",
+      "blocks": [
+        { "type": "menu_column" },
+        { "type": "menu_column" }
+      ]
+    }
+  ]
 }
 {% endschema %}
