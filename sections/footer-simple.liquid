@@ -60,7 +60,7 @@
 /* Mobile: 卡片内描述隐藏；底部描述显示 */
 @media (max-width:767px){
   .newsletter-card .newsletter-desc{ display:none; }
- 
+  .footer-legal-mobile{ display:block; }
   .footer-legal-mobile .newsletter-desc--mobile{
     font-size:12px; line-height:1.6; color:#6b6b6b;
     border-top:1px dashed rgba(0,0,0,.25); padding-top:16px; margin-top:16px;
@@ -82,7 +82,7 @@
         <div class="newsletter-card">
           <h3 id="FooterNewsletterHeading" class="newsletter-title">{{ section.settings.newsletter_heading }}</h3>
           {%- if section.settings.newsletter_desc != blank -%}
-            <p class="newsletter-desc">{{ section.settings.newsletter_desc }}</p>
+            <div class="newsletter-desc">{{ section.settings.newsletter_desc }}</div>
           {%- endif -%}
 
           {%- form 'customer', id: 'FooterNewsletterForm', class: 'newsletter-form' -%}
