@@ -95,7 +95,7 @@
     {% assign parent_title = link.title | strip | default: link.object.title %}
     <li class="footer-parent">
       <a href="{{ link.url | default: '#' }}" class="footer-parent-link">
-        <span class="footer-parent-text">{{ parent_title | escape }}</span>
+        <h2 class="footer-parent-text">{{ parent_title | escape }}</h2>
       </a>
 
       {% if link.links != blank %}
