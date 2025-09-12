@@ -74,6 +74,24 @@
 /* Desktop: 底部描述隐藏，仅显示卡片内描述 */
 @media (min-width:768px){ 
 .footer-legal-mobile{ display:none; } }
+/* 桌面端：右侧两行等高；底行内容贴底 */
+@media (min-width: 990px){
+  .footer-simple__cols{
+    grid-template-rows: 1fr 1fr;      /* 两行等高 */
+    align-content: stretch;
+  }
+
+  /* 让所有菜单块成为列方向的弹性容器（顶对齐为默认） */
+  .footer-simple__cols > .footer-block{
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 选中“最后两块”（即底行的 Information / Account），把内容推到底部 */
+  .footer-simple__cols > .footer-block:nth-last-child(-n+2){
+    justify-content: flex-end;        /* 整块内容贴底 */
+  }
+}
 
 {%- endstyle -%}
 
