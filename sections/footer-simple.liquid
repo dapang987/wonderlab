@@ -76,28 +76,29 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'menu_column' and block.settings.menu != blank -%}
           <div class="footer-block footer-block--menu" {{ block.shopify_attributes }}>
-            <ul class="list-unstyled">
-              {%- for link in block.settings.menu.links -%}
-                <li>
-                  <!-- 父链接 -->
-                  <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
-                    <span class="footer-menu__parent">{{ link.title }}</span>
-                  </a>
-                  <!-- 子链接（存在才渲染） -->
-                  {%- if link.links != blank -%}
-                    <ul class="footer-submenu list-unstyled">
-                      {%- for child_link in link.links -%}
-                        <li>
-                          <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
-                            {{ child_link.title }}
-                          </a>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  {%- endif -%}
-                </li>
-              {%- endfor -%}
-            </ul>
+        <ul class="list-unstyled">
+  {% for link in block.settings.menu.links %}
+    {% assign parent_title = link.title | strip | default: link.object.title %}
+    <li class="footer-parent">
+      <a href="{{ link.url | default: '#' }}" class="footer-parent-link">
+        <span class="footer-parent-text">{{ parent_title | escape }}</span>
+      </a>
+
+      {% if link.links != blank %}
+        <ul class="footer-submenu list-unstyled">
+          {% for child_link in link.links %}
+            <li>
+              <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
+                {{ child_link.title | strip | default: child_link.object.title | escape }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+
           </div>
         {%- endif -%}
       {%- endfor -%}
