@@ -92,6 +92,25 @@
     justify-content: flex-end;        /* 整块内容贴底 */
   }
 }
+/* Desktop: 右侧两列整体在容器里垂直居中 */
+@media (min-width: 990px){
+  .footer-simple__cols{
+    /* 行按内容高度，不要 1fr 1fr 撑满 */
+    grid-template-rows: auto auto;
+    /* 把两行在容器高度中居中 */
+    align-content: center;
+  }
+
+  /* 如果之前加过“底行贴底”的规则，复位 */
+  .footer-simple__cols > .footer-block:nth-last-child(-n+2){
+    justify-content: initial;
+  }
+
+  /* 如果之前把 .footer-block 设成 flex，这里还原为普通块 */
+  .footer-simple__cols > .footer-block{
+    display: block;
+  }
+}
 
 {%- endstyle -%}
 
