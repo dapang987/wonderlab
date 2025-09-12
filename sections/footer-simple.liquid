@@ -1,4 +1,4 @@
-{% comment %} Simple Footer: Newsletter (left) + 4 Menus (right) {% endcomment %}
+{% comment %} Simple Footer: Newsletter (left) + Multi-Menu Columns (right, Plan A) {% endcomment %}
 
 {{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
 
@@ -30,15 +30,18 @@
 .newsletter-message.error{ color:#d00; }
 .newsletter-message.success{ color:#090; }
 
-/* Right: 4 menu columns */
+/* Right: menu columns grid */
 .footer-simple__cols{
   display:grid; gap:24px;
-  grid-template-columns: repeat(2, minmax(0,1fr));
+  grid-template-columns: repeat(2, minmax(0,1fr)); /* 基础：2 列等宽 */
 }
 @media (min-width: 990px){
+  .footer-simple__cols{
+    grid-template-columns: repeat(2, minmax(0,1fr)); /* ≥990px：2列等宽 */
+  }
 }
 .footer-block--menu{ }
-.footer-menu__parent{font-weight:600; margin:0 0 12px; text-align:center; }
+.footer-menu__parent{ font-weight:600; margin:0 0 12px; text-align:center; }
 .footer-submenu{ display:grid; gap:8px; margin:0; }
 .footer-submenu__link{ opacity:.9; }
 
@@ -99,58 +102,116 @@
       {%- endif -%}
     </section>
 
-    {%- comment -%} RIGHT: 4 columns (Shop / About / Information / Account) {%- endcomment -%}
-<nav class="footer-simple__cols" aria-label="Footer navigation">
-  {% if section.settings.menu_shop != blank %}
-    <div class="footer-block footer-block--menu">
-      <ul class="list-unstyled">
-        {% for link in section.settings.menu_shop.links %}
-          <li>
-            <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
-              <span class="footer-menu__parent">{{ link.title }}</span>
-            </a>
-            {% if link.links != blank %}
-              <ul class="footer-submenu list-unstyled">
-                {% for child_link in link.links %}
-                  <li><a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">{{ child_link.title }}</a></li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+    {%- comment -%} RIGHT: Menus as separate grid items (Plan A) {%- endcomment -%}
+    <nav class="footer-simple__cols" aria-label="Footer navigation">
 
-  {% if section.settings.menu_shop != blank %}
-    <div class="footer-block footer-block--menu">
-    
-      <ul class="list-unstyled">
-        {% for link in section.settings.menu_shop.links %}
-          <li>
-            <!-- 父链接 -->
-            <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
-              <span class="footer-menu__parent">{{ link.title }}</span>
-            </a>
-            <!-- 子链接（有才渲染） -->
-            {% if link.links != blank %}
-              <ul class="footer-submenu list-unstyled">
-                {% for child_link in link.links %}
-                  <li>
-                    <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
-                      {{ child_link.title }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-</nav>
+      {%- comment -%} Shop 列 {%- endcomment -%}
+      {% if section.settings.menu_shop != blank %}
+        <div class="footer-block footer-block--menu">
+          <ul class="list-unstyled">
+            {% for link in section.settings.menu_shop.links %}
+              <li>
+                <!-- 父链接 -->
+                <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
+                  <span class="footer-menu__parent">{{ link.title }}</span>
+                </a>
+                <!-- 子链接 -->
+                {% if link.links != blank %}
+                  <ul class="footer-submenu list-unstyled">
+                    {% for child_link in link.links %}
+                      <li>
+                        <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
+                          {{ child_link.title }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
 
+      {%- comment -%} About 列 {%- endcomment -%}
+      {% if section.settings.menu_about != blank %}
+        <div class="footer-block footer-block--menu">
+          <ul class="list-unstyled">
+            {% for link in section.settings.menu_about.links %}
+              <li>
+                <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
+                  <span class="footer-menu__parent">{{ link.title }}</span>
+                </a>
+                {% if link.links != blank %}
+                  <ul class="footer-submenu list-unstyled">
+                    {% for child_link in link.links %}
+                      <li>
+                        <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
+                          {{ child_link.title }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {%- comment -%} Information 列 {%- endcomment -%}
+      {% if section.settings.menu_info != blank %}
+        <div class="footer-block footer-block--menu">
+          <ul class="list-unstyled">
+            {% for link in section.settings.menu_info.links %}
+              <li>
+                <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
+                  <span class="footer-menu__parent">{{ link.title }}</span>
+                </a>
+                {% if link.links != blank %}
+                  <ul class="footer-submenu list-unstyled">
+                    {% for child_link in link.links %}
+                      <li>
+                        <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
+                          {{ child_link.title }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {%- comment -%} Account 列 {%- endcomment -%}
+      {% if section.settings.menu_account != blank %}
+        <div class="footer-block footer-block--menu">
+          <ul class="list-unstyled">
+            {% for link in section.settings.menu_account.links %}
+              <li>
+                <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
+                  <span class="footer-menu__parent">{{ link.title }}</span>
+                </a>
+                {% if link.links != blank %}
+                  <ul class="footer-submenu list-unstyled">
+                    {% for child_link in link.links %}
+                      <li>
+                        <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
+                          {{ child_link.title }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+    </nav>
   </div>
 
   {%- comment -%} Bottom: localization + payments {%- endcomment -%}
@@ -183,6 +244,8 @@
 {% schema %}
 {
   "name": "Footer",
+  "tag": "footer",
+  "enabled_on": { "groups": ["footer"] },
   "settings": [
     { "type": "color_scheme", "id": "color_scheme", "label": "Colors", "default": "scheme-1" },
 
@@ -191,8 +254,11 @@
     { "type": "inline_richtext", "id": "newsletter_heading", "label": "Title", "default": "Stay Up To Date" },
     { "type": "richtext", "id": "newsletter_desc", "label": "Description", "default": "<p>By submitting this form, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from {{ shop.name }} at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg and data rates may apply. View Terms &amp; Privacy.</p>" },
 
-    { "type": "header", "content": "Right columns (menus)" },
+    { "type": "header", "content": "Menus (each renders parent + its children)" },
     { "type": "link_list", "id": "menu_shop", "label": "Shop menu" },
+    { "type": "link_list", "id": "menu_about", "label": "About menu" },
+    { "type": "link_list", "id": "menu_info", "label": "Information menu" },
+    { "type": "link_list", "id": "menu_account", "label": "Account menu" },
 
     { "type": "header", "content": "Localization & payments" },
     { "type": "checkbox", "id": "enable_country_selector", "label": "Show country selector", "default": true },
@@ -200,6 +266,6 @@
     { "type": "checkbox", "id": "payment_enable", "label": "Show payment icons", "default": true }
   ],
   "blocks": [],
-  "presets": [{ "name": "Footer: Newsletter + 4 menus" }]
+  "presets": [{ "name": "Footer: Newsletter + Multi-Menu" }]
 }
 {% endschema %}
