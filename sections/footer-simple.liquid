@@ -101,6 +101,26 @@
 
     {%- comment -%} RIGHT: 4 columns (Shop / About / Information / Account) {%- endcomment -%}
 <nav class="footer-simple__cols" aria-label="Footer navigation">
+  {% if section.settings.menu_shop != blank %}
+    <div class="footer-block footer-block--menu">
+      <ul class="list-unstyled">
+        {% for link in section.settings.menu_shop.links %}
+          <li>
+            <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
+              <span class="footer-menu__parent">{{ link.title }}</span>
+            </a>
+            {% if link.links != blank %}
+              <ul class="footer-submenu list-unstyled">
+                {% for child_link in link.links %}
+                  <li><a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">{{ child_link.title }}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 
   {% if section.settings.menu_shop != blank %}
     <div class="footer-block footer-block--menu">
