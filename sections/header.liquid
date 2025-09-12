@@ -190,7 +190,11 @@
 
 {%- if section.settings.logo_position == 'middle-center' -%}
   {%- if request.page_type == 'index' -%}<h1 class="header__heading">{%- endif -%}
-    <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset brand" aria-label="{{ section.settings.brand_text | default: shop.name | upcase }}">
+  <a href="{{ section.settings.brand_link | default: routes.root_url }}"
+   {% if section.settings.brand_link_newtab %}target="_blank" rel="noopener"{% endif %}
+   class="header__heading-link link link--text focus-inset brand"
+   aria-label="{{ section.settings.brand_text | default: shop.name | upcase }}">
+</a>
       {%- if settings.logo != blank -%}
         <div class="header__heading-logo-wrapper">
           {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
