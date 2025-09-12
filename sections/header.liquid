@@ -184,9 +184,9 @@
       endif
     -%}
 
-  {%- if section.settings.logo_position != 'middle-center' -%}
+{%- if section.settings.logo_position != 'middle-center' -%}
   {%- if request.page_type == 'index' -%}<h1 class="header__heading">{%- endif -%}
-  <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset brand" aria-label="{{ section.settings.brand_text | default: shop.name }}">
+  <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset brand" aria-label="{{ section.settings.brand_text | default: shop.name | upcase }}">
     {%- if settings.logo != blank -%}
       <div class="header__heading-logo-wrapper">
         {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
@@ -204,12 +204,13 @@
         }}
       </div>
     {%- else -%}
-      <span class="brand__logo--fallback" aria-hidden="true">{{ shop.name | slice: 0,1 }}</span>
+      <span class="brand__logo--fallback" aria-hidden="true">{{ shop.name | slice: 0,1 | upcase }}</span>
     {%- endif -%}
-    <span class="brand__text">{{ section.settings.brand_text | default: shop.name }}</span>
+    <span class="brand__text">{{ section.settings.brand_text | default: shop.name | upcase }}</span>
   </a>
   {%- if request.page_type == 'index' -%}</h1>{%- endif -%}
 {%- endif -%}
+
 
 
     {%- liquid
