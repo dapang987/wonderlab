@@ -3,37 +3,26 @@
 {{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
-/* Footer Simple — consolidated styles (no redundancy) */
+/* Footer Simple — clean */
 
 /* Layout */
 .footer-simple{ padding:36px 0; }
-.footer-simple__top{
-  display:grid;
-  gap:32px;
-  align-items:stretch;                 /* 左右两块等高 */
-}
-@media (min-width:990px){
-  .footer-simple__top{ grid-template-columns:1fr 1fr; }  /* 左右等宽 */
-}
+.footer-simple__top{ display:grid; gap:32px; align-items:stretch; }   /* 等高 */
+@media (min-width:990px){ .footer-simple__top{ grid-template-columns:1fr 1fr; } }
 
 /* Newsletter */
 .newsletter-card{
-  background:#fff;
-  border:1px solid #e5e5e5;
-  border-radius:8px;
-  padding:24px;
+  background:#fff; border:1px solid #e5e5e5; border-radius:8px; padding:24px;
 }
 .newsletter-title{ font-size:20px; font-weight:600; line-height:1.3; margin:0 0 12px; }
 .newsletter-desc{ font-size:14px; color:#555; line-height:1.5; margin:0 0 20px; }
 .newsletter-form label{ display:block; font-size:14px; margin:0 0 6px; color:#222; }
 .newsletter-input{
-  width:100%; padding:12px; margin:0 0 16px;
-  border:1px solid #ccc; border-radius:6px; font-size:14px; box-sizing:border-box;
+  width:100%; padding:12px; margin:0 0 16px; border:1px solid #ccc; border-radius:6px; font-size:14px; box-sizing:border-box;
 }
 .newsletter-input:focus{ outline:none; border-color:#111; }
 .btn-submit{
-  width:100%; background:#111; color:#fff; border:0; border-radius:6px;
-  padding:14px; font-size:16px; cursor:pointer; transition:background .2s;
+  width:100%; background:#111; color:#fff; border:0; border-radius:6px; padding:14px; font-size:16px; cursor:pointer; transition:background .2s;
 }
 .btn-submit:hover{ background:#333; }
 .newsletter-message{ font-size:13px; margin-top:10px; }
@@ -43,77 +32,42 @@
 /* Right menus: always 2 columns */
 .footer-simple__cols{
   display:grid; gap:24px;
-  grid-template-columns:repeat(2, minmax(0,1fr));  /* 移动 & 桌面均为 2 列 */
-  padding:24px;
-  background:#fff;
-  border-radius:8px;
-  box-sizing:border-box;
-  align-content:start;                               /* 从顶端开始排布 */
+  grid-template-columns:repeat(2, minmax(0,1fr));         /* 移动 & 桌面均 2 列 */
+  padding:24px; background:#fff; border:1px solid #e5e5e5; border-radius:8px;
+  box-sizing:border-box; align-content:start;              /* 内容贴顶 */
 }
 .footer-simple__cols > .footer-block{ min-width:0; }
 
 .footer-parent-link{ display:block; text-decoration:none; }
 .footer-parent-text{
-  display:block;
-  margin:0 0 12px;
-  line-height:1.3;
-  font-weight:600;
-  color:rgb(var(--color-foreground));
-  text-align:left;                                   /* 需要居中可改 center */
-  word-wrap:break-word;
+  display:block; margin:0 0 12px; line-height:1.3; font-weight:600;
+  color:rgb(var(--color-foreground)); text-align:left; word-wrap:break-word;
 }
 
 .footer-simple__cols ul,
-.footer-simple__cols .list-unstyled{
-  margin:0;
-  padding:0;
-  list-style:none;
-}
+.footer-simple__cols .list-unstyled{ margin:0; padding:0; list-style:none; }
 
 .footer-submenu{ display:grid; gap:8px; margin:6px 0 0; }
 .footer-submenu__link{ opacity:.9; }
 
 /* Bottom */
-.footer-simple__bottom{
-  border-top:1px solid rgba(0,0,0,.08);
-  margin-top:32px;
-  padding-top:20px;
-}
-.footer-simple__bottom-inner{
-  display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap;
-}
-.footer-block--newsletter,
-.footer-simple__cols{ align-self: stretch; height: 100%; }
-/* 手机端：把卡片里的描述隐藏，把底部描述显示出来 */
-@media (max-width: 749px){
-  .newsletter-card .newsletter-desc{ display:none; }
+.footer-simple__bottom{ border-top:1px solid rgba(0,0,0,.08); margin-top:32px; padding-top:20px; }
+.footer-simple__bottom-inner{ display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
 
+.footer-block--newsletter,
+.footer-simple__cols{ align-self:stretch; height:100%; }
+
+/* Mobile: 卡片内描述隐藏；底部描述显示 */
+@media (max-width:749px){
+  .newsletter-card .newsletter-desc{ display:none !important; }
   .footer-legal-mobile{ display:block; }
   .footer-legal-mobile .newsletter-desc--mobile{
-    font-size:12px;
-    line-height:1.6;
-    color:#6b6b6b;
-    border-top:1px dashed rgba(0,0,0,.25);
-    padding-top:16px;
-    margin-top:16px;
+    font-size:12px; line-height:1.6; color:#6b6b6b;
+    border-top:1px dashed rgba(0,0,0,.25); padding-top:16px; margin-top:16px;
   }
 }
-
-/* 桌面端：仅显示卡片里的描述，隐藏底部那份 */
-@media (min-width: 750px){
-  .footer-legal-mobile{ display:none; }
-}
-/* 手机端：只显示底部那段，隐藏卡片内的描述 */
-@media (max-width: 749px){
-  .newsletter-card .newsletter-desc{ display: none !important; }
-  .footer-legal-mobile{ display: block; }
-}
-
-/* 桌面端：只显示卡片内的描述，隐藏底部那段 */
-@media (min-width: 750px){
-  .footer-legal-mobile{ display: none !important; }
-}
-
+/* Desktop: 底部描述隐藏，仅显示卡片内描述 */
+@media (min-width:750px){ .footer-legal-mobile{ display:none !important; } }
 {%- endstyle -%}
 
 <footer class="footer footer-simple color-{{ section.settings.color_scheme }} gradient">
@@ -135,7 +89,6 @@
             <label for="FooterNewsletterPhone">Your mobile # (optional - save 15%)</label>
             <input type="tel" id="FooterNewsletterPhone" name="contact[phone]" class="newsletter-input" placeholder="Value">
             <button type="submit" class="btn-submit">Subscribe</button>
-
             {%- if form.errors -%}
               <small class="newsletter-message error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</small>
             {%- endif -%}
@@ -152,41 +105,41 @@
       {%- for block in section.blocks -%}
         {%- if block.type == 'menu_column' and block.settings.menu != blank -%}
           <div class="footer-block footer-block--menu" {{ block.shopify_attributes }}>
-        <ul class="list-unstyled">
-  {% for link in block.settings.menu.links %}
-    {% assign parent_title = link.title | strip | default: link.object.title %}
-    <li class="footer-parent">
-      <a href="{{ link.url | default: '#' }}" class="footer-parent-link">
-        <h2 class="footer-parent-text">{{ parent_title | escape }}</h2>
-      </a>
-
-      {% if link.links != blank %}
-        <ul class="footer-submenu list-unstyled">
-          {% for child_link in link.links %}
-            <li>
-              <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
-                {{ child_link.title | strip | default: child_link.object.title | escape }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </li>
-  {% endfor %}
-</ul>
-
+            <ul class="list-unstyled">
+              {% for link in block.settings.menu.links %}
+                {% assign parent_title = link.title | strip | default: link.object.title %}
+                <li class="footer-parent">
+                  <a href="{{ link.url | default: '#' }}" class="footer-parent-link">
+                    <span class="footer-parent-text">{{ parent_title | escape }}</span>
+                  </a>
+                  {% if link.links != blank %}
+                    <ul class="footer-submenu list-unstyled">
+                      {% for child_link in link.links %}
+                        <li>
+                          <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
+                            {{ child_link.title | strip | default: child_link.object.title | escape }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
           </div>
         {%- endif -%}
       {%- endfor -%}
     </nav>
 
   </div>
-<!-- 手机端显示的“底部免责声明”，内容复用 newsletter_desc -->
-<div class="page-width footer-legal-mobile">
-  <div class="newsletter-desc newsletter-desc--mobile">
-    {{ section.settings.newsletter_desc }}
+
+  <!-- Mobile-only bottom disclaimer -->
+  <div class="page-width footer-legal-mobile">
+    <div class="newsletter-desc newsletter-desc--mobile">
+      {{ section.settings.newsletter_desc }}
+    </div>
   </div>
-</div>
+
   {%- comment -%} Bottom: localization + payments {%- endcomment -%}
   <div class="footer-simple__bottom">
     <div class="footer-simple__bottom-inner page-width">
@@ -236,7 +189,7 @@
     {
       "type": "menu_column",
       "name": "Menu column",
-       "limit": 8,
+      "limit": 8,
       "settings": [
         { "type": "link_list", "id": "menu", "label": "Menu" }
       ]
