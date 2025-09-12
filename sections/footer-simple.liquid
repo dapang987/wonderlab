@@ -103,6 +103,16 @@
 @media (min-width: 750px){
   .footer-legal-mobile{ display:none; }
 }
+/* 手机端：只显示底部那段，隐藏卡片内的描述 */
+@media (max-width: 749px){
+  .newsletter-card .newsletter-desc{ display: none !important; }
+  .footer-legal-mobile{ display: block; }
+}
+
+/* 桌面端：只显示卡片内的描述，隐藏底部那段 */
+@media (min-width: 750px){
+  .footer-legal-mobile{ display: none !important; }
+}
 
 {%- endstyle -%}
 
