@@ -68,6 +68,23 @@
 }
 /* Desktop: 底部描述隐藏，仅显示卡片内描述 */
 @media (min-width:750px){ .footer-legal-mobile{ display:none !important; } }
+/* 手机端：隐藏所有 newsletter-desc，但保留底部那段 */
+@media (max-width: 749px){
+  .footer .newsletter-desc:not(.newsletter-desc--mobile){
+    display: none !important;
+  }
+  .footer-legal-mobile{
+    display: block !important;
+  }
+}
+
+/* 桌面端：只显示卡片内描述，隐藏底部那段 */
+@media (min-width: 750px){
+  .footer-legal-mobile{
+    display: none !important;
+  }
+}
+
 {%- endstyle -%}
 
 <footer class="footer footer-simple color-{{ section.settings.color_scheme }} gradient">
