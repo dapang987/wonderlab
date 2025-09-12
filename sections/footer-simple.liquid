@@ -104,16 +104,17 @@
 <nav class="footer-simple__cols" aria-label="Footer navigation">
 
   <!-- Shop -->
-  <div class="footer-block footer-block--menu">
-    <h4 class="footer-menu__parent">Shop</h4>
-    {% if section.settings.menu_shop != blank %}
+  {% if section.settings.menu_shop != blank %}
+    <div class="footer-block footer-block--menu">
+      <h4 class="footer-menu__parent">{{ section.settings.menu_shop.title | default: 'Shop' }}</h4>
       <ul class="list-unstyled">
         {% for link in section.settings.menu_shop.links %}
           <li>
+            <!-- 父链接 -->
             <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
               <span class="footer-menu__parent">{{ link.title }}</span>
             </a>
-
+            <!-- 子链接（有才渲染） -->
             {% if link.links != blank %}
               <ul class="footer-submenu list-unstyled">
                 {% for child_link in link.links %}
@@ -128,20 +129,19 @@
           </li>
         {% endfor %}
       </ul>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
   <!-- About -->
-  <div class="footer-block footer-block--menu">
-    <h4 class="footer-menu__parent">About</h4>
-    {% if section.settings.menu_about != blank %}
+  {% if section.settings.menu_about != blank %}
+    <div class="footer-block footer-block--menu">
+      <h4 class="footer-menu__parent">{{ section.settings.menu_about.title | default: 'About' }}</h4>
       <ul class="list-unstyled">
         {% for link in section.settings.menu_about.links %}
           <li>
             <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
               <span class="footer-menu__parent">{{ link.title }}</span>
             </a>
-
             {% if link.links != blank %}
               <ul class="footer-submenu list-unstyled">
                 {% for child_link in link.links %}
@@ -156,20 +156,19 @@
           </li>
         {% endfor %}
       </ul>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
   <!-- Information -->
-  <div class="footer-block footer-block--menu">
-    <h4 class="footer-menu__parent">Information</h4>
-    {% if section.settings.menu_info != blank %}
+  {% if section.settings.menu_info != blank %}
+    <div class="footer-block footer-block--menu">
+      <h4 class="footer-menu__parent">{{ section.settings.menu_info.title | default: 'Information' }}</h4>
       <ul class="list-unstyled">
         {% for link in section.settings.menu_info.links %}
           <li>
             <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
               <span class="footer-menu__parent">{{ link.title }}</span>
             </a>
-
             {% if link.links != blank %}
               <ul class="footer-submenu list-unstyled">
                 {% for child_link in link.links %}
@@ -184,20 +183,19 @@
           </li>
         {% endfor %}
       </ul>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
   <!-- Account -->
-  <div class="footer-block footer-block--menu">
-    <h4 class="footer-menu__parent">Account</h4>
-    {% if section.settings.menu_account != blank %}
+  {% if section.settings.menu_account != blank %}
+    <div class="footer-block footer-block--menu">
+      <h4 class="footer-menu__parent">{{ section.settings.menu_account.title | default: 'Account' }}</h4>
       <ul class="list-unstyled">
         {% for link in section.settings.menu_account.links %}
           <li>
             <a href="{{ link.url }}" class="link link--text list-menu__item list-menu__item--link">
               <span class="footer-menu__parent">{{ link.title }}</span>
             </a>
-
             {% if link.links != blank %}
               <ul class="footer-submenu list-unstyled">
                 {% for child_link in link.links %}
@@ -212,10 +210,11 @@
           </li>
         {% endfor %}
       </ul>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 
 </nav>
+
   </div>
 
   {%- comment -%} Bottom: localization + payments {%- endcomment -%}
