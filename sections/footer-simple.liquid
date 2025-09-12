@@ -59,17 +59,17 @@
 
 /* Mobile: 卡片内描述隐藏；底部描述显示 */
 @media (max-width:767px){
-
+  .newsletter-card .newsletter-desc{ display:none; }
   .footer-legal-mobile{ display:block; }
   .footer-legal-mobile .newsletter-desc--mobile{
     font-size:12px; line-height:1.6; color:#6b6b6b;
     border-top:1px dashed rgba(0,0,0,.25); padding-top:16px; margin-top:16px;
-    display:none;
+
   }
 }
 /* Desktop: 底部描述隐藏，仅显示卡片内描述 */
 @media (min-width:768px){ 
-  .footer-legal-mobile{ display:none; } }
+ .newsletter-card .footer-legal-mobile{ display:none; } }
 
 {%- endstyle -%}
 
