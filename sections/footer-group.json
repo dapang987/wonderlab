@@ -14,15 +14,15 @@
     "footer_simple": {
       "type": "footer-simple",
       "blocks": {
-        "menu_column_gx3PAX": {
+        "menu_column_VRQrE7": {
           "type": "menu_column",
           "settings": {
-            "menu": "footer"
+            "menu": "about"
           }
         }
       },
       "block_order": [
-        "menu_column_gx3PAX"
+        "menu_column_VRQrE7"
       ],
       "settings": {
         "color_scheme": "",
