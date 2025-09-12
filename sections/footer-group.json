@@ -19,10 +19,31 @@
           "settings": {
             "menu": "about"
           }
+        },
+        "menu_column_npMMWz": {
+          "type": "menu_column",
+          "settings": {
+            "menu": "about"
+          }
+        },
+        "menu_column_WVFQkA": {
+          "type": "menu_column",
+          "settings": {
+            "menu": "information"
+          }
+        },
+        "menu_column_YeiGRp": {
+          "type": "menu_column",
+          "settings": {
+            "menu": "shop"
+          }
         }
       },
       "block_order": [
-        "menu_column_VRQrE7"
+        "menu_column_VRQrE7",
+        "menu_column_npMMWz",
+        "menu_column_WVFQkA",
+        "menu_column_YeiGRp"
       ],
       "settings": {
         "color_scheme": "",
