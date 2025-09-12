@@ -58,7 +58,7 @@
 .footer-simple__cols{ align-self:stretch; height:100%; }
 
 /* Mobile: 卡片内描述隐藏；底部描述显示 */
-@media (max-width:749px){
+@media (max-width:767px){
   .newsletter-card .newsletter-desc{ display:none !important; }
   .footer-legal-mobile{ display:block; }
   .footer-legal-mobile .newsletter-desc--mobile{
@@ -67,23 +67,7 @@
   }
 }
 /* Desktop: 底部描述隐藏，仅显示卡片内描述 */
-@media (min-width:750px){ .footer-legal-mobile{ display:none !important; } }
-/* 手机端：隐藏所有 newsletter-desc，但保留底部那段 */
-@media (max-width: 749px){
-  .footer .newsletter-desc:not(.newsletter-desc--mobile){
-    display: none !important;
-  }
-  .footer-legal-mobile{
-    display: block !important;
-  }
-}
-
-/* 桌面端：只显示卡片内描述，隐藏底部那段 */
-@media (min-width: 750px){
-  .footer-legal-mobile{
-    display: none !important;
-  }
-}
+@media (min-width:768px){ .footer-legal-mobile{ display:none !important; } }
 
 {%- endstyle -%}
 
