@@ -127,6 +127,27 @@
 }
 /* 如需控制图标高度，可开启这行： */
 /* .header__heading-logo { height:28px; width:auto; } */
+
+
+/* 触控盒：44×44 居中 */
+.header__icon{
+  width:44px;height:44px;display:inline-grid;place-items:center;
+}
+
+/* 统一基准尺寸 */
+.header__icon svg{ width:22px;height:22px;display:block;transform-origin:50% 50%; }
+
+/* 光学微调（按你现场感觉微调这三个比例） */
+.header__icon .icon-search{  transform:scale(.90); }   /* 放大镜通常显得大 → 稍减 */
+.header__icon .icon-account{ transform:scale(1.00); }  /* 基准 */
+.header__icon .icon-cart-empty{ transform:scale(.95); }/* 填充更“重” → 再小一点 */
+
+/* 线条粗细统一（描边图标） */
+.header__icon svg *{
+  vector-effect: non-scaling-stroke;
+  stroke-width:1.5;
+}
+
 {%- endstyle -%}
 
 <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
