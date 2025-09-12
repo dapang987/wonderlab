@@ -29,13 +29,13 @@
         "menu_column_npMMWz": {
           "type": "menu_column",
           "settings": {
-            "menu": "about"
+            "menu": "information"
           }
         },
         "menu_column_WVFQkA": {
           "type": "menu_column",
           "settings": {
-            "menu": "information"
+            "menu": "account"
           }
         }
       },
