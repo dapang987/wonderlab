@@ -14,7 +14,7 @@
 .newsletter-card{
   background:#fff; border:1px solid #e5e5e5; border-radius:8px; padding:24px;
 }
-.newsletter-title{ font-size:20px; font-weight:600; line-height:1.3; margin:0 0 12px; }
+.newsletter-title{ font-weight:600; line-height:1.3; margin:0 0 12px; }
 .newsletter-desc{ font-size:14px; color:#555; line-height:1.5; margin:0 0 20px; }
 .newsletter-form label{ display:block; font-size:14px; margin:0 0 6px; color:#222; }
 .newsletter-input{
@@ -84,7 +84,7 @@
     <section class="footer-block footer-block--newsletter" aria-labelledby="FooterNewsletterHeading">
       {%- if section.settings.newsletter_enable -%}
         <div class="newsletter-card">
-          <h3 id="FooterNewsletterHeading" class="newsletter-title">{{ section.settings.newsletter_heading }}</h3>
+          <h2 id="FooterNewsletterHeading" class="newsletter-title">{{ section.settings.newsletter_heading }}</h2>
           {%- if section.settings.newsletter_desc != blank -%}
             <div class="newsletter-desc">{{ section.settings.newsletter_desc }}</div>
           {%- endif -%}
