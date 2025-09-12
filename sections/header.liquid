@@ -107,6 +107,25 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* Logo + 店铺名并排 */
+.brand{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  text-decoration:none;
+}
+/* 让字标更像示例风格 */
+.brand__text{
+  font-weight:700;
+  letter-spacing:.08em;
+  white-space:nowrap;
+  color: rgb(var(--color-foreground));
+  text-transform: uppercase; /* 保险起见，样式也大写 */
+  line-height:1;
+}
+/* 如需控制图标高度，可开启这行： */
+/* .header__heading-logo { height:28px; width:auto; } */
 {%- endstyle -%}
 
 <script src="{{ 'details-disclosure.js' | asset_url }}" defer="defer"></script>
