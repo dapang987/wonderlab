@@ -3,54 +3,87 @@
 {{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
+/* Footer Simple — consolidated styles (no redundancy) */
+
 /* Layout */
-.footer-simple{ padding: 36px 0; }
-.footer-simple__top{ display: grid; gap: 32px; }
-@media (min-width: 990px){
-  .footer-simple__top{ grid-template-columns: 1.1fr 1fr; } /* 左订阅 / 右菜单 */
+.footer-simple{ padding:36px 0; }
+.footer-simple__top{
+  display:grid;
+  gap:32px;
+  align-items:stretch;                 /* 左右两块等高 */
+}
+@media (min-width:990px){
+  .footer-simple__top{ grid-template-columns:1fr 1fr; }  /* 左右等宽 */
 }
 
-/* Newsletter card */
+/* Newsletter */
 .newsletter-card{
-  background:#fff; border:1px solid #e5e5e5; border-radius:8px; padding:24px;
+  background:#fff;
+  border:1px solid #e5e5e5;
+  border-radius:8px;
+  padding:24px;
 }
-.newsletter-title{ font-size:20px; font-weight:600; line-height:1.3; margin:0 0 8px; }
+.newsletter-title{ font-size:20px; font-weight:600; line-height:1.3; margin:0 0 12px; }
 .newsletter-desc{ font-size:14px; color:#555; line-height:1.5; margin:0 0 20px; }
 .newsletter-form label{ display:block; font-size:14px; margin:0 0 6px; color:#222; }
-.newsletter-input{ width:100%; padding:12px; margin:0 0 16px; border:1px solid #ccc; border-radius:6px; font-size:14px; }
+.newsletter-input{
+  width:100%; padding:12px; margin:0 0 16px;
+  border:1px solid #ccc; border-radius:6px; font-size:14px; box-sizing:border-box;
+}
 .newsletter-input:focus{ outline:none; border-color:#111; }
-.btn-submit{ width:100%; background:#111; color:#fff; border:0; border-radius:6px; padding:14px; font-size:16px; }
+.btn-submit{
+  width:100%; background:#111; color:#fff; border:0; border-radius:6px;
+  padding:14px; font-size:16px; cursor:pointer; transition:background .2s;
+}
 .btn-submit:hover{ background:#333; }
 .newsletter-message{ font-size:13px; margin-top:10px; }
 .newsletter-message.error{ color:#d00; }
 .newsletter-message.success{ color:#090; }
 
-/* Right: menus grid — always 2 columns */
+/* Right menus: always 2 columns */
 .footer-simple__cols{
   display:grid; gap:24px;
-  grid-template-columns: repeat(2, minmax(0,1fr)); /* 移动端/桌面端都为 2 列 */
+  grid-template-columns:repeat(2, minmax(0,1fr));  /* 移动 & 桌面均为 2 列 */
+  padding:24px;
+  background:#fff;
+  border:1px solid #e5e5e5;
+  border-radius:8px;
+  box-sizing:border-box;
+  align-content:start;                               /* 从顶端开始排布 */
 }
-.footer-block--menu{ }
-.footer-menu__parent{ font-weight:600; margin:0 0 12px; text-align:center; }
-.footer-submenu{ display:grid; gap:8px; margin:0; }
-.footer-submenu__link{ opacity:.9; }
+.footer-simple__cols > .footer-block{ min-width:0; }
 
-/* Bottom: localization + payments */
-.footer-simple__bottom{ border-top:1px solid rgba(0,0,0,.08); margin-top:32px; padding-top:20px; }
-.footer-simple__bottom-inner{ display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-/* 避免父标题被样式影响看不见 */
 .footer-parent-link{ display:block; text-decoration:none; }
 .footer-parent-text{
   display:block;
-  font-weight:600;
-  line-height:1.3;
   margin:0 0 12px;
- 
-  color: rgb(var(--color-foreground)); /* 强制继承主题前景色 */
+  line-height:1.3;
+  font-weight:600;
+  color:rgb(var(--color-foreground));
+  text-align:left;                                   /* 需要居中可改 center */
+  word-wrap:break-word;
 }
 
-/* 子菜单本来就是 display:grid；再保险： */
-.footer-submenu{ display:grid !important; gap:8px; margin:0; }
+.footer-simple__cols ul,
+.footer-simple__cols .list-unstyled{
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+.footer-submenu{ display:grid; gap:8px; margin:6px 0 0; }
+.footer-submenu__link{ opacity:.9; }
+
+/* Bottom */
+.footer-simple__bottom{
+  border-top:1px solid rgba(0,0,0,.08);
+  margin-top:32px;
+  padding-top:20px;
+}
+.footer-simple__bottom-inner{
+  display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+}
+
 
 {%- endstyle -%}
 
