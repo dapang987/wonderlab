@@ -13,15 +13,22 @@
   "sections": {
     "footer_simple": {
       "type": "footer-simple",
+      "blocks": {
+        "menu_column_gx3PAX": {
+          "type": "menu_column",
+          "settings": {
+            "menu": "footer"
+          }
+        }
+      },
+      "block_order": [
+        "menu_column_gx3PAX"
+      ],
       "settings": {
         "color_scheme": "",
         "newsletter_enable": true,
         "newsletter_heading": "Stay Up To Date",
         "newsletter_desc": "<p>By submitting this form, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from  at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg and data rates may apply. View Terms & Privacy.</p>",
-        "menu_shop": "footer",
-        "menu_about": "",
-        "menu_info": "",
-        "menu_account": "",
         "enable_country_selector": true,
         "enable_language_selector": true,
         "payment_enable": true
