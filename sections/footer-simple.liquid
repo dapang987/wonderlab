@@ -171,7 +171,12 @@
     </nav>
 
   </div>
-
+<!-- 手机端显示的“底部免责声明”，内容复用 newsletter_desc -->
+<div class="page-width footer-legal-mobile">
+  <div class="newsletter-desc newsletter-desc--mobile">
+    {{ section.settings.newsletter_desc }}
+  </div>
+</div>
   {%- comment -%} Bottom: localization + payments {%- endcomment -%}
   <div class="footer-simple__bottom">
     <div class="footer-simple__bottom-inner page-width">
