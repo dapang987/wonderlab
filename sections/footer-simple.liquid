@@ -189,7 +189,7 @@
   <!-- Account -->
   {% if section.settings.menu_account != blank %}
     <div class="footer-block footer-block--menu">
-      <h4 class="footer-menu__parent">{{ section.settings.menu_account.title | default: 'Account' }}</h4>
+  
       <ul class="list-unstyled">
         {% for link in section.settings.menu_account.links %}
           <li>
