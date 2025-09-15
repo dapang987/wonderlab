@@ -408,7 +408,33 @@
         { "type": "range", "id": "btn2_radius", "label": "按钮2 圆角（px）", "min": 0, "max": 40, "step": 2, "default": 12 },
         { "type": "color", "id": "btn2_bg_color", "label": "按钮2 背景色", "default": "#111111" }
       ]
-    }
+    },
+    {
+  "type": "cert_info",
+  "name": "认证信息（覆盖在图片上）",
+  "limit": 3,
+  "settings": [
+    { "type": "text", "id": "label", "label": "认证文字", "default": "认证信息" },
+    { "type": "url",  "id": "link",  "label": "可选：链接" },
+    { "type": "checkbox", "id": "new_tab", "label": "新窗口打开", "default": true },
+
+    { "type": "header", "content": "样式" },
+    { "type": "color", "id": "bg_color", "label": "背景色", "default": "#111111" },
+    { "type": "color", "id": "text_color", "label": "文字颜色", "default": "#ffffff" },
+    { "type": "range", "id": "font_size", "label": "字体大小（px）", "min": 12, "max": 28, "step": 1, "default": 16 },
+    { "type": "range", "id": "border_radius", "label": "圆角（px）", "min": 0, "max": 32, "step": 2, "default": 12 },
+    { "type": "range", "id": "pad_x", "label": "左右内边距（px）", "min": 6, "max": 32, "step": 2, "default": 16 },
+    { "type": "range", "id": "pad_y", "label": "上下内边距（px）", "min": 4, "max": 24, "step": 2, "default": 10 },
+    { "type": "checkbox", "id": "use_shadow", "label": "启用阴影", "default": true },
+
+    { "type": "header", "content": "位置（默认右下角）" },
+    { "type": "range", "id": "offset_right", "label": "距右侧偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
+    { "type": "range", "id": "offset_bottom", "label": "距底部偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
+
+    { "type": "checkbox", "id": "show_on_mobile", "label": "在手机端显示", "default": true }
+  ]
+}
+
   ],
   "presets": [
     { "name": "t:sections.image-banner.presets.name", "blocks": [ { "type": "heading" }, { "type": "text" }, { "type": "buttons" } ] }
