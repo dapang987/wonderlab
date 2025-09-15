@@ -90,8 +90,9 @@
             "offset_right": 100,
             "offset_bottom": 100,
             "show_on_mobile": true,
-            "m_offset_right_pct": 0,
-            "m_offset_bottom_pct": 0
+            "position_desktop": "bottom-right",
+            "position_mobile": "top-left",
+            "edge_gap": 16
           }
         }
       },
