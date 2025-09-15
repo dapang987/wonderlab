@@ -87,8 +87,8 @@
             "pad_x": 16,
             "pad_y": 10,
             "use_shadow": true,
-            "offset_right": 16,
-            "offset_bottom": 16,
+            "offset_right": 100,
+            "offset_bottom": 100,
             "show_on_mobile": true,
             "m_offset_right_pct": 0,
             "m_offset_bottom_pct": 0
