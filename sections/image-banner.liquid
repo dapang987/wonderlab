@@ -240,40 +240,35 @@
               #Banner-{{ section.id }} .buttons-{{ block.id }} .button{ width: auto; }
             {%- endstyle -%}
 
-{%- if block.settings.button_label_1 != blank -%}
-  <a
-    {% if block.settings.button_link_1 == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link_1 }}" {% endif %}
-    class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %} btn-1"
-    style="
-      /* 用内联样式，确保配置颜色一定生效 */
-      background: {{ block.settings.btn1_bg_color }};
-      background-color: {{ block.settings.btn1_bg_color }};
-      color: {{ block.settings.btn1_text_color }};
-      border-color: {{ block.settings.btn1_bg_color }};
-      border-radius: {{ block.settings.btn1_radius }}px;
-    "
-  >
-    {{- block.settings.button_label_1 | escape -}}
-  </a>
-{%- endif -%}
+            <div
+              class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %} buttons-{{ block.id }}"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.button_label_1 != blank -%}
+                <a
+                  {% if block.settings.button_link_1 == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ block.settings.button_link_1 }}"
+                  {% endif %}
+                  class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %} btn-1"
+                >
+                  {{- block.settings.button_label_1 | escape -}}
+                </a>
+              {%- endif -%}
 
-
-             {%- if block.settings.button_label_2 != blank -%}
-  <a
-    {% if block.settings.button_link_2 == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link_2 }}" {% endif %}
-    class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %} btn-2"
-    style="
-      background: {{ block.settings.btn2_bg_color }};
-      background-color: {{ block.settings.btn2_bg_color }};
-      color: {{ block.settings.btn2_text_color }};
-      border-color: {{ block.settings.btn2_bg_color }};
-      border-radius: {{ block.settings.btn2_radius }}px;
-    "
-  >
-    {{- block.settings.button_label_2 | escape -}}
-  </a>
-{%- endif -%}
-
+              {%- if block.settings.button_label_2 != blank -%}
+                <a
+                  {% if block.settings.button_link_2 == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ block.settings.button_link_2 }}"
+                  {% endif %}
+                  class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %} btn-2"
+                >
+                  {{- block.settings.button_label_2 | escape -}}
+                </a>
+              {%- endif -%}
             </div>
         {%- endcase -%}
       {%- endfor -%}
