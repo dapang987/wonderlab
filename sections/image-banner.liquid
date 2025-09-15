@@ -22,6 +22,21 @@
     }
   {%- endstyle -%}
 {%- endif -%}
+{%- style -%}
+@media (max-width: 749px){
+  #Banner-{{ section.id }} .banner-buttons{ width:100%; }
+
+  #Banner-{{ section.id }}.banner--content-align-mobile-left   .banner-buttons{
+    justify-content:flex-start; margin-left:0;    margin-right:auto;
+  }
+  #Banner-{{ section.id }}.banner--content-align-mobile-center .banner-buttons{
+    justify-content:center;     margin-left:auto; margin-right:auto;
+  }
+  #Banner-{{ section.id }}.banner--content-align-mobile-right  .banner-buttons{
+    justify-content:flex-end;   margin-left:auto; margin-right:0;
+  }
+}
+{%- endstyle -%}
 
 {%- style -%}
   #Banner-{{ section.id }}::after {
