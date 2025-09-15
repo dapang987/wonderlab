@@ -493,12 +493,29 @@
     { "type": "range", "id": "pad_x", "label": "左右内边距（px）", "min": 6, "max": 32, "step": 2, "default": 16 },
     { "type": "range", "id": "pad_y", "label": "上下内边距（px）", "min": 4, "max": 24, "step": 2, "default": 10 },
     { "type": "checkbox", "id": "use_shadow", "label": "启用阴影", "default": true },
+{
+  "type": "header",
+  "content": "手机端位置（百分比）"
+},
+{
+  "type": "range",
+  "id": "m_offset_right_pct",
+  "label": "手机端距右侧偏移（%）",
+  "min": 0,
+  "max": 100,
+  "step": 1,
+  "default": 5
+},
+{
+  "type": "range",
+  "id": "m_offset_bottom_pct",
+  "label": "手机端距底部偏移（%）",
+  "min": 0,
+  "max": 100,
+  "step": 1,
+  "default": 5
+}
 
-    { "type": "header", "content": "位置（默认右下角）" },
-    { "type": "range", "id": "offset_right", "label": "距右侧偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
-    { "type": "range", "id": "offset_bottom", "label": "距底部偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
-
-    { "type": "checkbox", "id": "show_on_mobile", "label": "在手机端显示", "default": true }
   ]
 }
 
