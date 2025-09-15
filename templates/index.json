@@ -88,7 +88,7 @@
             "width": 400,
             "use_fixed_height": false,
             "height": 48,
-            "use_overlay": false,
+            "use_overlay": true,
             "position_preset": "bottom-right",
             "z_index": 5,
             "left_desktop": 0,
