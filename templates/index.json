@@ -45,14 +45,14 @@
           "type": "heading",
           "settings": {
             "heading": "Explore EasyShape Probiotic",
-            "heading_size": "h1"
+            "heading_size": "h0"
           }
         },
         "text_jCPBMg": {
           "type": "text",
           "settings": {
             "text": "Our Pioneering Weight Management Solution",
-            "text_style": "body"
+            "text_style": "subtitle"
           }
         },
         "buttons_qBghTK": {
