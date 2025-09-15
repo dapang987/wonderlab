@@ -306,6 +306,17 @@
               /* 防止主题样式令按钮占满一行 */
               #Banner-{{ section.id }} .buttons-{{ block.id }} .button{ width: auto; }
             {%- endstyle -%}
+{%- style -%}
+/* 手机端（<990px）使用百分比偏移：相对整个 Banner 尺寸定位 */
+@media screen and (max-width: 989px){
+  #Banner-{{ section.id }} .cert-{{ block.id }}{
+    right: {{ block.settings.m_offset_right_pct }}% !important;
+    bottom: {{ block.settings.m_offset_bottom_pct }}% !important;
+    left: auto;
+    top: auto;
+  }
+}
+{%- endstyle -%}
 
             <div
               class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %} buttons-{{ block.id }}"
