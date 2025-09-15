@@ -1185,11 +1185,7 @@ deferred-media {
 /* component-button */
 /* Button - default */
 
-.button--secondary,
-.button--tertiary {
-  --color-button: var(--color-secondary-button);
-  --color-button-text: var(--color-secondary-button-text);
-}
+
 
 .button--tertiary {
   --alpha-button-background: 0;
