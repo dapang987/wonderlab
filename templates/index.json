@@ -87,8 +87,11 @@
             "pad_x": 16,
             "pad_y": 10,
             "use_shadow": true,
-            "m_offset_right_pct": 100,
-            "m_offset_bottom_pct": 100
+            "offset_right": 16,
+            "offset_bottom": 16,
+            "show_on_mobile": true,
+            "m_offset_right_pct": 0,
+            "m_offset_bottom_pct": 0
           }
         }
       },
