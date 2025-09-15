@@ -70,12 +70,34 @@
             "button_text_2": "#ffffff",
             "button_radius": 6
           }
+        },
+        "endorsement_button_8XeXyp": {
+          "type": "endorsement_button",
+          "settings": {
+            "label": "ENDORSED",
+            "link": "",
+            "use_secondary": false,
+            "bg": "",
+            "text": "",
+            "font_size": 14,
+            "pad_x": 19,
+            "pad_y": 9,
+            "radius": 6,
+            "anchor": "bottom-right",
+            "offset_x": 24,
+            "offset_y": 24,
+            "anchor_mobile": "bottom-right",
+            "offset_x_mobile": 24,
+            "offset_y_mobile": 24,
+            "hide_on_mobile": false
+          }
         }
       },
       "block_order": [
         "heading_jjV78L",
         "text_jCPBMg",
-        "buttons_qBghTK"
+        "buttons_qBghTK",
+        "endorsement_button_8XeXyp"
       ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
