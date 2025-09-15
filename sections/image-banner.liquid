@@ -11,7 +11,6 @@
         display: block;
       }
     }
-
     @media screen and (min-width: 750px) {
       #Banner-{{ section.id }}::before,
       #Banner-{{ section.id }} .banner__media::before {
@@ -27,43 +26,6 @@
   #Banner-{{ section.id }}::after {
     opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
   }
-{%- endstyle -%}
-{%- style -%}
-/* === 仅作用于这个 Banner 与这个 buttons block（移动端修正）=== */
-@media screen and (max-width: 989px){
-  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK{
-    /* 仍保持上下排列，但让容器内元素在横向居中 */
-    display: flex;
-    flex-direction: column !important;
-    align-items: center !important;     /* 关键：从原来的 flex-start 改为 center */
-    justify-content: flex-start;
-    width: 100%;
-  }
-  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK .button{
-    /* 390px，窄屏不溢出，同时居中 */
-    padding: 9px 19px !important;
-    box-sizing: border-box;
-    margin-inline: auto !important;     /* 关键：按钮自身也水平居中 */
-  }
-}
-
-/* === PC 端保持横向左对齐（若已设置可忽略）=== */
-@media screen and (min-width: 990px){
-  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK{
-    display: flex;
-    flex-direction: row !important;
-    justify-content: flex-start !important; /* 左对齐 */
-    align-items: center;
-    gap: 10px;
-    flex-wrap: nowrap;
-  }
-  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK .button{
-    width: 300px !important;
-    height: 46px !important;
-    padding: 9px 19px !important;
-    box-sizing: border-box;
-  }
-}
 {%- endstyle -%}
 
 {%- liquid
@@ -82,6 +44,7 @@
     assign half_width = '50vw'
     assign stacked_sizes = '(min-width: 750px) 50vw, 100vw'
   endif
+
   assign fetch_priority = 'auto'
   if section.index == 1
     assign fetch_priority = 'high'
@@ -158,11 +121,9 @@
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
+
           {%- when 'heading' -%}
-            <h2
-              class="banner__heading inline-richtext {{ block.settings.heading_size }}"
-              {{ block.shopify_attributes }}
-            >
+            <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
               {{ block.settings.heading }}
             </h2>
 
@@ -172,9 +133,15 @@
             </div>
 
           {%- when 'buttons' -%}
-            {%- comment -%} PC 横向左对齐；移动端上下排列。两按钮独立控制：字体大小/颜色、圆角、背景色；PC/移动端尺寸。 {%- endcomment -%}
+            {%- comment -%}
+              需求：
+              • PC 端：横向排列 + 左对齐，固定尺寸 300×46
+              • 移动端：上下排列（纵向）且水平居中，固定视觉宽度 390×46（窄屏不溢出）
+              • 两个按钮分别可配置：字体大小/颜色、圆角、背景色
+            {%- endcomment -%}
+
             {%- style -%}
-              /* —— 每个按钮的文字/圆角/背景（作用域仅此 block） —— */
+              /* —— 每个按钮的文字/圆角/背景（仅作用于当前 block） —— */
               #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1,
               #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:hover,
               #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:focus{
@@ -194,34 +161,41 @@
                 border-color: {{ block.settings.btn2_bg_color }};
               }
 
-              /* —— 默认（移动端）上下排列，左对齐 —— */
+              /* —— 移动端（默认）上下排列，水平居中 —— */
               #Banner-{{ section.id }} .buttons-{{ block.id }}{
                 display: flex;
-                flex-direction: column;     /* 上下排列 */
-                align-items: flex-start;    /* 左对齐 */
+                flex-direction: column;        /* 上下排列 */
+                align-items: center;            /* 横向居中 */
                 justify-content: flex-start;
                 gap: 10px;
+                width: 100%;
+                text-align: center;
               }
               @media screen and (max-width: 989px){
                 #Banner-{{ section.id }} .buttons-{{ block.id }} .button{
                   display: flex !important;
                   justify-content: center;
                   align-items: center;
+                  width: min(390px, 92vw) !important; /* 窄屏防溢出 */
+                  height: 46px !important;
                   padding: 9px 19px !important;
                   gap: 10px;
                   flex-shrink: 0;
                   box-sizing: border-box;
+                  margin-left: auto !important;
+                  margin-right: auto !important;       /* 自身也水平居中 */
                 }
               }
 
               /* —— PC 端（≥990px）横向排列，左对齐 —— */
               @media screen and (min-width: 990px){
                 #Banner-{{ section.id }} .buttons-{{ block.id }}{
-                  flex-direction: row !important;     /* 横向 */
+                  flex-direction: row !important;      /* 横向 */
                   align-items: center;
                   justify-content: flex-start !important; /* 左对齐 */
                   gap: 10px;
                   flex-wrap: nowrap;
+                  text-align: left;
                 }
                 #Banner-{{ section.id }} .buttons-{{ block.id }} .button{
                   display: flex !important;
@@ -235,9 +209,6 @@
                   box-sizing: border-box; /* 确保总宽 300px */
                 }
               }
-
-              /* 防止主题样式令按钮占满一行 */
-              #Banner-{{ section.id }} .buttons-{{ block.id }} .button{ width: auto; }
             {%- endstyle -%}
 
             <div
@@ -246,11 +217,7 @@
             >
               {%- if block.settings.button_label_1 != blank -%}
                 <a
-                  {% if block.settings.button_link_1 == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ block.settings.button_link_1 }}"
-                  {% endif %}
+                  {% if block.settings.button_link_1 == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link_1 }}" {% endif %}
                   class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %} btn-1"
                 >
                   {{- block.settings.button_label_1 | escape -}}
@@ -259,17 +226,14 @@
 
               {%- if block.settings.button_label_2 != blank -%}
                 <a
-                  {% if block.settings.button_link_2 == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ block.settings.button_link_2 }}"
-                  {% endif %}
+                  {% if block.settings.button_link_2 == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link_2 }}" {% endif %}
                   class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %} btn-2"
                 >
                   {{- block.settings.button_label_2 | escape -}}
                 </a>
               {%- endif -%}
             </div>
+
         {%- endcase -%}
       {%- endfor -%}
     </div>
@@ -286,22 +250,31 @@
     { "type": "image_picker", "id": "image", "label": "t:sections.image-banner.settings.image.label" },
     { "type": "image_picker", "id": "image_2", "label": "t:sections.image-banner.settings.image_2.label" },
     {
-      "type": "range", "id": "image_overlay_opacity", "min": 0, "max": 100, "step": 10, "unit": "%",
-      "label": "t:sections.image-banner.settings.image_overlay_opacity.label", "default": 0
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "t:sections.image-banner.settings.image_overlay_opacity.label",
+      "default": 0
     },
     {
-      "type": "select", "id": "image_height", "default": "medium",
+      "type": "select",
+      "id": "image_height",
       "options": [
         { "value": "adapt",  "label": "t:sections.image-banner.settings.image_height.options__1.label" },
         { "value": "small",  "label": "t:sections.image-banner.settings.image_height.options__2.label" },
         { "value": "medium", "label": "t:sections.image-banner.settings.image_height.options__3.label" },
         { "value": "large",  "label": "t:sections.image-banner.settings.image_height.options__4.label" }
       ],
+      "default": "medium",
       "label": "t:sections.image-banner.settings.image_height.label",
       "info": "t:sections.image-banner.settings.image_height.info"
     },
     {
-      "type": "select", "id": "desktop_content_position", "default": "middle-center",
+      "type": "select",
+      "id": "desktop_content_position",
       "options": [
         { "value": "top-left", "label": "t:sections.image-banner.settings.desktop_content_position.options__1.label" },
         { "value": "top-center", "label": "t:sections.image-banner.settings.desktop_content_position.options__2.label" },
@@ -313,37 +286,44 @@
         { "value": "bottom-center", "label": "t:sections.image-banner.settings.desktop_content_position.options__8.label" },
         { "value": "bottom-right", "label": "t:sections.image-banner.settings.desktop_content_position.options__9.label" }
       ],
+      "default": "middle-center",
       "label": "t:sections.image-banner.settings.desktop_content_position.label"
     },
     { "type": "checkbox", "id": "show_text_box", "default": true, "label": "t:sections.image-banner.settings.show_text_box.label" },
     {
-      "type": "select", "id": "desktop_content_alignment", "default": "center",
+      "type": "select",
+      "id": "desktop_content_alignment",
       "options": [
         { "value": "left", "label": "t:sections.image-banner.settings.desktop_content_alignment.options__1.label" },
         { "value": "center", "label": "t:sections.image-banner.settings.desktop_content_alignment.options__2.label" },
         { "value": "right", "label": "t:sections.image-banner.settings.desktop_content_alignment.options__3.label" }
       ],
+      "default": "center",
       "label": "t:sections.image-banner.settings.desktop_content_alignment.label"
     },
     { "type": "header", "content": "t:sections.all.animation.content" },
     {
-      "type": "select", "id": "image_behavior", "default": "none",
+      "type": "select",
+      "id": "image_behavior",
       "options": [
         { "value": "none", "label": "t:sections.all.animation.image_behavior.options__1.label" },
         { "value": "ambient", "label": "t:sections.all.animation.image_behavior.options__2.label" },
         { "value": "fixed", "label": "t:sections.all.animation.image_behavior.options__3.label" },
         { "value": "zoom-in", "label": "t:sections.all.animation.image_behavior.options__4.label" }
       ],
+      "default": "none",
       "label": "t:sections.all.animation.image_behavior.label"
     },
     { "type": "header", "content": "t:sections.image-banner.settings.mobile.content" },
     {
-      "type": "select", "id": "mobile_content_alignment", "default": "center",
+      "type": "select",
+      "id": "mobile_content_alignment",
       "options": [
         { "value": "left", "label": "t:sections.image-banner.settings.mobile_content_alignment.options__1.label" },
         { "value": "center", "label": "t:sections.image-banner.settings.mobile_content_alignment.options__2.label" },
         { "value": "right", "label": "t:sections.image-banner.settings.mobile_content_alignment.options__3.label" }
       ],
+      "default": "center",
       "label": "t:sections.image-banner.settings.mobile_content_alignment.label"
     },
     { "type": "checkbox", "id": "stack_images_on_mobile", "default": true, "label": "t:sections.image-banner.settings.stack_images_on_mobile.label" },
@@ -357,12 +337,14 @@
       "settings": [
         { "type": "inline_richtext", "id": "heading", "default": "Image banner", "label": "t:sections.image-banner.blocks.heading.settings.heading.label" },
         {
-          "type": "select", "id": "heading_size", "default": "h1",
+          "type": "select",
+          "id": "heading_size",
           "options": [
             { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
             { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
             { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" }
           ],
+          "default": "h1",
           "label": "t:sections.all.heading_size.label"
         }
       ]
@@ -374,12 +356,14 @@
       "settings": [
         { "type": "inline_richtext", "id": "text", "default": "Give customers details about the banner image(s) or content on the template.", "label": "t:sections.image-banner.blocks.text.settings.text.label" },
         {
-          "type": "select", "id": "text_style", "default": "body",
+          "type": "select",
+          "id": "text_style",
           "options": [
             { "value": "body", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__1.label" },
             { "value": "subtitle", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__2.label" },
             { "value": "caption-with-letter-spacing", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label" }
           ],
+          "default": "body",
           "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
         }
       ]
@@ -411,7 +395,14 @@
     }
   ],
   "presets": [
-    { "name": "t:sections.image-banner.presets.name", "blocks": [ { "type": "heading" }, { "type": "text" }, { "type": "buttons" } ] }
+    {
+      "name": "t:sections.image-banner.presets.name",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "buttons" }
+      ]
+    }
   ]
 }
 {% endschema %}
