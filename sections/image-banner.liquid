@@ -206,6 +206,76 @@
                 >{{ block.settings.button_label_2 | escape }}</a>
               {%- endif -%}
             </div>
+
+
+
+            {%- when 'endorsement_button' -%}
+  {%- assign b = block.settings -%}
+  {%- comment -%}
+    绝对定位容器：相对Banner根节点定位
+  {%- endcomment -%}
+  <div
+    class="endorsement endorsement--{{ block.id }} {% unless b.show_on_mobile %}is-hidden-mobile{% endunless %}"
+    style="
+      --eb-left-d: {{ b.left_desktop | default: 10 }};
+      --eb-top-d: {{ b.top_desktop  | default: 10 }};
+      --eb-left-m: {{ b.left_mobile  | default: 5 }};
+      --eb-top-m: {{ b.top_mobile   | default: 85 }};
+      --eb-bg: {{ b.bg_color }};
+      --eb-color: {{ b.text_color }};
+      --eb-fs: {{ b.font_size }}px;
+      --eb-radius: {{ b.radius }}px;
+      --eb-px: {{ b.pad_x }}px;
+      --eb-py: {{ b.pad_y }}px;
+      --eb-z: {{ b.z_index }};
+      --eb-fw: {{ b.font_weight }};
+      {%- case b.anchor -%}
+        {%- when 'center' -%}--eb-tx:-50%;--eb-ty:-50%;
+        {%- when 'top-right' -%}--eb-tx:-100%;--eb-ty:0%;
+        {%- when 'bottom-left' -%}--eb-tx:0%;--eb-ty:-100%;
+        {%- when 'bottom-right' -%}--eb-tx:-100%;--eb-ty:-100%;
+        {%- else -%}--eb-tx:0%;--eb-ty:0%;
+      {%- endcase -%}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {%- if b.link != blank -%}
+      <a
+        class="endorsement-btn button button--primary"
+        href="{{ b.link }}"
+        {% if b.new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+        style="
+          font-size: var(--eb-fs);
+          font-weight: var(--eb-fw);
+          color: var(--eb-color);
+          background: var(--eb-bg);
+          border-radius: var(--eb-radius);
+          padding: var(--eb-py) var(--eb-px);
+          {%- if b.use_fixed_width -%}width: {{ b.width }}px;{%- endif -%}
+          {%- if b.use_fixed_height -%}height: {{ b.height }}px; align-items:center; display:inline-flex;{%- endif -%}
+        "
+      >
+        {{ b.label | escape }}
+      </a>
+    {%- else -%}
+      <span
+        class="endorsement-btn button button--primary"
+        style="
+          font-size: var(--eb-fs);
+          font-weight: var(--eb-fw);
+          color: var(--eb-color);
+          background: var(--eb-bg);
+          border-radius: var(--eb-radius);
+          padding: var(--eb-py) var(--eb-px);
+          {%- if b.use_fixed_width -%}width: {{ b.width }}px;{%- endif -%}
+          {%- if b.use_fixed_height -%}height: {{ b.height }}px; align-items:center; display:inline-flex;{%- endif -%}
+        "
+      >
+        {{ b.label | escape }}
+      </span>
+    {%- endif -%}
+  </div>
+
         {%- endcase -%}
       {%- endfor -%}
     </div>
