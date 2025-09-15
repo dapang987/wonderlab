@@ -124,7 +124,7 @@
         "heading_nyPDV9": {
           "type": "heading",
           "settings": {
-            "heading": "Image with text",
+            "heading": "Weight Management: EasyShape Probiotic",
             "heading_size": "h1"
           }
         },
@@ -151,10 +151,10 @@
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
-        "height": "adapt",
+        "height": "large",
         "desktop_image_width": "medium",
         "layout": "image_first",
-        "desktop_content_position": "top",
+        "desktop_content_position": "middle",
         "desktop_content_alignment": "left",
         "content_layout": "no-overlap",
         "section_color_scheme": "",
