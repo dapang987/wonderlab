@@ -85,7 +85,7 @@
             "pad_x": 16,
             "pad_y": 10,
             "use_fixed_width": true,
-            "width": 300,
+            "width": 600,
             "use_fixed_height": false,
             "height": 48,
             "anchor": "top-left",
@@ -93,8 +93,8 @@
             "left_desktop": 100,
             "top_desktop": 100,
             "show_on_mobile": true,
-            "left_mobile": 5,
-            "top_mobile": 85
+            "left_mobile": 10,
+            "top_mobile": 0
           }
         }
       },
