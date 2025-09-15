@@ -92,6 +92,17 @@
     #Banner-{{ section.id }} .cert-hide-mobile{ display: none !important; }
   }
 {%- endstyle -%}
+{%- style -%}
+/* 手机端（<990px）使用百分比偏移：相对整个 Banner 尺寸定位 */
+@media screen and (max-width: 989px){
+  #Banner-{{ section.id }} .cert-{{ block.id }}{
+    right: {{ block.settings.m_offset_right_pct }}% !important;
+    bottom: {{ block.settings.m_offset_bottom_pct }}% !important;
+    left: auto;
+    top: auto;
+  }
+}
+{%- endstyle -%}
 
 
 {%- liquid
