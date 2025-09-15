@@ -11,7 +11,6 @@
         display: block;
       }
     }
-
     @media screen and (min-width: 750px) {
       #Banner-{{ section.id }}::before,
       #Banner-{{ section.id }} .banner__media::before {
@@ -24,46 +23,32 @@
 {%- endif -%}
 
 {%- style -%}
+  #Banner-{{ section.id }} { position: relative; } /* 让绝对定位的认证块以 Banner 为参照 */
   #Banner-{{ section.id }}::after {
     opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
   }
-{%- endstyle -%}
-{%- style -%}
-/* === 仅作用于这个 Banner 与这个 buttons block（移动端修正）=== */
-@media screen and (max-width: 989px){
-  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK{
-    /* 仍保持上下排列，但让容器内元素在横向居中 */
-    display: flex;
-    flex-direction: column !important;
-    align-items: center !important;     /* 关键：从原来的 flex-start 改为 center */
-    justify-content: flex-start;
-    width: 100%;
-  }
-  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK .button{
-    /* 390px，窄屏不溢出，同时居中 */
-    padding: 9px 19px !important;
-    box-sizing: border-box;
-    margin-inline: auto !important;     /* 关键：按钮自身也水平居中 */
-  }
-}
 
-/* === PC 端保持横向左对齐（若已设置可忽略）=== */
-@media screen and (min-width: 990px){
-  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK{
-    display: flex;
-    flex-direction: row !important;
-    justify-content: flex-start !important; /* 左对齐 */
+  /* 认证信息块基础样式（覆盖在图片上） */
+  #Banner-{{ section.id }} .cert-overlay{
+    position: absolute;
+    z-index: 4;
+    pointer-events: auto;
+    max-width: 92vw; /* 移动端防溢出 */
+  }
+  #Banner-{{ section.id }} .cert-chip{
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    flex-wrap: nowrap;
-  }
-  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK .button{
-    width: 300px !important;
-    height: 46px !important;
-    padding: 9px 19px !important;
+    justify-content: center;
     box-sizing: border-box;
+    text-decoration: none;
+    white-space: nowrap;
   }
-}
+  #Banner-{{ section.id }} .cert-chip--shadow{
+    box-shadow: 0 10px 24px rgba(0,0,0,.18);
+  }
+  @media screen and (max-width: 749px){
+    #Banner-{{ section.id }} .cert-hide-mobile{ display: none !important; }
+  }
 {%- endstyle -%}
 
 {%- liquid
@@ -82,6 +67,7 @@
     assign half_width = '50vw'
     assign stacked_sizes = '(min-width: 750px) 50vw, 100vw'
   endif
+
   assign fetch_priority = 'auto'
   if section.index == 1
     assign fetch_priority = 'high'
@@ -154,15 +140,49 @@
     </div>
   {%- endif -%}
 
+  {%- comment -%}
+    认证信息块：直接压在图片上（不进入 banner__box）。
+    默认右下角；支持右/下偏移、样式与移动端显示开关。
+  {%- endcomment -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'cert_info' -%}
+      <div
+        class="cert-overlay {% unless block.settings.show_on_mobile %}cert-hide-mobile{% endunless %} {% if settings.animations_reveal_on_scroll %}scroll-trigger animate--fade-in{% endif %} cert-{{ block.id }}"
+        style="right: {{ block.settings.offset_right }}px; bottom: {{ block.settings.offset_bottom }}px;"
+        {{ block.shopify_attributes }}
+      >
+       {%- capture chip_styles -%}
+background: {{ block.settings.bg_color }};
+color: {{ block.settings.text_color }};
+font-size: {{ block.settings.font_size }}px;
+border-radius: {{ block.settings.border_radius }}px;
+padding: {{ block.settings.pad_y }}px {{ block.settings.pad_x }}px;
+{%- endcapture -%}
+
+
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}"
+             class="cert-chip {% if block.settings.use_shadow %}cert-chip--shadow{% endif %}"
+             {% if block.settings.new_tab %} target="_blank" rel="noopener" {% endif %}
+             style="{{ chip_styles }}">
+            {{ block.settings.label | escape }}
+          </a>
+        {%- else -%}
+          <div class="cert-chip {% if block.settings.use_shadow %}cert-chip--shadow{% endif %}" style="{{ chip_styles }}">
+            {{ block.settings.label | escape }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+
   <div class="banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
+
           {%- when 'heading' -%}
-            <h2
-              class="banner__heading inline-richtext {{ block.settings.heading_size }}"
-              {{ block.shopify_attributes }}
-            >
+            <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
               {{ block.settings.heading }}
             </h2>
 
@@ -172,9 +192,13 @@
             </div>
 
           {%- when 'buttons' -%}
-            {%- comment -%} PC 横向左对齐；移动端上下排列。两按钮独立控制：字体大小/颜色、圆角、背景色；PC/移动端尺寸。 {%- endcomment -%}
+            {%- comment -%}
+              PC：横向左对齐，尺寸 300×46
+              移动端：上下排列且居中，视觉 390×46（窄屏不溢出）
+              两个按钮分别可控：字体大小/颜色、圆角、背景色
+            {%- endcomment -%}
             {%- style -%}
-              /* —— 每个按钮的文字/圆角/背景（作用域仅此 block） —— */
+              /* 按钮1/2 文本/圆角/背景（当前 block 作用域） */
               #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1,
               #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:hover,
               #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:focus{
@@ -194,34 +218,41 @@
                 border-color: {{ block.settings.btn2_bg_color }};
               }
 
-              /* —— 默认（移动端）上下排列，左对齐 —— */
+              /* 移动端：上下排列 + 居中 */
               #Banner-{{ section.id }} .buttons-{{ block.id }}{
                 display: flex;
-                flex-direction: column;     /* 上下排列 */
-                align-items: flex-start;    /* 左对齐 */
+                flex-direction: column;
+                align-items: center;
                 justify-content: flex-start;
                 gap: 10px;
+                width: 100%;
+                text-align: center;
               }
               @media screen and (max-width: 989px){
                 #Banner-{{ section.id }} .buttons-{{ block.id }} .button{
                   display: flex !important;
                   justify-content: center;
                   align-items: center;
+                  width: min(390px, 92vw) !important;
+                  height: 46px !important;
                   padding: 9px 19px !important;
                   gap: 10px;
                   flex-shrink: 0;
                   box-sizing: border-box;
+                  margin-left: auto !important;
+                  margin-right: auto !important;
                 }
               }
 
-              /* —— PC 端（≥990px）横向排列，左对齐 —— */
+              /* PC：横向左对齐 */
               @media screen and (min-width: 990px){
                 #Banner-{{ section.id }} .buttons-{{ block.id }}{
-                  flex-direction: row !important;     /* 横向 */
+                  flex-direction: row !important;
                   align-items: center;
-                  justify-content: flex-start !important; /* 左对齐 */
+                  justify-content: flex-start !important;
                   gap: 10px;
                   flex-wrap: nowrap;
+                  text-align: left;
                 }
                 #Banner-{{ section.id }} .buttons-{{ block.id }} .button{
                   display: flex !important;
@@ -232,26 +263,17 @@
                   align-items: center;
                   gap: 10px;
                   flex-shrink: 0;
-                  box-sizing: border-box; /* 确保总宽 300px */
+                  box-sizing: border-box;
                 }
               }
-
-              /* 防止主题样式令按钮占满一行 */
-              #Banner-{{ section.id }} .buttons-{{ block.id }} .button{ width: auto; }
             {%- endstyle -%}
 
-            <div
-              class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %} buttons-{{ block.id }}"
-              {{ block.shopify_attributes }}
-            >
+            <div class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %} buttons-{{ block.id }}" {{ block.shopify_attributes }}>
               {%- if block.settings.button_label_1 != blank -%}
                 <a
-                  {% if block.settings.button_link_1 == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ block.settings.button_link_1 }}"
-                  {% endif %}
+                  {% if block.settings.button_link_1 == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link_1 }}"{% endif %}
                   class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %} btn-1"
+                  style="background: {{ block.settings.btn1_bg_color }}; background-color: {{ block.settings.btn1_bg_color }}; color: {{ block.settings.btn1_text_color }}; border-color: {{ block.settings.btn1_bg_color }}; border-radius: {{ block.settings.btn1_radius }}px;"
                 >
                   {{- block.settings.button_label_1 | escape -}}
                 </a>
@@ -259,17 +281,15 @@
 
               {%- if block.settings.button_label_2 != blank -%}
                 <a
-                  {% if block.settings.button_link_2 == blank %}
-                    role="link" aria-disabled="true"
-                  {% else %}
-                    href="{{ block.settings.button_link_2 }}"
-                  {% endif %}
+                  {% if block.settings.button_link_2 == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link_2 }}"{% endif %}
                   class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %} btn-2"
+                  style="background: {{ block.settings.btn2_bg_color }}; background-color: {{ block.settings.btn2_bg_color }}; color: {{ block.settings.btn2_text_color }}; border-color: {{ block.settings.btn2_bg_color }}; border-radius: {{ block.settings.btn2_radius }}px;"
                 >
                   {{- block.settings.button_label_2 | escape -}}
                 </a>
               {%- endif -%}
             </div>
+
         {%- endcase -%}
       {%- endfor -%}
     </div>
@@ -390,10 +410,10 @@
       "limit": 1,
       "settings": [
         { "type": "text", "id": "button_label_1", "default": "Button label", "label": "t:sections.image-banner.blocks.buttons.settings.button_label_1.label", "info": "t:sections.image-banner.blocks.buttons.settings.button_label_1.info" },
-        { "type": "url", "id": "button_link_1", "label": "t:sections.image-banner.blocks.buttons.settings.button_link_1.label" },
+        { "type": "url",  "id": "button_link_1", "label": "t:sections.image-banner.blocks.buttons.settings.button_link_1.label" },
         { "type": "checkbox", "id": "button_style_secondary_1", "default": false, "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_1.label" },
         { "type": "text", "id": "button_label_2", "default": "Button label", "label": "t:sections.image-banner.blocks.buttons.settings.button_label_2.label", "info": "t:sections.image-banner.blocks.buttons.settings.button_label_2.info" },
-        { "type": "url", "id": "button_link_2", "label": "t:sections.image-banner.blocks.buttons.settings.button_link_2.label" },
+        { "type": "url",  "id": "button_link_2", "label": "t:sections.image-banner.blocks.buttons.settings.button_link_2.label" },
         { "type": "checkbox", "id": "button_style_secondary_2", "default": false, "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_2.label" },
 
         { "type": "header", "content": "按钮1样式" },
@@ -408,10 +428,44 @@
         { "type": "range", "id": "btn2_radius", "label": "按钮2 圆角（px）", "min": 0, "max": 40, "step": 2, "default": 12 },
         { "type": "color", "id": "btn2_bg_color", "label": "按钮2 背景色", "default": "#111111" }
       ]
+    },
+
+    {
+      "type": "cert_info",
+      "name": "认证信息（覆盖在图片上）",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "label", "label": "认证文字", "default": "认证信息" },
+        { "type": "url",  "id": "link",  "label": "可选：链接" },
+        { "type": "checkbox", "id": "new_tab", "label": "新窗口打开", "default": true },
+
+        { "type": "header", "content": "样式" },
+        { "type": "color", "id": "bg_color", "label": "背景色", "default": "#111111" },
+        { "type": "color", "id": "text_color", "label": "文字颜色", "default": "#ffffff" },
+        { "type": "range", "id": "font_size", "label": "字体大小（px）", "min": 12, "max": 28, "step": 1, "default": 16 },
+        { "type": "range", "id": "border_radius", "label": "圆角（px）", "min": 0, "max": 32, "step": 2, "default": 12 },
+        { "type": "range", "id": "pad_x", "label": "左右内边距（px）", "min": 6, "max": 32, "step": 2, "default": 16 },
+        { "type": "range", "id": "pad_y", "label": "上下内边距（px）", "min": 4, "max": 24, "step": 2, "default": 10 },
+        { "type": "checkbox", "id": "use_shadow", "label": "启用阴影", "default": true },
+
+        { "type": "header", "content": "位置（默认右下角）" },
+        { "type": "range", "id": "offset_right", "label": "距右侧偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
+        { "type": "range", "id": "offset_bottom", "label": "距底部偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
+
+        { "type": "checkbox", "id": "show_on_mobile", "label": "在手机端显示", "default": true }
+      ]
     }
   ],
   "presets": [
-    { "name": "t:sections.image-banner.presets.name", "blocks": [ { "type": "heading" }, { "type": "text" }, { "type": "buttons" } ] }
+    {
+      "name": "t:sections.image-banner.presets.name",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "buttons" },
+        { "type": "cert_info" }
+      ]
+    }
   ]
 }
 {% endschema %}
