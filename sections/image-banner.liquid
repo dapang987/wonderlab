@@ -172,7 +172,9 @@
                   class="btn-300x46 button banner-btn-{{ block.id }} btn-1{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
                   style="
                     {%- if block.settings.button_bg_1   != blank -%}background-color: {{ block.settings.button_bg_1 }}; border-color: {{ block.settings.button_bg_1 }};{%- endif -%}
-                    {%- if block.settings.button_text_1 != blank -%}color: {{ block.settings.button_text_1 }};{%- endif -%}
+                    {%- if block.settings.button_text_1 != blank -%}color: {{ block.settings.button_text_1 }};
+                       border-radius: {{ block.settings.button_radius | default: 6 }}px;
+                    {%- endif -%}
                   "
                 >{{ block.settings.button_label_1 | escape }}</a>
               {%- endif -%}
