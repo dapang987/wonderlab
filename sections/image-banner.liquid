@@ -24,112 +24,60 @@
 {%- endif -%}
 
 {%- style -%}
-  #Banner-{{ section.id }}::after { opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }}; }
-
-  /* ===== Custom additions ===== */
-
-  /* Make banner a positioning context for overlay button(s) */
-  #Banner-{{ section.id }}{ position: relative; }
-
-  /* Fixed 300x46 helper (for regular buttons if you want it) */
-  .btn-300x46{
-    display:flex; width:300px; height:46px; padding:9px 19px;
-    justify-content:center; align-items:center; gap:10px; flex-shrink:0; box-sizing:border-box;
+  #Banner-{{ section.id }}::after {
+    opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
   }
-
-  /* Endorsement button wrap (absolute) */
-  #Banner-{{ section.id }} .endorsement-btn-wrap{
-    position:absolute; z-index:3;
-  }
-
-  /* Button itself (size, radius, font via CSS vars) */
-  #Banner-{{ section.id }} .endorsement-btn{
-    display:flex; justify-content:center; align-items:center; gap:10px;
-    width:var(--w,300px); height:var(--h,46px);
-    padding:var(--py,10px) var(--px,20px);
-    border-radius:var(--r,6px);
-    font-size:var(--fs,14px);
-    line-height:1; text-decoration:none;
-    border:1px solid transparent; box-sizing:border-box;
-  }
-  #Banner-{{ section.id }} .endorsement-btn--secondary{ background:transparent; border-color:currentColor; }
-
-  /* Desktop anchors */
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-top-left    { top:var(--y,20px); left:var(--x,20px); }
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-top-center  { top:var(--y,20px); left:50%; transform:translateX(-50%); }
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-top-right   { top:var(--y,20px); right:var(--x,20px); }
-
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-middle-left   { top:50%; left:var(--x,20px); transform:translateY(-50%); }
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-middle-center { top:50%; left:50%; transform:translate(-50%,-50%); }
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-middle-right  { top:50%; right:var(--x,20px); transform:translateY(-50%); }
-
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-bottom-left   { bottom:var(--y,20px); left:var(--x,20px); }
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-bottom-center { bottom:var(--y,20px); left:50%; transform:translateX(-50%); }
-  #Banner-{{ section.id }} .endorsement-btn-wrap.is-bottom-right  { bottom:var(--y,20px); right:var(--x,20px); }
-
-  /* Mobile overrides */
-  @media (max-width: 749px){
-    #Banner-{{ section.id }} .endorsement-btn-wrap.hide-mobile{ display:none !important; }
-
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-top-left    { top:var(--ym,20px); left:var(--xm,20px); right:auto; bottom:auto; transform:none; }
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-top-center  { top:var(--ym,20px); left:50%; right:auto; bottom:auto; transform:translateX(-50%); }
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-top-right   { top:var(--ym,20px); right:var(--xm,20px); left:auto; bottom:auto; transform:none; }
-
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-middle-left   { top:50%; left:var(--xm,20px); right:auto; bottom:auto; transform:translateY(-50%); }
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-middle-center { top:50%; left:50%; right:auto; bottom:auto; transform:translate(-50%,-50%); }
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-middle-right  { top:50%; right:var(--xm,20px); left:auto; bottom:auto; transform:translateY(-50%); }
-
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-bottom-left   { bottom:var(--ym,20px); left:var(--xm,20px); top:auto; right:auto; transform:none; }
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-bottom-center { bottom:var(--ym,20px); left:50%; top:auto; right:auto; transform:translateX(-50%); }
-    #Banner-{{ section.id }} .endorsement-btn-wrap.ism-bottom-right  { bottom:var(--ym,20px); right:var(--xm,20px); top:auto; left:auto; transform:none; }
-  }
-  /* 让两个按钮同一行对齐，避免 baseline 造成“掉下去” */
-.banner__box .banner-buttons{
-  display: flex;
-  align-items: flex-start;  /* 两个按钮顶边对齐；要中线对齐改为 center */
-  gap: 12px;                /* 两按钮间距 */
-  flex-wrap: wrap;          /* 小屏换行 */
-}
-
-/* 规范按钮内部的垂直居中，避免行高差异 */
-.banner__box .banner-buttons .button{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;          /* 去掉不同字体行高对齐偏差 */
-  box-sizing: border-box;
-}
-
-/* 你的固定尺寸按钮 */
-.banner__box .banner-buttons .btn-300x46{
-  width: 300px;
-  height: 46px;
-  padding: 9px 19px;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
 {%- endstyle -%}
-{%- style -%}
-/* 让绝对定位有参照物 */
-#Banner-{{ section.id }}{ position: relative; }
 
-/* 手机端：按钮压在图片上（右下角） */
-@media (max-width: 749px){
-  #Banner-{{ section.id }} .endorsement-btn{
-    position: absolute;
-    right: 16px;          /* 调整水平位置 */
-    bottom: 16px;         /* 调整垂直位置 */
-    z-index: 5;           /* 确保盖在图片和遮罩之上 */
-    transform: none;      /* 防止被其它动画/样式影响 */
-  }
+{%- style -%}
+/* ===== Custom: fixed-size button + alignment & overlay support ===== */
+#Banner-{{ section.id }}{
+  position: relative; /* 作为覆盖按钮定位参照 */
 }
 
-/* 桌面端：恢复正常文档流位置（如果你希望桌面不覆盖） */
-@media (min-width: 750px){
-  #Banner-{{ section.id }} .endorsement-btn{
-    position: static;
-  }
+/* 固定 300×46 按钮尺寸（全局生效） */
+.btn-300x46{
+  display:flex;
+  width:300px;
+  height:46px;
+  padding:9px 19px;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+  box-sizing:border-box;
+}
+
+/* 多按钮容器：控制间距与换行 */
+.banner-buttons{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+/* 让文案/按钮与 header 的 page-width 左对齐：移除 box 左右内边距 */
+#Banner-{{ section.id }} .banner__box{
+  padding-left:0;
+  padding-right:0;
+}
+
+/* 覆盖按钮基础样式（位置由每个 block 注入的 <style> 控制） */
+#Banner-{{ section.id }} .endorsement-btn{
+  position:absolute;
+  z-index:5;
+  pointer-events:auto;
+  white-space:nowrap;
+  box-sizing:border-box;
+  max-width: calc(100vw - 20px); /* 防止手机端越界 */
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* 保证在 Dawn 的按钮基础类上不被压缩 */
+#Banner-{{ section.id }} .endorsement-btn.button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
 }
 {%- endstyle -%}
 
@@ -221,35 +169,77 @@
     </div>
   {%- endif -%}
 
-  {%- comment -%} Render overlay endorsement button blocks (absolute on banner) {%- endcomment -%}
+  {%- comment -%}
+    ==== Overlay Endorsement Button(s) ====
+    单独循环渲染，保证压在图片上，不受 .banner__box 流式布局影响
+  {%- endcomment -%}
   {%- for block in section.blocks -%}
     {%- if block.type == 'endorsement_button' -%}
-      <div
-        class="endorsement-btn-wrap is-{{ block.settings.anchor }} ism-{{ block.settings.anchor_mobile }}{% if block.settings.hide_on_mobile %} hide-mobile{% endif %}"
-        style="
-          --w:  {{ block.settings.width  | default: 300 }}px;
-          --h:  {{ block.settings.height | default: 46  }}px;
-          --px: {{ block.settings.pad_x  | default: 20  }}px;
-          --py: {{ block.settings.pad_y  | default: 10  }}px;
-          --r:  {{ block.settings.radius | default: 6   }}px;
-          --fs: {{ block.settings.font_size | default: 14 }}px;
+      {%- liquid
+        assign anchor = block.settings.anchor
+        assign ax = block.settings.offset_x | default: 24
+        assign ay = block.settings.offset_y | default: 24
 
-          --x:  {{ block.settings.offset_x        | default: 20 }}px;
-          --y:  {{ block.settings.offset_y        | default: 20 }}px;
-          --xm: {{ block.settings.offset_x_mobile | default: 20 }}px;
-          --ym: {{ block.settings.offset_y_mobile | default: 20 }}px;
-        "
+        assign anchor_m = block.settings.anchor_mobile
+        assign axm = block.settings.offset_x_mobile | default: 24
+        assign aym = block.settings.offset_y_mobile | default: 24
+      -%}
+
+      {%- capture pos_desktop -%}
+        {%- case anchor -%}
+          {%- when 'top-left' -%}top:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
+          {%- when 'top-center' -%}top:{{ ay }}px;left:50%;transform:translate(-50%,0);
+          {%- when 'top-right' -%}top:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
+          {%- when 'middle-left' -%}top:50%;left:{{ ax }}px;transform:translate(0,-50%);
+          {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
+          {%- when 'middle-right' -%}top:50%;right:{{ ax }}px;transform:translate(0,-50%);
+          {%- when 'bottom-left' -%}bottom:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
+          {%- when 'bottom-center' -%}bottom:{{ ay }}px;left:50%;transform:translate(-50%,0);
+          {%- else -%}bottom:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
+        {%- endcase -%}
+      {%- endcapture -%}
+
+      {%- capture pos_mobile -%}
+        {%- case anchor_m -%}
+          {%- when 'top-left' -%}top:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
+          {%- when 'top-center' -%}top:{{ aym }}px;left:50%;transform:translate(-50%,0);
+          {%- when 'top-right' -%}top:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
+          {%- when 'middle-left' -%}top:50%;left:{{ axm }}px;transform:translate(0,-50%);
+          {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
+          {%- when 'middle-right' -%}top:50%;right:{{ axm }}px;transform:translate(0,-50%);
+          {%- when 'bottom-left' -%}bottom:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
+          {%- when 'bottom-center' -%}bottom:{{ aym }}px;left:50%;transform:translate(-50%,0);
+          {%- else -%}bottom:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
+        {%- endcase -%}
+      {%- endcapture -%}
+
+      <style>
+        /* 每个区块生成独立定位样式（桌面/手机） */
+        @media (min-width: 750px){
+          #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{ {{ pos_desktop | strip }} }
+        }
+        @media (max-width: 749px){
+          #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{
+            {{ pos_mobile | strip }}
+            {%- if block.settings.hide_on_mobile -%} display:none; {%- endif -%}
+          }
+        }
+      </style>
+
+      <a
         {{ block.shopify_attributes }}
+        href="{{ block.settings.link | default: '#' }}"
+        class="endorsement-btn endorsement-btn--{{ block.id }} button{% if block.settings.use_secondary %} button--secondary{% else %} button--primary{% endif %}"
+        style="
+          {%- if block.settings.bg   != blank -%}background-color: {{ block.settings.bg }}; border-color: {{ block.settings.bg }};{%- endif -%}
+          {%- if block.settings.text != blank -%}color: {{ block.settings.text }};{%- endif -%}
+          font-size: {{ block.settings.font_size | default: 14 }}px;
+          padding: {{ block.settings.pad_y | default: 9 }}px {{ block.settings.pad_x | default: 19 }}px;
+          border-radius: {{ block.settings.radius | default: 6 }}px;
+        "
       >
-        <a
-          href="{{ block.settings.link | default: '#' }}"
-          class="endorsement-btn button{% if block.settings.use_secondary %} endorsement-btn--secondary button--secondary{% else %} button--primary{% endif %}"
-          style="
-            {%- if block.settings.bg   != blank -%}background-color: {{ block.settings.bg }}; border-color: {{ block.settings.bg }};{%- endif -%}
-            {%- if block.settings.text != blank -%}color: {{ block.settings.text }};{%- endif -%}
-          "
-        >{{ block.settings.label | escape }}</a>
-      </div>
+        {{ block.settings.label | default: 'ENDORSED' }}
+      </a>
     {%- endif -%}
   {%- endfor -%}
 
@@ -258,7 +248,12 @@
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when 'heading' -%}
-            <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>{{ block.settings.heading }}</h2>
+            <h2
+              class="banner__heading inline-richtext {{ block.settings.heading_size }}"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.heading }}
+            </h2>
 
           {%- when 'text' -%}
             <div class="banner__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
@@ -270,10 +265,11 @@
               {%- if block.settings.button_label_1 != blank -%}
                 <a
                   href="{{ block.settings.button_link_1 | default: '#' }}"
-                  class="btn-300x46 button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
+                  class="btn-300x46 button banner-btn-{{ block.id }} btn-1{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
                   style="
                     {%- if block.settings.button_bg_1   != blank -%}background-color: {{ block.settings.button_bg_1 }}; border-color: {{ block.settings.button_bg_1 }};{%- endif -%}
                     {%- if block.settings.button_text_1 != blank -%}color: {{ block.settings.button_text_1 }};{%- endif -%}
+                    border-radius: {{ block.settings.button_radius | default: 6 }}px;
                   "
                 >{{ block.settings.button_label_1 | escape }}</a>
               {%- endif -%}
@@ -281,10 +277,11 @@
               {%- if block.settings.button_label_2 != blank -%}
                 <a
                   href="{{ block.settings.button_link_2 | default: '#' }}"
-                  class="btn-300x46 button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
+                  class="button btn-300x46 banner-btn-{{ block.id }} btn-2{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %}"
                   style="
                     {%- if block.settings.button_bg_2   != blank -%}background-color: {{ block.settings.button_bg_2 }}; border-color: {{ block.settings.button_bg_2 }};{%- endif -%}
                     {%- if block.settings.button_text_2 != blank -%}color: {{ block.settings.button_text_2 }};{%- endif -%}
+                    border-radius: {{ block.settings.button_radius | default: 6 }}px;
                   "
                 >{{ block.settings.button_label_2 | escape }}</a>
               {%- endif -%}
@@ -304,10 +301,13 @@
   "settings": [
     { "type": "image_picker", "id": "image",  "label": "t:sections.image-banner.settings.image.label" },
     { "type": "image_picker", "id": "image_2","label": "t:sections.image-banner.settings.image_2.label" },
-
-    { "type": "range", "id": "image_overlay_opacity", "min": 0, "max": 100, "step": 10, "unit": "%", "label": "t:sections.image-banner.settings.image_overlay_opacity.label", "default": 0 },
-
-    { "type": "select", "id": "image_height", "options": [
+    {
+      "type": "range", "id": "image_overlay_opacity", "min": 0, "max": 100, "step": 10, "unit": "%",
+      "label": "t:sections.image-banner.settings.image_overlay_opacity.label", "default": 0
+    },
+    {
+      "type": "select", "id": "image_height",
+      "options": [
         { "value": "adapt",  "label": "t:sections.image-banner.settings.image_height.options__1.label" },
         { "value": "small",  "label": "t:sections.image-banner.settings.image_height.options__2.label" },
         { "value": "medium", "label": "t:sections.image-banner.settings.image_height.options__3.label" },
@@ -317,8 +317,9 @@
       "label": "t:sections.image-banner.settings.image_height.label",
       "info": "t:sections.image-banner.settings.image_height.info"
     },
-
-    { "type": "select", "id": "desktop_content_position", "options": [
+    {
+      "type": "select", "id": "desktop_content_position",
+      "options": [
         { "value": "top-left",     "label": "t:sections.image-banner.settings.desktop_content_position.options__1.label" },
         { "value": "top-center",   "label": "t:sections.image-banner.settings.desktop_content_position.options__2.label" },
         { "value": "top-right",    "label": "t:sections.image-banner.settings.desktop_content_position.options__3.label" },
@@ -332,10 +333,10 @@
       "default": "middle-center",
       "label": "t:sections.image-banner.settings.desktop_content_position.label"
     },
-
     { "type": "checkbox", "id": "show_text_box", "default": true, "label": "t:sections.image-banner.settings.show_text_box.label" },
-
-    { "type": "select", "id": "desktop_content_alignment", "options": [
+    {
+      "type": "select", "id": "desktop_content_alignment",
+      "options": [
         { "value": "left",   "label": "t:sections.image-banner.settings.desktop_content_alignment.options__1.label" },
         { "value": "center", "label": "t:sections.image-banner.settings.desktop_content_alignment.options__2.label" },
         { "value": "right",  "label": "t:sections.image-banner.settings.desktop_content_alignment.options__3.label" }
@@ -343,9 +344,10 @@
       "default": "center",
       "label": "t:sections.image-banner.settings.desktop_content_alignment.label"
     },
-
     { "type": "header", "content": "t:sections.all.animation.content" },
-    { "type": "select", "id": "image_behavior", "options": [
+    {
+      "type": "select", "id": "image_behavior",
+      "options": [
         { "value": "none",    "label": "t:sections.all.animation.image_behavior.options__1.label" },
         { "value": "ambient", "label": "t:sections.all.animation.image_behavior.options__2.label" },
         { "value": "fixed",   "label": "t:sections.all.animation.image_behavior.options__3.label" },
@@ -354,9 +356,10 @@
       "default": "none",
       "label": "t:sections.all.animation.image_behavior.label"
     },
-
     { "type": "header", "content": "t:sections.image-banner.settings.mobile.content" },
-    { "type": "select", "id": "mobile_content_alignment", "options": [
+    {
+      "type": "select", "id": "mobile_content_alignment",
+      "options": [
         { "value": "left",   "label": "t:sections.image-banner.settings.mobile_content_alignment.options__1.label" },
         { "value": "center", "label": "t:sections.image-banner.settings.mobile_content_alignment.options__2.label" },
         { "value": "right",  "label": "t:sections.image-banner.settings.mobile_content_alignment.options__3.label" }
@@ -364,11 +367,9 @@
       "default": "center",
       "label": "t:sections.image-banner.settings.mobile_content_alignment.label"
     },
-
     { "type": "checkbox", "id": "stack_images_on_mobile", "default": true, "label": "t:sections.image-banner.settings.stack_images_on_mobile.label" },
     { "type": "checkbox", "id": "show_text_below",        "default": true, "label": "t:sections.image-banner.settings.show_text_below.label" }
   ],
-
   "blocks": [
     {
       "type": "heading",
@@ -376,7 +377,9 @@
       "limit": 5,
       "settings": [
         { "type": "inline_richtext", "id": "heading", "default": "Image banner", "label": "t:sections.image-banner.blocks.heading.settings.heading.label" },
-        { "type": "select", "id": "heading_size", "options": [
+        {
+          "type": "select", "id": "heading_size",
+          "options": [
             { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
             { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
             { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" }
@@ -386,6 +389,64 @@
         }
       ]
     },
+    {
+      "type": "endorsement_button",
+      "name": "Endorsement button",
+      "limit": 1,
+      "settings": [
+        { "type": "text",     "id": "label",         "label": "Text", "default": "ENDORSED" },
+        { "type": "url",      "id": "link",          "label": "Link" },
+        { "type": "checkbox", "id": "use_secondary", "label": "Use secondary style", "default": false },
+
+        { "type": "color", "id": "bg",   "label": "Background color" },
+        { "type": "color", "id": "text", "label": "Text color" },
+
+        { "type": "range", "id": "font_size", "label": "Font size", "min": 10, "max": 36, "step": 1, "unit": "px", "default": 14 },
+
+        { "type": "header", "content": "Size" },
+        { "type": "range", "id": "pad_x",  "label": "Padding X", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 19 },
+        { "type": "range", "id": "pad_y",  "label": "Padding Y", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 9 },
+        { "type": "range", "id": "radius", "label": "Border radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 6 },
+
+        { "type": "header", "content": "Desktop position" },
+        {
+          "type": "select", "id": "anchor", "label": "Anchor (desktop)", "default": "bottom-right",
+          "options": [
+            { "value": "top-left", "label": "Top left" },
+            { "value": "top-center", "label": "Top center" },
+            { "value": "top-right", "label": "Top right" },
+            { "value": "middle-left", "label": "Middle left" },
+            { "value": "middle-center", "label": "Middle center" },
+            { "value": "middle-right", "label": "Middle right" },
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "bottom-center", "label": "Bottom center" },
+            { "value": "bottom-right", "label": "Bottom right" }
+          ]
+        },
+        { "type": "range", "id": "offset_x", "label": "Horizontal offset (desktop)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+        { "type": "range", "id": "offset_y", "label": "Vertical offset (desktop)",   "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+
+        { "type": "header", "content": "Mobile position" },
+        {
+          "type": "select", "id": "anchor_mobile", "label": "Anchor (mobile)", "default": "bottom-right",
+          "options": [
+            { "value": "top-left", "label": "Top left" },
+            { "value": "top-center", "label": "Top center" },
+            { "value": "top-right", "label": "Top right" },
+            { "value": "middle-left", "label": "Middle left" },
+            { "value": "middle-center", "label": "Middle center" },
+            { "value": "middle-right", "label": "Middle right" },
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "bottom-center", "label": "Bottom center" },
+            { "value": "bottom-right", "label": "Bottom right" }
+          ]
+        },
+        { "type": "range", "id": "offset_x_mobile", "label": "Horizontal offset (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+        { "type": "range", "id": "offset_y_mobile", "label": "Vertical offset (mobile)",   "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+
+        { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile (<750px)", "default": false }
+      ]
+    },
 
     {
       "type": "text",
@@ -393,17 +454,18 @@
       "limit": 5,
       "settings": [
         { "type": "inline_richtext", "id": "text", "default": "Give customers details about the banner image(s) or content on the template.", "label": "t:sections.image-banner.blocks.text.settings.text.label" },
-        { "type": "select", "id": "text_style", "options": [
-            { "value": "body",  "label": "t:sections.image-banner.blocks.text.settings.text_style.options__1.label" },
-            { "value": "subtitle", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__2.label" },
-            { "value": "caption-with-letter-spacing", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label" }
+        {
+          "type": "select", "id": "text_style",
+          "options": [
+            { "value": "body",                         "label": "t:sections.image-banner.blocks.text.settings.text_style.options__1.label" },
+            { "value": "subtitle",                     "label": "t:sections.image-banner.blocks.text.settings.text_style.options__2.label" },
+            { "value": "caption-with-letter-spacing",  "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label" }
           ],
           "default": "body",
           "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
         }
       ]
     },
-
     {
       "type": "buttons",
       "name": "t:sections.image-banner.blocks.buttons.name",
@@ -412,82 +474,34 @@
         { "type": "text", "id": "button_label_1", "default": "Button label", "label": "t:sections.image-banner.blocks.buttons.settings.button_label_1.label", "info": "t:sections.image-banner.blocks.buttons.settings.button_label_1.info" },
         { "type": "url",  "id": "button_link_1",  "label": "t:sections.image-banner.blocks.buttons.settings.button_link_1.label" },
         { "type": "checkbox", "id": "button_style_secondary_1", "default": false, "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_1.label" },
-
         { "type": "color", "id": "button_bg_1",   "label": "Button 1 background" },
         { "type": "color", "id": "button_text_1", "label": "Button 1 text color" },
 
         { "type": "text", "id": "button_label_2", "default": "Button label", "label": "t:sections.image-banner.blocks.buttons.settings.button_label_2.label", "info": "t:sections.image-banner.blocks.buttons.settings.button_label_2.info" },
         { "type": "url",  "id": "button_link_2",  "label": "t:sections.image-banner.blocks.buttons.settings.button_link_2.label" },
         { "type": "checkbox", "id": "button_style_secondary_2", "default": false, "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_2.label" },
-
         { "type": "color", "id": "button_bg_2",   "label": "Button 2 background" },
-        { "type": "color", "id": "button_text_2", "label": "Button 2 text color" }
-      ]
-    },
-
-    {
-      "type": "endorsement_button",
-      "name": "Endorsement button",
-      "limit": 3,
-      "settings": [
-        { "type": "text", "id": "label", "label": "Text", "default": "ENDORSED" },
-        { "type": "url",  "id": "link",  "label": "Link" },
-        { "type": "checkbox", "id": "use_secondary", "label": "Use secondary style (outlined)", "default": false },
-
-        { "type": "header", "content": "Colors" },
-        { "type": "color", "id": "bg",   "label": "Background color" },
-        { "type": "color", "id": "text", "label": "Text color" },
-
-        { "type": "header", "content": "Size & typography" },
-        { "type": "range", "id": "width",  "label": "Width (px)",  "min": 120, "max": 480, "step": 4,  "default": 300 },
-        { "type": "range", "id": "height", "label": "Height (px)", "min":  32, "max":  80, "step": 2,  "default": 46 },
-        { "type": "range", "id": "pad_x",  "label": "Padding X (px)", "min": 0, "max": 40, "step": 1, "default": 1 },
-        { "type": "range", "id": "pad_y",  "label": "Padding Y (px)", "min": 0, "max": 24, "step": 1, "default": 1 },
-        { "type": "range", "id": "radius", "label": "Border radius (px)", "min": 0, "max": 32, "step": 1, "default": 6 },
-        { "type": "range", "id": "font_size", "label": "Font size (px)", "min": 10, "max": 24, "step": 1, "default": 14 },
-
-        { "type": "header", "content": "Position (desktop)" },
-        { "type": "select", "id": "anchor", "label": "Anchor", "default": "top-left", "options": [
-          { "value": "top-left", "label": "Top left" },
-          { "value": "top-center", "label": "Top center" },
-          { "value": "top-right", "label": "Top right" },
-          { "value": "middle-left", "label": "Middle left" },
-          { "value": "middle-center", "label": "Middle center" },
-          { "value": "middle-right", "label": "Middle right" },
-          { "value": "bottom-left", "label": "Bottom left" },
-          { "value": "bottom-center", "label": "Bottom center" },
-          { "value": "bottom-right", "label": "Bottom right" }
-        ]},
-        { "type": "range", "id": "offset_x", "label": "Offset X (px)", "min": 0, "max": 200, "step": 2, "default": 20 },
-        { "type": "range", "id": "offset_y", "label": "Offset Y (px)", "min": 0, "max": 200, "step": 2, "default": 20 },
-
-        { "type": "header", "content": "Position (mobile)" },
-        { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
-        { "type": "select", "id": "anchor_mobile", "label": "Anchor (mobile)", "default": "bottom-center", "options": [
-          { "value": "top-left", "label": "Top left" },
-          { "value": "top-center", "label": "Top center" },
-          { "value": "top-right", "label": "Top right" },
-          { "value": "middle-left", "label": "Middle left" },
-          { "value": "middle-center", "label": "Middle center" },
-          { "value": "middle-right", "label": "Middle right" },
-          { "value": "bottom-left", "label": "Bottom left" },
-          { "value": "bottom-center", "label": "Bottom center" },
-          { "value": "bottom-right", "label": "Bottom right" }
-        ]},
-        { "type": "range", "id": "offset_x_mobile", "label": "Offset X (px, mobile)", "min": 0, "max": 200, "step": 2, "default": 20 },
-        { "type": "range", "id": "offset_y_mobile", "label": "Offset Y (px, mobile)", "min": 0, "max": 200, "step": 2, "default": 20 }
+        { "type": "color", "id": "button_text_2", "label": "Button 2 text color" },
+        {
+          "type": "range",
+          "id": "button_radius",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "label": "Button corner radius",
+          "default": 6
+        }
       ]
     }
   ],
-
   "presets": [
     {
       "name": "t:sections.image-banner.presets.name",
       "blocks": [
         { "type": "heading" },
         { "type": "text" },
-        { "type": "buttons" },
-        { "type": "endorsement_button" }
+        { "type": "buttons" }
       ]
     }
   ]
