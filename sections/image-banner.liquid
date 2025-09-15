@@ -87,6 +87,7 @@
       {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
     </div>
   {%- endif -%}
+
   {%- if section.settings.image_2 != blank -%}
     <div class="banner__media media{% if section.settings.image != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
       {%- liquid
@@ -115,6 +116,7 @@
       }}
     </div>
   {%- endif -%}
+
   <div class="banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
       {%- for block in section.blocks -%}
@@ -126,89 +128,121 @@
             >
               {{ block.settings.heading }}
             </h2>
+
           {%- when 'text' -%}
             <div class="banner__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
               <p>{{ block.settings.text }}</p>
             </div>
-{%- when 'buttons' -%}
-  {%- comment -%} 两个按钮分别可控：字体大小/颜色、圆角、背景色 + PC/移动端尺寸 {%- endcomment -%}
-  {%- style -%}
-    /* ====== 公共：按钮1/按钮2的文字、圆角、背景 ====== */
-    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1,
-    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:hover,
-    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:focus {
-      font-size: {{ block.settings.btn1_font_size }}px;
-      color: {{ block.settings.btn1_text_color }};
-      border-radius: {{ block.settings.btn1_radius }}px;
-      background-color: {{ block.settings.btn1_bg_color }};
-      border-color: {{ block.settings.btn1_bg_color }};
-    }
-    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2,
-    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:hover,
-    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:focus {
-      font-size: {{ block.settings.btn2_font_size }}px;
-      color: {{ block.settings.btn2_text_color }};
-      border-radius: {{ block.settings.btn2_radius }}px;
-      background-color: {{ block.settings.btn2_bg_color }};
-      border-color: {{ block.settings.btn2_bg_color }};
-    }
 
-    /* ====== PC 端（≥990px）：300×46 ====== */
-    @media screen and (min-width: 990px){
-      #Banner-{{ section.id }} .buttons-{{ block.id }} .button {
-        display: flex !important;
-        width: 300px !important;
-        height: 46px !important;
-        padding: 9px 19px !important;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        flex-shrink: 0;
-        box-sizing: border-box; /* 宽度包含内边距，确保总宽300px */
-      }
-    }
+          {%- when 'buttons' -%}
+            {%- comment -%} 两个按钮分别可控：字体大小/颜色、圆角、背景色；PC/移动端尺寸；移动端横向滚动保持 390px 宽度 {%- endcomment -%}
+            {%- style -%}
+              /* 公共：按钮1/按钮2的文字、圆角、背景（作用域限定到本 block） */
+              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1,
+              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:hover,
+              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:focus {
+                font-size: {{ block.settings.btn1_font_size }}px;
+                color: {{ block.settings.btn1_text_color }};
+                border-radius: {{ block.settings.btn1_radius }}px;
+                background-color: {{ block.settings.btn1_bg_color }};
+                border-color: {{ block.settings.btn1_bg_color }};
+              }
+              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2,
+              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:hover,
+              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:focus {
+                font-size: {{ block.settings.btn2_font_size }}px;
+                color: {{ block.settings.btn2_text_color }};
+                border-radius: {{ block.settings.btn2_radius }}px;
+                background-color: {{ block.settings.btn2_bg_color }};
+                border-color: {{ block.settings.btn2_bg_color }};
+              }
 
-    /* ====== 移动端（<990px）：390×46 ====== */
-    @media screen and (max-width: 989px){
-      #Banner-{{ section.id }} .buttons-{{ block.id }} .button {
-        display: flex !important;
-        width: min(390px, 92vw) !important; /* 防溢出：窄屏时不会跑出屏幕 */
-        height: 46px !important;
-        padding: 9px 19px !important;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        flex-shrink: 0;
-        box-sizing: border-box;
-      }
-    }
-  {%- endstyle -%}
+              /* 强制横向排列（覆盖主题在窄屏可能的 column 布局） */
+              #Banner-{{ section.id }} .buttons-{{ block.id }}{
+                display: flex;
+                flex-direction: row !important;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+              }
 
-  <div
-    class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %} buttons-{{ block.id }}"
-    {{ block.shopify_attributes }}
-  >
-    {%- if block.settings.button_label_1 != blank -%}
-      <a
-        {% if block.settings.button_link_1 == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link_1 }}" {% endif %}
-        class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %} btn-1"
-      >
-        {{- block.settings.button_label_1 | escape -}}
-      </a>
-    {%- endif -%}
+              /* PC 端（≥990px）：300×46 */
+              @media screen and (min-width: 990px){
+                #Banner-{{ section.id }} .buttons-{{ block.id }}{
+                  flex-wrap: nowrap;
+                }
+                #Banner-{{ section.id }} .buttons-{{ block.id }} .button{
+                  display: flex !important;
+                  width: 300px !important;
+                  height: 46px !important;
+                  padding: 9px 19px !important;
+                  justify-content: center;
+                  align-items: center;
+                  gap: 10px;
+                  flex-shrink: 0;
+                  box-sizing: border-box; /* 保证总宽 300px */
+                }
+              }
 
-    {%- if block.settings.button_label_2 != blank -%}
-      <a
-        {% if block.settings.button_link_2 == blank %} role="link" aria-disabled="true" {% else %} href="{{ block.settings.button_link_2 }}" {% endif %}
-        class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %} btn-2"
-      >
-        {{- block.settings.button_label_2 | escape -}}
-      </a>
-    {%- endif -%}
-  </div>
+              /* 移动端（<990px）：保持 390×46，并排场景采用横向滑动 */
+              @media screen and (max-width: 989px){
+                #Banner-{{ section.id }} .buttons-{{ block.id }}{
+                  flex-wrap: nowrap !important;
+                  overflow-x: auto;
+                  -webkit-overflow-scrolling: touch;
+                  scroll-snap-type: x mandatory;
+                  padding-bottom: 6px; /* 给滚动条留空间 */
+                }
+                #Banner-{{ section.id }} .buttons-{{ block.id }} .button{
+                  display: flex !important;
+                  justify-content: center;
+                  align-items: center;
+                  width: 390px !important;
+                  height: 46px !important;
+                  padding: 9px 19px !important;
+                  gap: 10px;
+                  flex: 0 0 390px !important; /* 固定宽度不压缩 */
+                  box-sizing: border-box;
+                  scroll-snap-align: start;
+                }
+              }
 
+              /* 防止主题把按钮设为 100% 宽占满一行 */
+              #Banner-{{ section.id }} .buttons-{{ block.id }} .button{
+                width: auto;
+              }
+            {%- endstyle -%}
 
+            <div
+              class="banner__buttons{% if block.settings.button_label_1 != blank and block.settings.button_label_2 != blank %} banner__buttons--multiple{% endif %} buttons-{{ block.id }}"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.button_label_1 != blank -%}
+                <a
+                  {% if block.settings.button_link_1 == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ block.settings.button_link_1 }}"
+                  {% endif %}
+                  class="button{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %} btn-1"
+                >
+                  {{- block.settings.button_label_1 | escape -}}
+                </a>
+              {%- endif -%}
 
+              {%- if block.settings.button_label_2 != blank -%}
+                <a
+                  {% if block.settings.button_link_2 == blank %}
+                    role="link" aria-disabled="true"
+                  {% else %}
+                    href="{{ block.settings.button_link_2 }}"
+                  {% endif %}
+                  class="button{% if block.settings.button_style_secondary_2 %} button--secondary{% else %} button--primary{% endif %} btn-2"
+                >
+                  {{- block.settings.button_label_2 | escape -}}
+                </a>
+              {%- endif -%}
+            </div>
         {%- endcase -%}
       {%- endfor -%}
     </div>
@@ -248,22 +282,10 @@
       "type": "select",
       "id": "image_height",
       "options": [
-        {
-          "value": "adapt",
-          "label": "t:sections.image-banner.settings.image_height.options__1.label"
-        },
-        {
-          "value": "small",
-          "label": "t:sections.image-banner.settings.image_height.options__2.label"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.image-banner.settings.image_height.options__3.label"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.image-banner.settings.image_height.options__4.label"
-        }
+        { "value": "adapt",  "label": "t:sections.image-banner.settings.image_height.options__1.label" },
+        { "value": "small",  "label": "t:sections.image-banner.settings.image_height.options__2.label" },
+        { "value": "medium", "label": "t:sections.image-banner.settings.image_height.options__3.label" },
+        { "value": "large",  "label": "t:sections.image-banner.settings.image_height.options__4.label" }
       ],
       "default": "medium",
       "label": "t:sections.image-banner.settings.image_height.label",
@@ -273,42 +295,15 @@
       "type": "select",
       "id": "desktop_content_position",
       "options": [
-        {
-          "value": "top-left",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__1.label"
-        },
-        {
-          "value": "top-center",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__2.label"
-        },
-        {
-          "value": "top-right",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__3.label"
-        },
-        {
-          "value": "middle-left",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__4.label"
-        },
-        {
-          "value": "middle-center",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__5.label"
-        },
-        {
-          "value": "middle-right",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__6.label"
-        },
-        {
-          "value": "bottom-left",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__7.label"
-        },
-        {
-          "value": "bottom-center",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__8.label"
-        },
-        {
-          "value": "bottom-right",
-          "label": "t:sections.image-banner.settings.desktop_content_position.options__9.label"
-        }
+        { "value": "top-left",     "label": "t:sections.image-banner.settings.desktop_content_position.options__1.label" },
+        { "value": "top-center",   "label": "t:sections.image-banner.settings.desktop_content_position.options__2.label" },
+        { "value": "top-right",    "label": "t:sections.image-banner.settings.desktop_content_position.options__3.label" },
+        { "value": "middle-left",  "label": "t:sections.image-banner.settings.desktop_content_position.options__4.label" },
+        { "value": "middle-center","label": "t:sections.image-banner.settings.desktop_content_position.options__5.label" },
+        { "value": "middle-right", "label": "t:sections.image-banner.settings.desktop_content_position.options__6.label" },
+        { "value": "bottom-left",  "label": "t:sections.image-banner.settings.desktop_content_position.options__7.label" },
+        { "value": "bottom-center","label": "t:sections.image-banner.settings.desktop_content_position.options__8.label" },
+        { "value": "bottom-right", "label": "t:sections.image-banner.settings.desktop_content_position.options__9.label" }
       ],
       "default": "middle-center",
       "label": "t:sections.image-banner.settings.desktop_content_position.label"
@@ -323,71 +318,34 @@
       "type": "select",
       "id": "desktop_content_alignment",
       "options": [
-        {
-          "value": "left",
-          "label": "t:sections.image-banner.settings.desktop_content_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.image-banner.settings.desktop_content_alignment.options__2.label"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.image-banner.settings.desktop_content_alignment.options__3.label"
-        }
+        { "value": "left",   "label": "t:sections.image-banner.settings.desktop_content_alignment.options__1.label" },
+        { "value": "center", "label": "t:sections.image-banner.settings.desktop_content_alignment.options__2.label" },
+        { "value": "right",  "label": "t:sections.image-banner.settings.desktop_content_alignment.options__3.label" }
       ],
       "default": "center",
       "label": "t:sections.image-banner.settings.desktop_content_alignment.label"
     },
-
-    {
-      "type": "header",
-      "content": "t:sections.all.animation.content"
-    },
+    { "type": "header", "content": "t:sections.all.animation.content" },
     {
       "type": "select",
       "id": "image_behavior",
       "options": [
-        {
-          "value": "none",
-          "label": "t:sections.all.animation.image_behavior.options__1.label"
-        },
-        {
-          "value": "ambient",
-          "label": "t:sections.all.animation.image_behavior.options__2.label"
-        },
-        {
-          "value": "fixed",
-          "label": "t:sections.all.animation.image_behavior.options__3.label"
-        },
-        {
-          "value": "zoom-in",
-          "label": "t:sections.all.animation.image_behavior.options__4.label"
-        }
+        { "value": "none",    "label": "t:sections.all.animation.image_behavior.options__1.label" },
+        { "value": "ambient", "label": "t:sections.all.animation.image_behavior.options__2.label" },
+        { "value": "fixed",   "label": "t:sections.all.animation.image_behavior.options__3.label" },
+        { "value": "zoom-in", "label": "t:sections.all.animation.image_behavior.options__4.label" }
       ],
       "default": "none",
       "label": "t:sections.all.animation.image_behavior.label"
     },
-    {
-      "type": "header",
-      "content": "t:sections.image-banner.settings.mobile.content"
-    },
+    { "type": "header", "content": "t:sections.image-banner.settings.mobile.content" },
     {
       "type": "select",
       "id": "mobile_content_alignment",
       "options": [
-        {
-          "value": "left",
-          "label": "t:sections.image-banner.settings.mobile_content_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.image-banner.settings.mobile_content_alignment.options__2.label"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.image-banner.settings.mobile_content_alignment.options__3.label"
-        }
+        { "value": "left",   "label": "t:sections.image-banner.settings.mobile_content_alignment.options__1.label" },
+        { "value": "center", "label": "t:sections.image-banner.settings.mobile_content_alignment.options__2.label" },
+        { "value": "right",  "label": "t:sections.image-banner.settings.mobile_content_alignment.options__3.label" }
       ],
       "default": "center",
       "label": "t:sections.image-banner.settings.mobile_content_alignment.label"
@@ -421,18 +379,9 @@
           "type": "select",
           "id": "heading_size",
           "options": [
-            {
-              "value": "h2",
-              "label": "t:sections.all.heading_size.options__1.label"
-            },
-            {
-              "value": "h1",
-              "label": "t:sections.all.heading_size.options__2.label"
-            },
-            {
-              "value": "h0",
-              "label": "t:sections.all.heading_size.options__3.label"
-            }
+            { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
+            { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
+            { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" }
           ],
           "default": "h1",
           "label": "t:sections.all.heading_size.label"
@@ -454,18 +403,9 @@
           "type": "select",
           "id": "text_style",
           "options": [
-            {
-              "value": "body",
-              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__1.label"
-            },
-            {
-              "value": "subtitle",
-              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__2.label"
-            },
-            {
-              "value": "caption-with-letter-spacing",
-              "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label"
-            }
+            { "value": "body", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__1.label" },
+            { "value": "subtitle", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__2.label" },
+            { "value": "caption-with-letter-spacing", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label" }
           ],
           "default": "body",
           "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
@@ -513,111 +453,70 @@
           "default": false,
           "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_2.label"
         },
+
+        { "type": "header", "content": "按钮1样式" },
         {
-  "type": "range",
-  "id": "btn_width",
-  "label": "按钮宽度（px）",
-  "min": 50,
-  "max": 100,
-  "step": 2,
-  "default": 50
-},
-{
-  "type": "range",
-  "id": "btn_height",
-  "label": "按钮高度（px）",
-  "min": 36,
-  "max": 96,
-  "step": 2,
-  "default": 48
-},
-{
-  "type": "range",
-  "id": "btn_font_size",
-  "label": "字体大小（px）",
-  "min": 12,
-  "max": 28,
-  "step": 2,
-  "default": 16
-},
-{
-  "type": "color",
-  "id": "btn_text_color",
-  "label": "字体颜色",
-  "default": "#ffffff"
-},
-{
-  "type": "header",
-  "content": "按钮1样式"
-},
-{
-  "type": "range",
-  "id": "btn1_font_size",
-  "label": "按钮1 字体大小（px）",
-  "min": 12,
-  "max": 28,
-  "step": 1,
-  "default": 16
-},
-{
-  "type": "color",
-  "id": "btn1_text_color",
-  "label": "按钮1 字体颜色",
-  "default": "#ffffff"
-},
-{
-  "type": "range",
-  "id": "btn1_radius",
-  "label": "按钮1 圆角（px）",
-  "min": 0,
-  "max": 40,
-  "step": 2,
-  "default": 12
-},
+          "type": "range",
+          "id": "btn1_font_size",
+          "label": "按钮1 字体大小（px）",
+          "min": 12,
+          "max": 28,
+          "step": 1,
+          "default": 16
+        },
+        {
+          "type": "color",
+          "id": "btn1_text_color",
+          "label": "按钮1 字体颜色",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "btn1_radius",
+          "label": "按钮1 圆角（px）",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "default": 12
+        },
+        {
+          "type": "color",
+          "id": "btn1_bg_color",
+          "label": "按钮1 背景色",
+          "default": "#111111"
+        },
 
-{
-  "type": "header",
-  "content": "按钮2样式"
-},
-{
-  "type": "range",
-  "id": "btn2_font_size",
-  "label": "按钮2 字体大小（px）",
-  "min": 12,
-  "max": 28,
-  "step": 1,
-  "default": 16
-},
-{
-  "type": "color",
-  "id": "btn2_text_color",
-  "label": "按钮2 字体颜色",
-  "default": "#ffffff"
-},
-{
-  "type": "range",
-  "id": "btn2_radius",
-  "label": "按钮2 圆角（px）",
-  "min": 0,
-  "max": 40,
-  "step": 2,
-  "default": 12
-},
-{
-  "type": "color",
-  "id": "btn1_bg_color",
-  "label": "按钮1 背景色",
-  "default": "#111111"
-},
-{
-  "type": "color",
-  "id": "btn2_bg_color",
-  "label": "按钮2 背景色",
-  "default": "#111111"
-}
-
-
-
+        { "type": "header", "content": "按钮2样式" },
+        {
+          "type": "range",
+          "id": "btn2_font_size",
+          "label": "按钮2 字体大小（px）",
+          "min": 12,
+          "max": 28,
+          "step": 1,
+          "default": 16
+        },
+        {
+          "type": "color",
+          "id": "btn2_text_color",
+          "label": "按钮2 字体颜色",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "btn2_radius",
+          "label": "按钮2 圆角（px）",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "default": 12
+        },
+        {
+          "type": "color",
+          "id": "btn2_bg_color",
+          "label": "按钮2 背景色",
+          "default": "#111111"
+        }
       ]
     }
   ],
@@ -625,15 +524,9 @@
     {
       "name": "t:sections.image-banner.presets.name",
       "blocks": [
-        {
-          "type": "heading"
-        },
-        {
-          "type": "text"
-        },
-        {
-          "type": "buttons"
-        }
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "buttons" }
       ]
     }
   ]
