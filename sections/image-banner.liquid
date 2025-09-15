@@ -400,6 +400,68 @@
     { "type": "checkbox", "id": "show_text_below",        "default": true, "label": "t:sections.image-banner.settings.show_text_below.label" }
   ],
   "blocks": [
+
+    {
+  "type": "endorsement_button",
+  "name": "认证信息按钮",
+  "limit": 8,
+  "settings": [
+    { "type": "text",  "id": "label", "label": "按钮文字", "default": "认证信息" },
+    { "type": "url",   "id": "link",  "label": "链接（可选）" },
+    { "type": "checkbox", "id": "new_tab", "label": "新窗口打开", "default": true },
+
+    { "type": "header", "content": "样式" },
+    { "type": "color", "id": "bg_color",   "label": "背景颜色", "default": "#111111" },
+    { "type": "color", "id": "text_color", "label": "字体颜色", "default": "#ffffff" },
+    { "type": "range", "id": "font_size",  "label": "字体大小(px)", "min": 12, "max": 32, "step": 1, "default": 16 },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "字重",
+      "default": "600",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ]
+    },
+    { "type": "range", "id": "radius", "label": "圆角(px)", "min": 0, "max": 40, "step": 1, "default": 8 },
+    { "type": "range", "id": "pad_x",  "label": "左右内边距(px)", "min": 0, "max": 32, "step": 1, "default": 16 },
+    { "type": "range", "id": "pad_y",  "label": "上下内边距(px)", "min": 0, "max": 20, "step": 1, "default": 10 },
+
+    { "type": "header", "content": "固定尺寸（可选）" },
+    { "type": "checkbox", "id": "use_fixed_width",  "label": "固定宽度", "default": true },
+    { "type": "range",    "id": "width", "label": "宽度(px)",  "min": 120, "max": 600, "step": 5, "default": 300 },
+    { "type": "checkbox", "id": "use_fixed_height", "label": "固定高度", "default": false },
+    { "type": "range",    "id": "height", "label": "高度(px)", "min": 32, "max": 120, "step": 2, "default": 48 },
+
+    { "type": "header", "content": "定位" },
+    {
+      "type": "select",
+      "id": "anchor",
+      "label": "定位锚点（以哪个角/中心为原点）",
+      "default": "top-left",
+      "options": [
+        { "value": "top-left",     "label": "左上（默认）" },
+        { "value": "center",       "label": "中心" },
+        { "value": "top-right",    "label": "右上" },
+        { "value": "bottom-left",  "label": "左下" },
+        { "value": "bottom-right", "label": "右下" }
+      ]
+    },
+    { "type": "range", "id": "z_index", "label": "层级（z-index）", "min": 1, "max": 20, "step": 1, "default": 5 },
+
+    { "type": "header", "content": "PC 位置 (%)" },
+    { "type": "range", "id": "left_desktop", "label": "左(%)", "min": 0, "max": 100, "step": 1, "default": 10 },
+    { "type": "range", "id": "top_desktop",  "label": "上(%)", "min": 0, "max": 100, "step": 1, "default": 10 },
+
+    { "type": "header", "content": "手机位置 (%)" },
+    { "type": "checkbox", "id": "show_on_mobile", "label": "在手机端显示", "default": true },
+    { "type": "range", "id": "left_mobile", "label": "左(%)", "min": 0, "max": 100, "step": 1, "default": 5 },
+    { "type": "range", "id": "top_mobile",  "label": "上(%)", "min": 0, "max": 100, "step": 1, "default": 85 }
+  ]
+},
+
     {
       "type": "heading",
       "name": "t:sections.image-banner.blocks.heading.name",
