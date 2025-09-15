@@ -71,7 +71,7 @@
             "button_radius": 6
           }
         },
-        "endorsement_button_8XeXyp": {
+        "endorsement_button_7QJDkY": {
           "type": "endorsement_button",
           "settings": {
             "label": "ENDORSED",
@@ -86,7 +86,7 @@
             "anchor": "bottom-right",
             "offset_x": 24,
             "offset_y": 24,
-            "anchor_mobile": "middle-center",
+            "anchor_mobile": "bottom-right",
             "offset_x_mobile": 24,
             "offset_y_mobile": 24,
             "hide_on_mobile": false
@@ -97,7 +97,7 @@
         "heading_jjV78L",
         "text_jCPBMg",
         "buttons_qBghTK",
-        "endorsement_button_8XeXyp"
+        "endorsement_button_7QJDkY"
       ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
