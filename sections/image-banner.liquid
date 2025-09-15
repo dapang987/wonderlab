@@ -155,6 +155,45 @@
       }}
     </div>
   {%- endif -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'cert_info' -%}
+    <div
+      class="cert-overlay
+             pos-{{ block.settings.position_desktop }}
+             mpos-{{ block.settings.position_mobile }}
+             {% unless block.settings.show_on_mobile %}cert-hide-mobile{% endunless %}
+             cert-{{ block.id }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+      style="--cert-gap: {{ block.settings.edge_gap }}px;"
+      {{ block.shopify_attributes }}
+    >
+      {%- if block.settings.link != blank -%}
+        <a href="{{ block.settings.link }}"
+           class="cert-chip {% if block.settings.use_shadow %}cert-chip--shadow{% endif %}"
+           {% if block.settings.new_tab %} target="_blank" rel="noopener" {% endif %}
+           style="
+             background: {{ block.settings.bg_color }};
+             color: {{ block.settings.text_color }};
+             font-size: {{ block.settings.font_size }}px;
+             border-radius: {{ block.settings.border_radius }}px;
+             padding: {{ block.settings.pad_y }}px {{ block.settings.pad_x }}px;
+           ">
+          {{ block.settings.label | escape }}
+        </a>
+      {%- else -%}
+        <div class="cert-chip {% if block.settings.use_shadow %}cert-chip--shadow{% endif %}"
+             style="
+               background: {{ block.settings.bg_color }};
+               color: {{ block.settings.text_color }};
+               font-size: {{ block.settings.font_size }}px;
+               border-radius: {{ block.settings.border_radius }}px;
+               padding: {{ block.settings.pad_y }}px {{ block.settings.pad_x }}px;
+             ">
+          {{ block.settings.label | escape }}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endfor -%}
 
   <div class="banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
