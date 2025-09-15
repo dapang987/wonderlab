@@ -140,7 +140,10 @@
       font-size: {{ block.settings.btn1_font_size }}px;
       color: {{ block.settings.btn1_text_color }};
       border-radius: {{ block.settings.btn1_radius }}px;
+      background-color: {{ block.settings.btn1_bg_color }};
+      border-color: {{ block.settings.btn1_bg_color }};
     }
+
     /* 按钮2样式 */
     #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2,
     #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:hover,
@@ -148,6 +151,8 @@
       font-size: {{ block.settings.btn2_font_size }}px;
       color: {{ block.settings.btn2_text_color }};
       border-radius: {{ block.settings.btn2_radius }}px;
+      background-color: {{ block.settings.btn2_bg_color }};
+      border-color: {{ block.settings.btn2_bg_color }};
     }
   {%- endstyle -%}
 
@@ -181,6 +186,7 @@
       </a>
     {%- endif -%}
   </div>
+
 
         {%- endcase -%}
       {%- endfor -%}
