@@ -88,10 +88,10 @@
             "width": 300,
             "use_fixed_height": false,
             "height": 48,
-            "anchor": "bottom-right",
+            "anchor": "top-left",
             "z_index": 5,
-            "left_desktop": 10,
-            "top_desktop": 10,
+            "left_desktop": 100,
+            "top_desktop": 100,
             "show_on_mobile": true,
             "left_mobile": 5,
             "top_mobile": 85
