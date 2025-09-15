@@ -76,20 +76,16 @@
           "settings": {
             "label": "ENDORSED",
             "link": "",
-            "use_secondary": false,
-            "bg": "",
-            "text": "",
+            "bg_color": "",
+            "text_color": "",
             "font_size": 14,
-            "pad_x": 19,
-            "pad_y": 9,
             "radius": 6,
-            "anchor": "bottom-right",
-            "offset_x": 24,
-            "offset_y": 24,
-            "anchor_mobile": "bottom-right",
-            "offset_x_mobile": 24,
-            "offset_y_mobile": 24,
-            "hide_on_mobile": false
+            "align_desktop": "right",
+            "align_mobile": "center",
+            "absolute_position": false,
+            "abs_top": 50,
+            "abs_left": 50,
+            "show_on_mobile": true
           }
         }
       },
@@ -109,7 +105,9 @@
         "image_behavior": "zoom-in",
         "mobile_content_alignment": "center",
         "stack_images_on_mobile": true,
-        "show_text_below": true
+        "show_text_below": true,
+        "color_scheme": "",
+        "fallback_button_radius": 6
       }
     }
   },
