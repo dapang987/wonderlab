@@ -82,7 +82,7 @@
             "height": 46,
             "pad_x": 40,
             "pad_y": 24,
-            "radius": 6,
+            "radius": 32,
             "font_size": 14,
             "anchor": "bottom-right",
             "offset_x": 20,
