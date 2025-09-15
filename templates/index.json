@@ -73,7 +73,9 @@
             "btn1_radius": 0,
             "btn2_font_size": 16,
             "btn2_text_color": "#ffffff",
-            "btn2_radius": 12
+            "btn2_radius": 12,
+            "btn1_bg_color": "#ffffff",
+            "btn2_bg_color": "#ffffff"
           }
         }
       },
