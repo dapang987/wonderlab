@@ -105,7 +105,9 @@
         "buttons_qBghTK",
         "cert_info_FQdB6D"
       ],
-      "custom_css": [],
+      "custom_css": [
+        "section{padding: 0px;}"
+      ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
         "image_overlay_opacity": 0,
