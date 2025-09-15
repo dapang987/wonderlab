@@ -20,6 +20,27 @@
         display: block;
       }
     }
+
+/* 让 image-banner 的文字/按钮与 header 左边缘对齐 */
+#Banner-{{ section.id }} .banner__content { text-align: left; }
+#Banner-{{ section.id }} .banner__box {
+  /* 去掉左侧内边距，避免比 .page-width 再缩进一层 */
+  padding-left: 0 !important;
+}
+
+/* 可选：如果你希望移动端也绝对左对齐（非居中），保留这一段 */
+@media (max-width: 749px){
+  #Banner-{{ section.id }} .banner__content { text-align: left; }
+  #Banner-{{ section.id }} .banner__box { padding-left: 0 !important; }
+}
+
+/* 防止子元素再额外加缩进 */
+#Banner-{{ section.id }} .banner__heading,
+#Banner-{{ section.id }} .banner__text,
+#Banner-{{ section.id }} .banner-buttons {
+  margin-left: 0;
+}
+
   {%- endstyle -%}
 {%- endif -%}
 
