@@ -73,12 +73,31 @@
             "btn2_radius": 12,
             "btn2_bg_color": "#ebe9e9"
           }
+        },
+        "cert_info_FQdB6D": {
+          "type": "cert_info",
+          "settings": {
+            "label": "认证信息",
+            "link": "",
+            "new_tab": true,
+            "bg_color": "#111111",
+            "text_color": "#ffffff",
+            "font_size": 16,
+            "border_radius": 12,
+            "pad_x": 16,
+            "pad_y": 10,
+            "use_shadow": true,
+            "offset_right": 16,
+            "offset_bottom": 16,
+            "show_on_mobile": true
+          }
         }
       },
       "block_order": [
         "heading_jjV78L",
         "text_jCPBMg",
-        "buttons_qBghTK"
+        "buttons_qBghTK",
+        "cert_info_FQdB6D"
       ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
