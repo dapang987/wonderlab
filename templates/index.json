@@ -84,7 +84,7 @@
             "pad_y": 24,
             "radius": 6,
             "font_size": 14,
-            "anchor": "top-left",
+            "anchor": "bottom-right",
             "offset_x": 20,
             "offset_y": 20,
             "hide_on_mobile": false,
