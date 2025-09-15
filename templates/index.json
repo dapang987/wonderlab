@@ -67,15 +67,38 @@
             "button_link_2": "",
             "button_style_secondary_2": false,
             "button_bg_2": "#ebe9e9",
-            "button_text_2": "#ffffff",
-            "button_radius": 5
+            "button_text_2": "#ffffff"
+          }
+        },
+        "endorsement_button_HYA7Bh": {
+          "type": "endorsement_button",
+          "settings": {
+            "label": "ENDORSED",
+            "link": "",
+            "use_secondary": false,
+            "bg": "",
+            "text": "",
+            "width": 300,
+            "height": 46,
+            "pad_x": 40,
+            "pad_y": 24,
+            "radius": 6,
+            "font_size": 14,
+            "anchor": "top-left",
+            "offset_x": 20,
+            "offset_y": 20,
+            "hide_on_mobile": false,
+            "anchor_mobile": "bottom-center",
+            "offset_x_mobile": 20,
+            "offset_y_mobile": 20
           }
         }
       },
       "block_order": [
         "heading_jjV78L",
         "text_jCPBMg",
-        "buttons_qBghTK"
+        "buttons_qBghTK",
+        "endorsement_button_HYA7Bh"
       ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
