@@ -86,7 +86,7 @@
             "anchor": "bottom-right",
             "offset_x": 24,
             "offset_y": 24,
-            "anchor_mobile": "bottom-right",
+            "anchor_mobile": "middle-center",
             "offset_x_mobile": 24,
             "offset_y_mobile": 24,
             "hide_on_mobile": false
