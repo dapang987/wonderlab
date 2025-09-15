@@ -73,6 +73,45 @@
   }
 }
 {%- endstyle -%}
+{%- style -%}
+  /* 保障 Banner 根有定位上下文 */
+  #Banner-{{ section.id }} { position: relative; }
+
+  /* 通用定位与层级 */
+  #Banner-{{ section.id }} .endorsement {
+    position: absolute;
+    z-index: var(--eb-z, 3);
+    transform: translate(var(--eb-tx, 0%), var(--eb-ty, 0%));
+    pointer-events: auto;
+  }
+
+  /* PC: 使用 desktop 百分比 */
+  @media screen and (min-width: 750px) {
+    #Banner-{{ section.id }} .endorsement {
+      left: calc(var(--eb-left-d, 50) * 1%);
+      top:  calc(var(--eb-top-d,  50) * 1%);
+    }
+  }
+
+  /* Mobile: 使用 mobile 百分比；可选择隐藏 */
+  @media screen and (max-width: 749px) {
+    #Banner-{{ section.id }} .endorsement {
+      left: calc(var(--eb-left-m, 50) * 1%);
+      top:  calc(var(--eb-top-m,  50) * 1%);
+    }
+    #Banner-{{ section.id }} .endorsement.is-hidden-mobile { display: none !important; }
+  }
+
+  /* 按钮基础（沿用 Dawn 的按钮基类，再做轻量微调） */
+  #Banner-{{ section.id }} .endorsement-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+{%- endstyle -%}
 
 {%- liquid
   assign full_width = '100vw'
