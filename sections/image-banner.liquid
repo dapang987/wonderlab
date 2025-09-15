@@ -155,45 +155,6 @@
       }}
     </div>
   {%- endif -%}
-{%- for block in section.blocks -%}
-  {%- if block.type == 'cert_info' -%}
-    <div
-      class="cert-overlay
-             pos-{{ block.settings.position_desktop }}
-             mpos-{{ block.settings.position_mobile }}
-             {% unless block.settings.show_on_mobile %}cert-hide-mobile{% endunless %}
-             cert-{{ block.id }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-      style="--cert-gap: {{ block.settings.edge_gap }}px;"
-      {{ block.shopify_attributes }}
-    >
-      {%- if block.settings.link != blank -%}
-        <a href="{{ block.settings.link }}"
-           class="cert-chip {% if block.settings.use_shadow %}cert-chip--shadow{% endif %}"
-           {% if block.settings.new_tab %} target="_blank" rel="noopener" {% endif %}
-           style="
-             background: {{ block.settings.bg_color }};
-             color: {{ block.settings.text_color }};
-             font-size: {{ block.settings.font_size }}px;
-             border-radius: {{ block.settings.border_radius }}px;
-             padding: {{ block.settings.pad_y }}px {{ block.settings.pad_x }}px;
-           ">
-          {{ block.settings.label | escape }}
-        </a>
-      {%- else -%}
-        <div class="cert-chip {% if block.settings.use_shadow %}cert-chip--shadow{% endif %}"
-             style="
-               background: {{ block.settings.bg_color }};
-               color: {{ block.settings.text_color }};
-               font-size: {{ block.settings.font_size }}px;
-               border-radius: {{ block.settings.border_radius }}px;
-               padding: {{ block.settings.pad_y }}px {{ block.settings.pad_x }}px;
-             ">
-          {{ block.settings.label | escape }}
-        </div>
-      {%- endif -%}
-    </div>
-  {%- endif -%}
-{%- endfor -%}
 
   <div class="banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
@@ -470,55 +431,7 @@
     { "type": "header", "content": "位置（默认右下角）" },
     { "type": "range", "id": "offset_right", "label": "距右侧偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
     { "type": "range", "id": "offset_bottom", "label": "距底部偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
-    { "type": "checkbox", "id": "show_on_mobile", "label": "在手机端显示", "default": true },
-    {
-  "type": "header",
-  "content": "位置（下拉选择）"
-},
-{
-  "type": "select",
-  "id": "position_desktop",
-  "label": "PC 端位置",
-  "default": "bottom-right",
-  "options": [
-    { "value": "top-left", "label": "上-左" },
-    { "value": "top-center", "label": "上-中" },
-    { "value": "top-right", "label": "上-右" },
-    { "value": "middle-left", "label": "中-左" },
-    { "value": "middle-center", "label": "中-中" },
-    { "value": "middle-right", "label": "中-右" },
-    { "value": "bottom-left", "label": "下-左" },
-    { "value": "bottom-center", "label": "下-中" },
-    { "value": "bottom-right", "label": "下-右" }
-  ]
-},
-{
-  "type": "select",
-  "id": "position_mobile",
-  "label": "手机端位置",
-  "default": "bottom-right",
-  "options": [
-    { "value": "top-left", "label": "上-左" },
-    { "value": "top-center", "label": "上-中" },
-    { "value": "top-right", "label": "上-右" },
-    { "value": "middle-left", "label": "中-左" },
-    { "value": "middle-center", "label": "中-中" },
-    { "value": "middle-right", "label": "中-右" },
-    { "value": "bottom-left", "label": "下-左" },
-    { "value": "bottom-center", "label": "下-中" },
-    { "value": "bottom-right", "label": "下-右" }
-  ]
-},
-{
-  "type": "range",
-  "id": "edge_gap",
-  "label": "边距（与边缘的间距，px）",
-  "min": 0,
-  "max": 40,
-  "step": 2,
-  "default": 16
-},
-
+    { "type": "checkbox", "id": "show_on_mobile", "label": "在手机端显示", "default": true }
   ]
 }
 
