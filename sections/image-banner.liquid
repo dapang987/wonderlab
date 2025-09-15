@@ -32,10 +32,10 @@
 {%- style -%}
 /* ===== Custom: fixed-size button + alignment ===== */
 
-/* 固定 300×46 按钮尺寸（全局生效，不受上面条件限制） */
+/* 固定 300×46（PC）；手机端不溢出 */
 .btn-300x46{
-  display:flex;
-  width:398px;
+  display:inline-flex;
+  width:300px;
   height:46px;
   padding:9px 19px;
   justify-content:center;
@@ -43,34 +43,79 @@
   gap:10px;
   flex-shrink:0;
   box-sizing:border-box;
+  line-height:1;
+  text-align:center;
+  white-space:nowrap;
+  min-width:auto;
 }
 
-/* 多按钮的容器，控制间距与换行 */
+/* 多按钮容器：间距与换行 */
 .banner-buttons{
   display:flex;
   gap:12px;
   flex-wrap:wrap;
 }
 
-/* 让文案/按钮与 header 的 page-width 左边对齐：移除 box 左右内边距 */
+/* 与 page-width 左对齐 */
 #Banner-{{ section.id }} .banner__box{
+  position: relative; /* 为绝对定位的 endorsement 铺底 */
   padding-left:0;
   padding-right:0;
+  margin-left:0;
+  margin-right:auto;
 }
-{%- endstyle -%}
-{%- style -%}
+
+/* 兜底圆角 */
+#Banner-{{ section.id }} .banner-buttons .btn-300x46{
+  border-radius: {{ section.settings.fallback_button_radius | default: 6 }}px;
+}
+
+/* ===== Endorsement block 样式 ===== */
+#Banner-{{ section.id }} .endorsement-wrap{
+  display:flex;
+  width:100%;
+  z-index:3;
+}
+#Banner-{{ section.id }} .endorsement-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:46px;
+  padding:0 20px;
+  line-height:1;
+  text-decoration:none;
+  border: 1px solid transparent;
+  box-sizing:border-box;
+}
+
+/* PC 对齐 */
+#Banner-{{ section.id }} .endorsement--align-left{ justify-content:flex-start; }
+#Banner-{{ section.id }} .endorsement--align-center{ justify-content:center; }
+#Banner-{{ section.id }} .endorsement--align-right{ justify-content:flex-end; }
+
+/* 绝对定位模式 */
+#Banner-{{ section.id }} .endorsement--absolute{
+  position:absolute;
+  width:auto;
+  transform:none; /* 用 top/left 直接锚定 */
+}
+
+/* 手机端 */
 @media (max-width: 749px){
   #Banner-{{ section.id }} .banner-buttons{ width:100%; }
+  #Banner-{{ section.id }} .btn-300x46{ width:min(300px, 100%); }
 
-  #Banner-{{ section.id }}.banner--content-align-mobile-left   .banner-buttons{
-    justify-content:flex-start; margin-left:0;    margin-right:auto;
-  }
-  #Banner-{{ section.id }}.banner--content-align-mobile-center .banner-buttons{
-    justify-content:center;     margin-left:auto; margin-right:auto;
-  }
-  #Banner-{{ section.id }}.banner--content-align-mobile-right  .banner-buttons{
-    justify-content:flex-end;   margin-left:auto; margin-right:0;
-  }
+  #Banner-{{ section.id }}.banner--content-align-mobile-left   .banner-buttons{ justify-content:flex-start; margin-left:0;    margin-right:auto; }
+  #Banner-{{ section.id }}.banner--content-align-mobile-center .banner-buttons{ justify-content:center;     margin-left:auto; margin-right:auto; }
+  #Banner-{{ section.id }}.banner--content-align-mobile-right  .banner-buttons{ justify-content:flex-end;   margin-left:auto; margin-right:0; }
+
+  /* Endorsement 手机端对齐 */
+  #Banner-{{ section.id }} .endorsement--align-mobile-left{ justify-content:flex-start; }
+  #Banner-{{ section.id }} .endorsement--align-mobile-center{ justify-content:center; }
+  #Banner-{{ section.id }} .endorsement--align-mobile-right{ justify-content:flex-end; }
+
+  /* 隐藏开关 */
+  #Banner-{{ section.id }} .endorsement--mobile-hidden{ display:none !important; }
 }
 {%- endstyle -%}
 
@@ -167,12 +212,7 @@
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when 'heading' -%}
-            <h2
-              class="banner__heading inline-richtext {{ block.settings.heading_size }}"
-              {{ block.shopify_attributes }}
-            >
-              {{ block.settings.heading }}
-            </h2>
+            <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>{{ block.settings.heading }}</h2>
 
           {%- when 'text' -%}
             <div class="banner__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
@@ -180,16 +220,15 @@
             </div>
 
           {%- when 'buttons' -%}
-            <div class="banner-buttons">
+            <div class="banner-buttons" {{ block.shopify_attributes }}>
               {%- if block.settings.button_label_1 != blank -%}
                 <a
                   href="{{ block.settings.button_link_1 | default: '#' }}"
                   class="btn-300x46 button banner-btn-{{ block.id }} btn-1{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
                   style="
                     {%- if block.settings.button_bg_1   != blank -%}background-color: {{ block.settings.button_bg_1 }}; border-color: {{ block.settings.button_bg_1 }};{%- endif -%}
-                    {%- if block.settings.button_text_1 != blank -%}color: {{ block.settings.button_text_1 }};
-                       border-radius: {{ block.settings.button_radius | default: 6 }}px;
-                    {%- endif -%}
+                    {%- if block.settings.button_text_1 != blank -%}color: {{ block.settings.button_text_1 }};{%- endif -%}
+                    border-radius: {{ block.settings.button_radius | default: 6 }}px;
                   "
                 >{{ block.settings.button_label_1 | escape }}</a>
               {%- endif -%}
@@ -201,11 +240,42 @@
                   style="
                     {%- if block.settings.button_bg_2   != blank -%}background-color: {{ block.settings.button_bg_2 }}; border-color: {{ block.settings.button_bg_2 }};{%- endif -%}
                     {%- if block.settings.button_text_2 != blank -%}color: {{ block.settings.button_text_2 }};{%- endif -%}
-                       border-radius: {{ block.settings.button_radius | default: 6 }}px;
+                    border-radius: {{ block.settings.button_radius | default: 6 }}px;
                   "
                 >{{ block.settings.button_label_2 | escape }}</a>
               {%- endif -%}
             </div>
+
+          {%- when 'endorsement_button' -%}
+            {%- liquid
+              assign pc_align = block.settings.align_desktop | default: 'left'
+              assign mb_align = block.settings.align_mobile | default: 'center'
+            -%}
+            <div
+              class="
+                endorsement-wrap
+                endorsement--align-{{ pc_align }}
+                endorsement--align-mobile-{{ mb_align }}
+                {% if block.settings.absolute_position %}endorsement--absolute{% endif %}
+                {% unless block.settings.show_on_mobile %}endorsement--mobile-hidden{% endunless %}
+              "
+              style="{% if block.settings.absolute_position %}left: {{ block.settings.abs_left | default: 50 }}%; top: {{ block.settings.abs_top | default: 50 }}%;{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              {%- if block.settings.label != blank -%}
+                <a
+                  href="{{ block.settings.link | default: '#' }}"
+                  class="endorsement-btn button button--primary"
+                  style="
+                    {%- if block.settings.bg_color   != blank -%}background-color: {{ block.settings.bg_color }}; border-color: {{ block.settings.bg_color }};{%- endif -%}
+                    {%- if block.settings.text_color != blank -%}color: {{ block.settings.text_color }};{%- endif -%}
+                    font-size: {{ block.settings.font_size | default: 16 }}px;
+                    border-radius: {{ block.settings.radius | default: 6 }}px;
+                  "
+                >{{ block.settings.label | escape }}</a>
+              {%- endif -%}
+            </div>
+
         {%- endcase -%}
       {%- endfor -%}
     </div>
@@ -288,7 +358,19 @@
       "label": "t:sections.image-banner.settings.mobile_content_alignment.label"
     },
     { "type": "checkbox", "id": "stack_images_on_mobile", "default": true, "label": "t:sections.image-banner.settings.stack_images_on_mobile.label" },
-    { "type": "checkbox", "id": "show_text_below",        "default": true, "label": "t:sections.image-banner.settings.show_text_below.label" }
+
+    /* 手机端覆盖在图片上展示（关闭=文字在图片下方） */
+    { "type": "checkbox", "id": "show_text_below", "default": false, "label": "t:sections.image-banner.settings.show_text_below.label" },
+
+    /* 颜色方案 */
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:sections.all.colors.label", "default": "background-1" },
+
+    /* 兜底圆角（当 block 渲染取不到时） */
+    {
+      "type": "range", "id": "fallback_button_radius",
+      "min": 0, "max": 40, "step": 1, "unit": "px",
+      "label": "Fallback button corner radius", "default": 6
+    }
   ],
   "blocks": [
     {
@@ -309,7 +391,6 @@
         }
       ]
     },
-
     {
       "type": "text",
       "name": "t:sections.image-banner.blocks.text.name",
@@ -345,16 +426,72 @@
         { "type": "color", "id": "button_bg_2",   "label": "Button 2 background" },
         { "type": "color", "id": "button_text_2", "label": "Button 2 text color" },
         {
-  "type": "range",
-  "id": "button_radius",
-  "min": 0,
-  "max": 40,
-  "step": 1,
-  "unit": "px",
-  "label": "Button corner radius",
-  "default": 6
-}
+          "type": "range", "id": "button_radius",
+          "min": 0, "max": 40, "step": 1, "unit": "px",
+          "label": "Button corner radius", "default": 6
+        }
+      ]
+    },
 
+    /* 新增：认证信息按钮 */
+    {
+      "type": "endorsement_button",
+      "name": "Endorsement button",
+      "limit": 8,
+      "settings": [
+        { "type": "text",  "id": "label", "label": "Button text", "default": "認証情報を見る" },
+        { "type": "url",   "id": "link",  "label": "Button link" },
+        { "type": "color", "id": "bg_color",   "label": "Background color" },
+        { "type": "color", "id": "text_color", "label": "Text color" },
+
+        {
+          "type": "range", "id": "font_size",
+          "min": 12, "max": 40, "step": 1, "unit": "px",
+          "label": "Font size", "default": 16
+        },
+        {
+          "type": "range", "id": "radius",
+          "min": 0, "max": 40, "step": 1, "unit": "px",
+          "label": "Radius", "default": 6
+        },
+
+        { "type": "header", "content": "Alignment & Position" },
+        {
+          "type": "select", "id": "align_desktop", "label": "Desktop align",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "select", "id": "align_mobile", "label": "Mobile align",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "checkbox", "id": "absolute_position",
+          "label": "Use absolute positioning (top/left % within banner content)", "default": false
+        },
+        {
+          "type": "range", "id": "abs_top",
+          "min": 0, "max": 100, "step": 1, "unit": "%",
+          "label": "Top (%) — absolute only", "default": 50
+        },
+        {
+          "type": "range", "id": "abs_left",
+          "min": 0, "max": 100, "step": 1, "unit": "%",
+          "label": "Left (%) — absolute only", "default": 50
+        },
+        {
+          "type": "checkbox", "id": "show_on_mobile",
+          "label": "Show on mobile", "default": true
+        }
       ]
     }
   ],
@@ -364,7 +501,8 @@
       "blocks": [
         { "type": "heading" },
         { "type": "text" },
-        { "type": "buttons" }
+        { "type": "buttons" },
+        { "type": "endorsement_button" }
       ]
     }
   ]
