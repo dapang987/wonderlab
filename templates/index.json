@@ -60,14 +60,14 @@
           "settings": {
             "button_label_1": "Take the quiz",
             "button_link_1": "",
-            "button_style_secondary_1": false,
-            "button_bg_1": "",
-            "button_text_1": "",
+            "button_style_secondary_1": true,
+            "button_bg_1": "#121212",
+            "button_text_1": "#ffffff",
             "button_label_2": "Shop Now",
             "button_link_2": "",
             "button_style_secondary_2": false,
-            "button_bg_2": "",
-            "button_text_2": ""
+            "button_bg_2": "#121212",
+            "button_text_2": "#ffffff"
           }
         }
       },
