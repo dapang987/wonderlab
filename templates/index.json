@@ -58,10 +58,10 @@
         "buttons_qBghTK": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "Button label",
+            "button_label_1": "Take the quiz",
             "button_link_1": "",
             "button_style_secondary_1": false,
-            "button_label_2": "Button label",
+            "button_label_2": "Shop Now",
             "button_link_2": "",
             "button_style_secondary_2": false
           }
@@ -76,7 +76,7 @@
       "settings": {
         "image_overlay_opacity": 0,
         "image_height": "medium",
-        "desktop_content_position": "middle-center",
+        "desktop_content_position": "middle-left",
         "show_text_box": true,
         "desktop_content_alignment": "center",
         "image_behavior": "none",
