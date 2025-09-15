@@ -83,6 +83,32 @@
     #Banner-{{ section.id }} .endorsement-btn-wrap.ism-bottom-center { bottom:var(--ym,20px); left:50%; top:auto; right:auto; transform:translateX(-50%); }
     #Banner-{{ section.id }} .endorsement-btn-wrap.ism-bottom-right  { bottom:var(--ym,20px); right:var(--xm,20px); top:auto; left:auto; transform:none; }
   }
+  /* 让两个按钮同一行对齐，避免 baseline 造成“掉下去” */
+.banner__box .banner-buttons{
+  display: flex;
+  align-items: flex-start;  /* 两个按钮顶边对齐；要中线对齐改为 center */
+  gap: 12px;                /* 两按钮间距 */
+  flex-wrap: wrap;          /* 小屏换行 */
+}
+
+/* 规范按钮内部的垂直居中，避免行高差异 */
+.banner__box .banner-buttons .button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;          /* 去掉不同字体行高对齐偏差 */
+  box-sizing: border-box;
+}
+
+/* 你的固定尺寸按钮 */
+.banner__box .banner-buttons .btn-300x46{
+  width: 300px;
+  height: 46px;
+  padding: 9px 19px;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
 {%- endstyle -%}
 
 {%- liquid
