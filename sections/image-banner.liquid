@@ -110,6 +110,28 @@
 }
 
 {%- endstyle -%}
+{%- style -%}
+/* 让绝对定位有参照物 */
+#Banner-{{ section.id }}{ position: relative; }
+
+/* 手机端：按钮压在图片上（右下角） */
+@media (max-width: 749px){
+  #Banner-{{ section.id }} .endorsement-btn{
+    position: absolute;
+    right: 16px;          /* 调整水平位置 */
+    bottom: 16px;         /* 调整垂直位置 */
+    z-index: 5;           /* 确保盖在图片和遮罩之上 */
+    transform: none;      /* 防止被其它动画/样式影响 */
+  }
+}
+
+/* 桌面端：恢复正常文档流位置（如果你希望桌面不覆盖） */
+@media (min-width: 750px){
+  #Banner-{{ section.id }} .endorsement-btn{
+    position: static;
+  }
+}
+{%- endstyle -%}
 
 {%- liquid
   assign full_width = '100vw'
