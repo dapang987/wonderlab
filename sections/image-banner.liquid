@@ -28,6 +28,45 @@
     opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
   }
 {%- endstyle -%}
+{%- style -%}
+/* === 仅作用于这个 Banner 与这个 buttons block（移动端修正）=== */
+@media screen and (max-width: 989px){
+  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK{
+    /* 仍保持上下排列，但让容器内元素在横向居中 */
+    display: flex;
+    flex-direction: column !important;
+    align-items: center !important;     /* 关键：从原来的 flex-start 改为 center */
+    justify-content: flex-start;
+    width: 100%;
+  }
+  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK .button{
+    /* 390px，窄屏不溢出，同时居中 */
+    width: min(390px, 92vw) !important;
+    height: 46px !important;
+    padding: 9px 19px !important;
+    box-sizing: border-box;
+    margin-inline: auto !important;     /* 关键：按钮自身也水平居中 */
+  }
+}
+
+/* === PC 端保持横向左对齐（若已设置可忽略）=== */
+@media screen and (min-width: 990px){
+  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK{
+    display: flex;
+    flex-direction: row !important;
+    justify-content: flex-start !important; /* 左对齐 */
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+  }
+  #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK .button{
+    width: 300px !important;
+    height: 46px !important;
+    padding: 9px 19px !important;
+    box-sizing: border-box;
+  }
+}
+{%- endstyle -%}
 
 {%- liquid
   assign full_width = '100vw'

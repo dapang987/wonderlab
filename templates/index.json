@@ -57,7 +57,6 @@
         },
         "buttons_qBghTK": {
           "type": "buttons",
-          "disabled": true,
           "settings": {
             "button_label_1": "Take the quiz",
             "button_link_1": "",
