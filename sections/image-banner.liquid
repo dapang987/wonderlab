@@ -112,6 +112,44 @@
     text-decoration: none;
   }
 {%- endstyle -%}
+{%- style -%}
+  /* Banner 作为定位上下文（即使不开启 overlay 也无妨） */
+  #Banner-{{ section.id }} { position: relative; }
+
+  /* 基础按钮表现 */
+  #Banner-{{ section.id }} .endorsement-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  /* 常规文流时的自然间距 */
+  #Banner-{{ section.id }} .endorsement { margin-top: 0.8rem; }
+
+  /* 覆盖定位 */
+  #Banner-{{ section.id }} .endorsement--overlay {
+    position: absolute;
+    z-index: 5;
+    /* 边距安全区：可按需在此微调默认值 */
+    --edge-gap: 1.5rem;
+  }
+
+  /* 9宫格预设位置 */
+  #Banner-{{ section.id }} .pos-top-left     { top: var(--edge-gap); left: var(--edge-gap); }
+  #Banner-{{ section.id }} .pos-top-center   { top: var(--edge-gap); left: 50%; transform: translateX(-50%); }
+  #Banner-{{ section.id }} .pos-top-right    { top: var(--edge-gap); right: var(--edge-gap); }
+
+  #Banner-{{ section.id }} .pos-center-left  { top: 50%; left: var(--edge-gap); transform: translateY(-50%); }
+  #Banner-{{ section.id }} .pos-center       { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  #Banner-{{ section.id }} .pos-center-right { top: 50%; right: var(--edge-gap); transform: translateY(-50%); }
+
+  #Banner-{{ section.id }} .pos-bottom-left  { bottom: var(--edge-gap); left: var(--edge-gap); }
+  #Banner-{{ section.id }} .pos-bottom-center{ bottom: var(--edge-gap); left: 50%; transform: translateX(-50%); }
+  #Banner-{{ section.id }} .pos-bottom-right { bottom: var(--edge-gap); right: var(--edge-gap); }
+{%- endstyle -%}
 
 {%- liquid
   assign full_width = '100vw'

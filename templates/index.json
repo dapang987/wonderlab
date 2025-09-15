@@ -81,7 +81,7 @@
             "text_color": "",
             "font_size": 14,
             "font_weight": "400",
-            "radius": 6,
+            "radius": 40,
             "pad_x": 16,
             "pad_y": 10,
             "use_fixed_width": true,
