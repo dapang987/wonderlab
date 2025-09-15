@@ -61,49 +61,26 @@
             "button_label_1": "Take the quiz",
             "button_link_1": "",
             "button_style_secondary_1": true,
-            "button_bg_1": "#121212",
-            "button_text_1": "#ffffff",
             "button_label_2": "Shop Now",
             "button_link_2": "",
             "button_style_secondary_2": false,
-            "button_bg_2": "#ebe9e9",
-            "button_text_2": "#ffffff",
-            "button_radius": 6
-          }
-        },
-        "endorsement_button_7QJDkY": {
-          "type": "endorsement_button",
-          "settings": {
-            "label": "DOCTOR TRUSTED TRACEABLE STRAIN",
-            "link": "",
-            "new_tab": true,
-            "bg_color": "#d9d9d9",
-            "text_color": "",
-            "font_size": 14,
-            "font_weight": "400",
-            "radius": 40,
-            "pad_x": 16,
-            "pad_y": 10,
-            "use_fixed_width": true,
-            "width": 400,
-            "use_fixed_height": false,
-            "height": 48,
-            "use_overlay": true,
-            "position_preset": "bottom-right",
-            "z_index": 5,
-            "left_desktop": 0,
-            "top_desktop": 0,
-            "show_on_mobile": true,
-            "left_mobile": 0,
-            "top_mobile": 0
+            "btn_width": 50,
+            "btn_height": 48,
+            "btn_font_size": 16,
+            "btn_text_color": "#ffffff",
+            "btn1_font_size": 16,
+            "btn1_text_color": "#ffffff",
+            "btn1_radius": 0,
+            "btn2_font_size": 16,
+            "btn2_text_color": "#ffffff",
+            "btn2_radius": 12
           }
         }
       },
       "block_order": [
         "heading_jjV78L",
         "text_jCPBMg",
-        "buttons_qBghTK",
-        "endorsement_button_7QJDkY"
+        "buttons_qBghTK"
       ],
       "name": "t:sections.image-banner.presets.name",
       "settings": {
