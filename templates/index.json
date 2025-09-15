@@ -80,17 +80,17 @@
             "text": "",
             "width": 300,
             "height": 46,
-            "pad_x": 40,
-            "pad_y": 24,
-            "radius": 32,
+            "pad_x": 0,
+            "pad_y": 0,
+            "radius": 0,
             "font_size": 14,
-            "anchor": "bottom-right",
-            "offset_x": 20,
-            "offset_y": 20,
+            "anchor": "top-left",
+            "offset_x": 0,
+            "offset_y": 0,
             "hide_on_mobile": false,
-            "anchor_mobile": "bottom-center",
-            "offset_x_mobile": 20,
-            "offset_y_mobile": 20
+            "anchor_mobile": "middle-center",
+            "offset_x_mobile": 0,
+            "offset_y_mobile": 0
           }
         }
       },
