@@ -67,7 +67,8 @@
             "button_link_2": "",
             "button_style_secondary_2": false,
             "button_bg_2": "#121212",
-            "button_text_2": "#ffffff"
+            "button_text_2": "#ffffff",
+            "button_radius": 5
           }
         }
       },
