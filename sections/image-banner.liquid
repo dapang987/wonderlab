@@ -66,6 +66,34 @@
 }
 {%- endstyle -%}
 
+{%- style -%}
+  /* 作为定位参照 */
+  #Banner-{{ section.id }} { position: relative; }
+
+  /* 覆盖在图片上的认证块 */
+  #Banner-{{ section.id }} .cert-overlay{
+    position: absolute;
+    z-index: 4;
+    pointer-events: auto;
+    max-width: 92vw; /* 移动端防溢出 */
+  }
+  #Banner-{{ section.id }} .cert-chip{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
+  #Banner-{{ section.id }} .cert-chip--shadow{
+    box-shadow: 0 10px 24px rgba(0,0,0,.18);
+  }
+  @media (max-width: 749px){
+    #Banner-{{ section.id }} .cert-hide-mobile{ display: none !important; }
+  }
+{%- endstyle -%}
+
+
 {%- liquid
   assign full_width = '100vw'
   assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
