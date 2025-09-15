@@ -190,6 +190,19 @@
                   "
                 >{{ block.settings.button_label_2 | escape }}</a>
               {%- endif -%}
+
+                {%- if block.settings.button_label_3 != blank -%}
+      <a
+        href="{{ block.settings.button_link_3 | default: '#' }}
+"
+        class="btn-300x46 button banner-btn-{{ block.id }} btn-3{% if block.settings.button_style_secondary_3 %} button--secondary{% else %} button--primary{% endif %}"
+        style="
+          {%- if block.settings.button_bg_3   != blank -%}background-color: {{ block.settings.button_bg_3 }}; border-color: {{ block.settings.button_bg_3 }};{%- endif -%}
+          {%- if block.settings.button_text_3 != blank -%}color: {{ block.settings.button_text_3 }};{%- endif -%}
+          border-radius: {{ block.settings.button_radius | default: 6 }}px;
+        "
+      >{{ block.settings.button_label_3 | escape }}</a>
+    {%- endif -%}
             </div>
         {%- endcase -%}
       {%- endfor -%}
