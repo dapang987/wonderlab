@@ -57,6 +57,7 @@
         },
         "buttons_qBghTK": {
           "type": "buttons",
+          "disabled": true,
           "settings": {
             "button_label_1": "Take the quiz",
             "button_link_1": "",
@@ -64,17 +65,13 @@
             "button_label_2": "Shop Now",
             "button_link_2": "",
             "button_style_secondary_2": false,
-            "btn_width": 50,
-            "btn_height": 48,
-            "btn_font_size": 16,
-            "btn_text_color": "#000000",
             "btn1_font_size": 16,
             "btn1_text_color": "#ffffff",
             "btn1_radius": 6,
+            "btn1_bg_color": "#121212",
             "btn2_font_size": 16,
             "btn2_text_color": "#121212",
             "btn2_radius": 12,
-            "btn1_bg_color": "#121212",
             "btn2_bg_color": "#ffffff"
           }
         }
