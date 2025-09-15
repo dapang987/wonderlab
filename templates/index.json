@@ -76,16 +76,25 @@
           "settings": {
             "label": "ENDORSED",
             "link": "",
+            "new_tab": true,
             "bg_color": "",
             "text_color": "",
             "font_size": 14,
+            "font_weight": "400",
             "radius": 6,
-            "align_desktop": "right",
-            "align_mobile": "center",
-            "absolute_position": false,
-            "abs_top": 50,
-            "abs_left": 50,
-            "show_on_mobile": true
+            "pad_x": 16,
+            "pad_y": 10,
+            "use_fixed_width": true,
+            "width": 300,
+            "use_fixed_height": false,
+            "height": 48,
+            "anchor": "bottom-right",
+            "z_index": 5,
+            "left_desktop": 10,
+            "top_desktop": 10,
+            "show_on_mobile": true,
+            "left_mobile": 5,
+            "top_mobile": 85
           }
         }
       },
@@ -105,9 +114,7 @@
         "image_behavior": "zoom-in",
         "mobile_content_alignment": "center",
         "stack_images_on_mobile": true,
-        "show_text_below": true,
-        "color_scheme": "",
-        "fallback_button_radius": 6
+        "show_text_below": true
       }
     }
   },
