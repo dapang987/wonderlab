@@ -22,21 +22,6 @@
     }
   {%- endstyle -%}
 {%- endif -%}
-{%- style -%}
-@media (max-width: 749px){
-  #Banner-{{ section.id }} .banner-buttons{ width:100%; }
-
-  #Banner-{{ section.id }}.banner--content-align-mobile-left   .banner-buttons{
-    justify-content:flex-start; margin-left:0;    margin-right:auto;
-  }
-  #Banner-{{ section.id }}.banner--content-align-mobile-center .banner-buttons{
-    justify-content:center;     margin-left:auto; margin-right:auto;
-  }
-  #Banner-{{ section.id }}.banner--content-align-mobile-right  .banner-buttons{
-    justify-content:flex-end;   margin-left:auto; margin-right:0;
-  }
-}
-{%- endstyle -%}
 
 {%- style -%}
   #Banner-{{ section.id }}::after {
@@ -47,15 +32,20 @@
 {%- style -%}
 /* ===== Custom: fixed-size button + alignment + overlay endorsement button ===== */
 
-/* 作为覆盖按钮定位参照 */
+/* 作为覆盖按钮定位参照（根级可保留） */
 #Banner-{{ section.id }}{
   position: relative;
 }
 
-/* 固定 300×46 按钮尺寸（不受上面条件限制） */
+/* 让每个图片容器成为定位上下文（关键） */
+#Banner-{{ section.id }} .banner__media{
+  position: relative;
+}
+
+/* 固定 300×46 主按钮尺寸（不影响覆盖按钮） */
 .btn-300x46{
   display:flex;
-  width:398px;
+  width:300px;
   height:46px;
   padding:9px 19px;
   justify-content:center;
@@ -95,9 +85,6 @@
   justify-content:center;
 }
 {%- endstyle -%}
-{%- style -%}
-#Banner-{{ section.id }} .banner__media{ position: relative; }
-{%- endstyle -%}
 
 {%- liquid
   assign full_width = '100vw'
@@ -119,6 +106,8 @@
   if section.index == 1
     assign fetch_priority = 'high'
   endif
+
+  assign endorsement_rendered = false
 -%}
 
 <div
@@ -151,6 +140,77 @@
           widths: widths,
           fetchpriority: fetch_priority
       }}
+
+      {%- comment -%} 覆盖按钮：优先挂在第一张图上 {%- endcomment -%}
+      {%- unless endorsement_rendered -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'endorsement_button' -%}
+            {%- liquid
+              assign anchor   = block.settings.anchor
+              assign ax       = block.settings.offset_x        | default: 24
+              assign ay       = block.settings.offset_y        | default: 24
+              assign anchor_m = block.settings.anchor_mobile
+              assign axm      = block.settings.offset_x_mobile | default: 24
+              assign aym      = block.settings.offset_y_mobile | default: 24
+            -%}
+
+            {%- capture pos_desktop -%}
+              {%- case anchor -%}
+                {%- when 'top-left' -%}top:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
+                {%- when 'top-center' -%}top:{{ ay }}px;left:50%;transform:translate(-50%,0);
+                {%- when 'top-right' -%}top:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
+                {%- when 'middle-left' -%}top:50%;left:{{ ax }}px;transform:translate(0,-50%);
+                {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
+                {%- when 'middle-right' -%}top:50%;right:{{ ax }}px;transform:translate(0,-50%);
+                {%- when 'bottom-left' -%}bottom:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
+                {%- when 'bottom-center' -%}bottom:{{ ay }}px;left:50%;transform:translate(-50%,0);
+                {%- else -%}bottom:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
+              {%- endcase -%}
+            {%- endcapture -%}
+
+            {%- capture pos_mobile -%}
+              {%- case anchor_m -%}
+                {%- when 'top-left' -%}top:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
+                {%- when 'top-center' -%}top:{{ aym }}px;left:50%;transform:translate(-50%,0);
+                {%- when 'top-right' -%}top:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
+                {%- when 'middle-left' -%}top:50%;left:{{ axm }}px;transform:translate(0,-50%);
+                {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
+                {%- when 'middle-right' -%}top:50%;right:{{ axm }}px;transform:translate(0,-50%);
+                {%- when 'bottom-left' -%}bottom:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
+                {%- when 'bottom-center' -%}bottom:{{ aym }}px;left:50%;transform:translate(-50%,0);
+                {%- else -%}bottom:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
+              {%- endcase -%}
+            {%- endcapture -%}
+
+            <style>
+              @media (min-width: 750px){
+                #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{ {{ pos_desktop | strip }} }
+              }
+              @media (max-width: 749px){
+                #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{
+                  {{ pos_mobile | strip }}
+                  {%- if block.settings.hide_on_mobile -%} display:none; {%- endif -%}
+                }
+              }
+            </style>
+
+            <a
+              {{ block.shopify_attributes }}
+              href="{{ block.settings.link | default: '#' }}
+"
+              class="endorsement-btn endorsement-btn--{{ block.id }} button{% if block.settings.use_secondary %} button--secondary{% else %} button--primary{% endif %}"
+              style="
+                {%- if block.settings.bg   != blank -%}background-color: {{ block.settings.bg }}; border-color: {{ block.settings.bg }};{%- endif -%}
+                {%- if block.settings.text != blank -%}color: {{ block.settings.text }};{%- endif -%}
+                font-size: {{ block.settings.font_size | default: 14 }}px;
+                padding: {{ block.settings.pad_y | default: 9 }}px {{ block.settings.pad_x | default: 19 }}px;
+                border-radius: {{ block.settings.radius | default: 6 }}px;
+              "
+            >{{ block.settings.label | default: 'ENDORSED' }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign endorsement_rendered = true -%}
+      {%- endunless -%}
     </div>
   {%- elsif section.settings.image_2 == blank -%}
     <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
@@ -184,80 +244,78 @@
           widths: widths,
           fetchpriority: fetch_priority
       }}
+
+      {%- comment -%} 如果第一张没渲染，则挂在第二张图上 {%- endcomment -%}
+      {%- unless endorsement_rendered -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'endorsement_button' -%}
+            {%- liquid
+              assign anchor   = block.settings.anchor
+              assign ax       = block.settings.offset_x        | default: 24
+              assign ay       = block.settings.offset_y        | default: 24
+              assign anchor_m = block.settings.anchor_mobile
+              assign axm      = block.settings.offset_x_mobile | default: 24
+              assign aym      = block.settings.offset_y_mobile | default: 24
+            -%}
+
+            {%- capture pos_desktop -%}
+              {%- case anchor -%}
+                {%- when 'top-left' -%}top:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
+                {%- when 'top-center' -%}top:{{ ay }}px;left:50%;transform:translate(-50%,0);
+                {%- when 'top-right' -%}top:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
+                {%- when 'middle-left' -%}top:50%;left:{{ ax }}px;transform:translate(0,-50%);
+                {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
+                {%- when 'middle-right' -%}top:50%;right:{{ ax }}px;transform:translate(0,-50%);
+                {%- when 'bottom-left' -%}bottom:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
+                {%- when 'bottom-center' -%}bottom:{{ ay }}px;left:50%;transform:translate(-50%,0);
+                {%- else -%}bottom:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
+              {%- endcase -%}
+            {%- endcapture -%}
+
+            {%- capture pos_mobile -%}
+              {%- case anchor_m -%}
+                {%- when 'top-left' -%}top:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
+                {%- when 'top-center' -%}top:{{ aym }}px;left:50%;transform:translate(-50%,0);
+                {%- when 'top-right' -%}top:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
+                {%- when 'middle-left' -%}top:50%;left:{{ axm }}px;transform:translate(0,-50%);
+                {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
+                {%- when 'middle-right' -%}top:50%;right:{{ axm }}px;transform:translate(0,-50%);
+                {%- when 'bottom-left' -%}bottom:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
+                {%- when 'bottom-center' -%}bottom:{{ aym }}px;left:50%;transform:translate(-50%,0);
+                {%- else -%}bottom:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
+              {%- endcase -%}
+            {%- endcapture -%}
+
+            <style>
+              @media (min-width: 750px){
+                #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{ {{ pos_desktop | strip }} }
+              }
+              @media (max-width: 749px){
+                #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{
+                  {{ pos_mobile | strip }}
+                  {%- if block.settings.hide_on_mobile -%} display:none; {%- endif -%}
+                }
+              }
+            </style>
+
+            <a
+              {{ block.shopify_attributes }}
+              href="{{ block.settings.link | default: '#' }}"
+              class="endorsement-btn endorsement-btn--{{ block.id }} button{% if block.settings.use_secondary %} button--secondary{% else %} button--primary{% endif %}"
+              style="
+                {%- if block.settings.bg   != blank -%}background-color: {{ block.settings.bg }}; border-color: {{ block.settings.bg }};{%- endif -%}
+                {%- if block.settings.text != blank -%}color: {{ block.settings.text }};{%- endif -%}
+                font-size: {{ block.settings.font_size | default: 14 }}px;
+                padding: {{ block.settings.pad_y | default: 9 }}px {{ block.settings.pad_x | default: 19 }}px;
+                border-radius: {{ block.settings.radius | default: 6 }}px;
+              "
+            >{{ block.settings.label | default: 'ENDORSED' }}</a>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign endorsement_rendered = true -%}
+      {%- endunless -%}
     </div>
   {%- endif -%}
-
-  {%- comment -%}
-    ==== Overlay Endorsement Button ====
-    单独循环渲染，不受 .banner__box 影响，确保“压在图片上”
-  {%- endcomment -%}
-  {%- for block in section.blocks -%}
-    {%- if block.type == 'endorsement_button' -%}
-      {%- liquid
-        assign anchor   = block.settings.anchor
-        assign ax       = block.settings.offset_x       | default: 24
-        assign ay       = block.settings.offset_y       | default: 24
-        assign anchor_m = block.settings.anchor_mobile
-        assign axm      = block.settings.offset_x_mobile| default: 24
-        assign aym      = block.settings.offset_y_mobile| default: 24
-      -%}
-
-      {%- capture pos_desktop -%}
-        {%- case anchor -%}
-          {%- when 'top-left' -%}top:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
-          {%- when 'top-center' -%}top:{{ ay }}px;left:50%;transform:translate(-50%,0);
-          {%- when 'top-right' -%}top:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
-          {%- when 'middle-left' -%}top:50%;left:{{ ax }}px;transform:translate(0,-50%);
-          {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
-          {%- when 'middle-right' -%}top:50%;right:{{ ax }}px;transform:translate(0,-50%);
-          {%- when 'bottom-left' -%}bottom:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
-          {%- when 'bottom-center' -%}bottom:{{ ay }}px;left:50%;transform:translate(-50%,0);
-          {%- else -%}bottom:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
-        {%- endcase -%}
-      {%- endcapture -%}
-
-      {%- capture pos_mobile -%}
-        {%- case anchor_m -%}
-          {%- when 'top-left' -%}top:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
-          {%- when 'top-center' -%}top:{{ aym }}px;left:50%;transform:translate(-50%,0);
-          {%- when 'top-right' -%}top:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
-          {%- when 'middle-left' -%}top:50%;left:{{ axm }}px;transform:translate(0,-50%);
-          {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
-          {%- when 'middle-right' -%}top:50%;right:{{ axm }}px;transform:translate(0,-50%);
-          {%- when 'bottom-left' -%}bottom:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
-          {%- when 'bottom-center' -%}bottom:{{ aym }}px;left:50%;transform:translate(-50%,0);
-          {%- else -%}bottom:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
-        {%- endcase -%}
-      {%- endcapture -%}
-
-      <style>
-        @media (min-width: 750px){
-          #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{ {{ pos_desktop | strip }} }
-        }
-        @media (max-width: 749px){
-          #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{
-            {{ pos_mobile | strip }}
-            {%- if block.settings.hide_on_mobile -%} display:none; {%- endif -%}
-          }
-        }
-      </style>
-
-      <a
-        {{ block.shopify_attributes }}
-        href="{{ block.settings.link | default: '#' }}"
-        class="endorsement-btn endorsement-btn--{{ block.id }} button{% if block.settings.use_secondary %} button--secondary{% else %} button--primary{% endif %}"
-        style="
-          {%- if block.settings.bg   != blank -%}background-color: {{ block.settings.bg }}; border-color: {{ block.settings.bg }};{%- endif -%}
-          {%- if block.settings.text != blank -%}color: {{ block.settings.text }};{%- endif -%}
-          font-size: {{ block.settings.font_size | default: 14 }}px;
-          padding: {{ block.settings.pad_y | default: 9 }}px {{ block.settings.pad_x | default: 19 }}px;
-          border-radius: {{ block.settings.radius | default: 6 }}px;
-        "
-      >
-        {{ block.settings.label | default: 'ENDORSED' }}
-      </a>
-    {%- endif -%}
-  {%- endfor -%}
 
   <div class="banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
@@ -307,6 +365,19 @@
     </div>
   </div>
 </div>
+
+{%- comment -%}
+  PC 端为覆盖按钮设置固定尺寸 390×80（放在最后，确保覆盖）
+{%- endcomment -%}
+{%- style -%}
+@media (min-width: 750px){
+  #Banner-{{ section.id }} .endorsement-btn{
+    width: 390px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+}
+{%- endstyle -%}
 
 {% schema %}
 {
