@@ -166,11 +166,22 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "custom_liquid_mEKyFG": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<!DOCTYPE html>\n\n  <style>\n    :root{\n      --text:#222;\n      --muted:#666;\n      --divider:#bdbdbd;\n      --radius:12px;\n      --gap:3rem;\n    }\n\n\n    .section{ padding:24px; }\n    .wrap{ max-width:1500px; margin:0 auto; }\n\n    /* 最外围盒子（固定尺寸 + 比例 + 浅灰背景） */\n    .benefits-outer{\n      width: 1354px;\n      height: 344px;\n      flex-shrink: 0;\n      aspect-ratio: 492 / 125;\n      background-color: #EEE;\n      border-radius: var(--radius);\n      padding: 28px 32px;\n      margin: 0 auto;\n      /* 不用额外居中，由内部网格做垂直居中 */\n    }\n\n    /* 三列：左/分隔线/右；让网格占满父容器高度 */\n    .benefits{\n      display:grid;\n      grid-template-columns: 1fr 1px 1fr;\n      column-gap:var(--gap);\n      align-items:stretch;   /* 让分隔线能拉满高度 */\n      height:100%;           /* 关键：网格高度=外层高度，便于垂直居中 */\n      width:100%;\n    }\n\n    /* 两个内容列自身做垂直居中 */\n    .col{\n      display:flex;\n      flex-direction:column;\n      justify-content:center; /* 关键：列内内容垂直居中 */\n         padding-left:50px;\n    }\n\n    /* 竖向点状分隔线，拉满父容器高度 */\n    .divider{\n      align-self:stretch;\n      height:100%;\n      width:1px;\n      background-image: radial-gradient(var(--divider) 1.2px, transparent 1.2px);\n      background-size:1px 8px;\n      background-repeat:repeat-y;\n      background-position:center top;\n    }\n\n    .col h3{\n      margin:0 0 12px;\n      font-size:20px;\n      font-weight:700;\n      letter-spacing:.2px;\n    }\n\n    .col ul{\n      list-style:none;\n      padding:0;\n      margin:0;\n   \n    }\n    .col li{\n      color:var(--muted);\n      font-size:14px;\n      line-height:1.7;\n      display:flex;\n      align-items:flex-start;\n    }\n    .col li::before{\n      content:\"·\";\n      display:inline-block;\n      margin-right:.6rem;\n      transform:translateY(-1px);\n      color:var(--muted);\n      flex:none;\n    }\n\n    /* 自适应：窄屏宽度100%，高度按比例，栅格上下堆叠并改横向点状线 */\n    @media (max-width: 1390px){\n      .benefits-outer{\n        width: 100%;\n        max-width: 1354px;\n        height: auto;            /* 高度随 aspect-ratio 计算 */\n      }\n      .benefits{\n        height:100%;             /* 依然占满外层的可用高度 */\n      }\n    }\n\n    @media (max-width: 768px){\n      .benefits-outer{\n        padding: 22px 16px;\n      }\n      .benefits{\n        grid-template-columns: 1fr;\n        row-gap:18px;\n      }\n      .divider{\n        width:100%;\n        height:1px;\n        background-size:8px 1px;   /* 横向点状 */\n        background-repeat:repeat-x;\n      }\n      .col h3{ font-size:18px; }\n      .col li{ font-size:13.5px; }\n    }\n  </style>\n\n  <section class=\"section\">\n    <div class=\"wrap\">\n      <div class=\"benefits-outer\">\n        <div class=\"benefits\">\n          <!-- 左列 -->\n          <div class=\"col\">\n            <h3>Weight Management Support</h3>\n            <ul>\n              <li>Naturally curb cravings where they start</li>\n              <li>Stop carbs and fats from being absorbed right at the gut</li>\n              <li>Enhance calorie expenditure, supercharge metabolic efficiency</li>\n            </ul>\n          </div>\n\n          <!-- 中间分隔线 -->\n          <div class=\"divider\" aria-hidden=\"true\"></div>\n\n          <!-- 右列 -->\n          <div class=\"col\">\n            <h3>Healthy Microbiome &amp; Digestion</h3>\n            <ul>\n              <li>Probiotics for a healthier gut</li>\n              <li>Fibers and prebiotics feed good bacteria, boosting growth</li>\n              <li>Strains survive stomach acid &amp; bile, thriving for max benefits</li>\n            </ul>\n          </div>\n        </div>\n      </div>\n    </div>\n  </section>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
     "featured_collection",
     "image_banner_Cx3d8j",
-    "image_with_text_izDx6t"
+    "image_with_text_izDx6t",
+    "custom_liquid_mEKyFG"
   ]
 }
