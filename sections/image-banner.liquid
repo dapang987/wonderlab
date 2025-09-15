@@ -92,17 +92,6 @@
     #Banner-{{ section.id }} .cert-hide-mobile{ display: none !important; }
   }
 {%- endstyle -%}
-{%- style -%}
-/* 手机端（<990px）使用百分比偏移：相对整个 Banner 尺寸定位 */
-@media screen and (max-width: 989px){
-  #Banner-{{ section.id }} .cert-{{ block.id }}{
-    right: {{ block.settings.m_offset_right_pct }}% !important;
-    bottom: {{ block.settings.m_offset_bottom_pct }}% !important;
-    left: auto;
-    top: auto;
-  }
-}
-{%- endstyle -%}
 
 
 {%- liquid
@@ -504,7 +493,13 @@
     { "type": "range", "id": "pad_x", "label": "左右内边距（px）", "min": 6, "max": 32, "step": 2, "default": 16 },
     { "type": "range", "id": "pad_y", "label": "上下内边距（px）", "min": 4, "max": 24, "step": 2, "default": 10 },
     { "type": "checkbox", "id": "use_shadow", "label": "启用阴影", "default": true },
-{
+
+    { "type": "header", "content": "位置（默认右下角）" },
+    { "type": "range", "id": "offset_right", "label": "距右侧偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
+    { "type": "range", "id": "offset_bottom", "label": "距底部偏移（px）", "min": 0, "max": 100, "step": 1, "default": 16 },
+    { "type": "checkbox", "id": "show_on_mobile", "label": "在手机端显示", "default": true },
+
+    {
   "type": "header",
   "content": "手机端位置（百分比）"
 },
