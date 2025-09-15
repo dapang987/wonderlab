@@ -30,9 +30,14 @@
 {%- endstyle -%}
 
 {%- style -%}
-/* ===== Custom: fixed-size button + alignment ===== */
+/* ===== Custom: fixed-size button + alignment + overlay endorsement button ===== */
 
-/* 固定 300×46 按钮尺寸（全局生效，不受上面条件限制） */
+/* 作为覆盖按钮定位参照 */
+#Banner-{{ section.id }}{
+  position: relative;
+}
+
+/* 固定 300×46 按钮尺寸（不受上面条件限制） */
 .btn-300x46{
   display:flex;
   width:300px;
@@ -45,17 +50,34 @@
   box-sizing:border-box;
 }
 
-/* 多按钮的容器，控制间距与换行 */
+/* 多按钮容器 */
 .banner-buttons{
   display:flex;
   gap:12px;
   flex-wrap:wrap;
 }
 
-/* 让文案/按钮与 header 的 page-width 左边对齐：移除 box 左右内边距 */
+/* 让文案/按钮与 page-width 左边对齐 */
 #Banner-{{ section.id }} .banner__box{
   padding-left:0;
   padding-right:0;
+}
+
+/* 覆盖按钮基础样式（具体位置由每个 block 注入的 <style> 控制） */
+#Banner-{{ section.id }} .endorsement-btn{
+  position:absolute;
+  z-index:5;
+  pointer-events:auto;
+  white-space:nowrap;
+  box-sizing:border-box;
+  max-width: calc(100vw - 20px); /* 防止手机端越界 */
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#Banner-{{ section.id }} .endorsement-btn.button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
 }
 {%- endstyle -%}
 
@@ -147,6 +169,78 @@
     </div>
   {%- endif -%}
 
+  {%- comment -%}
+    ==== Overlay Endorsement Button ====
+    单独循环渲染，不受 .banner__box 影响，确保“压在图片上”
+  {%- endcomment -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'endorsement_button' -%}
+      {%- liquid
+        assign anchor   = block.settings.anchor
+        assign ax       = block.settings.offset_x       | default: 24
+        assign ay       = block.settings.offset_y       | default: 24
+        assign anchor_m = block.settings.anchor_mobile
+        assign axm      = block.settings.offset_x_mobile| default: 24
+        assign aym      = block.settings.offset_y_mobile| default: 24
+      -%}
+
+      {%- capture pos_desktop -%}
+        {%- case anchor -%}
+          {%- when 'top-left' -%}top:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
+          {%- when 'top-center' -%}top:{{ ay }}px;left:50%;transform:translate(-50%,0);
+          {%- when 'top-right' -%}top:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
+          {%- when 'middle-left' -%}top:50%;left:{{ ax }}px;transform:translate(0,-50%);
+          {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
+          {%- when 'middle-right' -%}top:50%;right:{{ ax }}px;transform:translate(0,-50%);
+          {%- when 'bottom-left' -%}bottom:{{ ay }}px;left:{{ ax }}px;transform:translate(0,0);
+          {%- when 'bottom-center' -%}bottom:{{ ay }}px;left:50%;transform:translate(-50%,0);
+          {%- else -%}bottom:{{ ay }}px;right:{{ ax }}px;transform:translate(0,0);
+        {%- endcase -%}
+      {%- endcapture -%}
+
+      {%- capture pos_mobile -%}
+        {%- case anchor_m -%}
+          {%- when 'top-left' -%}top:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
+          {%- when 'top-center' -%}top:{{ aym }}px;left:50%;transform:translate(-50%,0);
+          {%- when 'top-right' -%}top:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
+          {%- when 'middle-left' -%}top:50%;left:{{ axm }}px;transform:translate(0,-50%);
+          {%- when 'middle-center' -%}top:50%;left:50%;transform:translate(-50%,-50%);
+          {%- when 'middle-right' -%}top:50%;right:{{ axm }}px;transform:translate(0,-50%);
+          {%- when 'bottom-left' -%}bottom:{{ aym }}px;left:{{ axm }}px;transform:translate(0,0);
+          {%- when 'bottom-center' -%}bottom:{{ aym }}px;left:50%;transform:translate(-50%,0);
+          {%- else -%}bottom:{{ aym }}px;right:{{ axm }}px;transform:translate(0,0);
+        {%- endcase -%}
+      {%- endcapture -%}
+
+      <style>
+        @media (min-width: 750px){
+          #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{ {{ pos_desktop | strip }} }
+        }
+        @media (max-width: 749px){
+          #Banner-{{ section.id }} .endorsement-btn--{{ block.id }}{
+            {{ pos_mobile | strip }}
+            {%- if block.settings.hide_on_mobile -%} display:none; {%- endif -%}
+          }
+        }
+      </style>
+
+      <a
+        {{ block.shopify_attributes }}
+        href="{{ block.settings.link | default: '#' }}"
+        class="endorsement-btn endorsement-btn--{{ block.id }} button{% if block.settings.use_secondary %} button--secondary{% else %} button--primary{% endif %}"
+        style="
+          {%- if block.settings.bg   != blank -%}background-color: {{ block.settings.bg }}; border-color: {{ block.settings.bg }};{%- endif -%}
+          {%- if block.settings.text != blank -%}color: {{ block.settings.text }};{%- endif -%}
+          font-size: {{ block.settings.font_size | default: 14 }}px;
+          padding: {{ block.settings.pad_y | default: 9 }}px {{ block.settings.pad_x | default: 19 }}px;
+          border-radius: {{ block.settings.radius | default: 6 }}px;
+        "
+      >
+        {{ block.settings.label | default: 'ENDORSED' }}
+      </a>
+    {%- endif -%}
+  {%- endfor -%}
+
   <div class="banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
       {%- for block in section.blocks -%}
@@ -165,16 +259,15 @@
             </div>
 
           {%- when 'buttons' -%}
-            <div class="banner-buttons">
+            <div class="banner-buttons" {{ block.shopify_attributes }}>
               {%- if block.settings.button_label_1 != blank -%}
                 <a
                   href="{{ block.settings.button_link_1 | default: '#' }}"
                   class="btn-300x46 button banner-btn-{{ block.id }} btn-1{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
                   style="
                     {%- if block.settings.button_bg_1   != blank -%}background-color: {{ block.settings.button_bg_1 }}; border-color: {{ block.settings.button_bg_1 }};{%- endif -%}
-                    {%- if block.settings.button_text_1 != blank -%}color: {{ block.settings.button_text_1 }};
-                       border-radius: {{ block.settings.button_radius | default: 6 }}px;
-                    {%- endif -%}
+                    {%- if block.settings.button_text_1 != blank -%}color: {{ block.settings.button_text_1 }};{%- endif -%}
+                    border-radius: {{ block.settings.button_radius | default: 6 }}px;
                   "
                 >{{ block.settings.button_label_1 | escape }}</a>
               {%- endif -%}
@@ -186,7 +279,7 @@
                   style="
                     {%- if block.settings.button_bg_2   != blank -%}background-color: {{ block.settings.button_bg_2 }}; border-color: {{ block.settings.button_bg_2 }};{%- endif -%}
                     {%- if block.settings.button_text_2 != blank -%}color: {{ block.settings.button_text_2 }};{%- endif -%}
-                       border-radius: {{ block.settings.button_radius | default: 6 }}px;
+                    border-radius: {{ block.settings.button_radius | default: 6 }}px;
                   "
                 >{{ block.settings.button_label_2 | escape }}</a>
               {%- endif -%}
@@ -295,61 +388,61 @@
       ]
     },
     {
-  "type": "endorsement_button",
-  "name": "Endorsement button",
-  "limit": 1,
-  "settings": [
-    { "type": "text",     "id": "label",         "label": "Text", "default": "ENDORSED" },
-    { "type": "url",      "id": "link",          "label": "Link" },
-    { "type": "checkbox", "id": "use_secondary", "label": "Use secondary style", "default": false },
+      "type": "endorsement_button",
+      "name": "Endorsement button",
+      "limit": 1,
+      "settings": [
+        { "type": "text",     "id": "label",         "label": "Text", "default": "ENDORSED" },
+        { "type": "url",      "id": "link",          "label": "Link" },
+        { "type": "checkbox", "id": "use_secondary", "label": "Use secondary style", "default": false },
 
-    { "type": "color", "id": "bg",   "label": "Background color" },
-    { "type": "color", "id": "text", "label": "Text color" },
+        { "type": "color", "id": "bg",   "label": "Background color" },
+        { "type": "color", "id": "text", "label": "Text color" },
 
-    { "type": "range", "id": "font_size", "label": "Font size", "min": 10, "max": 36, "step": 1, "unit": "px", "default": 14 },
+        { "type": "range", "id": "font_size", "label": "Font size", "min": 10, "max": 36, "step": 1, "unit": "px", "default": 14 },
 
-    { "type": "header", "content": "Size" },
-    { "type": "range", "id": "pad_x",  "label": "Padding X", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 19 },
-    { "type": "range", "id": "pad_y",  "label": "Padding Y", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 9 },
-    { "type": "range", "id": "radius", "label": "Border radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 6 },
+        { "type": "header", "content": "Size" },
+        { "type": "range", "id": "pad_x",  "label": "Padding X", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 19 },
+        { "type": "range", "id": "pad_y",  "label": "Padding Y", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 9 },
+        { "type": "range", "id": "radius", "label": "Border radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 6 },
 
-    { "type": "header", "content": "Desktop position" },
-    { "type": "select", "id": "anchor", "label": "Anchor (desktop)", "default": "bottom-right",
-      "options": [
-        { "value": "top-left", "label": "Top left" },
-        { "value": "top-center", "label": "Top center" },
-        { "value": "top-right", "label": "Top right" },
-        { "value": "middle-left", "label": "Middle left" },
-        { "value": "middle-center", "label": "Middle center" },
-        { "value": "middle-right", "label": "Middle right" },
-        { "value": "bottom-left", "label": "Bottom left" },
-        { "value": "bottom-center", "label": "Bottom center" },
-        { "value": "bottom-right", "label": "Bottom right" }
+        { "type": "header", "content": "Desktop position" },
+        { "type": "select", "id": "anchor", "label": "Anchor (desktop)", "default": "bottom-right",
+          "options": [
+            { "value": "top-left", "label": "Top left" },
+            { "value": "top-center", "label": "Top center" },
+            { "value": "top-right", "label": "Top right" },
+            { "value": "middle-left", "label": "Middle left" },
+            { "value": "middle-center", "label": "Middle center" },
+            { "value": "middle-right", "label": "Middle right" },
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "bottom-center", "label": "Bottom center" },
+            { "value": "bottom-right", "label": "Bottom right" }
+          ]
+        },
+        { "type": "range", "id": "offset_x", "label": "Horizontal offset (desktop)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+        { "type": "range", "id": "offset_y", "label": "Vertical offset (desktop)",   "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+
+        { "type": "header", "content": "Mobile position" },
+        { "type": "select", "id": "anchor_mobile", "label": "Anchor (mobile)", "default": "bottom-right",
+          "options": [
+            { "value": "top-left", "label": "Top left" },
+            { "value": "top-center", "label": "Top center" },
+            { "value": "top-right", "label": "Top right" },
+            { "value": "middle-left", "label": "Middle left" },
+            { "value": "middle-center", "label": "Middle center" },
+            { "value": "middle-right", "label": "Middle right" },
+            { "value": "bottom-left", "label": "Bottom left" },
+            { "value": "bottom-center", "label": "Bottom center" },
+            { "value": "bottom-right", "label": "Bottom right" }
+          ]
+        },
+        { "type": "range", "id": "offset_x_mobile", "label": "Horizontal offset (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+        { "type": "range", "id": "offset_y_mobile", "label": "Vertical offset (mobile)",   "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
+
+        { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile (<750px)", "default": false }
       ]
     },
-    { "type": "range", "id": "offset_x", "label": "Horizontal offset (desktop)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
-    { "type": "range", "id": "offset_y", "label": "Vertical offset (desktop)",   "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
-
-    { "type": "header", "content": "Mobile position" },
-    { "type": "select", "id": "anchor_mobile", "label": "Anchor (mobile)", "default": "bottom-right",
-      "options": [
-        { "value": "top-left", "label": "Top left" },
-        { "value": "top-center", "label": "Top center" },
-        { "value": "top-right", "label": "Top right" },
-        { "value": "middle-left", "label": "Middle left" },
-        { "value": "middle-center", "label": "Middle center" },
-        { "value": "middle-right", "label": "Middle right" },
-        { "value": "bottom-left", "label": "Bottom left" },
-        { "value": "bottom-center", "label": "Bottom center" },
-        { "value": "bottom-right", "label": "Bottom right" }
-      ]
-    },
-    { "type": "range", "id": "offset_x_mobile", "label": "Horizontal offset (mobile)", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
-    { "type": "range", "id": "offset_y_mobile", "label": "Vertical offset (mobile)",   "min": 0, "max": 100, "step": 1, "unit": "px", "default": 24 },
-
-    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile (<750px)", "default": false }
-  ]
-},
 
     {
       "type": "text",
@@ -386,16 +479,15 @@
         { "type": "color", "id": "button_bg_2",   "label": "Button 2 background" },
         { "type": "color", "id": "button_text_2", "label": "Button 2 text color" },
         {
-  "type": "range",
-  "id": "button_radius",
-  "min": 0,
-  "max": 40,
-  "step": 1,
-  "unit": "px",
-  "label": "Button corner radius",
-  "default": 6
-}
-
+          "type": "range",
+          "id": "button_radius",
+          "min": 0,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "label": "Button corner radius",
+          "default": 6
+        }
       ]
     }
   ],
