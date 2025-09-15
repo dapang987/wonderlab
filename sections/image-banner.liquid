@@ -20,6 +20,19 @@
         display: block;
       }
     }
+/* 固定 300×46 按钮样式 */
+.btn-300x46{
+  display: flex;
+  width: 300px;
+  height: 46px;
+  padding: 9px 19px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  /* 可选：避免 padding/边框撑破高度 */
+  box-sizing: border-box;
+}
 
     
   {%- endstyle -%}
@@ -137,7 +150,7 @@
     {%- if block.settings.button_label_1 != blank -%}
       <a
         href="{{ block.settings.button_link_1 | default: '#' }}"
-        class="button banner-btn-{{ block.id }} btn-1{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
+        class="button btn-300x46 button banner-btn-{{ block.id }} btn-1{% if block.settings.button_style_secondary_1 %} button--secondary{% else %} button--primary{% endif %}"
         style="
           {%- if block.settings.button_bg_1   != blank -%}background-color: {{ block.settings.button_bg_1 }}; border-color: {{ block.settings.button_bg_1 }};{%- endif -%}
           {%- if block.settings.button_text_1 != blank -%}color: {{ block.settings.button_text_1 }};{%- endif -%}
