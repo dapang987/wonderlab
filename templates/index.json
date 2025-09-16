@@ -392,6 +392,7 @@
         "logo_CqL7C4",
         "logo_nVLwgG"
       ],
+      "disabled": true,
       "name": "Logo Marquee（无缝连续）",
       "settings": {
         "strip_bg": "#f3f3f3",
