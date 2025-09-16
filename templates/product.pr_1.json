@@ -110,9 +110,9 @@
         "body": "<p>Our 20B CFU blend features clinically proven strains B420 & HN019—a weight-management powerhouse. Exclusive packaging locks in full potency, ensuring every dose helps curb cravings, boost metabolism, and target stubborn areas. Proven to survive digestion and deliver real results—science that works.</p>",
         "image_alt": "",
         "layout": "text-right",
-        "image_width_desktop": 420,
+        "image_width_desktop": 640,
         "card_bg": "#efefef",
-        "full_width": true,
+        "full_width": false,
         "color_scheme": "",
         "padding_top": 56,
         "padding_bottom": 56
