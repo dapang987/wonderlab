@@ -156,6 +156,8 @@
         "image_alt": "",
         "layout": "text-left",
         "card_bg": "#efefef",
+        "card_min_height_mobile": 320,
+        "card_min_height_desktop": 520,
         "full_width": false,
         "color_scheme": "",
         "padding_top": 56,
