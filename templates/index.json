@@ -452,8 +452,10 @@
       "settings": {
         "heading": "Customer’s Five-Star Review",
         "a11y_label": "Customer Reviews Carousel",
-        "page_width": 1390,
-        "radius": 12,
+        "heading_size": 14,
+        "card_title_size": 12,
+        "card_quote_size": 12,
+        "radius": 0,
         "border": "#e5e7eb",
         "text": "#111111",
         "muted": "#666666"
