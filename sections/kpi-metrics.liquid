@@ -104,6 +104,17 @@
     @media (max-width: 360px){
       .section-{{ section.id }} .kpi-grid{ grid-template-columns: 1fr; }
     }
+
+    /* 跟随 Dawn 的分区间距，仅在前面插空隙，不影响首页第一个 section */
+.shopify-section + .shopify-section .section-{{ section.id }}{
+  margin-top: var(--spacing-sections-desktop);
+}
+@media (max-width: 749px){
+  .shopify-section + .shopify-section .section-{{ section.id }}{
+    margin-top: var(--spacing-sections-mobile);
+  }
+}
+
   </style>
 
   <!-- 使用 Dawn 的 .page-width，使宽度与 --page-width 一致 -->
