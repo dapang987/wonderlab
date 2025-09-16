@@ -1,0 +1,259 @@
+{% comment %}
+  Section: Logo Marquee（无缝连续）
+  - 无缝：把同一序列重复两遍，并整体平移 50%
+  - 少量 Logo ：当 <5 个时自动做额外倍增，保证连贯
+  - 可配置：速度、背景、间距、圆角、logo 高度（移动/桌面）、方向、悬停暂停、是否 page-width
+  用法：保存为 sections/logo-marquee.liquid，在自定义中添加 Logo blocks 即可
+{% endcomment %}
+
+<section class="logo-marquee section-{{ section.id }}" aria-label="Logo marquee">
+  {%- liquid
+    assign copies = 1
+    if section.blocks.size < 5
+      assign copies = 2
+    endif
+  -%}
+
+  <style>
+    .section-{{ section.id }}{
+      --strip-bg: {{ section.settings.strip_bg }};
+      --speed: {{ section.settings.speed }}s;     /* 一整圈时长：越小越快 */
+      --gap: {{ section.settings.gap }}px;
+      --logo-r: {{ section.settings.logo_radius }}px;
+      --grad-w: {{ section.settings.gradient_width }}px;
+      --logo-h-m: {{ section.settings.logo_h_mobile }}px;
+      --logo-h-d: {{ section.settings.logo_h_desktop }}px;
+    }
+
+    .section-{{ section.id }} .marquee{
+      background: var(--strip-bg);
+      padding: 14px 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* 宽度：可选全宽或跟随主题 page-width 宽度 */
+    .section-{{ section.id }} .marquee__inner{
+      {% if section.settings.full_width %}
+        max-width: none;
+      {% else %}
+        max-width: var(--page-width);
+        margin: 0 auto;
+        padding: 0 1.6rem;
+      {% endif %}
+    }
+
+    .section-{{ section.id }} .marquee__viewport{
+      overflow: hidden;
+    }
+
+    /* 轨道：两段相同序列拼接，平移 50% 即无缝 */
+    .section-{{ section.id }} .marquee__track{
+      display: flex;
+      width: max-content;
+      gap: var(--gap);
+      animation: logoScroll-{{ section.id }} var(--speed) linear infinite;
+      will-change: transform;
+      {% if section.settings.direction == 'right' %}
+        animation-direction: reverse;
+      {% else %}
+        animation-direction: normal;
+      {% endif %}
+    }
+
+    {% if section.settings.pause_on_hover %}
+    .section-{{ section.id }} .marquee:hover .marquee__track{
+      animation-play-state: paused;
+    }
+    {% endif %}
+
+    .section-{{ section.id }} .marquee__seq{
+      display: flex;
+      gap: var(--gap);
+    }
+
+    .section-{{ section.id }} .marquee__item{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto; /* 固定内容宽度，避免被挤压 */
+    }
+
+    .section-{{ section.id }} .marquee__img{
+      height: var(--logo-h-m);
+      width: auto;
+      border-radius: var(--logo-r);
+      display: block;
+    }
+    @media (min-width: 750px){
+      .section-{{ section.id }} .marquee__img{ height: var(--logo-h-d); }
+    }
+
+    /* 两侧渐隐 */
+    .section-{{ section.id }} .marquee::before,
+    .section-{{ section.id }} .marquee::after{
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0;
+      width: var(--grad-w);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .section-{{ section.id }} .marquee::before{
+      left: 0;
+      background: linear-gradient(to right, var(--strip-bg), rgba(255,255,255,0));
+    }
+    .section-{{ section.id }} .marquee::after{
+      right: 0;
+      background: linear-gradient(to left, var(--strip-bg), rgba(255,255,255,0));
+    }
+
+    /* 减少动态偏好 */
+    @media (prefers-reduced-motion: reduce){
+      .section-{{ section.id }} .marquee__track{ animation: none; }
+    }
+
+    @keyframes logoScroll-{{ section.id }}{
+      from{ transform: translateX(0); }
+      to{ transform: translateX(-50%); } /* 轨道包含两段相同序列，总宽度的 50% 即一段宽度 */
+    }
+  </style>
+
+  <div class="marquee">
+    <div class="{% if section.settings.full_width %}marquee__inner{% else %}page-width marquee__inner{% endif %}">
+      <div class="marquee__viewport">
+        <div class="marquee__track">
+
+          {%- comment -%} 第一段序列 {%- endcomment -%}
+          <div class="marquee__seq">
+            {%- if section.blocks.size > 0 -%}
+              {%- for c in (1..copies) -%}
+                {%- for block in section.blocks -%}
+                  {%- if block.type == 'logo' -%}
+                  <div class="marquee__item" {{ block.shopify_attributes }}>
+                    {%- if block.settings.link != blank -%}
+                      <a href="{{ block.settings.link }}" class="marquee__link" aria-label="{{ block.settings.alt | escape }}">
+                    {%- endif -%}
+
+                    {%- if block.settings.image != blank -%}
+                      {{ block.settings.image
+                        | image_url: width: 600
+                        | image_tag:
+                          loading: 'lazy',
+                          sizes: '200px',
+                          class: 'marquee__img',
+                          alt: block.settings.alt
+                      }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg marquee__img' }}
+                    {%- endif -%}
+
+                    {%- if block.settings.link != blank -%}</a>{%- endif -%}
+                  </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- for i in (1..6) -%}
+              <div class="marquee__item">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg marquee__img' }}
+              </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+
+          {%- comment -%} 第二段序列（无障碍隐藏，用于无缝衔接） {%- endcomment -%}
+          <div class="marquee__seq" aria-hidden="true">
+            {%- if section.blocks.size > 0 -%}
+              {%- for c in (1..copies) -%}
+                {%- for block in section.blocks -%}
+                  {%- if block.type == 'logo' -%}
+                  <div class="marquee__item">
+                    {%- if block.settings.link != blank -%}
+                      <a href="{{ block.settings.link }}" class="marquee__link" tabindex="-1" aria-hidden="true">
+                    {%- endif -%}
+
+                    {%- if block.settings.image != blank -%}
+                      {{ block.settings.image
+                        | image_url: width: 600
+                        | image_tag:
+                          loading: 'lazy',
+                          sizes: '200px',
+                          class: 'marquee__img',
+                          alt: block.settings.alt
+                      }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg marquee__img' }}
+                    {%- endif -%}
+
+                    {%- if block.settings.link != blank -%}</a>{%- endif -%}
+                  </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- else -%}
+              {%- for i in (1..6) -%}
+              <div class="marquee__item" aria-hidden="true">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg marquee__img' }}
+              </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Logo Marquee（无缝连续）",
+  "settings": [
+    { "type": "color", "id": "strip_bg", "label": "背景色", "default": "#ffffff" },
+    { "type": "range", "id": "speed", "label": "滚动时长（秒）", "min": 5, "max": 60, "step": 1, "default": 30 },
+    { "type": "range", "id": "gap", "label": "Logo 间距（px）", "min": 0, "max": 200, "step": 5, "default": 80 },
+    { "type": "range", "id": "logo_h_mobile", "label": "Logo 高度（移动端 px）", "min": 20, "max": 120, "step": 2, "default": 60 },
+    { "type": "range", "id": "logo_h_desktop", "label": "Logo 高度（桌面端 px）", "min": 20, "max": 160, "step": 2, "default": 80 },
+    { "type": "range", "id": "logo_radius", "label": "Logo 圆角（px）", "min": 0, "max": 30, "step": 1, "default": 8 },
+    { "type": "range", "id": "gradient_width", "label": "两侧渐隐宽度（px）", "min": 0, "max": 240, "step": 10, "default": 120 },
+    { "type": "checkbox", "id": "full_width", "label": "全宽显示（不受 page-width 限制）", "default": true },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "鼠标悬停时暂停滚动", "default": true },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "滚动方向",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "向左（默认）" },
+        { "value": "right", "label": "向右" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "limit": 40,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Logo 图片" },
+        { "type": "text", "id": "alt", "label": "Alt 文本（可选）", "default": "Alt 文本（可选" },
+        { "type": "url",  "id": "link", "label": "点击跳转链接（可选）" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo Marquee（无缝连续）",
+      "blocks": [
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" }
+      ]
+    }
+  ]
+}
+{% endschema %}
