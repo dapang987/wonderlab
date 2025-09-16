@@ -452,7 +452,7 @@
       "settings": {
         "heading": "Customer’s Five-Star Review",
         "a11y_label": "Customer Reviews Carousel",
-        "page_width": 1000,
+        "page_width": 1600,
         "radius": 12,
         "border": "#e5e7eb",
         "text": "#111111",
