@@ -1,0 +1,206 @@
+{% comment %}
+  Section: Stats Feature Split（命名空间化，避免与其他样式冲突）
+  - 桌面：左右两列（支持左右顺序切换）
+  - 移动：上图下文
+{% endcomment %}
+
+{%- style -%}
+  .section-{{ section.id }}{
+    --sf-radius: 12px;
+    --sf-gap: 24px;
+    --sf-card: {{ section.settings.card_bg }};
+    --sf-text: #111;
+    --sf-muted: #666;
+    --sf-shadow: 0 6px 16px rgba(0,0,0,.06);
+
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    color: var(--sf-text);
+  }
+  @media (min-width: 750px){
+    .section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .section-{{ section.id }} .sf-wrap{ width: min( var(--page-width, 1100px), 100% ); margin: 0 auto; }
+
+  .section-{{ section.id }} .sf-grid{
+    display: grid;
+    gap: var(--sf-gap);
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "sf-media"
+      "sf-stats";
+  }
+  @media (min-width: 750px){
+    .section-{{ section.id }} .sf-grid{
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: {% if section.settings.layout == 'text-left' %}"sf-stats sf-media"{% else %}"sf-media sf-stats"{% endif %};
+      align-items: stretch;
+    }
+  }
+
+  .section-{{ section.id }} .sf-card{
+    background: var(--sf-card);
+    border-radius: var(--sf-radius);
+    box-shadow: var(--sf-shadow);
+    padding: clamp(20px, 3vw, 32px);
+    height: 100%;
+  }
+
+  .section-{{ section.id }} .sf-media{ grid-area: sf-media; display: grid; place-items: center; }
+  .section-{{ section.id }} .sf-media__img,
+  .section-{{ section.id }} .sf-media__img--ph{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--sf-radius);
+    object-fit: cover;
+    background: #e6e6e6;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+  .section-{{ section.id }} .sf-media__img--ph svg{ width: 72px; height: 72px; opacity: .6; }
+
+  .section-{{ section.id }} .sf-stats{ grid-area: sf-stats; display: grid; gap: 18px; align-content: start; }
+  .section-{{ section.id }} .sf-heading{
+    margin: 0;
+    font-family: ui-serif, Georgia, "Times New Roman", serif;
+    font-size: clamp(22px, 3.8vw, 36px);
+    line-height: 1.2;
+    letter-spacing: .2px;
+  }
+  .section-{{ section.id }} .sf-heading .sf-line{ display:block; }
+  .section-{{ section.id }} .sf-subhead{
+    margin: 2px 0 8px;
+    font-size: clamp(13px, 1.8vw, 15px);
+    color: var(--sf-muted);
+  }
+
+  .section-{{ section.id }} .sf-stats-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+  }
+  .section-{{ section.id }} .sf-stat__num{
+    font-weight: 700;
+    font-size: clamp(28px, 6.2vw, 44px);
+    line-height: 1.15;
+    letter-spacing: .2px;
+  }
+  .section-{{ section.id }} .sf-stat__label{
+    margin-top: 2px;
+    font-size: clamp(12px, 1.4vw, 14px);
+    color: var(--sf-muted);
+    letter-spacing: .2px;
+  }
+{%- endstyle -%}
+
+<section class="section-{{ section.id }} color-{{ section.settings.color_scheme }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="sf-wrap">
+      <div class="sf-grid">
+        <!-- 图片卡 -->
+        <article class="sf-card sf-media" aria-label="{{ section.settings.heading_line1 | escape }}">
+          <figure class="sf-media__img" role="img" aria-label="{{ section.settings.image_alt | escape }}">
+            {%- if section.settings.image != blank -%}
+              {%- assign alt_txt = section.settings.image_alt | default: section.settings.heading_line1 | escape -%}
+              {{ section.settings.image
+                | image_url: width: 1600
+                | image_tag:
+                  widths: '400, 600, 800, 1200, 1600',
+                  sizes: '(max-width: 749px) 100vw, 50vw',
+                  loading: 'lazy',
+                  alt: alt_txt,
+                  class: 'sf-media__img'
+              }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'sf-media__img--ph' }}
+            {%- endif -%}
+          </figure>
+        </article>
+
+        <!-- 统计卡 -->
+        <article class="sf-card sf-stats" aria-label="Science-backed results">
+          <h2 class="sf-heading">
+            <span class="sf-line">{{ section.settings.heading_line1 | escape }}</span>
+            <span class="sf-line">{{ section.settings.heading_line2 | escape }}</span>
+          </h2>
+          {%- if section.settings.subheading != blank -%}
+            <p class="sf-subhead">{{ section.settings.subheading | escape }}</p>
+          {%- endif -%}
+
+          {%- if section.blocks.size > 0 -%}
+            <ul class="sf-stats-list" aria-label="Key statistics">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'stat' -%}
+                  <li class="sf-stat" {{ block.shopify_attributes }}>
+                    <div class="sf-stat__num">{{ block.settings.number | escape }}</div>
+                    <div class="sf-stat__label">{{ block.settings.label | escape }}</div>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Stats feature split",
+  "settings": [
+    { "type": "text", "id": "heading_line1", "label": "标题行 1", "default": "Tired of diets?" },
+    { "type": "text", "id": "heading_line2", "label": "标题行 2", "default": "Let science do the work." },
+    { "type": "text", "id": "subheading", "label": "副标题", "default": "Science-backed ingredients that deliver real results" },
+
+    { "type": "image_picker", "id": "image", "label": "图片" },
+    { "type": "text", "id": "image_alt", "label": "图片替代文本（alt）" },
+
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "桌面布局",
+      "default": "text-left",
+      "options": [
+        { "value": "text-left", "label": "左文右图（默认）" },
+        { "value": "text-right", "label": "左图右文" }
+      ]
+    },
+
+    { "type": "color", "id": "card_bg", "label": "卡片背景颜色", "default": "#efefef" },
+
+    { "type": "checkbox", "id": "full_width", "label": "全宽（不使用 page-width 容器）", "default": false },
+    { "type": "color_scheme", "id": "color_scheme", "label": "配色方案", "default": "background-1" },
+
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "上内边距", "default": 56 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "下内边距", "default": 56 }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "统计项",
+      "settings": [
+        { "type": "text", "id": "number", "label": "数字", "default": "28+" },
+        { "type": "text", "id": "label", "label": "标签", "default": "Years of Probiotic Expertise" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stats feature split (scoped)",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "28+", "label": "Years of Probiotic Expertise" } },
+        { "type": "stat", "settings": { "number": "100,000+", "label": "Strain Library" } },
+        { "type": "stat", "settings": { "number": "1,412+", "label": "Scientific Studies" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
