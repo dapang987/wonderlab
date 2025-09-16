@@ -497,7 +497,7 @@
         "divider": "#dcdcdc",
         "text": "#111111",
         "muted": "#666666",
-        "point_title_size": 18,
+        "point_title_size": 12,
         "point_body_size": 15
       }
     }
