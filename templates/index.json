@@ -306,37 +306,10 @@
             "link": "",
             "alt": ""
           }
-        },
-        "logo_HAxk8z": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/Search.svg",
-            "link": "",
-            "alt": ""
-          }
-        },
-        "logo_LyiaiU": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/User.svg",
-            "link": "",
-            "alt": ""
-          }
-        },
-        "logo_MGUwRe": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/Group.svg",
-            "link": "",
-            "alt": ""
-          }
         }
       },
       "block_order": [
-        "logo_w8cceE",
-        "logo_HAxk8z",
-        "logo_LyiaiU",
-        "logo_MGUwRe"
+        "logo_w8cceE"
       ],
       "name": "Logo 跑马灯（无缝）",
       "settings": {
