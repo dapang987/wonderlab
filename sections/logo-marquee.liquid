@@ -1,276 +1,147 @@
 {% comment %}
-  Section: Logo Marquee (infinite)
-  - Add "Logo" blocks (image + optional link + alt)
-  - Seamless marquee by rendering blocks twice
-  - Configurable speed, slide size, bg, radius, gradient width, padding, container width
+  Section: Logo Marquee（无缝连续、不中断）
 {% endcomment %}
 
-<section id="Marquee-{{ section.id }}" class="logo-marquee color-{{ section.settings.color_scheme }}">
-  {%- style -%}
-    /* === Scoped vars for this section === */
-    #Marquee-{{ section.id }}{
-      --slide-w: {{ section.settings.slide_width }}px;
-      --slide-h: {{ section.settings.slide_height }}px;
-      --speed: {{ section.settings.speed }}s;
-      --bg: {{ section.settings.bg }};
-      --radius: {{ section.settings.radius }}px;
-      --grad-w: {{ section.settings.gradient_width }}px;
-      --pad-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-      --pad-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+<section class="logo-strip section-{{ section.id }}" aria-label="{{ section.settings.heading | escape }}">
+  <style>
+    .section-{{ section.id }}{
+      --strip-bg: {{ section.settings.strip_bg }};
+      --logo-h: {{ section.settings.logo_h }}px;
+      --logo-r: {{ section.settings.logo_radius }}px;
+      --speed: {{ section.settings.speed }}s;   /* 一整圈时长（越小越快） */
+      --gap: 120px;                              /* 如需做成设置项可再加 */
+      background: var(--strip-bg);
+      padding: 14px 0;
+      overflow: hidden;
     }
-    @media screen and (min-width: 750px){
-      #Marquee-{{ section.id }}{
-        --pad-top: {{ section.settings.padding_top }}px;
-        --pad-bottom: {{ section.settings.padding_bottom }}px;
+
+    .section-{{ section.id }} .page-width{ overflow:hidden; }
+
+    /* 单轨道 + 双份内容，移动 50% 即首尾无缝衔接 */
+    .section-{{ section.id }} .marquee__track{
+      display: flex;
+      align-items: center;
+      width: max-content;
+      gap: var(--gap);                           /* 唯一的间距来源 */
+      will-change: transform;
+      animation: section-{{ section.id }}-scroll var(--speed) linear infinite;
+    }
+
+    .section-{{ section.id }} .logo{
+      display: block;
+      line-height: 0;
+      opacity: .9;
+      filter: grayscale(100%);
+      transition: opacity .2s ease, transform .2s ease, filter .2s ease;
+    }
+    .section-{{ section.id }} .logo:hover{
+      opacity: 1;
+      transform: translateY(-1px);
+      filter: grayscale(0%);
+    }
+    .section-{{ section.id }} .logo__img{
+      height: var(--logo-h);
+      width: auto;
+      display: block;
+      border-radius: var(--logo-r);
+    }
+
+    @keyframes section-{{ section.id }}-scroll{
+      from { transform: translate3d(0,0,0); }
+      to   { transform: translate3d(-50%,0,0); }
+    }
+
+    @media (max-width: 600px){
+      .section-{{ section.id }} .logo__img{
+        height: clamp(22px, 6vw, var(--logo-h));
       }
     }
+  </style>
 
-    /* Container width control */
-    #Marquee-{{ section.id }} .wrap{
-      width: 100%;
-      {% if section.settings.container == 'constrained' %}
-      max-width: var(--page-width);
-      {% else %}
-      max-width: none;
-      {% endif %}
-      margin: 0 auto;
-      padding-top: var(--pad-top);
-      padding-bottom: var(--pad-bottom);
-    }
-
-    /* Slider styling (converted from your CSS) */
-    #Marquee-{{ section.id }} .slider{
-      background: var(--bg);
-      box-shadow: 0 10px 20px -5px rgba(0,0,0,.125);
-      height: var(--slide-h);
-      overflow: hidden;
-      position: relative;
-      width: 100%;
-      border-radius: var(--radius);
-    }
-
-    #Marquee-{{ section.id }} .slider::before,
-    #Marquee-{{ section.id }} .slider::after{
-      background: linear-gradient(to right, var(--bg) 0%, rgba(255,255,255,0) 100%);
-      content: "";
-      height: 100%;
-      position: absolute;
-      width: var(--grad-w);
-      z-index: 2;
-      pointer-events:none;
-    }
-    #Marquee-{{ section.id }} .slider::after{
-      right: 0;
-      top: 0;
-      transform: rotateZ(180deg);
-    }
-    #Marquee-{{ section.id }} .slider::before{
-      left: 0;
-      top: 0;
-    }
-
-    /* Track width = (slide width) * (blocks * 2) */
-    #Marquee-{{ section.id }} .slide-track{
-      display: flex;
-      width: calc(var(--slide-w) * {{ section.blocks.size | times: 2 }});
-      animation: marquee-{{ section.id }} var(--speed) linear infinite;
-    }
-
-    /* Per slide */
-    #Marquee-{{ section.id }} .slide{
-      width: var(--slide-w);
-      height: var(--slide-h);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex: 0 0 auto;
-    }
-    #Marquee-{{ section.id }} .slide img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display:block;
-    }
-
-    /* Seamless distance = one full set width (not doubled) */
-    @keyframes marquee-{{ section.id }}{
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(calc(-1 * var(--slide-w) * {{ section.blocks.size }})); }
-    }
-
-    /* Accessibility: respect reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      #Marquee-{{ section.id }} .slide-track{ animation: none; }
-    }
-
-    /* Optional pause on hover */
-    {% if section.settings.pause_on_hover %}
-    #Marquee-{{ section.id }} .slider:hover .slide-track{ animation-play-state: paused; }
+  <div class="page-width">
+    {% if section.settings.heading != blank %}
+      <h2 class="visually-hidden">{{ section.settings.heading }}</h2>
     {% endif %}
-  {%- endstyle -%}
 
-  <div class="wrap">
-    <div class="slider">
-      {%- if section.blocks.size > 0 -%}
-        <div class="slide-track">
-          {%- for dup in (1..2) -%}
-            {%- for block in section.blocks -%}
-              <div class="slide" {{ block.shopify_attributes }}>
-                {%- if block.settings.link != blank -%}
-                  <a href="{{ block.settings.link }}" aria-label="{{ block.settings.alt | escape }}">
-                {%- endif -%}
-
-                {%- if block.settings.image != blank -%}
+    <div class="marquee" role="region" aria-roledescription="marquee" aria-label="{{ section.settings.heading | default: 'Brand logos' | escape }}">
+      <div class="marquee__track">
+        {% if section.blocks.size > 0 %}
+          {% comment %} 第一遍 {% endcomment %}
+          {% for block in section.blocks %}
+            {% if block.type == 'logo' %}
+              {% liquid
+                assign img = block.settings.image
+                assign url = block.settings.link
+                assign alt = block.settings.alt | default: img.alt | default: 'Brand logo'
+              %}
+              {% if url != blank %}<a class="logo" href="{{ url }}" target="_blank" rel="noopener" {{ block.shopify_attributes }}>{% else %}<span class="logo" {{ block.shopify_attributes }}>{% endif %}
+                {% if img != blank %}
                   <img
-                    src="{{ block.settings.image | image_url: width: 800 }}"
-                    alt="{{ block.settings.alt | default: block.settings.image.alt | escape }}"
+                    class="logo__img"
+                    src="{{ img | image_url: width: 320 }}"
+                    srcset="{{ img | image_url: width: 160 }} 160w, {{ img | image_url: width: 240 }} 240w, {{ img | image_url: width: 320 }} 320w, {{ img | image_url: width: 480 }} 480w"
+                    sizes="(max-width: 600px) 140px, 240px"
+                    alt="{{ alt | escape }}"
                     loading="lazy"
-                    width="{{ block.settings.image.width }}"
-                    height="{{ block.settings.image.height }}"
-                  >
-                {%- else -%}
-                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                {%- endif -%}
+                    decoding="async">
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'logo__img' }}
+                {% endif %}
+              {% if url != blank %}</a>{% else %}</span>{% endif %}
+            {% endif %}
+          {% endfor %}
 
-                {%- if block.settings.link != blank -%}
-                  </a>
-                {%- endif -%}
-              </div>
-            {%- endfor -%}
-          {%- endfor -%}
-        </div>
-      {%- else -%}
-        <div class="slide-track">
-          {%- for i in (1..6) -%}
-            <div class="slide">
-              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-            </div>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
+          {% comment %} 第二遍（无障碍：避免重复朗读） {% endcomment %}
+          {% for block in section.blocks %}
+            {% if block.type == 'logo' %}
+              {% liquid
+                assign img = block.settings.image
+                assign url = block.settings.link
+              %}
+              {% if url != blank %}<a class="logo" href="{{ url }}" aria-hidden="true" tabindex="-1">{% else %}<span class="logo" aria-hidden="true">{% endif %}
+                {% if img != blank %}
+                  <img class="logo__img" src="{{ img | image_url: width: 320 }}" alt="" loading="lazy" decoding="async">
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'logo__img' }}
+                {% endif %}
+              {% if url != blank %}</a>{% else %}</span>{% endif %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% comment %} 无图片时提供占位，保证动画正常 {% endcomment %}
+          {% for i in (1..6) %}<span class="logo" aria-hidden="true">{{ 'image' | placeholder_svg_tag: 'logo__img' }}</span>{% endfor %}
+          {% for i in (1..6) %}<span class="logo" aria-hidden="true">{{ 'image' | placeholder_svg_tag: 'logo__img' }}</span>{% endfor %}
+        {% endif %}
+      </div>
     </div>
   </div>
-
-  {%- schema -%}
-  {
-    "name": "Logo Marquee (Infinite)",
-    "tag": "section",
-    "class": "section logo-marquee-section",
-    "settings": [
-      {
-        "type": "select",
-        "id": "container",
-        "label": "Section width",
-        "default": "constrained",
-        "options": [
-          { "value": "constrained", "label": "Use page width" },
-          { "value": "full", "label": "Full width" }
-        ]
-      },
-      {
-        "type": "range",
-        "id": "speed",
-        "min": 4,
-        "max": 100,
-        "step": 1,
-        "default": 40,
-        "label": "Marquee speed (seconds per loop)"
-      },
-      {
-        "type": "range",
-        "id": "slide_width",
-        "min": 20,
-        "max": 100,
-        "step": 2,
-        "default": 50,
-        "label": "Logo card width (px)"
-      },
-      {
-        "type": "range",
-        "id": "slide_height",
-        "min": 48,
-        "max": 160,
-        "step": 2,
-        "default": 100,
-        "label": "Section height / Logo card height (px)"
-      },
-      {
-        "type": "range",
-        "id": "radius",
-        "min": 0,
-        "max": 32,
-        "step": 2,
-        "default": 0,
-        "label": "Section corner radius (px)"
-      },
-      {
-        "type": "range",
-        "id": "gradient_width",
-        "min": 0,
-        "max": 360,
-        "step": 10,
-        "default": 200,
-        "label": "Edge fade width (px)"
-      },
-      {
-        "type": "color",
-        "id": "bg",
-        "default": "#ffffff",
-        "label": "Background color"
-      },
-      {
-        "type": "checkbox",
-        "id": "pause_on_hover",
-        "default": false,
-        "label": "Pause on hover"
-      },
-      {
-        "type": "select",
-        "id": "color_scheme",
-        "label": "Color scheme",
-        "default": "scheme-1",
-        "options": [
-          { "value": "scheme-1", "label": "Scheme 1" },
-          { "value": "scheme-2", "label": "Scheme 2" },
-          { "value": "scheme-3", "label": "Scheme 3" },
-          { "value": "scheme-4", "label": "Scheme 4" },
-          { "value": "scheme-5", "label": "Scheme 5" }
-        ]
-      },
-      {
-        "type": "range",
-        "id": "padding_top",
-        "label": "Padding top",
-        "min": 0,
-        "max": 100,
-        "step": 4,
-        "default": 28
-      },
-      {
-        "type": "range",
-        "id": "padding_bottom",
-        "label": "Padding bottom",
-        "min": 0,
-        "max": 100,
-        "step": 4,
-        "default": 28
-      }
-    ],
-    "blocks": [
-      {
-        "type": "logo",
-        "name": "Logo",
-        "limit": 30,
-        "settings": [
-          { "type": "image_picker", "id": "image", "label": "Image" },
-          { "type": "url", "id": "link", "label": "Optional link" },
-          { "type": "text", "id": "alt", "label": "Alt text (accessibility)" }
-        ]
-      }
-    ],
-    "presets": [
-      { "name": "Logo Marquee (Infinite)", "category": "Image" }
-    ]
-  }
-  {%- endschema -%}
 </section>
+
+{% schema %}
+{
+  "name": "Logo 跑马灯（无缝）",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "无障碍标题（可留空）", "default": "Our Partners" },
+    { "type": "range", "id": "speed", "label": "轮播速度（整圈用时，秒）", "min": 5, "max": 100, "step": 1, "default": 38 },
+    { "type": "color", "id": "strip_bg", "label": "横幅背景颜色", "default": "#eeeeee" },
+    { "type": "range", "id": "logo_h", "label": "Logo 高度（px）", "min": 16, "max": 80, "step": 1, "default": 32 },
+    { "type": "range", "id": "logo_radius", "label": "Logo 圆角（px）", "min": 0, "max": 16, "step": 1, "default": 4 }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Logo 图片" },
+        { "type": "url", "id": "link", "label": "链接（可选）" },
+        { "type": "text", "id": "alt", "label": "替代文本（可选）", "info": "用于无障碍；不填则使用图片 ALT 或“Brand logo”" }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    { "name": "Logo 跑马灯（无缝）" }
+  ]
+}
+{% endschema %}
