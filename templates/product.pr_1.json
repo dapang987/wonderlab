@@ -163,12 +163,98 @@
         "padding_top": 56,
         "padding_bottom": 56
       }
+    },
+    "comparison_matrix_cifVii": {
+      "type": "Comparison-Matrix",
+      "blocks": {
+        "row_y6YUNx": {
+          "type": "row",
+          "settings": {
+            "feature": "Patented weight management strains",
+            "a_mark": "dot",
+            "a_text": "123",
+            "b_mark": "ring",
+            "b_text": "123",
+            "c_mark": "ring",
+            "c_text": "123"
+          }
+        },
+        "row_JDeRTj": {
+          "type": "row",
+          "settings": {
+            "feature": "300+ Clinically studied probiotic strains",
+            "a_mark": "dot",
+            "a_text": "123",
+            "b_mark": "rare",
+            "b_text": "123",
+            "c_mark": "ring",
+            "c_text": "123"
+          }
+        },
+        "row_6hnUEm": {
+          "type": "row",
+          "settings": {
+            "feature": "No water needed delivery system",
+            "a_mark": "dot",
+            "a_text": "123",
+            "b_mark": "ring",
+            "b_text": "123",
+            "c_mark": "ring",
+            "c_text": "123"
+          }
+        },
+        "row_7pbQJt": {
+          "type": "row",
+          "settings": {
+            "feature": "Patented weight management strains",
+            "a_mark": "dot",
+            "a_text": "123",
+            "b_mark": "ring",
+            "b_text": "123",
+            "c_mark": "ring",
+            "c_text": "123"
+          }
+        },
+        "row_x9ypkA": {
+          "type": "row",
+          "settings": {
+            "feature": "Patented weight management strains",
+            "a_mark": "dot",
+            "a_text": "123",
+            "b_mark": "rare",
+            "b_text": "123",
+            "c_mark": "ring",
+            "c_text": "123"
+          }
+        }
+      },
+      "block_order": [
+        "row_y6YUNx",
+        "row_JDeRTj",
+        "row_6hnUEm",
+        "row_7pbQJt",
+        "row_x9ypkA"
+      ],
+      "name": "Comparison matrix",
+      "settings": {
+        "heading": "Revolutionary Probiotics Delivery for Better Results",
+        "subheading": "<p>EasyShape is formulated with 300+ clinical study strains specifically designed for weight management and digestion, not commonly found in other probiotics or foods.</p>",
+        "col_a_label": "EasyShape Probiotics",
+        "col_b_label": "OTC Probiotics",
+        "col_c_label": "Consumer Diet",
+        "min_table_width": 880,
+        "full_width": false,
+        "color_scheme": "",
+        "padding_top": 56,
+        "padding_bottom": 56
+      }
     }
   },
   "order": [
     "main",
     "related-products",
     "feature_split_card_LDP3bW",
-    "stats_feature_split_abTmBf"
+    "stats_feature_split_abTmBf",
+    "comparison_matrix_cifVii"
   ]
 }
