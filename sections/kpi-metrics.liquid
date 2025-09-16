@@ -1,35 +1,25 @@
 {% comment %}
-  Section: KPI Metrics + Bottom Image
-  - PC: 4 列；<=1024px: 2 列；<=360px: 1 列
-  - 每个 KPI：数字（大号） + 点状分隔线 + 小标题 + 描述
-  - 底部图片支持裁切/占位
+  Section: KPI Metrics + Bottom Image (follow theme --page-width)
 {% endcomment %}
 
 <section class="kpi-section section-{{ section.id }}" aria-label="{{ section.settings.title | escape }}">
   <style>
     .section-{{ section.id }}{
-      /* 主题变量 */
-      --wrap: {{ section.settings.max_width }}px;
-      --gap: {{ section.settings.gap }}px;
       --text: {{ section.settings.text_color }};
       --muted: {{ section.settings.muted_color }};
       --rule: {{ section.settings.rule_color }};
+      --gap: {{ section.settings.gap }}px;
       --pad-top: {{ section.settings.pad_top }}px;
       --pad-bottom: {{ section.settings.pad_bottom }}px;
       --radius: {{ section.settings.radius }}px;
       --figure-bg: {{ section.settings.figure_bg }};
       --figure-border: {{ section.settings.figure_border }};
+      color: var(--text);
+      /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
+      padding: var(--pad-top) 0 var(--pad-bottom);
     }
 
     .section-{{ section.id }} *{ box-sizing: border-box; }
-    .section-{{ section.id }}{
-      padding: var(--pad-top) 16px var(--pad-bottom);
-      color: var(--text);
-    }
-    .section-{{ section.id }} .kpi-wrap{
-      max-width: var(--wrap);
-      margin: 0 auto;
-    }
 
     /* 标题 */
     .section-{{ section.id }} .kpi-title{
@@ -45,7 +35,7 @@
     /* 栅格 */
     .section-{{ section.id }} .kpi-grid{
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0,1fr));
       gap: var(--gap);
     }
 
@@ -116,7 +106,8 @@
     }
   </style>
 
-  <div class="kpi-wrap">
+  <!-- 使用 Dawn 的 .page-width，使宽度与 --page-width 一致 -->
+  <div class="kpi-wrap page-width">
     {% if section.settings.title != blank %}
       <h2 class="kpi-title">{{ section.settings.title }}</h2>
     {% endif %}
@@ -140,7 +131,6 @@
       {% endfor %}
     </div>
 
-    {%- comment -%} 底部图片（有图则渲染 <img>；否则显示占位） {%- endcomment -%}
     <figure class="kpi-figure" role="group" aria-label="{{ section.settings.figure_alt | default: section.settings.title | escape }}">
       {% if section.settings.figure != blank %}
         <img
@@ -151,7 +141,7 @@
             {{ section.settings.figure | image_url: width: 1500 }} 1500w,
             {{ section.settings.figure | image_url: width: 2048 }} 2048w"
           src="{{ section.settings.figure | image_url: width: 1500 }}"
-          sizes="(max-width: 1024px) 100vw, {{ section.settings.max_width }}px"
+          sizes="(min-width: 1024px) {{ settings.page_width }}px, 100vw"
           alt="{{ section.settings.figure_alt | escape }}"
           loading="lazy"
           decoding="async">
@@ -179,7 +169,6 @@
     { "type": "text", "id": "title", "label": "标题", "default": "Industry Leader Trusted by Doctors" },
     { "type": "checkbox", "id": "serif_title", "label": "标题使用衬线字体", "default": true },
 
-    { "type": "range", "id": "max_width", "min": 800, "max": 1400, "step": 10, "unit": "px", "label": "内容最大宽度", "default": 1120 },
     { "type": "range", "id": "gap", "min": 12, "max": 60, "step": 2, "unit": "px", "label": "列间距", "default": 36 },
     { "type": "range", "id": "pad_top", "min": 0, "max": 140, "step": 4, "unit": "px", "label": "上内边距", "default": 64 },
     { "type": "range", "id": "pad_bottom", "min": 0, "max": 140, "step": 4, "unit": "px", "label": "下内边距", "default": 64 },
@@ -217,7 +206,7 @@
   "max_blocks": 8,
   "presets": [
     {
-      "name": "KPIs + 底部图片",
+      "name": "KPIs + 底部图片（跟随 --page-width）",
       "blocks": [
         { "type": "kpi", "settings": { "number": "210+", "title": "Doctors Collaborated to Develop Our Formulas", "desc": "Experts are from Harvard, Yale, Johns Hopkins and Northwestern" } },
         { "type": "kpi", "settings": { "number": "147+", "title": "Validated Scientific Publications", "desc": "High-quality strains co-developed by scientific teams in the U.S. and Finland." } },
