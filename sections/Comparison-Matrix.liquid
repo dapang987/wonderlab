@@ -1,8 +1,6 @@
 {% comment %}
-  Section: Comparison Matrix（对比矩阵，按两张参考图）
-  - 桌面：四列（左侧特性 + 3 个对比列）
-  - 移动：保持表格结构，横向滚动查看
-  - 可配置：标题、副标题、三列表头、最小表格宽度、上下内边距、是否全宽
+  sections/comparison-matrix.liquid
+  Comparison Matrix（无横向滚动版：四列自适应压缩，始终一屏内展示）
 {% endcomment %}
 
 {%- style -%}
@@ -10,7 +8,7 @@
     --cm-text: #111;
     --cm-muted: #666;
     --cm-rule: #d9d9d9;
-    --cm-minw: {{ section.settings.min_table_width }}px; /* 小屏横向滚动的最小宽度 */
+
     color: var(--cm-text);
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -29,61 +27,76 @@
     margin:0 0 6px;
     text-align:center;
     font-family: ui-serif, Georgia, "Times New Roman", serif;
-    font-size: clamp(26px, 4.4vw, 40px);
+    font-size: clamp(22px, 4.2vw, 36px);
     line-height:1.15;
     letter-spacing:.2px;
   }
   .section-{{ section.id }} .cm-subtitle{
-    margin: 0 auto 22px;
+    margin: 0 auto 20px;
     max-width: 720px;
     text-align:center;
     color: var(--cm-muted);
     font-size: clamp(12px, 1.6vw, 14px);
   }
 
-  /* 小屏横向滚动容器 */
-  .section-{{ section.id }} .cm-scroller{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  /* 取消横向滚动容器的滚动行为（保留节点以便后续扩展） */
+  .section-{{ section.id }} .cm-scroller{ overflow-x:hidden; }
 
   /* 表格样式（作用域化，避免冲突） */
   .section-{{ section.id }} .cm-table{
     width:100%;
-    min-width: var(--cm-minw);
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: fixed;          /* 固定布局以避免超宽 */
+    word-break: break-word;       /* 特性列可换行 */
   }
   .section-{{ section.id }} .cm-table caption{
     position:absolute; width:1px; height:1px; overflow:hidden;
     clip:rect(0 0 0 0); clip-path: inset(50%); white-space:nowrap; padding:0; margin:-1px; border:0;
   }
-  .section-{{ section.id }} .cm-table colgroup col:first-child{ width: 44%; }
-  .section-{{ section.id }} .cm-table colgroup col:not(:first-child){ width: calc((56%)/3); }
+
+  /* 百分比列宽：左 46%，后三列平均分配 */
+  .section-{{ section.id }} .cm-table colgroup col:first-child{ width: 46%; }
+  .section-{{ section.id }} .cm-table colgroup col:not(:first-child){ width: calc((54%)/3); }
 
   .section-{{ section.id }} .cm-th,
   .section-{{ section.id }} .cm-td{
-    padding: 12px 14px;
+    padding: 10px 10px;
     vertical-align: middle;
     border-bottom: 1px dashed var(--cm-rule);
     text-align: center;
   }
-  .section-{{ section.id }} .cm-feature{ text-align:left; }
+  .section-{{ section.id }} .cm-feature{
+    text-align:left;
+  }
 
   .section-{{ section.id }} thead .cm-th{
     color: var(--cm-muted);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: .2px;
   }
 
-  /* 标记 */
-  .section-{{ section.id }} .cm-mark{ display:inline-grid; place-items:center; min-height:20px; }
+  /* 标记（小屏进一步缩小） */
+  .section-{{ section.id }} .cm-mark{ display:inline-grid; place-items:center; min-height:18px; }
   .section-{{ section.id }} .cm-dot{
-    width:10px; height:10px; border-radius:50%; background: var(--cm-text); display:inline-block;
+    width:9px; height:9px; border-radius:50%; background: var(--cm-text); display:inline-block;
   }
   .section-{{ section.id }} .cm-ring{
-    width:12px; height:12px; border-radius:50%;
-    border: 1.7px solid #999; background: transparent; display:inline-block;
+    width:11px; height:11px; border-radius:50%;
+    border: 1.6px solid #999; background: transparent; display:inline-block;
   }
-  .section-{{ section.id }} .cm-rare{ font-style: italic; color: var(--cm-muted); font-size: 14px; white-space: nowrap; }
+  .section-{{ section.id }} .cm-rare{ font-style: italic; color: var(--cm-muted); font-size: 12px; white-space: nowrap; }
+
+  /* 更窄屏的压缩策略（≤ 420px） */
+  @media (max-width: 420px){
+    .section-{{ section.id }} .cm-title{ font-size: clamp(20px, 6vw, 28px); }
+    .section-{{ section.id }} .cm-th, .section-{{ section.id }} .cm-td{ padding: 8px 8px; }
+    .section-{{ section.id }} .cm-table colgroup col:first-child{ width: 50%; }
+    .section-{{ section.id }} .cm-table colgroup col:not(:first-child){ width: calc((50%)/3); }
+    .section-{{ section.id }} .cm-rare{ font-size: 11px; }
+    .section-{{ section.id }} .cm-dot{ width:8px; height:8px; }
+    .section-{{ section.id }} .cm-ring{ width:10px; height:10px; border-width:1.4px; }
+  }
 {%- endstyle -%}
 
 <section class="section-{{ section.id }} color-{{ section.settings.color_scheme }}">
@@ -96,7 +109,7 @@
         <div class="cm-subtitle rte">{{ section.settings.subheading }}</div>
       {%- endif -%}
 
-      <div class="cm-scroller" aria-label="Comparison matrix scroller">
+      <div class="cm-scroller" aria-label="Comparison matrix no-scroll">
         <table class="cm-table" role="table">
           <caption>{{ section.settings.heading | escape }}</caption>
 
@@ -163,14 +176,9 @@
 
 {% schema %}
 {
-  "name": "Comparison matrix",
+  "name": "comparison-matrix",
   "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "标题",
-      "default": "Revolutionary Probiotics Delivery for Better Results"
-    },
+    { "type": "text", "id": "heading", "label": "标题", "default": "Revolutionary Probiotics Delivery for Better Results" },
     {
       "type": "richtext",
       "id": "subheading",
@@ -180,14 +188,6 @@
     { "type": "text", "id": "col_a_label", "label": "列 A 标题", "default": "EasyShape Probiotics" },
     { "type": "text", "id": "col_b_label", "label": "列 B 标题", "default": "OTC Probiotics" },
     { "type": "text", "id": "col_c_label", "label": "列 C 标题", "default": "Consumer Diet" },
-
-    {
-      "type": "range",
-      "id": "min_table_width",
-      "min": 720, "max": 1200, "step": 10, "unit": "px",
-      "label": "最小表格宽度（用于小屏横向滚动）",
-      "default": 880
-    },
 
     { "type": "checkbox", "id": "full_width", "label": "全宽（不使用 page-width 容器）", "default": false },
     { "type": "color_scheme", "id": "color_scheme", "label": "配色方案", "default": "background-1" },
@@ -213,7 +213,7 @@
           ],
           "default": "dot"
         },
-        { "type": "text", "id": "a_text", "label": "列 A 自定义文本", "default": "123" },
+        { "type": "text", "id": "a_text", "label": "列 A 自定义文本", "default": "3123" },
 
         {
           "type": "select", "id": "b_mark", "label": "列 B 标记",
@@ -239,28 +239,12 @@
           ],
           "default": "ring"
         },
-        { "type": "text", "id": "c_text", "label": "列 C 自定义文本", "default": "123" }
+        { "type": "text", "id": "c_text", "label": "列 C 自定义文本", "default": "123123" }
       ]
     }
   ],
   "presets": [
-    {
-      "name": "Comparison matrix",
-      "blocks": [
-        { "type": "row", "settings": {
-          "feature": "Patented weight management strains",
-          "a_mark": "dot", "b_mark": "ring", "c_mark": "ring"
-        }},
-        { "type": "row", "settings": {
-          "feature": "300+ Clinically studied probiotic strains",
-          "a_mark": "dot", "b_mark": "rare", "c_mark": "ring"
-        }},
-        { "type": "row", "settings": {
-          "feature": "No water needed delivery system",
-          "a_mark": "dot", "b_mark": "ring", "c_mark": "ring"
-        }}
-      ]
-    }
+    { "name": "comparison-matrix (no-scroll)" }
   ]
 }
 {% endschema %}
