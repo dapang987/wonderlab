@@ -66,6 +66,7 @@
         "description",
         "share"
       ],
+      "disabled": true,
       "settings": {
         "enable_sticky_info": true,
         "color_scheme": "scheme-1",
@@ -84,6 +85,7 @@
     },
     "related-products": {
       "type": "related-products",
+      "disabled": true,
       "settings": {
         "heading": "You may also like",
         "heading_size": "h2",
@@ -99,10 +101,27 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
+    },
+    "feature_split_card_LDP3bW": {
+      "type": "feature-split-card",
+      "name": "Feature split card",
+      "settings": {
+        "heading": "Why EasyShape Probiotic?",
+        "body": "<p>Our 20B CFU blend features clinically proven strains B420 & HN019—a weight-management powerhouse. Exclusive packaging locks in full potency, ensuring every dose helps curb cravings, boost metabolism, and target stubborn areas. Proven to survive digestion and deliver real results—science that works.</p>",
+        "image_alt": "",
+        "layout": "text-right",
+        "image_width_desktop": 420,
+        "card_bg": "#efefef",
+        "full_width": true,
+        "color_scheme": "",
+        "padding_top": 56,
+        "padding_bottom": 56
+      }
     }
   },
   "order": [
     "main",
-    "related-products"
+    "related-products",
+    "feature_split_card_LDP3bW"
   ]
 }
