@@ -20,6 +20,9 @@
       --card-title-size: {{ section.settings.card_title_size }}px;
       --card-quote-size: {{ section.settings.card_quote_size }}px;
     }
+    .page-width{
+        width:var(--page-width);
+    }
 
     .section-{{ section.id }}{
       color: var(--text);
@@ -153,7 +156,7 @@
     }
   {%- endstyle -%}
 
-  <div class="reviews__wrap">
+  <div class="reviews__wrap page-width">
     <h2 id="reviews-title-{{ section.id }}" class="reviews__title">
       {{ section.settings.heading | escape }}
     </h2>
