@@ -1,5 +1,5 @@
 {% comment %}
-  Section: Stats Feature Split（命名空间化，避免与其他样式冲突）
+  Section: Stats Feature Split（命名空间化，含容器高度设置）
   - 桌面：左右两列（支持左右顺序切换）
   - 移动：上图下文
 {% endcomment %}
@@ -12,6 +12,10 @@
     --sf-text: #111;
     --sf-muted: #666;
     --sf-shadow: 0 6px 16px rgba(0,0,0,.06);
+
+    /* 新增：容器最小高度（移动/桌面） */
+    --sf-minh-mo: {{ section.settings.card_min_height_mobile }}px;
+    --sf-minh-dt: {{ section.settings.card_min_height_desktop }}px;
 
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -48,6 +52,14 @@
     box-shadow: var(--sf-shadow);
     padding: clamp(20px, 3vw, 32px);
     height: 100%;
+    /* 新增：最小高度，移动端值 */
+    min-height: var(--sf-minh-mo);
+  }
+  @media (min-width: 750px){
+    .section-{{ section.id }} .sf-card{
+      /* 新增：桌面端最小高度 */
+      min-height: var(--sf-minh-dt);
+    }
   }
 
   .section-{{ section.id }} .sf-media{ grid-area: sf-media; display: grid; place-items: center; }
@@ -175,6 +187,22 @@
     },
 
     { "type": "color", "id": "card_bg", "label": "卡片背景颜色", "default": "#efefef" },
+
+    /* 新增：容器高度设置 */
+    {
+      "type": "range",
+      "id": "card_min_height_mobile",
+      "min": 160, "max": 800, "step": 10, "unit": "px",
+      "label": "最小高度（移动端）",
+      "default": 320
+    },
+    {
+      "type": "range",
+      "id": "card_min_height_desktop",
+      "min": 200, "max": 900, "step": 10, "unit": "px",
+      "label": "最小高度（桌面端）",
+      "default": 420
+    },
 
     { "type": "checkbox", "id": "full_width", "label": "全宽（不使用 page-width 容器）", "default": false },
     { "type": "color_scheme", "id": "color_scheme", "label": "配色方案", "default": "background-1" },
