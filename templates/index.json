@@ -306,10 +306,18 @@
             "link": "",
             "alt": ""
           }
+        },
+        "logo_Bam4MG": {
+          "type": "logo",
+          "settings": {
+            "link": "",
+            "alt": ""
+          }
         }
       },
       "block_order": [
-        "logo_w8cceE"
+        "logo_w8cceE",
+        "logo_Bam4MG"
       ],
       "name": "Logo 跑马灯（无缝）",
       "settings": {
