@@ -295,6 +295,57 @@
         "figure_bg": "#f2f2f2",
         "figure_border": "#e7e7e7"
       }
+    },
+    "logo_marquee_aWagBJ": {
+      "type": "logo-marquee",
+      "blocks": {
+        "logo_Eh8MpY": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Group.svg",
+            "link": "",
+            "alt": ""
+          }
+        },
+        "logo_YwLPAE": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Search.svg",
+            "link": "",
+            "alt": ""
+          }
+        },
+        "logo_zwxNwV": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/User.svg",
+            "link": "",
+            "alt": ""
+          }
+        },
+        "logo_zEtWeW": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Shopping_bag.svg",
+            "link": "",
+            "alt": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_Eh8MpY",
+        "logo_YwLPAE",
+        "logo_zwxNwV",
+        "logo_zEtWeW"
+      ],
+      "name": "Logo 跑马灯（无缝）",
+      "settings": {
+        "heading": "Our Partners",
+        "speed": 38,
+        "strip_bg": "#eeeeee",
+        "logo_h": 32,
+        "logo_radius": 4
+      }
     }
   },
   "order": [
@@ -304,6 +355,7 @@
     "custom_liquid_mEKyFG",
     "image_with_text_cpqBUU",
     "custom_liquid_GG3ynB",
-    "kpi_metrics_3aW3cC"
+    "kpi_metrics_3aW3cC",
+    "logo_marquee_aWagBJ"
   ]
 }
