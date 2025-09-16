@@ -5,11 +5,20 @@
 
 <section class="reviews section-{{ section.id }}" aria-labelledby="reviews-title-{{ section.id }}">
   {%- style -%}
+    /* ---- load chosen fonts ---- */
+    {{ section.settings.heading_font | font_face }}
+    {{ section.settings.card_font | font_face }}
+
     .section-{{ section.id }}{
       --radius: {{ section.settings.radius }}px;
       --border: {{ section.settings.border }};
       --text: {{ section.settings.text }};
       --muted: {{ section.settings.muted }};
+
+      /* new: typographic controls */
+      --heading-size: {{ section.settings.heading_size }}px;
+      --card-title-size: {{ section.settings.card_title_size }}px;
+      --card-quote-size: {{ section.settings.card_quote_size }}px;
     }
 
     .section-{{ section.id }}{
@@ -28,6 +37,8 @@
       text-align: center;
       line-height: 1.25;
       letter-spacing: .2px;
+      font-size: var(--heading-size);
+      font-family: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
     }
 
     /* ==== Mobile: 横向轮播（Scroll Snap） ==== */
@@ -40,10 +51,16 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scroll-padding-left: 2px;
+      justify-content: flex-start;
     }
     /* 隐藏滚动条（可按需移除） */
     .section-{{ section.id }} .reviews__grid::-webkit-scrollbar{ height: 0; }
     .section-{{ section.id }} .reviews__grid{ scrollbar-width: none; }
+
+    /* 单卡片：在移动端也居中 */
+    .section-{{ section.id }} .reviews__grid.reviews__grid--single{
+      justify-content: center;
+    }
 
     .section-{{ section.id }} .reviews__card{
       background: #fff;
@@ -70,12 +87,21 @@
         min-width: initial;
         scroll-snap-align: initial;
       }
+
+      /* 单卡片：网格下也居中且限制最大宽度 */
+      .section-{{ section.id }} .reviews__grid.reviews__grid--single{
+        grid-template-columns: minmax(320px, 720px);
+        place-content: center;
+      }
     }
 
     /* PC：4 列网格 */
     @media (min-width: 1024px){
       .section-{{ section.id }} .reviews__grid{
         grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .section-{{ section.id }} .reviews__grid.reviews__grid--single{
+        grid-template-columns: minmax(360px, 760px);
       }
     }
 
@@ -101,12 +127,14 @@
       margin: 0 0 10px;
       line-height: 1.3;
       font-weight: 700;
+      font-size: var(--card-title-size);
     }
 
     .section-{{ section.id }} .reviews__quote{
       margin: 0;
       color: var(--muted);
       line-height: 1.6;
+      font-size: var(--card-quote-size);
     }
 
     /* a11y 工具类 */
@@ -133,7 +161,7 @@
 
     <div
       id="reviews-grid-{{ section.id }}"
-      class="reviews__grid"
+      class="reviews__grid{% if section.blocks.size == 1 %} reviews__grid--single{% endif %}"
       role="list"
       aria-roledescription="carousel"
       aria-label="{{ section.settings.a11y_label | escape }}"
@@ -197,6 +225,36 @@
       "label": "ARIA label (for carousel)",
       "default": "Customer Reviews Carousel"
     },
+
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 14,
+      "max": 56,
+      "step": 1,
+      "label": "Heading font size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "label": "Card title font size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_quote_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "label": "Card quote font size",
+      "default": 15
+    },
+
+    /* ---- existing controls ---- */
     {
       "type": "range",
       "id": "radius",
