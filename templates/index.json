@@ -448,6 +448,7 @@
         "review_q8M7QK",
         "review_UQGhAQ"
       ],
+      "disabled": true,
       "name": "Five-star reviews",
       "settings": {
         "heading": "Customer’s Five-Star Review",
