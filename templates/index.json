@@ -283,7 +283,6 @@
       "settings": {
         "title": "Industry Leader Trusted by Doctors",
         "serif_title": true,
-        "max_width": 1120,
         "gap": 36,
         "pad_top": 64,
         "pad_bottom": 64,
@@ -292,7 +291,7 @@
         "muted_color": "#666666",
         "rule_color": "#cfcfcf",
         "figure_alt": "Research and clinical collaborations",
-        "figure_aspect": "21/9",
+        "figure_aspect": "auto",
         "figure_bg": "#f2f2f2",
         "figure_border": "#e7e7e7"
       }
