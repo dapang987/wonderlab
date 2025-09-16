@@ -166,6 +166,30 @@
     </div>
   </div>
 </section>
+<script>
+(() => {
+  const sec = document.querySelector('.section-{{ section.id }}');
+  if (!sec) return;
+  const track = sec.querySelector('.marquee__track');
+  const groups = [...track.querySelectorAll('.marquee__group')];
+  if (groups.length < 2) return;
+
+  // 用第一组的像素宽度作为“循环距离”
+  const groupWidth = (() => {
+    const g = groups[0];
+    const r = g.getBoundingClientRect();
+    return Math.round(r.width);
+  })();
+
+  // 若两组总宽 < 2×视口宽，则把克隆再追加几遍，直到够长
+  const need = Math.ceil((window.innerWidth * 2) / groupWidth);
+  for (let i = 2; i < need; i++) {
+    const clone = groups[1].cloneNode(true);
+    clone.setAttribute('aria-hidden','true');
+    track.appendChild(clone);
+  }
+})();
+</script>
 
 {% schema %}
 {
