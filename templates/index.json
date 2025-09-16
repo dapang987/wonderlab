@@ -405,6 +405,16 @@
         "pause_on_hover": true,
         "direction": "left"
       }
+    },
+    "custom_liquid_yLD8rX": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
@@ -415,6 +425,7 @@
     "image_with_text_cpqBUU",
     "custom_liquid_GG3ynB",
     "kpi_metrics_3aW3cC",
-    "logo_marquee_ra9MhX"
+    "logo_marquee_ra9MhX",
+    "custom_liquid_yLD8rX"
   ]
 }
