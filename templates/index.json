@@ -405,6 +405,61 @@
         "pause_on_hover": true,
         "direction": "left"
       }
+    },
+    "five_star_reviews_gQCNgB": {
+      "type": "Five-star-reviews",
+      "blocks": {
+        "review_N7XqaW": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Works better than expected!",
+            "quote": "I was skeptical, but after a month, I've lost 6 lbs without major diet changes. Will keep using it! My stomach is flatter, and I have more energy throughout the day."
+          }
+        },
+        "review_eViTjg": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Love it so far",
+            "quote": "Shipping was fast and the product quality is great. I've noticed steady progress without side effects."
+          }
+        },
+        "review_7Hx9C7": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Game changer",
+            "quote": "Energy levels are up and cravings are down. Exactly what I needed to stay consistent."
+          }
+        },
+        "review_BNn6bi": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Highly recommend",
+            "quote": "Customer service is responsive, and the product does what it promises. Very satisfied!"
+          }
+        }
+      },
+      "block_order": [
+        "review_N7XqaW",
+        "review_eViTjg",
+        "review_7Hx9C7",
+        "review_BNn6bi"
+      ],
+      "name": "Five-star reviews",
+      "settings": {
+        "heading": "Customer’s Five-Star Review",
+        "a11y_label": "Customer Reviews Carousel",
+        "heading_size": 28,
+        "card_title_size": 18,
+        "card_quote_size": 15,
+        "radius": 12,
+        "border": "#e5e7eb",
+        "text": "#111111",
+        "muted": "#666666"
+      }
     }
   },
   "order": [
@@ -415,6 +470,7 @@
     "image_with_text_cpqBUU",
     "custom_liquid_GG3ynB",
     "kpi_metrics_3aW3cC",
-    "logo_marquee_ra9MhX"
+    "logo_marquee_ra9MhX",
+    "five_star_reviews_gQCNgB"
   ]
 }
