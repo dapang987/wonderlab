@@ -290,7 +290,6 @@
         "text_color": "#1a1a1a",
         "muted_color": "#666666",
         "rule_color": "#cfcfcf",
-        "figure": "shopify://shop_images/Group.svg",
         "figure_alt": "Research and clinical collaborations",
         "figure_aspect": "auto",
         "figure_bg": "#f2f2f2",
