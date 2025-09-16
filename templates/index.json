@@ -487,11 +487,11 @@
       "settings": {
         "width_mode": "page",
         "pad_y": 40,
-        "radius": 16,
+        "radius": 0,
         "enable_shadow": true,
         "image_alt": "Product image",
         "heading": "Clinical-backed ingredients & formulas",
-        "heading_size": 44,
+        "heading_size": 56,
         "left_bg": "#ffffff",
         "right_bg": "#e8e8e8",
         "divider": "#dcdcdc",
