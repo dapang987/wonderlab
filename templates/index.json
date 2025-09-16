@@ -296,14 +296,78 @@
         "figure_border": "#e7e7e7"
       }
     },
-    "custom_liquid_bxMMWj": {
-      "type": "custom-liquid",
-      "name": "t:sections.custom-liquid.presets.name",
+    "logo_marquee_ra9MhX": {
+      "type": "logo-marquee",
+      "blocks": {
+        "logo_TnhEgr": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Shopping_bag.svg",
+            "alt": "Alt 文本（可选",
+            "link": ""
+          }
+        },
+        "logo_iNy8Wx": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/User.svg",
+            "alt": "Alt 文本（可选",
+            "link": ""
+          }
+        },
+        "logo_mDNcqJ": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Group.svg",
+            "alt": "Alt 文本（可选",
+            "link": ""
+          }
+        },
+        "logo_dVfET6": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Search.svg",
+            "alt": "Alt 文本（可选",
+            "link": ""
+          }
+        },
+        "logo_fWFUJG": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Group.svg",
+            "alt": "Alt 文本（可选",
+            "link": ""
+          }
+        },
+        "logo_aTER3Y": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/Group.svg",
+            "alt": "Alt 文本（可选",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_TnhEgr",
+        "logo_iNy8Wx",
+        "logo_mDNcqJ",
+        "logo_dVfET6",
+        "logo_fWFUJG",
+        "logo_aTER3Y"
+      ],
+      "name": "Logo Marquee（无缝连续）",
       "settings": {
-        "custom_liquid": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Document</title>\n    <style>\n/* Animation */\n@keyframes scroll {\n  0% { transform: translateX(0); }\n  100% { transform: translateX(calc(-250px * 7)); }\n}\n\n/* Styling */\n.slider {\n  background: #fff;\n  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .125);\n  height: 100px;\n  margin: auto;\n  overflow: hidden;\n  position: relative;\n  width: 100%;\n}\n\n.slider::before,\n.slider::after {\n  background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);\n  content: \"\";\n  height: 100px;\n  position: absolute;\n  width: 200px;\n  z-index: 2;\n}\n\n.slider::after {\n  right: 0;\n  top: 0;\n  transform: rotateZ(180deg);\n}\n\n.slider::before {\n  left: 0;\n  top: 0;\n}\n\n.slider .slide-track {\n  animation: scroll 40s linear infinite;\n  display: flex;\n  width: calc(250px * 14);\n}\n\n.slider .slide {\n  height: 100px;\n  width: 250px;\n}\n\n    </style>\n</head>\n<body>\n    <div class=\"slider\">\n\t<div class=\"slide-track\">\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/1.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/2.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/3.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/4.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/5.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/6.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/7.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/1.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/2.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/3.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/4.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/5.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/6.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t\t<div class=\"slide\">\n\t\t\t<img src=\"https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/7.png\" height=\"100\" width=\"250\" alt=\"\" />\n\t\t</div>\n\t</div>\n</div>\n</body>\n</html>",
-        "color_scheme": "",
-        "padding_top": 40,
-        "padding_bottom": 52
+        "strip_bg": "#ffffff",
+        "speed": 30,
+        "gap": 80,
+        "logo_h_mobile": 60,
+        "logo_h_desktop": 80,
+        "logo_radius": 8,
+        "gradient_width": 120,
+        "full_width": true,
+        "pause_on_hover": true,
+        "direction": "left"
       }
     }
   },
@@ -315,6 +379,6 @@
     "image_with_text_cpqBUU",
     "custom_liquid_GG3ynB",
     "kpi_metrics_3aW3cC",
-    "custom_liquid_bxMMWj"
+    "logo_marquee_ra9MhX"
   ]
 }
