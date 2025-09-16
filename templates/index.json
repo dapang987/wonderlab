@@ -295,6 +295,13 @@
         "figure_bg": "#f2f2f2",
         "figure_border": "#e7e7e7"
       }
+    },
+    "logo_marquee_QF3Gw9": {
+      "type": "logo-marquee",
+      "name": "Logo 跑马灯（无缝）",
+      "settings": {
+        "speed": 38
+      }
     }
   },
   "order": [
@@ -304,6 +311,7 @@
     "custom_liquid_mEKyFG",
     "image_with_text_cpqBUU",
     "custom_liquid_GG3ynB",
-    "kpi_metrics_3aW3cC"
+    "kpi_metrics_3aW3cC",
+    "logo_marquee_QF3Gw9"
   ]
 }
