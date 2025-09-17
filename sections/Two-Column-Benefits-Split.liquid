@@ -1,15 +1,11 @@
 {% comment %}
-  Section: Benefits split (2 columns) — isolated styles
-  - Scope via unique ID #benefits-split-{{ section.id }} + bs__* classes
-  - No global selectors; inner sections replaced with div[role="region"]
+  Section: Benefits split (2 columns) — hardened & isolated
 {% endcomment %}
 
-<section id="benefits-split-{{ section.id }}" class="section-{{ section.id }}" aria-label="Benefits overview">
+<section id="benefits-split-{{ section.id }}" aria-label="Benefits overview">
   <style>
-    /* ===== Scope: only inside this section ID ===== */
+    /* ===== Scope to this section only ===== */
     #benefits-split-{{ section.id }}{
-      /* tokens */
-      --page-width: {{ section.settings.page_width }}px;
       --radius: {{ section.settings.radius }}px;
       --gap: {{ section.settings.gap }}px;
       --pad-m: {{ section.settings.pad_m }}px;
@@ -19,96 +15,108 @@
       --muted: {{ section.settings.cl_muted }};
       --card-bg: {{ section.settings.cl_card }};
       --rule: {{ section.settings.cl_rule }};
-
       --shadow: 0 8px 24px rgba(0,0,0,.06);
 
       --title-size-m: {{ section.settings.title_size_m }}px;
       --title-size-d: {{ section.settings.title_size_d }}px;
       --list-size: {{ section.settings.list_size }}px;
 
-      padding: var(--pad-m) 16px;
-      color: var(--text);
+      padding: var(--pad-m) 16px !important;
+      color: var(--text) !important;
+      position: relative;
+      z-index: 0;
     }
     @media (min-width:1024px){
       #benefits-split-{{ section.id }}{
-        padding-top: var(--pad-d);
-        padding-bottom: var(--pad-d);
+        padding-top: var(--pad-d) !important;
+        padding-bottom: var(--pad-d) !important;
       }
     }
 
-    /* keep box-sizing local */
+    /* Local box sizing + reset that won't break layout */
     #benefits-split-{{ section.id }} *, 
     #benefits-split-{{ section.id }} *::before, 
     #benefits-split-{{ section.id }} *::after{ box-sizing: border-box; }
 
-    #benefits-split-{{ section.id }} .bs__wrap{
-      width: min(var(--page-width), 100%);
-      margin: 0 auto;
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 20px;
+    /* Wrapper card */
+    #benefits-split-{{ section.id }} .bsx__wrap{
+      width: min(var(--page-width), 100%) !important;
+      margin: 0 auto !important;
+      background: var(--card-bg) !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow) !important;
+      padding: 20px !important;
     }
 
-    #benefits-split-{{ section.id }} .bs__grid{
-      display: grid;
-      grid-template-columns: 1fr;
-      row-gap: 20px;
-      align-items: start;
+    /* Grid layout (force override) */
+    #benefits-split-{{ section.id }} .bsx__grid{
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      row-gap: 20px !important;
+      align-items: start !important;
     }
     @media (min-width:1024px){
-      #benefits-split-{{ section.id }} .bs__grid{
-        grid-template-columns: 1fr 2px 1fr; /* left | divider | right */
-        column-gap: var(--gap);
-        row-gap: 0;
+      #benefits-split-{{ section.id }} .bsx__grid{
+        grid-template-columns: 1fr 2px 1fr !important; /* left | divider | right */
+        column-gap: var(--gap) !important;
+        row-gap: 0 !important;
       }
     }
 
-    /* Divider orientation switches by breakpoint */
-    #benefits-split-{{ section.id }} .bs__divider{
-      height: 2px;
-      width: 100%;
-      background: repeating-linear-gradient(to right, var(--rule) 0 2px, transparent 2px 6px);
+    /* Divider switches orientation */
+    #benefits-split-{{ section.id }} .bsx__divider{
+      height: 2px !important;
+      width: 100% !important;
+      background: repeating-linear-gradient(to right, var(--rule) 0 2px, transparent 2px 6px) !important;
     }
     @media (min-width:1024px){
-      #benefits-split-{{ section.id }} .bs__divider{
-        width: 2px;
-        height: 100%;
-        background: repeating-linear-gradient(to bottom, var(--rule) 0 2px, transparent 2px 6px);
+      #benefits-split-{{ section.id }} .bsx__divider{
+        width: 2px !important;
+        height: 100% !important;
+        background: repeating-linear-gradient(to bottom, var(--rule) 0 2px, transparent 2px 6px) !important;
       }
     }
 
-    #benefits-split-{{ section.id }} .bs__title{
-      margin: 0 0 10px;
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
-      line-height: 1.25;
-      font-weight: 600;
-      font-size: var(--title-size-m);
+    /* Localized heading & list styles (avoid theme typography rules) */
+    #benefits-split-{{ section.id }} .bsx__title{
+      all: unset;                      /* clear theme heading rules safely */
+      display: block !important;
+      margin: 0 0 10px !important;
+      font-family: ui-serif, Georgia, "Times New Roman", serif !important;
+      line-height: 1.25 !important;
+      font-weight: 600 !important;
+      font-size: var(--title-size-m) !important;
+      color: var(--text) !important;
     }
     @media (min-width:1024px){
-      #benefits-split-{{ section.id }} .bs__title{ font-size: var(--title-size-d); }
+      #benefits-split-{{ section.id }} .bsx__title{ font-size: var(--title-size-d) !important; }
     }
 
-    /* List reset is LOCAL to this section */
-    #benefits-split-{{ section.id }} .bs__list{
-      margin: 0;
-      padding-left: 1.1em;
-      list-style: disc;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: var(--list-size);
+    #benefits-split-{{ section.id }} .bsx__list{
+      all: unset;
+      display: block !important;
+      margin: 0 !important;
+      padding-left: 1.25rem !important;
+      list-style: disc !important;
+      color: var(--muted) !important;
+      line-height: 1.7 !important;
+      font-size: var(--list-size) !important;
     }
-    #benefits-split-{{ section.id }} .bs__list li{ margin: .25em 0; }
+    #benefits-split-{{ section.id }} .bsx__list li{
+      all: unset;
+      display: list-item !important;
+      margin: .25em 0 !important;
+    }
   </style>
 
-  <div class="bs__wrap">
-    <div class="bs__grid">
+  <div class="bsx__wrap">
+    <div class="bsx__grid">
       <!-- Left column -->
-      <div class="bs__col" role="region" aria-labelledby="title-left-{{ section.id }}">
-        <h2 id="title-left-{{ section.id }}" class="bs__title">
+      <div class="bsx__col" role="region" aria-labelledby="bsx-title-left-{{ section.id }}">
+        <h2 id="bsx-title-left-{{ section.id }}" class="bsx__title">
           {{ section.settings.left_title | escape }}
         </h2>
-        <ul class="bs__list">
+        <ul class="bsx__list">
           {% for block in section.blocks %}
             {% if block.type == 'left_item' %}
               <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
@@ -118,14 +126,14 @@
       </div>
 
       <!-- Divider -->
-      <div class="bs__divider" role="separator" aria-hidden="true"></div>
+      <div class="bsx__divider" role="separator" aria-hidden="true"></div>
 
       <!-- Right column -->
-      <div class="bs__col" role="region" aria-labelledby="title-right-{{ section.id }}">
-        <h2 id="title-right-{{ section.id }}" class="bs__title">
+      <div class="bsx__col" role="region" aria-labelledby="bsx-title-right-{{ section.id }}">
+        <h2 id="bsx-title-right-{{ section.id }}" class="bsx__title">
           {{ section.settings.right_title | escape }}
         </h2>
-        <ul class="bs__list">
+        <ul class="bsx__list">
           {% for block in section.blocks %}
             {% if block.type == 'right_item' %}
               <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
@@ -182,7 +190,7 @@
   ],
   "presets": [
     {
-      "name": "Benefits split (2 columns) – isolated",
+      "name": "Benefits split (2 columns) – hardened",
       "blocks": [
         { "type": "left_item",  "settings": { "text": "Naturally curb cravings where they start" } },
         { "type": "left_item",  "settings": { "text": "Stop carbs and fats from being absorbed right at the gut" } },
