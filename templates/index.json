@@ -169,8 +169,8 @@
           "settings": {
             "button_label": "Shop Now",
             "button_link": "",
-            "button_style_secondary": false,
-            "button_radius": 8,
+            "button_style_secondary": true,
+            "button_radius": 5,
             "button_custom_style": true,
             "button_bg": "#0000e1",
             "button_text": "#ffffff",
