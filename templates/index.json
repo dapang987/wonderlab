@@ -168,71 +168,6 @@
         "padding_bottom": 36
       }
     },
-    "two_column_benefits_split_Vd9izr": {
-      "type": "Two-Column-Benefits-Split",
-      "blocks": {
-        "left_item_kyYHkA": {
-          "type": "left_item",
-          "settings": {
-            "text": "Naturally curb cravings where they start"
-          }
-        },
-        "left_item_aVP7AP": {
-          "type": "left_item",
-          "settings": {
-            "text": "Stop carbs and fats from being absorbed right at the gut"
-          }
-        },
-        "left_item_8pGe8V": {
-          "type": "left_item",
-          "settings": {
-            "text": "Enhance calorie expenditure, supercharge metabolic efficiency"
-          }
-        },
-        "right_item_eetmey": {
-          "type": "right_item",
-          "settings": {
-            "text": "Probiotics for a healthier gut"
-          }
-        },
-        "right_item_D7Hh9H": {
-          "type": "right_item",
-          "settings": {
-            "text": "Fibers and prebiotics feed good bacteria, boosting growth"
-          }
-        },
-        "right_item_7QFPWg": {
-          "type": "right_item",
-          "settings": {
-            "text": "Strains survive stomach acid & bile, thriving for max benefits"
-          }
-        }
-      },
-      "block_order": [
-        "left_item_kyYHkA",
-        "left_item_aVP7AP",
-        "left_item_8pGe8V",
-        "right_item_eetmey",
-        "right_item_D7Hh9H",
-        "right_item_7QFPWg"
-      ],
-      "name": "Benefits split (2 columns) – fixed divider",
-      "settings": {
-        "left_title": "Weight Management Support",
-        "right_title": "Healthy Microbiome & Digestion",
-        "gap": 56,
-        "radius": 12,
-        "pad_m": 24,
-        "pad_d": 44,
-        "title_size_m": 24,
-        "title_size_d": 32,
-        "list_size": 15,
-        "cl_text": "#111111",
-        "cl_muted": "#666666",
-        "cl_card": "#efefef",
-        "cl_rule": "#bdbdbd"
-      }
-    },
     "image_with_text_cpqBUU": {
       "type": "image-with-text",
       "blocks": {
@@ -561,7 +496,6 @@
     "featured_collection",
     "image_banner_Cx3d8j",
     "image_with_text_izDx6t",
-    "two_column_benefits_split_Vd9izr",
     "image_with_text_cpqBUU",
     "custom_liquid_GG3ynB",
     "kpi_metrics_3aW3cC",
