@@ -1,0 +1,331 @@
+{% comment %}
+  Section: Wonder Formulation Philosophy (3 columns, collapsible cards)
+  - Desktop: 3 independent columns
+  - Mobile: Masonry (column-count: 2) to avoid cross-column height coupling
+  - Each card is a block with: column (left/middle/right), title, description
+  - Strongly scoped by section.id
+{% endcomment %}
+
+<section id="philosophy-{{ section.id }}" class="section-{{ section.id }}-padding" aria-label="{{ section.settings.aria_label | escape }}">
+  <style>
+    /* ===== Scope root (variables) ===== */
+    #philosophy-{{ section.id }}{
+      --max-width: {{ section.settings.max_width }}px;
+      --card-bg: {{ section.settings.card_bg }};
+      --radius: {{ section.settings.radius }}px;
+      --gap: {{ section.settings.gap }}px;
+      --text: {{ section.settings.text }};
+      --muted: {{ section.settings.muted }};
+      --pad: {{ section.settings.pad }}px;
+      --transition: 240ms ease;
+      --shadow: 0 6px 16px rgba(0,0,0,.06);
+    }
+
+    /* Section vertical spacing + bg */
+    .section-{{ section.id }}-padding{
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      background: {{ section.settings.section_bg }};
+    }
+    @media (min-width: 750px){
+      .section-{{ section.id }}-padding{
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+
+    /* ===== Layout ===== */
+    #philosophy-{{ section.id }} *{ box-sizing: border-box; }
+    #philosophy-{{ section.id }} .wrap{ max-width: min(100%, var(--max-width)); margin: 0 auto; padding: 0 16px; }
+
+    .sec-title{
+      margin: 0 0 28px;
+      text-align: center;
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      line-height: 1.2;
+      color: var(--text);
+      letter-spacing: .2px;
+    }
+
+    /* Desktop: 3 independent columns */
+    #philosophy-{{ section.id }} .ph-grid{
+      display: flex;
+      gap: var(--gap);
+      align-items: flex-start;
+    }
+    #philosophy-{{ section.id }} .ph-col{
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+
+    /* Card (collapsible) */
+    #philosophy-{{ section.id }} .card{
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: var(--pad);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow var(--transition), transform var(--transition);
+      min-height: 110px;
+    }
+    #philosophy-{{ section.id }} .card[data-collapsible]{ cursor: pointer; }
+    #philosophy-{{ section.id }} .card:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
+    #philosophy-{{ section.id }} .card:focus-visible{ outline: 2px solid #000; outline-offset: 2px; }
+
+    .card__summary{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 64px;
+      user-select: none;
+      text-align: center;
+    }
+    .card__title{
+      margin: 0;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: .2px;
+      line-height: 1.2;
+    }
+    .card__chev{
+      width: 16px;
+      height: 16px;
+      flex: none;
+      display: inline-block;
+      border-right: 2px solid #333;
+      border-bottom: 2px solid #333;
+      transform: rotate(-45deg);
+      transform-origin: 50% 50%;
+      margin-left: 2px;
+      transition: transform var(--transition);
+    }
+
+    .card__details{
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition: max-height var(--transition), opacity var(--transition), transform var(--transition);
+      will-change: max-height, opacity, transform;
+      text-align: left;
+    }
+    .card__details-inner{ padding-top: 8px; }
+    .card__desc{
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .card.is-open .card__details{ opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .card.is-open .card__chev{ transform: rotate(135deg); }
+
+    /* Mobile: masonry (2 columns) */
+    @media (max-width: 768px){
+      .section-{{ section.id }}-padding{ padding-left: 14px; padding-right: 14px; }
+
+      #philosophy-{{ section.id }} .ph-grid{
+        display: block;
+        column-count: 2;
+        column-gap: var(--gap);
+      }
+      #philosophy-{{ section.id }} .ph-col{ display: contents; }
+      #philosophy-{{ section.id }} .card{
+        break-inside: avoid;
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+        width: 100%;
+        display: block;
+        margin-bottom: var(--gap);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #philosophy-{{ section.id }} .card,
+      #philosophy-{{ section.id }} .card__details{ transition: none !important; }
+    }
+  </style>
+
+  <div class="wrap">
+    {% if section.settings.title != blank %}
+      <h2 class="sec-title">{{ section.settings.title | escape }}</h2>
+    {% endif %}
+
+    <div class="ph-grid">
+      <!-- Left column -->
+      <div class="ph-col">
+        {% for block in section.blocks %}
+          {% if block.type == 'card' and block.settings.column == 'left' %}
+            <div class="card card--with-desc" data-collapsible role="button" tabindex="0" aria-expanded="false" {{ block.shopify_attributes }}>
+              <div class="card__summary">
+                <h3 class="card__title">{{ block.settings.title | escape }}</h3>
+                <i class="card__chev" aria-hidden="true"></i>
+              </div>
+              <div class="card__details">
+                <div class="card__details-inner">
+                  <p class="card__desc">{{ block.settings.desc | escape }}</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Middle column -->
+      <div class="ph-col">
+        {% for block in section.blocks %}
+          {% if block.type == 'card' and block.settings.column == 'middle' %}
+            <div class="card card--with-desc" data-collapsible role="button" tabindex="0" aria-expanded="false" {{ block.shopify_attributes }}>
+              <div class="card__summary">
+                <h3 class="card__title">{{ block.settings.title | escape }}</h3>
+                <i class="card__chev" aria-hidden="true"></i>
+              </div>
+              <div class="card__details">
+                <div class="card__details-inner">
+                  <p class="card__desc">{{ block.settings.desc | escape }}</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Right column -->
+      <div class="ph-col">
+        {% for block in section.blocks %}
+          {% if block.type == 'card' and block.settings.column == 'right' %}
+            <div class="card card--with-desc" data-collapsible role="button" tabindex="0" aria-expanded="false" {{ block.shopify_attributes }}>
+              <div class="card__summary">
+                <h3 class="card__title">{{ block.settings.title | escape }}</h3>
+                <i class="card__chev" aria-hidden="true"></i>
+              </div>
+              <div class="card__details">
+                <div class="card__details-inner">
+                  <p class="card__desc">{{ block.settings.desc | escape }}</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById('philosophy-{{ section.id }}');
+      if (!root) return;
+      const cards = root.querySelectorAll('.card[data-collapsible]');
+
+      function openDetails(details){
+        details.style.maxHeight = 'none';
+        const target = details.scrollHeight;
+        details.style.maxHeight = '0px';
+        requestAnimationFrame(() => { details.style.maxHeight = target + 'px'; });
+        const onEnd = (e) => {
+          if (e.propertyName === 'max-height') {
+            details.style.maxHeight = 'none';
+            details.removeEventListener('transitionend', onEnd);
+          }
+        };
+        details.addEventListener('transitionend', onEnd);
+      }
+
+      function closeDetails(details){
+        const current = details.scrollHeight;
+        details.style.maxHeight = current + 'px';
+        requestAnimationFrame(() => { details.style.maxHeight = '0px'; });
+      }
+
+      cards.forEach(card => {
+        const details = card.querySelector('.card__details');
+        if (!details) return;
+
+        const toggle = (evt) => {
+          const controlEl = evt.target.closest('a, button, [role="button"]:not(.card)');
+          if (controlEl) return;
+
+          const isOpen = card.classList.toggle('is-open');
+          card.setAttribute('aria-expanded', String(isOpen));
+          isOpen ? openDetails(details) : closeDetails(details);
+        };
+
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); }
+        });
+      });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Wonder Formulation",
+  "class": "section",
+  "max_blocks": 30,
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Wonder formulation philosophy" },
+    { "type": "text", "id": "title", "label": "Section title", "default": "Wonder Formulation Philosophy" },
+
+    { "type": "range", "id": "max_width", "min": 720, "max": 1600, "step": 10, "unit": "px", "label": "Max width", "default": 1100 },
+    { "type": "color", "id": "section_bg", "label": "Section background", "default": "#ffffff" },
+
+    { "type": "color", "id": "text", "label": "Text color", "default": "#111111" },
+    { "type": "color", "id": "muted", "label": "Muted text color", "default": "#666666" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#eeeeee" },
+
+    { "type": "range", "id": "radius", "min": 0, "max": 28, "step": 1, "label": "Card radius", "default": 12 },
+    { "type": "range", "id": "gap", "min": 8, "max": 48, "step": 2, "label": "Gap between items", "default": 22 },
+    { "type": "range", "id": "pad", "min": 8, "max": 40, "step": 2, "label": "Card padding", "default": 22 },
+
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding top", "default": 56 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Padding bottom", "default": 56 }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "limit": 30,
+      "settings": [
+        {
+          "type": "select",
+          "id": "column",
+          "label": "Column",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left column" },
+            { "value": "middle", "label": "Middle column" },
+            { "value": "right", "label": "Right column" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Wholistic" },
+        { "type": "textarea", "id": "desc", "label": "Description", "default": "We meticulously select clinically proven ingredients to address the root causes of your health concerns." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wonder Formulation Philosophy",
+      "category": "Text",
+      "blocks": [
+        { "type": "card", "settings": { "column": "left", "title": "Wholistic", "desc": "We meticulously select clinically proven ingredients to address the root causes of your health concerns." } },
+        { "type": "card", "settings": { "column": "left", "title": "Dependable", "desc": "Consistent dosing, third-party testing, and transparent sourcing ensure you can rely on every serving." } },
+
+        { "type": "card", "settings": { "column": "middle", "title": "Optimal", "desc": "Evidence-based dosages and bioavailable forms, balanced for efficacy and tolerance." } },
+        { "type": "card", "settings": { "column": "middle", "title": "Elevating", "desc": "Designed not only to address issues, but to lift daily performance, mood, and resilience." } },
+
+        { "type": "card", "settings": { "column": "right", "title": "Nexal", "desc": "Next-level synergy: formulas that connect systems—gut, brain, and energy—for compounded benefits." } },
+        { "type": "card", "settings": { "column": "right", "title": "Real", "desc": "No fluff. Clear labels, clean excipients, and claims you can verify." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
