@@ -491,40 +491,40 @@
         "point_body_size": 15
       }
     },
-    "two_column_benefits_split_bTPUzW": {
+    "two_column_benefits_split_d8KffN": {
       "type": "Two-Column-Benefits-Split",
       "blocks": {
-        "left_item_4wB7JX": {
+        "left_item_qqqhQa": {
           "type": "left_item",
           "settings": {
             "text": "Naturally curb cravings where they start"
           }
         },
-        "left_item_mFab8y": {
+        "left_item_6YLrX8": {
           "type": "left_item",
           "settings": {
             "text": "Stop carbs and fats from being absorbed right at the gut"
           }
         },
-        "left_item_9MrjxR": {
+        "left_item_q7Rzhy": {
           "type": "left_item",
           "settings": {
             "text": "Enhance calorie expenditure, supercharge metabolic efficiency"
           }
         },
-        "right_item_ThbA6C": {
+        "right_item_LqL93D": {
           "type": "right_item",
           "settings": {
             "text": "Probiotics for a healthier gut"
           }
         },
-        "right_item_eAebfK": {
+        "right_item_4TTh6P": {
           "type": "right_item",
           "settings": {
             "text": "Fibers and prebiotics feed good bacteria, boosting growth"
           }
         },
-        "right_item_kdbdtF": {
+        "right_item_R878yQ": {
           "type": "right_item",
           "settings": {
             "text": "Strains survive stomach acid & bile, thriving for max benefits"
@@ -532,18 +532,17 @@
         }
       },
       "block_order": [
-        "left_item_4wB7JX",
-        "left_item_mFab8y",
-        "left_item_9MrjxR",
-        "right_item_ThbA6C",
-        "right_item_eAebfK",
-        "right_item_kdbdtF"
+        "left_item_qqqhQa",
+        "left_item_6YLrX8",
+        "left_item_q7Rzhy",
+        "right_item_LqL93D",
+        "right_item_4TTh6P",
+        "right_item_R878yQ"
       ],
-      "name": "Benefits split (2 columns) – fixed grid",
+      "name": "Benefits split (2 columns) – fixed divider",
       "settings": {
         "left_title": "Weight Management Support",
         "right_title": "Healthy Microbiome & Digestion",
-        "page_width": 1100,
         "gap": 56,
         "radius": 12,
         "pad_m": 24,
@@ -562,12 +561,12 @@
     "featured_collection",
     "image_banner_Cx3d8j",
     "image_with_text_izDx6t",
+    "two_column_benefits_split_d8KffN",
     "image_with_text_cpqBUU",
     "custom_liquid_GG3ynB",
     "kpi_metrics_3aW3cC",
     "logo_marquee_ra9MhX",
     "five_star_reviews_gQCNgB",
-    "clinical_backed_feature_card_BiqqaT",
-    "two_column_benefits_split_bTPUzW"
+    "clinical_backed_feature_card_BiqqaT"
   ]
 }
