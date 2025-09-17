@@ -258,9 +258,9 @@
             "bullet_1": "Daily, regular poops",
             "bullet_2": "Less bloating",
             "alt": "Illustration",
-            "override_fs": false,
-            "block_title_fs_px": 22,
-            "block_desc_fs_px": 16
+            "override_fs": true,
+            "block_title_fs_px": 32,
+            "block_desc_fs_px": 24
           }
         },
         "stage_HdM3VE": {
