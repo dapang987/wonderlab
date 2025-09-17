@@ -1,13 +1,15 @@
 {% comment %}
   Section: Science-backed Ingredients Grid
-  Converts a static HTML file into a configurable Shopify section.
-  - Add/remove cards via blocks
-  - Customize title, colors, spacing, radius, page width, paddings
+  - Configurable title, colors, spacing, radius, page width, paddings
+  - Blocks for ingredient cards
+  - Added: Typography controls (mobile & desktop sizes for title, card heading, card description)
 {% endcomment %}
 
 <section class="section-{{ section.id }} ingr" aria-labelledby="ingr-title-{{ section.id }}">
   <style>
     .section-{{ section.id }}{
+      /* Design tokens (configurable) */
+      --page-width: {{ section.settings.page_width }}px;
       --gap: {{ section.settings.gap }}px;
       --radius: {{ section.settings.radius }}px;
 
@@ -16,6 +18,11 @@
       --border: {{ section.settings.cl_border }};
       --bg: {{ section.settings.cl_bg }};
       --tile: {{ section.settings.cl_tile }};
+
+      /* Typography (mobile defaults) */
+      --title-size: {{ section.settings.title_size_mobile }}px;
+      --heading-size: {{ section.settings.card_heading_mobile }}px;
+      --desc-size: {{ section.settings.card_desc_mobile }}px;
 
       padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
       padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -26,6 +33,14 @@
       .section-{{ section.id }}{
         padding-top: {{ section.settings.padding_top }}px;
         padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+    @media (min-width: 1024px){
+      .section-{{ section.id }}{
+        /* Typography overrides (desktop) */
+        --title-size: {{ section.settings.title_size_desktop }}px;
+        --heading-size: {{ section.settings.card_heading_desktop }}px;
+        --desc-size: {{ section.settings.card_desc_desktop }}px;
       }
     }
 
@@ -44,7 +59,7 @@
       font-family: ui-serif, Georgia, "Times New Roman", serif;
       font-weight: 400;
       line-height: 1.25;
-      font-size: clamp(24px, 3.2vw, 36px);
+      font-size: var(--title-size);
       letter-spacing: .2px;
     }
 
@@ -92,16 +107,13 @@
 
     .section-{{ section.id }} .ingr-card__h{
       margin: 6px 0 0;
-      font-size: 18px;
+      font-size: var(--heading-size);
       line-height: 1.35;
-    }
-    @media (max-width: 767.98px){
-      .section-{{ section.id }} .ingr-card__h{ font-size: 16px; }
     }
 
     .section-{{ section.id }} .ingr-card__desc{
       margin: 0;
-      font-size: 14px;
+      font-size: var(--desc-size);
       color: var(--muted);
       line-height: 1.7;
     }
@@ -181,6 +193,15 @@
     },
     {
       "type": "range",
+      "id": "page_width",
+      "label": "Max content width (px)",
+      "min": 720,
+      "max": 1600,
+      "step": 10,
+      "default": 1100
+    },
+    {
+      "type": "range",
       "id": "gap",
       "label": "Card gap (px)",
       "min": 8,
@@ -252,6 +273,72 @@
       "max": 100,
       "step": 4,
       "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Typography — Title"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size (mobile, px)",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Title size (desktop, px)",
+      "min": 20,
+      "max": 64,
+      "step": 1,
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Typography — Card Heading"
+    },
+    {
+      "type": "range",
+      "id": "card_heading_mobile",
+      "label": "Card heading size (mobile, px)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_heading_desktop",
+      "label": "Card heading size (desktop, px)",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Typography — Card Description"
+    },
+    {
+      "type": "range",
+      "id": "card_desc_mobile",
+      "label": "Card description size (mobile, px)",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "card_desc_desktop",
+      "label": "Card description size (desktop, px)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 14
     }
   ],
   "blocks": [
