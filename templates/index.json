@@ -402,8 +402,8 @@
         "radius": 12,
         "gap": 22,
         "pad": 22,
-        "padding_top": 56,
-        "padding_bottom": 56
+        "padding_top": 28,
+        "padding_bottom": 28
       }
     },
     "kpi_metrics_3aW3cC": {
