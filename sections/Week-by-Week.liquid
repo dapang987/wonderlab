@@ -1,6 +1,9 @@
 {% comment %}
-  Section: Feel the Difference — Week by Week (Isolated)
-  说明：所有样式/脚本均作用于 #fdiff-{{ section.id }} 作用域内，类名带 fdiff- 前缀，避免与主题冲突。
+  Section: Feel the Difference — Week by Week (Isolated + Section/Block Font Size Controls)
+  作用域：#fdiff-{{ section.id }}，避免与其他 section 冲突
+  新增：
+  - Section settings：整体字体大小调节（标题/卡片标题/卡片正文/Tabs）
+  - Block settings：可对单个卡片覆盖卡片标题/正文字号
 {% endcomment %}
 
 <section id="fdiff-{{ section.id }}" class="fdiff section-{{ section.id }}" style="--bg: {{ section.settings.bg_color }};">
@@ -31,7 +34,18 @@
       <div class="fdiff__grid" aria-hidden="false">
         {% for block in section.blocks %}
           {% if block.type == 'stage' %}
-            <article class="fdiff-card" {{ block.shopify_attributes }}>
+            {%- assign _title_fs = section.settings.card_title_fs_px -%}
+            {%- assign _desc_fs  = section.settings.card_desc_fs_px  -%}
+            {%- if block.settings.override_fs -%}
+              {%- if block.settings.block_title_fs_px and block.settings.block_title_fs_px > 0 -%}
+                {%- assign _title_fs = block.settings.block_title_fs_px -%}
+              {%- endif -%}
+              {%- if block.settings.block_desc_fs_px and block.settings.block_desc_fs_px > 0 -%}
+                {%- assign _desc_fs = block.settings.block_desc_fs_px -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            <article class="fdiff-card" style="--card-title-fs: {{ _title_fs }}px; --card-desc-fs: {{ _desc_fs }}px;" {{ block.shopify_attributes }}>
               <div class="fdiff-card__media">
                 {% if block.settings.image != blank %}
                   {{ block.settings.image
@@ -64,16 +78,28 @@
       <!-- Mobile single-card panel -->
       <div id="fdiff-panel-{{ section.id }}" class="fdiff-panel" role="tabpanel" aria-labelledby="fdiff-tab-{{ section.id }}-0"></div>
 
-      {%- comment -%} blocks -> JSON（不 escape，JS 直接读取） {%- endcomment -%}
+      {%- comment -%} blocks -> JSON（附带每个 block 计算后的字号，供移动端面板使用） {%- endcomment -%}
       {% capture stages_json -%}
       [
         {%- for block in section.blocks -%}
           {%- if block.type == 'stage' -%}
+            {%- assign _title_fs = section.settings.card_title_fs_px -%}
+            {%- assign _desc_fs  = section.settings.card_desc_fs_px  -%}
+            {%- if block.settings.override_fs -%}
+              {%- if block.settings.block_title_fs_px and block.settings.block_title_fs_px > 0 -%}
+                {%- assign _title_fs = block.settings.block_title_fs_px -%}
+              {%- endif -%}
+              {%- if block.settings.block_desc_fs_px and block.settings.block_desc_fs_px > 0 -%}
+                {%- assign _desc_fs = block.settings.block_desc_fs_px -%}
+              {%- endif -%}
+            {%- endif -%}
             {
               "title": {{ block.settings.title | json }},
               "bullets": [{{ block.settings.bullet_1 | json }}, {{ block.settings.bullet_2 | json }}],
               "alt": {{ block.settings.alt | json }},
-              "img": {%- if block.settings.image != blank -%}{{ block.settings.image | image_url: width: 800 | json }}{%- else -%}null{%- endif -%}
+              "img": {%- if block.settings.image != blank -%}{{ block.settings.image | image_url: width: 800 | json }}{%- else -%}null{%- endif -%},
+              "title_fs": {{ _title_fs | json }},
+              "desc_fs": {{ _desc_fs | json }}
             }{%- unless forloop.last -%},{%- endunless -%}
           {%- endif -%}
         {%- endfor -%}
@@ -84,11 +110,18 @@
   </div>
 
   {%- style -%}
-    /* ========== Scope Root ========== */
+    /* ====== Scope Root / Vars from settings ====== */
     #fdiff-{{ section.id }}{
-      isolation:isolate;              /* 防止混合模式/定位影响外部 */
+      isolation:isolate;
       background: var(--bg);
       --gap: 24px;
+
+      /* Section-level font sizes */
+      --title-fs: {{ section.settings.title_fs_px }}px;
+      --tabs-fs: {{ section.settings.tabs_fs_px }}px;
+      --card-title-fs-section: {{ section.settings.card_title_fs_px }}px;
+      --card-desc-fs-section: {{ section.settings.card_desc_fs_px }}px;
+
       --radius: {{ section.settings.radius }}px;
       --border: {{ section.settings.border_color }};
       --text: {{ section.settings.text_color }};
@@ -114,24 +147,24 @@
       }
     }
 
-    /* Title */
+    /* Title (clamp 或自定义像素) */
+    {% if section.settings.heading_custom_size %}
     #fdiff-{{ section.id }} .fdiff__title{
-      margin:0 0 16px;
-      text-align:center;
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
-      font-weight: 400;
-      line-height: 1.2;
-      letter-spacing:.2px;
-      font-size: clamp(24px, 3.5vw, 36px);
-      color: var(--text);
+      margin:0 0 16px; text-align:center; font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-weight: 400; line-height: 1.2; letter-spacing:.2px;
+      font-size: var(--title-fs); color: var(--text);
     }
+    {% else %}
+    #fdiff-{{ section.id }} .fdiff__title{
+      margin:0 0 16px; text-align:center; font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-weight: 400; line-height: 1.2; letter-spacing:.2px;
+      font-size: clamp(24px, 3.5vw, 36px); color: var(--text);
+    }
+    {% endif %}
 
     /* Grid */
     #fdiff-{{ section.id }} .fdiff__grid{
-      display:grid;
-      gap:var(--gap);
-      grid-template-columns: repeat(4, 1fr);
-      margin-top: 12px;
+      display:grid; gap:var(--gap); grid-template-columns: repeat(4, 1fr); margin-top: 12px;
     }
     @media (max-width: 1023.98px){
       #fdiff-{{ section.id }} .fdiff__grid{ grid-template-columns: repeat(2, 1fr); }
@@ -147,6 +180,9 @@
       background:#fff; color:var(--text);
       border-radius: var(--radius);
       border:1px solid var(--border);
+      /* 默认使用 section 的卡片字号，若 block 设置了 --card-title-fs/--card-desc-fs 则覆盖 */
+      --card-title-fs: var(--card-title-fs);
+      --card-desc-fs: var(--card-desc-fs);
     }
     #fdiff-{{ section.id }} .fdiff-card__media{
       border:1px solid var(--border);
@@ -155,9 +191,19 @@
       aspect-ratio: 4 / 3; display:flex; align-items:center; justify-content:center;
     }
     #fdiff-{{ section.id }} .fdiff-card__media img{ width:100%; height:100%; object-fit:cover; display:block; }
-    #fdiff-{{ section.id }} .fdiff-card__h{ margin:4px 0 0; font-size:1.1rem; line-height:1.35; }
+
+    /* 使用变量控制字号（带后备到 section 级变量） */
+    #fdiff-{{ section.id }} .fdiff-card__h{
+      margin:4px 0 0;
+      font-size: var(--card-title-fs, var(--card-title-fs-section));
+      line-height:1.35;
+    }
     #fdiff-{{ section.id }} .fdiff-card__hr{ border:0; border-top:1px dashed var(--rule); margin:2px 0 4px; }
-    #fdiff-{{ section.id }} .fdiff-card__desc{ margin:0; font-size:.92rem; color:var(--muted); }
+    #fdiff-{{ section.id }} .fdiff-card__desc{
+      margin:0;
+      font-size: var(--card-desc-fs, var(--card-desc-fs-section));
+      color:var(--muted);
+    }
 
     /* Tabs (Mobile) */
     #fdiff-{{ section.id }} .fdiff-tabs{ display:none; }
@@ -175,6 +221,7 @@
       display:inline-flex; align-items:center;
       border-radius:999px; border:0; background:transparent;
       color:var(--text); font:inherit; cursor:pointer; position:relative; padding:0 12px;
+      font-size: var(--tabs-fs);
     }
     #fdiff-{{ section.id }} .fdiff-tabs__btn[aria-selected="true"]{ font-weight:600; }
     #fdiff-{{ section.id }} .fdiff-tabs__btn[aria-selected="true"]::after{
@@ -197,7 +244,7 @@
       {% endif %}
     }
 
-    /* Panel (Mobile) */
+    /* Panel (Mobile) —— 也用同一套变量 */
     #fdiff-{{ section.id }} .fdiff-panel{ display:none; }
     @media (max-width: 767.98px){
       #fdiff-{{ section.id }} .fdiff-panel{ display:block; }
@@ -207,6 +254,9 @@
       border:1px solid var(--border); border-radius:var(--radius);
       padding:16px; background:#fff; box-shadow:var(--shadow);
       animation: fdiff-fadeIn-{{ section.id }} .2s ease;
+      /* 默认先用 section 值，renderPanel 时会写入对应 block 的 inline 变量覆盖 */
+      --card-title-fs: var(--card-title-fs-section);
+      --card-desc-fs: var(--card-desc-fs-section);
     }
     @keyframes fdiff-fadeIn-{{ section.id }}{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
     @media (prefers-reduced-motion: reduce){
@@ -223,12 +273,11 @@
       const tabsWrap = root.querySelector('#fdiff-tabs-{{ section.id }}');
       const tabs = Array.from(root.querySelectorAll('.fdiff-tabs__btn'));
 
-      // 数据
+      // 数据（包含每个 block 计算后的 title_fs/desc_fs）
       const jsonEl = root.querySelector('#fdiff-stages-{{ section.id }}');
       let STAGES = [];
       try { STAGES = JSON.parse(jsonEl?.textContent || '[]'); } catch(e){ STAGES = []; }
 
-      // 占位图
       const placeholderSVG = encodeURIComponent(`<?xml version='1.0' encoding='UTF-8'?>
       <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 120'>
         <rect width='160' height='120' fill='#f1f1f1'/>
@@ -240,8 +289,10 @@
       function renderPanel(index){
         const d = STAGES[index] || {};
         const imgSrc = d.img || `data:image/svg+xml;utf8,${placeholderSVG}`;
+        const tfs = (d.title_fs || 0);
+        const dfs = (d.desc_fs || 0);
         panel.innerHTML = `
-          <article class="fdiff-panel__card" aria-label="${(d.title||'').replace(/"/g,'&quot;')}">
+          <article class="fdiff-panel__card" style="--card-title-fs:${tfs}px; --card-desc-fs:${dfs}px;" aria-label="${(d.title||'').replace(/"/g,'&quot;')}">
             <div class="fdiff-card__media">
               <img alt="${(d.alt||'Illustration').replace(/"/g,'&quot;')}" src="${imgSrc}" onerror="this.src='data:image/svg+xml;utf8,${placeholderSVG}'">
             </div>
@@ -302,18 +353,29 @@
         { "value": "full", "label": "全宽（满屏）" }
       ]
     },
+
+    { "type": "checkbox", "id": "heading_custom_size", "label": "自定义主标题字号（否则使用 clamp 响应式）", "default": false },
+    { "type": "range", "id": "title_fs_px", "min": 16, "max": 64, "step": 1, "unit": "px", "label": "主标题字号（px）", "default": 20 },
+
+    { "type": "range", "id": "tabs_fs_px", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "手机 Tabs 字号（px）", "default": 16 },
+
+    { "type": "range", "id": "card_title_fs_px", "min": 12, "max": 28, "step": 1, "unit": "px", "label": "卡片标题字号（px，默认）", "default": 18 },
+    { "type": "range", "id": "card_desc_fs_px", "min": 12, "max": 22, "step": 1, "unit": "px", "label": "卡片正文字号（px，默认）", "default": 14 },
+
     { "type": "color", "id": "bg_color", "label": "背景颜色", "default": "#FFFFFF" },
     { "type": "color", "id": "text_color", "label": "正文颜色", "default": "#111111" },
     { "type": "color", "id": "muted_color", "label": "次级文字颜色", "default": "#666666" },
     { "type": "color", "id": "border_color", "label": "边框颜色", "default": "#e5e7eb" },
     { "type": "color", "id": "rule_color", "label": "分隔线/虚线颜色", "default": "#d9d9d9" },
     { "type": "color", "id": "focus_color", "label": "焦点高亮颜色", "default": "#111111" },
+
     { "type": "range", "id": "radius", "min": 8, "max": 24, "step": 1, "unit": "px", "label": "卡片圆角", "default": 16 },
     { "type": "checkbox", "id": "enable_shadow", "label": "移动端卡片阴影", "default": true },
     { "type": "range", "id": "tab_height", "min": 36, "max": 56, "step": 1, "unit": "px", "label": "手机端 Tab 高度", "default": 44 },
     { "type": "checkbox", "id": "enable_top_dashed", "label": "手机端 Tab 顶部虚线", "default": true },
     { "type": "range", "id": "dash_length", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "虚线：实线长度", "default": 8 },
     { "type": "range", "id": "gap_length", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "虚线：间隔长度", "default": 8 },
+
     { "type": "checkbox", "id": "show_hr", "label": "显示卡片分隔线（hr）", "default": true },
     { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "上内边距（PC）", "default": 48 },
     { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "下内边距（PC）", "default": 36 }
@@ -327,13 +389,17 @@
         { "type": "text", "id": "bullet_1", "label": "要点 1", "default": "Daily, regular poops" },
         { "type": "text", "id": "bullet_2", "label": "要点 2", "default": "Less bloating" },
         { "type": "image_picker", "id": "image", "label": "图片（可选）" },
-        { "type": "text", "id": "alt", "label": "图片替代文字", "default": "Illustration" }
+        { "type": "text", "id": "alt", "label": "图片替代文字", "default": "Illustration" },
+
+        { "type": "checkbox", "id": "override_fs", "label": "覆盖该卡片的字体大小", "default": false },
+        { "type": "range", "id": "block_title_fs_px", "min": 12, "max": 32, "step": 1, "unit": "px", "label": "（覆盖）卡片标题字号", "default": 22 },
+        { "type": "range", "id": "block_desc_fs_px", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "（覆盖）卡片正文字号", "default": 16 }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Feel the Difference (Isolated)",
+      "name": "Feel the Difference (Isolated + Font Size Controls)",
       "blocks": [
         { "type": "stage", "settings": { "title": "3–7 Days", "bullet_1": "Daily, regular poops", "bullet_2": "Less bloating" } },
         { "type": "stage", "settings": { "title": "1–2 Weeks", "bullet_1": "Fewer cravings", "bullet_2": "Fuller for longer (3–4 hrs)" } },
