@@ -25,65 +25,76 @@
 <noscript>{{ 'component-cart-notification.css' | asset_url | stylesheet_tag }}</noscript>
 <noscript>{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}</noscript>
 
-<style>
-  header-drawer {
-    justify-self: start;
-    margin-left: -1.2rem;
+{%- style -%}
+  .header {
+    padding: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px 3rem {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px 3rem;
   }
 
-  {%- if section.settings.sticky_header_type == 'reduce-logo-size' -%}
-    .scrolled-past-header .header__heading-logo-wrapper {
-      width: 75%;
-    }
-  {%- endif -%}
-
-  {%- if section.settings.menu_type_desktop != "drawer" -%}
-    @media screen and (min-width: 990px) {
-      header-drawer {
-        display: none;
-      }
-    }
-  {%- endif -%}
-
-  .menu-drawer-container {
-    display: flex;
-  }
-
-  .list-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .list-menu--inline {
-    display: inline-flex;
-    flex-wrap: wrap;
-  }
-
-  summary.list-menu__item {
-    padding-right: 2.7rem;
-  }
-
-  .list-menu__item {
-    display: flex;
-    align-items: center;
-    line-height: calc(1 + 0.3 / var(--font-body-scale));
-  }
-
-  .list-menu__item--link {
-    text-decoration: none;
-    padding-bottom: 1rem;
-    padding-top: 1rem;
-    line-height: calc(1 + 0.8 / var(--font-body-scale));
+  .section-header {
+    position: sticky; /* 修复 Safari z-index */
+    margin-bottom: {{ section.settings.margin_bottom | times: 0.75 | round: 0 }}px;
   }
 
   @media screen and (min-width: 750px) {
-    .list-menu__item--link {
-      padding-bottom: 0.5rem;
-      padding-top: 0.5rem;
+    .section-header {
+      margin-bottom: {{ section.settings.margin_bottom }}px;
     }
   }
-</style>
+
+  @media screen and (min-width: 990px) {
+    .header {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  /* ===== 新增：外观可配变量 ===== */
+  .header-wrapper{
+    /* 若未设置则不影响主题配色；设置了就强制覆盖背景 */
+    background: {{ section.settings.header_bg | default: 'transparent' }} !important;
+  }
+  .header{
+    --header-text: {{ section.settings.font_color | default: 'rgb(var(--color-foreground))' }};
+    --header-icon: {{ section.settings.icon_color | default: 'rgb(var(--color-foreground))' }};
+    color: var(--header-text);
+  }
+  /* 文字颜色（链接/菜单/品牌字标等） */
+  .header a,
+  .header .list-menu__item--link,
+  .header .brand__text{ color: var(--header-text); }
+
+  /* Icon 颜色（购物车/搜索/账号等，Dawn 多为 currentColor） */
+  .header .header__icon,
+  .header .header__icon svg{ color: var(--header-icon); }
+  .header .header__icon svg path{ stroke: var(--header-icon); }
+  .header .header__icon svg{ fill: var(--header-icon); }
+
+  /* 手机端 Logo 宽度（仅 <750px 生效） */
+  @media (max-width: 749px){
+    .header .header__heading-logo{
+      width: {{ section.settings.mobile_logo_width | default: 120 }}px !important;
+      height: auto !important;
+    }
+  }
+
+  /* Logo + 店铺名并排（保留你原样式） */
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    text-decoration:none;
+  }
+  .brand__text{
+    font-weight:700;
+    letter-spacing:.08em;
+    white-space:nowrap;
+    color: var(--header-text);
+    text-transform: uppercase;
+    line-height:1;
+    font-size: clamp(2rem, 1.2rem + 0.8vw, 2.4rem);
+  }
+{%- endstyle -%}
+
 
 {%- style -%}
   .header {
