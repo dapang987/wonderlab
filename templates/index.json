@@ -546,6 +546,82 @@
         "point_title_size": 12,
         "point_body_size": 15
       }
+    },
+    "wonder_formulation_philosophy_Ln8QHC": {
+      "type": "Wonder-Formulation-Philosophy",
+      "blocks": {
+        "card_kKqzpG": {
+          "type": "card",
+          "settings": {
+            "column": "left",
+            "title": "Wholistic",
+            "desc": "We meticulously select clinically proven ingredients to address the root causes of your health concerns."
+          }
+        },
+        "card_ehXFpF": {
+          "type": "card",
+          "settings": {
+            "column": "left",
+            "title": "Dependable",
+            "desc": "Consistent dosing, third-party testing, and transparent sourcing ensure you can rely on every serving."
+          }
+        },
+        "card_d4UQcA": {
+          "type": "card",
+          "settings": {
+            "column": "middle",
+            "title": "Optimal",
+            "desc": "Evidence-based dosages and bioavailable forms, balanced for efficacy and tolerance."
+          }
+        },
+        "card_ejyjnH": {
+          "type": "card",
+          "settings": {
+            "column": "middle",
+            "title": "Elevating",
+            "desc": "Designed not only to address issues, but to lift daily performance, mood, and resilience."
+          }
+        },
+        "card_RTkEka": {
+          "type": "card",
+          "settings": {
+            "column": "right",
+            "title": "Nexal",
+            "desc": "Next-level synergy: formulas that connect systems—gut, brain, and energy—for compounded benefits."
+          }
+        },
+        "card_9nzdPt": {
+          "type": "card",
+          "settings": {
+            "column": "right",
+            "title": "Real",
+            "desc": "No fluff. Clear labels, clean excipients, and claims you can verify."
+          }
+        }
+      },
+      "block_order": [
+        "card_kKqzpG",
+        "card_ehXFpF",
+        "card_d4UQcA",
+        "card_ejyjnH",
+        "card_RTkEka",
+        "card_9nzdPt"
+      ],
+      "name": "Wonder Formulation Philosophy",
+      "settings": {
+        "aria_label": "Wonder formulation philosophy",
+        "title": "Wonder Formulation Philosophy",
+        "max_width": 1100,
+        "section_bg": "#ffffff",
+        "text": "#111111",
+        "muted": "#666666",
+        "card_bg": "#eeeeee",
+        "radius": 12,
+        "gap": 22,
+        "pad": 22,
+        "padding_top": 56,
+        "padding_bottom": 56
+      }
     }
   },
   "order": [
@@ -554,6 +630,7 @@
     "image_with_text_izDx6t",
     "two_column_benefits_split_UH9F8r",
     "image_with_text_cpqBUU",
+    "wonder_formulation_philosophy_Ln8QHC",
     "kpi_metrics_3aW3cC",
     "logo_marquee_ra9MhX",
     "five_star_reviews_gQCNgB",
