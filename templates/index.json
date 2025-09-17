@@ -70,7 +70,7 @@
             "button_style_secondary_2": false,
             "btn1_font_size": 16,
             "btn1_text_color": "#ffffff",
-            "btn1_radius": 12,
+            "btn1_radius": 6,
             "btn1_bg_color": "#0000e1",
             "btn2_font_size": 16,
             "btn2_text_color": "#ffffff",
