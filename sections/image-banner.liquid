@@ -332,8 +332,7 @@
     #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center-right{ top: 50%; right: var(--inset); transform: translateY(-50%); }
     #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-left{ bottom: var(--inset); left: var(--inset); }
     #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-center{ bottom: var(--inset); left: 50%; transform: translateX(-50%); }
-    /* 建议：这里原来是 bottom:-50% / right:-80%，会把卡片移出 Banner，改为常规右下角 */
-    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-right{ bottom: var(--inset); right: var(--inset); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-right{ bottom: -50%; right: -80%; }
   }
 
   /* 手机定位 + 手机专属字号/内边距 */
