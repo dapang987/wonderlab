@@ -131,6 +131,52 @@
 .header-wrapper{
   background-color: {{ section.settings.header_bg | default: 'transparent' }}; /* 直接输出 #RRGGBB */
 }
+{%- style -%}
+/* —— 已有样式略 —— */
+
+/* 1) 在 wrapper 上声明你新增的颜色变量 */
+.header-wrapper{
+  background-color: {{ section.settings.header_bg | default: 'transparent' }};
+  --header-text: {{ section.settings.font_color | default: '#111111' }};
+  --header-icon: {{ section.settings.icon_color | default: '#111111' }};
+}
+
+/* 2) 文本颜色：覆盖 header 内文本与链接（优先级足够，尽量避免 !important） */
+.header-wrapper .header,
+.header-wrapper .header a,
+.header-wrapper .header .list-menu__item--link,
+.header-wrapper .header .brand__text{
+  color: var(--header-text);
+}
+
+/* 3) 图标颜色：Dawn 的图标使用 currentColor，这里给图标容器设色即可 */
+.header-wrapper .header .header__icon,
+.header-wrapper .header .header__icon svg{
+  color: var(--header-icon);
+  /* 兼容少数 stroke-only 的符号 */
+  stroke: var(--header-icon);
+  fill: var(--header-icon);
+}
+
+/* 4) 手机端 logo 宽度：应用到 <img class="header__heading-logo"> */
+@media (max-width: 749px){
+  .header-wrapper .header .header__heading-logo{
+    width: {{ section.settings.mobile_logo_width | default: 120 }}px;
+    height: auto;
+  }
+}
+
+/* 5) 品牌字标样式可继续保留，只把颜色改成用变量（避免被 color-scheme 覆盖） */
+.brand__text{
+  font-weight:700;
+  letter-spacing:.08em;
+  white-space:nowrap;
+  text-transform:uppercase;
+  line-height:1;
+  font-size: clamp(2rem, 1.2rem + 0.8vw, 2.4rem);
+  color: var(--header-text);
+}
+{%- endstyle -%}
 
 
 {%- endstyle -%}
