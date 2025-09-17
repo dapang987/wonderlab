@@ -85,6 +85,28 @@
     assign fetch_priority = 'high'
   endif
 -%}
+{%- liquid
+  assign img_pos = 'center center'
+  case section.settings.image_position
+    when 'top-left'     then assign img_pos = 'left top'
+    when 'top'          then assign img_pos = 'center top'
+    when 'top-right'    then assign img_pos = 'right top'
+    when 'left'         then assign img_pos = 'left center'
+    when 'center'       then assign img_pos = 'center center'
+    when 'right'        then assign img_pos = 'right center'
+    when 'bottom-left'  then assign img_pos = 'left bottom'
+    when 'bottom'       then assign img_pos = 'center bottom'
+    when 'bottom-right' then assign img_pos = 'right bottom'
+  endcase
+-%}
+
+{%- style -%}
+  /* 统一控制当前 section 的图片贴合与对齐 */
+  #Banner-{{ section.id }} .banner__media img{
+    object-fit: {{ section.settings.image_fit }};
+    object-position: {{ img_pos }};
+  }
+{%- endstyle -%}
 
 <div
   id="Banner-{{ section.id }}"
