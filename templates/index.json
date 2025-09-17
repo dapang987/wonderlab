@@ -131,6 +131,7 @@
       "settings": {
         "image": "shopify://shop_images/Rectangle_2_1.png",
         "image_mobile": "shopify://shop_images/Rectangle_2_2.png",
+        "mobile_adapt_to_image": true,
         "image_overlay_opacity": 0,
         "image_height": "large",
         "image_fit": "cover",

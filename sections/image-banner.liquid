@@ -28,6 +28,25 @@
     opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
   }
 {%- endstyle -%}
+{%- if section.settings.mobile_adapt_to_image and section.settings.image_mobile != blank -%}
+  {%- style -%}
+  @media screen and (max-width: 749px){
+    /* 清除主题在手机端的固定高度，交给图片比例控制 */
+    #Banner-{{ section.id }}.banner--small,
+    #Banner-{{ section.id }}.banner--medium,
+    #Banner-{{ section.id }}.banner--large { min-height: 0 !important; }
+
+    /* 用手机端上传图的比例撑开容器高度 */
+    #Banner-{{ section.id }}::before,
+    #Banner-{{ section.id }} .banner__media::before,
+    #Banner-{{ section.id }}:not(.banner--mobile-bottom) .banner__content::before {
+      padding-bottom: {{ 1 | divided_by: section.settings.image_mobile.aspect_ratio | times: 100 }}%;
+      content: '';
+      display: block;
+    }
+  }
+  {%- endstyle -%}
+{%- endif -%}
 
 {%- style -%}
 /* === 仅作用于这个 Banner 与这个 buttons block（移动端修正）=== */
@@ -63,25 +82,6 @@
   }
 }
 {%- endstyle -%}
-{%- if section.settings.mobile_adapt_to_image and section.settings.image_mobile != blank -%}
-  {%- style -%}
-  @media screen and (max-width: 749px){
-    /* 清除主题在手机端的固定高度，交给图片比例控制 */
-    #Banner-{{ section.id }}.banner--small,
-    #Banner-{{ section.id }}.banner--medium,
-    #Banner-{{ section.id }}.banner--large { min-height: 0 !important; }
-
-    /* 用手机端上传图的比例撑开容器高度 */
-    #Banner-{{ section.id }}::before,
-    #Banner-{{ section.id }} .banner__media::before,
-    #Banner-{{ section.id }}:not(.banner--mobile-bottom) .banner__content::before {
-      padding-bottom: {{ 1 | divided_by: section.settings.image_mobile.aspect_ratio | times: 100 }}%;
-      content: '';
-      display: block;
-    }
-  }
-  {%- endstyle -%}
-{%- endif -%}
 
 {%- liquid
   assign full_width = '100vw'
