@@ -11,6 +11,13 @@
     /* ===== Scope root (variables) ===== */
     #philosophy-{{ section.id }}{
       --max-width: var(--page-width);
+  /* Section border config */
+  --section-border-color: {{ section.settings.section_border_color }};
+  --section-border-width: {{ section.settings.section_border_width }}px;
+  --section-border-radius: {{ section.settings.section_border_radius }}px;
+
+  /* Card open-state background */
+  --card-bg-open: {{ section.settings.card_bg_open }};
 
       /* Colors */
       --section-bg: {{ section.settings.section_bg }};
