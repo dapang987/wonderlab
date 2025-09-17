@@ -1,0 +1,442 @@
+{% comment %}
+  Section: FAQ — Questions? We’ve got answers
+  - Shopify section version of the single-file FAQ accordion
+  - Blocks = FAQ items (question + answer)
+  - Settings for title, page width, paddings, colors, radius, gap
+  - Options: Single-open mode, open-first
+{% endcomment %}
+
+<section id="faq-{{ section.id }}" class="faq section-{{ section.id }}" aria-labelledby="faq-title-{{ section.id }}" data-single-open="{{ section.settings.single_open }}">
+  <style>
+    .section-{{ section.id }}{
+      /* ===== Design tokens (editable) ===== */
+      --page-width: {{ section.settings.page_width }}px;
+      --radius: {{ section.settings.radius }}px;
+      --gap: {{ section.settings.gap }}px;
+
+      --text: {{ section.settings.cl_text }};
+      --muted: {{ section.settings.cl_muted }};
+      --border: {{ section.settings.cl_border }};
+      --bg: {{ section.settings.cl_bg }};
+      --shadow: 0 6px 16px rgba(0,0,0,.06);
+
+      --title-size-m: {{ section.settings.title_size_m }}px;
+      --title-size-d: {{ section.settings.title_size_d }}px;
+
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      color: var(--text);
+      background: var(--bg);
+    }
+    @media (min-width: 750px){
+      .section-{{ section.id }}{
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+
+    /* Base */
+    .section-{{ section.id }} *, .section-{{ section.id }} *::before, .section-{{ section.id }} *::after { box-sizing: border-box; }
+    .section-{{ section.id }} .faq__wrap{ width:min(var(--page-width),100%); margin:0 auto; padding:0 16px; }
+
+    .section-{{ section.id }} .faq__title{
+      margin:0 0 18px;
+      text-align:center;
+      font-weight:600;
+      line-height:1.2;
+      letter-spacing:.2px;
+      font-size: clamp(22px, 5vw, var(--title-size-m));
+    }
+    @media (min-width:768px){
+      .section-{{ section.id }} .faq__title{ font-size: clamp(28px, 3vw, var(--title-size-d)); }
+    }
+
+    .section-{{ section.id }} .faq__list{ display:grid; gap:var(--gap); }
+
+    .section-{{ section.id }} .faq__item{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:#fff;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .section-{{ section.id }} .faq__btn{
+      -webkit-tap-highlight-color:transparent;
+      width:100%;
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      gap:10px;
+      padding:14px 16px;
+      min-height:52px;
+      text-align:left;
+      background:#fff;
+      color:inherit;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+      line-height:1.35;
+    }
+    @media (min-width:768px){
+      .section-{{ section.id }} .faq__btn{ padding:16px 18px; }
+    }
+    .section-{{ section.id }} .faq__btn:focus-visible{
+      outline:2px solid #111;
+      outline-offset:2px;
+      border-radius:calc(var(--radius) - 2px);
+    }
+
+    .section-{{ section.id }} .faq__chev{
+      width:22px;height:22px;flex:0 0 22px;
+      transition:transform .24s ease;
+      transform-origin:50% 50%;
+      color:#222;
+    }
+    .section-{{ section.id }} .faq__item[aria-expanded="true"] .faq__chev{ transform:rotate(180deg); }
+
+    .section-{{ section.id }} .faq__panel{
+      height:0; overflow:hidden;
+      transition:height .24s ease;
+      will-change:height;
+      border-top:1px solid var(--border);
+    }
+    .section-{{ section.id }} .faq__inner{
+      padding:12px 16px 16px;
+      color:var(--muted);
+      line-height:1.7;
+      background:#fff;
+    }
+    @media (min-width:768px){
+      .section-{{ section.id }} .faq__inner{ padding:14px 18px 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .section-{{ section.id }} .faq__chev{ transition:none; }
+      .section-{{ section.id }} .faq__panel{ transition:none; }
+    }
+  </style>
+
+  <div class="faq__wrap">
+    {% if section.settings.title != blank %}
+      <h2 id="faq-title-{{ section.id }}" class="faq__title">{{ section.settings.title | escape }}</h2>
+    {% endif %}
+
+    <div class="faq__list">
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% liquid
+            assign idx = forloop.index
+            assign q_id = 'q-' | append: section.id | append: '-' | append: idx
+            assign a_id = 'a-' | append: section.id | append: '-' | append: idx
+            assign expanded = false
+            if section.settings.open_first and forloop.first
+              assign expanded = true
+            endif
+          %}
+          <div class="faq__item" data-item aria-expanded="{{ expanded }}" {{ block.shopify_attributes }}>
+            <button class="faq__btn" id="{{ q_id }}" aria-controls="{{ a_id }}" aria-expanded="{{ expanded }}">
+              <span>{{ block.settings.question | escape }}</span>
+              <svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="faq__panel" id="{{ a_id }}" role="region" aria-labelledby="{{ q_id }}">
+              <div class="faq__inner">
+                {{ block.settings.answer }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="faq__item" aria-expanded="true">
+          <button class="faq__btn" id="placeholder-q-{{ section.id }}" aria-controls="placeholder-a-{{ section.id }}" aria-expanded="true">
+            <span>How does this FAQ work?</span>
+            <svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="faq__panel" id="placeholder-a-{{ section.id }}" role="region" aria-labelledby="placeholder-q-{{ section.id }}">
+            <div class="faq__inner">
+              <p>Add FAQ items in the theme editor. Each item has a question and a rich text answer.</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var root = document.getElementById('faq-{{ section.id }}');
+    if(!root) return;
+    var singleOpen = (root.getAttribute('data-single-open') === 'true');
+    var items = Array.prototype.slice.call(root.querySelectorAll('[data-item]'));
+
+    function closeItem(item){
+      var btn = item.querySelector('.faq__btn');
+      var panel = item.querySelector('.faq__panel');
+      if(!panel || !btn) return;
+      btn.setAttribute('aria-expanded','false');
+      item.setAttribute('aria-expanded','false');
+      panel.style.height = panel.offsetHeight + 'px';
+      panel.getBoundingClientRect();
+      panel.style.height = '0px';
+    }
+    function openItem(item){
+      var btn = item.querySelector('.faq__btn');
+      var panel = item.querySelector('.faq__panel');
+      if(!panel || !btn) return;
+      btn.setAttribute('aria-expanded','true');
+      item.setAttribute('aria-expanded','true');
+      panel.style.height = panel.scrollHeight + 'px';
+    }
+
+    items.forEach(function(item){
+      var btn = item.querySelector('.faq__btn');
+      var panel = item.querySelector('.faq__panel');
+
+      // initial height
+      if(item.getAttribute('aria-expanded') === 'true'){
+        panel.style.height = panel.scrollHeight + 'px';
+      }else{
+        panel.style.height = '0px';
+      }
+
+      btn.addEventListener('click', function(){
+        var isOpen = item.getAttribute('aria-expanded') === 'true';
+        if(singleOpen){
+          items.forEach(function(i){ if(i !== item) closeItem(i); });
+        }
+        isOpen ? closeItem(item) : openItem(item);
+      });
+
+      btn.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          btn.click();
+        }
+      });
+
+      panel.addEventListener('transitionend', function(ev){
+        if(ev.propertyName !== 'height') return;
+        var expanded = item.getAttribute('aria-expanded') === 'true';
+        if(expanded){
+          panel.style.height = 'auto';
+        }
+      });
+
+      var resizeTimer;
+      window.addEventListener('resize', function(){
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function(){
+          if(item.getAttribute('aria-expanded') === 'true'){
+            panel.style.height = 'auto';
+            panel.style.height = panel.scrollHeight + 'px';
+          }
+        }, 80);
+      });
+    });
+  })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ — Accordion",
+  "class": "section-faq-accordion",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Questions? We’ve got answers"
+    },
+    {
+      "type": "range",
+      "id": "page_width",
+      "label": "Max content width (px)",
+      "min": 720,
+      "max": 1400,
+      "step": 10,
+      "default": 980
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Card spacing (px)",
+      "min": 6,
+      "max": 32,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Card radius (px)",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "cl_bg",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cl_text",
+      "label": "Text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "cl_muted",
+      "label": "Muted text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "cl_border",
+      "label": "Border color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size_m",
+      "label": "Title size (mobile, px)",
+      "min": 18,
+      "max": 36,
+      "step": 1,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "title_size_d",
+      "label": "Title size (desktop, px)",
+      "min": 24,
+      "max": 48,
+      "step": 1,
+      "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "single_open",
+      "label": "Allow only one item open at a time",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open the first item by default",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Your question title"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Write a helpful answer here. You can include links and formatting.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ — Accordion",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Who can take Easy Shape Probiotic?",
+            "answer": "<p>Easy Shape Probiotic is designed for ages 3 and above and is perfect for anyone targeting their waist and abdominal area—whether you're dealing with stubborn waist fat or trying to curb persistent cravings. Pregnant and breastfeeding women should consult their healthcare provider before starting any new supplement.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What does Easy Shape Probiotic do?",
+            "answer": "<p>It supports waist and abdominal goals, helps curb cravings, and promotes digestive balance by nurturing beneficial gut bacteria.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I take Easy Shape Probiotic?",
+            "answer": "<p>Take once daily with water or your favorite beverage. It can be taken with or without food. For best results, take it at the same time each day.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is the shelf life of Easy Shape Probiotic?",
+            "answer": "<p>Unopened products typically last 24 months when stored in a cool, dry place away from heat and sunlight. Always check the expiration date.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is the shelf life of Easy Shape Probiotic?",
+            "answer": "<p>Shelf life remains the same after opening if stored properly with the lid tightly closed. For peak potency, use within 60 days of opening.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I take this with other supplements? What about medications?",
+            "answer": "<p>Generally safe with most supplements. If you’re taking prescription medications or have a medical condition, consult your healthcare provider first.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
