@@ -78,7 +78,7 @@
           "type": "cert_info",
           "settings": {
             "heading": "认证信息",
-            "text": "<p>ISO 9001 / CE / RoHS</p>",
+            "text": "",
             "link_url": "",
             "link_target": "_self",
             "bg_color": "#111111",
