@@ -79,7 +79,11 @@
             "btn1_border_width": 0,
             "btn1_border_color": "#111111",
             "btn2_border_width": 2,
-            "btn2_border_color": "#ffffff"
+            "btn2_border_color": "#ffffff",
+            "btn1_text_color_mobile": "#ffffff",
+            "btn1_border_color_mobile": "#111111",
+            "btn2_text_color_mobile": "#121212",
+            "btn2_border_color_mobile": "#111111"
           }
         },
         "cert_info_gzU7Jj": {
