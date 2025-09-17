@@ -537,7 +537,10 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
           "label": "t:sections.all.heading_size.label"
         },
         { "type": "color", "id": "heading_color", "label": "标题颜色", "default": "#111111" },
-{ "type": "range", "id": "heading_font_size", "label": "标题字号（px，0=跟随主题）", "min": 0, "max": 96, "step": 1, "default": 0 }
+{ "type": "range", "id": "heading_font_size", "label": "标题字号（px，0=跟随主题）", "min": 0, "max": 96, "step": 1, "default": 0 },
+{ "type": "color", "id": "heading_color_mobile", "label": "标题颜色（手机）", "default": "#111111" },
+{ "type": "range", "id": "heading_font_size_mobile", "label": "标题字号（手机，px，0=跟随桌面/主题）", "min": 0, "max": 96, "step": 1, "default": 0 }
+
 
       ]
     },
@@ -557,7 +560,10 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
           "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
         },
         { "type": "color", "id": "text_color", "label": "文字颜色", "default": "#111111" },
-{ "type": "range", "id": "text_font_size", "label": "正文字号（px，0=跟随主题）", "min": 0, "max": 48, "step": 1, "default": 0 }
+{ "type": "range", "id": "text_font_size", "label": "正文字号（px，0=跟随主题）", "min": 0, "max": 48, "step": 1, "default": 0 },
+{ "type": "color", "id": "text_color_mobile", "label": "文字颜色（手机）", "default": "#111111" },
+{ "type": "range", "id": "text_font_size_mobile", "label": "正文字号（手机，px，0=跟随桌面/主题）", "min": 0, "max": 48, "step": 1, "default": 0 }
+
         
       ]
     },
