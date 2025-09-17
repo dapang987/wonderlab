@@ -15,9 +15,9 @@
       "type": "header",
       "settings": {
         "logo_position": "middle-center",
-        "header_bg": "#334fb4",
+        "header_bg": "#0000e1",
         "mobile_logo_width": 120,
-        "font_color": "#111111",
+        "font_color": "#ffffff",
         "icon_color": "#111111",
         "menu": "main-menu",
         "menu_type_desktop": "dropdown",
