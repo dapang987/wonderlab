@@ -331,6 +331,53 @@
         "padding_top": 48,
         "padding_bottom": 36
       }
+    },
+    "science_backed_ingredients_La4x6X": {
+      "type": "Science-backed-ingredients",
+      "blocks": {
+        "ingredient_E8c3j7": {
+          "type": "ingredient",
+          "settings": {
+            "image_alt": "",
+            "title": "Bifidobacterium animalis subsp. lactis B420",
+            "desc": "<p>B420 is a <em>Bifidobacterium animalis</em> subsp. <em>lactis</em> strain that supports weight management. Studies have shown that B420 can reduce body fat, waist circumference, energy intake, and increase the abundance of <em>Akkermansia muciniphila</em>, supporting intestinal health.</p>"
+          }
+        },
+        "ingredient_Vjk3AY": {
+          "type": "ingredient",
+          "settings": {
+            "image_alt": "",
+            "title": "Bifidobacterium animalis subsp. lactis HN019",
+            "desc": "<p>HN019 is a <em>Bifidobacterium animalis</em> subsp. <em>lactis</em> strain that supports digestive health. Studies have shown that HN019 can increase bowel movements, regulating intestinal health.</p>"
+          }
+        },
+        "ingredient_pbgaBm": {
+          "type": "ingredient",
+          "settings": {
+            "image_alt": "",
+            "title": "Prebiotic Blend",
+            "desc": "<p>Prebiotic blend contains isomaltooligosaccharides and polydextrose, which promote the proliferation of beneficial bacteria in the intestines and support digestive health.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "ingredient_E8c3j7",
+        "ingredient_Vjk3AY",
+        "ingredient_pbgaBm"
+      ],
+      "name": "Science-backed ingredients",
+      "settings": {
+        "title": "Science-backed ingredients that deliver real results",
+        "gap": 24,
+        "radius": 12,
+        "cl_bg": "#ffffff",
+        "cl_text": "#111111",
+        "cl_muted": "#666666",
+        "cl_border": "#e5e7eb",
+        "cl_tile": "#f2f3f5",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
     }
   },
   "order": [
@@ -339,6 +386,7 @@
     "feature_split_card_LDP3bW",
     "stats_feature_split_abTmBf",
     "comparison_matrix_cifVii",
-    "week_by_week_emwRXH"
+    "week_by_week_emwRXH",
+    "science_backed_ingredients_La4x6X"
   ]
 }

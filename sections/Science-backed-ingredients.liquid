@@ -8,8 +8,6 @@
 <section class="section-{{ section.id }} ingr" aria-labelledby="ingr-title-{{ section.id }}">
   <style>
     .section-{{ section.id }}{
-      /* Design tokens (configurable) */
-      --page-width: {{ section.settings.page_width }}px;
       --gap: {{ section.settings.gap }}px;
       --radius: {{ section.settings.radius }}px;
 
@@ -180,15 +178,6 @@
       "id": "title",
       "label": "Section title",
       "default": "Science-backed ingredients that deliver real results"
-    },
-    {
-      "type": "range",
-      "id": "page_width",
-      "label": "Max content width (px)",
-      "min": 720,
-      "max": 1600,
-      "step": 10,
-      "default": 1100
     },
     {
       "type": "range",
