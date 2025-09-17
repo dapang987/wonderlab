@@ -157,15 +157,28 @@
       {%- for block in section.blocks -%}
         {%- case block.type -%}
 
-          {%- when 'heading' -%}
-            <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
-              {{ block.settings.heading }}
-            </h2>
+       {%- when 'heading' -%}
+  {%- style -%}
+  #Banner-{{ section.id }} .heading-{{ block.id }}{
+    color: {{ block.settings.heading_color }};
+    {% if block.settings.heading_font_size > 0 %}font-size: {{ block.settings.heading_font_size }}px;{% endif %}
+  }
+  {%- endstyle -%}
+  <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }} heading-{{ block.id }}" {{ block.shopify_attributes }}>
+    {{ block.settings.heading }}
+  </h2>
 
-          {%- when 'text' -%}
-            <div class="banner__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
-              <p>{{ block.settings.text }}</p>
-            </div>
+{%- when 'text' -%}
+  {%- style -%}
+  #Banner-{{ section.id }} .text-{{ block.id }}{
+    color: {{ block.settings.text_color }};
+    {% if block.settings.text_font_size > 0 %}font-size: {{ block.settings.text_font_size }}px;{% endif %}
+  }
+  {%- endstyle -%}
+  <div class="banner__text rte {{ block.settings.text_style }} text-{{ block.id }}" {{ block.shopify_attributes }}>
+    <p>{{ block.settings.text }}</p>
+  </div>
+
 
           {%- when 'buttons' -%}
             {%- comment -%} PC 横向左对齐；移动端上下排列。两按钮独立控制：字体大小/颜色、圆角、背景色；PC/移动端尺寸。 {%- endcomment -%}
