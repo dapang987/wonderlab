@@ -8,8 +8,6 @@
 <section class="section-{{ section.id }} ingr" aria-labelledby="ingr-title-{{ section.id }}">
   <style>
     .section-{{ section.id }}{
-      /* Design tokens (configurable) */
-      --page-width: {{ section.settings.page_width }}px;
       --gap: {{ section.settings.gap }}px;
       --radius: {{ section.settings.radius }}px;
 
@@ -84,7 +82,7 @@
       gap: 12px;
       padding: 20px;
       background: #fff;
-      border: 1px solid var(--border);
+   
       border-radius: var(--radius);
       transition: border-color .15s ease, box-shadow .15s ease, transform .02s ease;
     }
