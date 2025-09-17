@@ -128,6 +128,9 @@
 /* 如需控制图标高度，可开启这行： */
 /* .header__heading-logo { height:28px; width:auto; } */
 
+.header-wrapper{
+  background-color: {{ section.settings.header_bg | default: 'transparent' }}; /* 直接输出 #RRGGBB */
+}
 
 
 {%- endstyle -%}
