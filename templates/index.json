@@ -75,7 +75,11 @@
             "btn2_font_size": 16,
             "btn2_text_color": "#ffffff",
             "btn2_radius": 6,
-            "btn2_bg_color": "rgba(0,0,0,0)"
+            "btn2_bg_color": "rgba(0,0,0,0)",
+            "btn1_border_width": 0,
+            "btn1_border_color": "#111111",
+            "btn2_border_width": 2,
+            "btn2_border_color": "#ffffff"
           }
         },
         "cert_info_gzU7Jj": {
