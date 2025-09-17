@@ -18,7 +18,7 @@
         "header_bg": "#0000e1",
         "mobile_logo_width": 120,
         "font_color": "#ffffff",
-        "icon_color": "#111111",
+        "icon_color": "#ffffff",
         "menu": "main-menu",
         "menu_type_desktop": "dropdown",
         "sticky_header_type": "on-scroll-up",
