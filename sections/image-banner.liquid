@@ -183,25 +183,34 @@
           {%- when 'buttons' -%}
             {%- comment -%} PC 横向左对齐；移动端上下排列。两按钮独立控制：字体大小/颜色、圆角、背景色；PC/移动端尺寸。 {%- endcomment -%}
             {%- style -%}
-              /* —— 每个按钮的文字/圆角/背景（作用域仅此 block） —— */
-              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1,
-              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:hover,
-              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:focus{
-                font-size: {{ block.settings.btn1_font_size }}px;
-                color: {{ block.settings.btn1_text_color }};
-                border-radius: {{ block.settings.btn1_radius }}px;
-                background-color: {{ block.settings.btn1_bg_color }};
-                border-color: {{ block.settings.btn1_bg_color }};
-              }
-              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2,
-              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:hover,
-              #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:focus{
-                font-size: {{ block.settings.btn2_font_size }}px;
-                color: {{ block.settings.btn2_text_color }};
-                border-radius: {{ block.settings.btn2_radius }}px;
-                background-color: {{ block.settings.btn2_bg_color }};
-                border-color: {{ block.settings.btn2_bg_color }};
-              }
+            /* —— 每个按钮的文字/圆角/背景（作用域仅此 block） —— */
+    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1,
+    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:hover,
+    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:focus{
+      font-size: {{ block.settings.btn1_font_size }}px;
+      color: {{ block.settings.btn1_text_color }};
+      border-radius: {{ block.settings.btn1_radius }}px;
+      background-color: {{ block.settings.btn1_bg_color }};
+
+      /* 新增：边框（颜色/粗细） */
+      border-style: solid;
+      border-width: {{ block.settings.btn1_border_width }}px;
+      border-color: {{ block.settings.btn1_border_color }};
+    }
+
+    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2,
+    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:hover,
+    #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:focus{
+      font-size: {{ block.settings.btn2_font_size }}px;
+      color: {{ block.settings.btn2_text_color }};
+      border-radius: {{ block.settings.btn2_radius }}px;
+      background-color: {{ block.settings.btn2_bg_color }};
+
+      /* 新增：边框（颜色/粗细） */
+      border-style: solid;
+      border-width: {{ block.settings.btn2_border_width }}px;
+      border-color: {{ block.settings.btn2_border_color }};
+    }
 
               /* —— 默认（移动端）上下排列，左对齐 —— */
               #Banner-{{ section.id }} .buttons-{{ block.id }}{
