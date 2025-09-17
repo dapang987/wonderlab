@@ -258,7 +258,7 @@
         "radius": 12,
         "gap": 96,
         "pad_m": 20,
-        "pad_d": 32,
+        "pad_d": 64,
         "cl_text": "#111111",
         "cl_muted": "#666666",
         "cl_card": "#f3f4f6",
