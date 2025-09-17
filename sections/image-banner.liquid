@@ -470,6 +470,8 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
   "settings": [
 { "type": "image_picker", "id": "image", "label": "t:sections.image-banner.settings.image.label" },
 { "type": "image_picker", "id": "image_mobile", "label": "手机端图片" },
+{ "type": "checkbox", "id": "mobile_adapt_to_image", "label": "手机端高度跟随上传图片比例", "default": true, "info": "≤749px 时按手机端图片（image_mobile）的长宽比自适应高度。" },
+
 {"type": "range", "id": "image_overlay_opacity", "min": 0, "max": 100, "step": 10, "unit": "%",
 "label": "t:sections.image-banner.settings.image_overlay_opacity.label", "default": 0},
     {
