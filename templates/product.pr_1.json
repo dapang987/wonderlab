@@ -257,7 +257,10 @@
             "title": "3–7 Days",
             "bullet_1": "Daily, regular poops",
             "bullet_2": "Less bloating",
-            "alt": "Illustration"
+            "alt": "Illustration",
+            "override_fs": false,
+            "block_title_fs_px": 22,
+            "block_desc_fs_px": 16
           }
         },
         "stage_HdM3VE": {
@@ -266,7 +269,10 @@
             "title": "1–2 Weeks",
             "bullet_1": "Fewer cravings",
             "bullet_2": "Fuller for longer (3–4 hrs)",
-            "alt": "Illustration"
+            "alt": "Illustration",
+            "override_fs": false,
+            "block_title_fs_px": 22,
+            "block_desc_fs_px": 16
           }
         },
         "stage_RFKmDb": {
@@ -275,7 +281,10 @@
             "title": "1 Month+",
             "bullet_1": "See slimmer waist/thighs",
             "bullet_2": "Keep losing (~1 lb/week)",
-            "alt": "Illustration"
+            "alt": "Illustration",
+            "override_fs": false,
+            "block_title_fs_px": 22,
+            "block_desc_fs_px": 16
           }
         },
         "stage_xhXxVz": {
@@ -284,7 +293,10 @@
             "title": "3 Months+",
             "bullet_1": "Drop a pants size",
             "bullet_2": "Fit into tight jeans",
-            "alt": "Illustration"
+            "alt": "Illustration",
+            "override_fs": false,
+            "block_title_fs_px": 22,
+            "block_desc_fs_px": 16
           }
         }
       },
@@ -298,7 +310,12 @@
       "settings": {
         "heading": "Feel the Difference—Week by Week",
         "container": "page",
-        "bg_color": "#FFFFFF",
+        "heading_custom_size": false,
+        "title_fs_px": 64,
+        "tabs_fs_px": 17,
+        "card_title_fs_px": 18,
+        "card_desc_fs_px": 14,
+        "bg_color": "#ffffff",
         "text_color": "#111111",
         "muted_color": "#666666",
         "border_color": "#e5e7eb",
