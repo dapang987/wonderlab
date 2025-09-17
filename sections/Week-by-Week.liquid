@@ -1,11 +1,22 @@
 {% comment %}
-  Section: Feel the Difference — Week by Week (Isolated)
-  说明：所有样式/脚本均作用于 #fdiff-{{ section.id }} 作用域内，类名带 fdiff- 前缀，避免与主题冲突。
+  Section: Feel the Difference — Week by Week (Isolated + Font Controls)
+  说明：
+  - 完全作用域：#fdiff-{{ section.id }}
+  - 新增字体调节按钮（A−/A/A+），仅影响本 section，支持持久化
 {% endcomment %}
 
 <section id="fdiff-{{ section.id }}" class="fdiff section-{{ section.id }}" style="--bg: {{ section.settings.bg_color }};">
   <div class="fdiff__pad" aria-labelledby="fdiff-title-{{ section.id }}">
     <div class="{% if section.settings.container == 'page' %}page-width{% else %}page-width page-width--full{% endif %}">
+      
+      {% if section.settings.show_font_controls %}
+      <div class="fdiff-controls" role="group" aria-label="字体大小调节">
+        <button class="fdiff-fs-btn" data-act="dec" aria-label="减小字体" title="A−">A−</button>
+        <button class="fdiff-fs-btn" data-act="reset" aria-label="重置字体" title="A">A</button>
+        <button class="fdiff-fs-btn" data-act="inc" aria-label="增大字体" title="A+">A+</button>
+      </div>
+      {% endif %}
+
       {% if section.settings.heading != blank %}
         <h2 id="fdiff-title-{{ section.id }}" class="fdiff__title">{{ section.settings.heading }}</h2>
       {% endif %}
@@ -86,9 +97,13 @@
   {%- style -%}
     /* ========== Scope Root ========== */
     #fdiff-{{ section.id }}{
-      isolation:isolate;              /* 防止混合模式/定位影响外部 */
+      isolation:isolate;
       background: var(--bg);
       --gap: 24px;
+
+      /* 字体调节核心变量：以 px 偏移叠加到各处字号 */
+      --fs-delta: 0px;
+
       --radius: {{ section.settings.radius }}px;
       --border: {{ section.settings.border_color }};
       --text: {{ section.settings.text_color }};
@@ -114,7 +129,22 @@
       }
     }
 
-    /* Title */
+    /* Font Controls */
+    #fdiff-{{ section.id }} .fdiff-controls{
+      display:flex; gap:8px; justify-content:flex-end; margin:0 0 8px;
+    }
+    #fdiff-{{ section.id }} .fdiff-fs-btn{
+      appearance:none; -webkit-appearance:none;
+      padding:4px 10px; border:1px solid var(--border);
+      background:#fff; color:var(--text); cursor:pointer;
+      border-radius: 999px; line-height:1; font-size: 14px;
+      transition: box-shadow .15s ease, transform .05s ease;
+    }
+    #fdiff-{{ section.id }} .fdiff-fs-btn:hover{ box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+    #fdiff-{{ section.id }} .fdiff-fs-btn:active{ transform: translateY(1px); }
+    #fdiff-{{ section.id }} .fdiff-fs-btn:focus-visible{ outline:2px solid var(--focus-c); outline-offset:2px; }
+
+    /* Title（在 clamp 基础上叠加 fs-delta） */
     #fdiff-{{ section.id }} .fdiff__title{
       margin:0 0 16px;
       text-align:center;
@@ -122,7 +152,7 @@
       font-weight: 400;
       line-height: 1.2;
       letter-spacing:.2px;
-      font-size: clamp(24px, 3.5vw, 36px);
+      font-size: calc(clamp(24px, 3.5vw, 36px) + var(--fs-delta));
       color: var(--text);
     }
 
@@ -155,9 +185,19 @@
       aspect-ratio: 4 / 3; display:flex; align-items:center; justify-content:center;
     }
     #fdiff-{{ section.id }} .fdiff-card__media img{ width:100%; height:100%; object-fit:cover; display:block; }
-    #fdiff-{{ section.id }} .fdiff-card__h{ margin:4px 0 0; font-size:1.1rem; line-height:1.35; }
+
+    /* 标题与正文随 fs-delta 微调（避免过度放大） */
+    #fdiff-{{ section.id }} .fdiff-card__h{
+      margin:4px 0 0;
+      font-size: calc(1.1rem + (var(--fs-delta) * 0.5));
+      line-height:1.35;
+    }
     #fdiff-{{ section.id }} .fdiff-card__hr{ border:0; border-top:1px dashed var(--rule); margin:2px 0 4px; }
-    #fdiff-{{ section.id }} .fdiff-card__desc{ margin:0; font-size:.92rem; color:var(--muted); }
+    #fdiff-{{ section.id }} .fdiff-card__desc{
+      margin:0;
+      font-size: calc(0.92rem + (var(--fs-delta) * 0.4));
+      color:var(--muted);
+    }
 
     /* Tabs (Mobile) */
     #fdiff-{{ section.id }} .fdiff-tabs{ display:none; }
@@ -175,6 +215,7 @@
       display:inline-flex; align-items:center;
       border-radius:999px; border:0; background:transparent;
       color:var(--text); font:inherit; cursor:pointer; position:relative; padding:0 12px;
+      font-size: calc(1rem + (var(--fs-delta) * 0.25));
     }
     #fdiff-{{ section.id }} .fdiff-tabs__btn[aria-selected="true"]{ font-weight:600; }
     #fdiff-{{ section.id }} .fdiff-tabs__btn[aria-selected="true"]::after{
@@ -219,16 +260,46 @@
       const root = document.getElementById('fdiff-{{ section.id }}');
       if(!root) return;
 
+      /* ========= 字体调节逻辑 ========= */
+      const key = 'fdiff:fs:{{ section.id }}';
+      const step = {{ section.settings.font_step_px | default: 2 | json }};
+      const minAbs = {{ section.settings.font_min_px | default: 4 | json }};
+      const maxAbs = {{ section.settings.font_max_px | default: 8 | json }};
+      const controls = root.querySelectorAll('.fdiff-fs-btn');
+
+      // 从本地读取当前 delta，范围限制在 [-minAbs, +maxAbs]
+      let delta = 0;
+      try {
+        const saved = localStorage.getItem(key);
+        if(saved !== null) delta = Math.max(-minAbs, Math.min(maxAbs, parseInt(saved, 10) || 0));
+      } catch(e){}
+
+      applyDelta();
+
+      controls.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const act = btn.getAttribute('data-act');
+          if(act === 'dec') delta = Math.max(-minAbs, delta - step);
+          else if(act === 'inc') delta = Math.min(maxAbs, delta + step);
+          else if(act === 'reset') delta = 0;
+          applyDelta();
+          try { localStorage.setItem(key, String(delta)); } catch(e){}
+        });
+      });
+
+      function applyDelta(){
+        root.style.setProperty('--fs-delta', delta + 'px');
+      }
+
+      /* ========= 原有 Tabs/Panel 逻辑 ========= */
       const panel = root.querySelector('#fdiff-panel-{{ section.id }}');
       const tabsWrap = root.querySelector('#fdiff-tabs-{{ section.id }}');
       const tabs = Array.from(root.querySelectorAll('.fdiff-tabs__btn'));
 
-      // 数据
       const jsonEl = root.querySelector('#fdiff-stages-{{ section.id }}');
       let STAGES = [];
       try { STAGES = JSON.parse(jsonEl?.textContent || '[]'); } catch(e){ STAGES = []; }
 
-      // 占位图
       const placeholderSVG = encodeURIComponent(`<?xml version='1.0' encoding='UTF-8'?>
       <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 120'>
         <rect width='160' height='120' fill='#f1f1f1'/>
@@ -302,18 +373,26 @@
         { "value": "full", "label": "全宽（满屏）" }
       ]
     },
+
+    { "type": "checkbox", "id": "show_font_controls", "label": "显示字体调节按钮（A−/A/A+）", "default": true },
+    { "type": "range", "id": "font_step_px", "min": 1, "max": 4, "step": 1, "unit": "px", "label": "每次调节步长", "default": 2 },
+    { "type": "range", "id": "font_min_px", "min": 0, "max": 10, "step": 1, "unit": "px", "label": "可减少的最大像素", "default": 4 },
+    { "type": "range", "id": "font_max_px", "min": 0, "max": 16, "step": 1, "unit": "px", "label": "可增加的最大像素", "default": 8 },
+
     { "type": "color", "id": "bg_color", "label": "背景颜色", "default": "#FFFFFF" },
     { "type": "color", "id": "text_color", "label": "正文颜色", "default": "#111111" },
     { "type": "color", "id": "muted_color", "label": "次级文字颜色", "default": "#666666" },
     { "type": "color", "id": "border_color", "label": "边框颜色", "default": "#e5e7eb" },
     { "type": "color", "id": "rule_color", "label": "分隔线/虚线颜色", "default": "#d9d9d9" },
     { "type": "color", "id": "focus_color", "label": "焦点高亮颜色", "default": "#111111" },
+
     { "type": "range", "id": "radius", "min": 8, "max": 24, "step": 1, "unit": "px", "label": "卡片圆角", "default": 16 },
     { "type": "checkbox", "id": "enable_shadow", "label": "移动端卡片阴影", "default": true },
     { "type": "range", "id": "tab_height", "min": 36, "max": 56, "step": 1, "unit": "px", "label": "手机端 Tab 高度", "default": 44 },
     { "type": "checkbox", "id": "enable_top_dashed", "label": "手机端 Tab 顶部虚线", "default": true },
     { "type": "range", "id": "dash_length", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "虚线：实线长度", "default": 8 },
     { "type": "range", "id": "gap_length", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "虚线：间隔长度", "default": 8 },
+
     { "type": "checkbox", "id": "show_hr", "label": "显示卡片分隔线（hr）", "default": true },
     { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "上内边距（PC）", "default": 48 },
     { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "下内边距（PC）", "default": 36 }
@@ -333,7 +412,7 @@
   ],
   "presets": [
     {
-      "name": "Feel the Difference (Isolated)",
+      "name": "Feel the Difference (Isolated + Font Controls)",
       "blocks": [
         { "type": "stage", "settings": { "title": "3–7 Days", "bullet_1": "Daily, regular poops", "bullet_2": "Less bloating" } },
         { "type": "stage", "settings": { "title": "1–2 Weeks", "bullet_1": "Fewer cravings", "bullet_2": "Fuller for longer (3–4 hrs)" } },
