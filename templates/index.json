@@ -400,7 +400,7 @@
         "muted": "#666666",
         "card_bg": "#eeeeee",
         "radius": 12,
-        "gap": 22,
+        "gap": 16,
         "pad": 22,
         "padding_top": 32,
         "padding_bottom": 28
