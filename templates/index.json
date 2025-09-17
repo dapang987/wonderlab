@@ -412,7 +412,11 @@
         "gap": 16,
         "pad": 22,
         "padding_top": 32,
-        "padding_bottom": 28
+        "padding_bottom": 28,
+        "section_border_color": "#25aef7",
+        "section_border_width": 0,
+        "section_border_radius": 12,
+        "card_bg_open": "#f7f7f7"
       }
     },
     "kpi_metrics_3aW3cC": {
