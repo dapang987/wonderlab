@@ -1,14 +1,14 @@
 {% comment %}
   Section: FAQ — Questions? We’ve got answers
-  - Shopify section version of the single-file FAQ accordion
-  - Blocks = FAQ items (question + answer)
-  - Settings for title, page width, paddings, colors, radius, gap
-  - Options: Single-open mode, open-first
+  - Each block = one FAQ item (question + answer)
+  - New per-item controls: question font size, answer font size, card background color
 {% endcomment %}
 
 <section id="faq-{{ section.id }}" class="faq section-{{ section.id }}" aria-labelledby="faq-title-{{ section.id }}" data-single-open="{{ section.settings.single_open }}">
   <style>
     .section-{{ section.id }}{
+      /* ===== Section-level tokens ===== */
+      --page-width: {{ section.settings.page_width }}px;
       --radius: {{ section.settings.radius }}px;
       --gap: {{ section.settings.gap }}px;
 
@@ -51,10 +51,15 @@
 
     .section-{{ section.id }} .faq__list{ display:grid; gap:var(--gap); }
 
+    /* Item container: reads per-item CSS variables set inline */
     .section-{{ section.id }} .faq__item{
+      --item-bg: #fff;            /* fallback if block didn't set */
+      --item-q-size: 16px;        /* question font-size fallback */
+      --item-a-size: 14px;        /* answer font-size fallback */
+
       border:1px solid var(--border);
       border-radius:var(--radius);
-      background:#fff;
+      background: var(--item-bg);
       box-shadow:var(--shadow);
       overflow:hidden;
     }
@@ -69,12 +74,13 @@
       padding:14px 16px;
       min-height:52px;
       text-align:left;
-      background:#fff;
+      background: var(--item-bg);
       color:inherit;
       border:0;
       cursor:pointer;
       font-weight:600;
       line-height:1.35;
+      font-size: var(--item-q-size);
     }
     @media (min-width:768px){
       .section-{{ section.id }} .faq__btn{ padding:16px 18px; }
@@ -98,12 +104,14 @@
       transition:height .24s ease;
       will-change:height;
       border-top:1px solid var(--border);
+      background: var(--item-bg);
     }
     .section-{{ section.id }} .faq__inner{
       padding:12px 16px 16px;
       color:var(--muted);
       line-height:1.7;
-      background:#fff;
+      background: var(--item-bg);
+      font-size: var(--item-a-size);
     }
     @media (min-width:768px){
       .section-{{ section.id }} .faq__inner{ padding:14px 18px 18px; }
@@ -131,8 +139,16 @@
             if section.settings.open_first and forloop.first
               assign expanded = true
             endif
+
+            assign item_bg = block.settings.item_bg | default: '#ffffff'
+            assign q_size = block.settings.question_size | default: 16
+            assign a_size = block.settings.answer_size | default: 14
           %}
-          <div class="faq__item" data-item aria-expanded="{{ expanded }}" {{ block.shopify_attributes }}>
+          <div class="faq__item"
+               data-item
+               aria-expanded="{{ expanded }}"
+               style="--item-bg: {{ item_bg }}; --item-q-size: {{ q_size }}px; --item-a-size: {{ a_size }}px;"
+               {{ block.shopify_attributes }}>
             <button class="faq__btn" id="{{ q_id }}" aria-controls="{{ a_id }}" aria-expanded="{{ expanded }}">
               <span>{{ block.settings.question | escape }}</span>
               <svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true">
@@ -147,7 +163,7 @@
           </div>
         {% endfor %}
       {% else %}
-        <div class="faq__item" aria-expanded="true">
+        <div class="faq__item" aria-expanded="true" style="--item-bg:#ffffff; --item-q-size:16px; --item-a-size:14px;">
           <button class="faq__btn" id="placeholder-q-{{ section.id }}" aria-controls="placeholder-a-{{ section.id }}" aria-expanded="true">
             <span>How does this FAQ work?</span>
             <svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true">
@@ -245,136 +261,41 @@
   "class": "section-faq-accordion",
   "max_blocks": 20,
   "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Section title",
-      "default": "Questions? We’ve got answers"
-    },
-    {
-      "type": "range",
-      "id": "gap",
-      "label": "Card spacing (px)",
-      "min": 6,
-      "max": 32,
-      "step": 1,
-      "default": 12
-    },
-    {
-      "type": "range",
-      "id": "radius",
-      "label": "Card radius (px)",
-      "min": 0,
-      "max": 20,
-      "step": 1,
-      "default": 12
-    },
-    {
-      "type": "header",
-      "content": "Colors"
-    },
-    {
-      "type": "color",
-      "id": "cl_bg",
-      "label": "Section background",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "cl_text",
-      "label": "Text color",
-      "default": "#111111"
-    },
-    {
-      "type": "color",
-      "id": "cl_muted",
-      "label": "Muted text color",
-      "default": "#666666"
-    },
-    {
-      "type": "color",
-      "id": "cl_border",
-      "label": "Border color",
-      "default": "#e5e7eb"
-    },
-    {
-      "type": "header",
-      "content": "Section padding"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "Padding top",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "default": 32
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "Padding bottom",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "default": 32
-    },
-    {
-      "type": "header",
-      "content": "Typography"
-    },
-    {
-      "type": "range",
-      "id": "title_size_m",
-      "label": "Title size (mobile, px)",
-      "min": 18,
-      "max": 36,
-      "step": 1,
-      "default": 28
-    },
-    {
-      "type": "range",
-      "id": "title_size_d",
-      "label": "Title size (desktop, px)",
-      "min": 24,
-      "max": 48,
-      "step": 1,
-      "default": 36
-    },
-    {
-      "type": "header",
-      "content": "Behavior"
-    },
-    {
-      "type": "checkbox",
-      "id": "single_open",
-      "label": "Allow only one item open at a time",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "open_first",
-      "label": "Open the first item by default",
-      "default": true
-    }
+    { "type": "text", "id": "title", "label": "Section title", "default": "Questions? We’ve got answers" },
+    { "type": "range", "id": "page_width", "label": "Max content width (px)", "min": 720, "max": 1400, "step": 10, "default": 980 },
+    { "type": "range", "id": "gap", "label": "Card spacing (px)", "min": 6, "max": 32, "step": 1, "default": 12 },
+    { "type": "range", "id": "radius", "label": "Card radius (px)", "min": 0, "max": 20, "step": 1, "default": 12 },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "cl_bg", "label": "Section background", "default": "#ffffff" },
+    { "type": "color", "id": "cl_text", "label": "Text color", "default": "#111111" },
+    { "type": "color", "id": "cl_muted", "label": "Muted text color", "default": "#666666" },
+    { "type": "color", "id": "cl_border", "label": "Border color", "default": "#e5e7eb" },
+
+    { "type": "header", "content": "Section padding" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 32 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 32 },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "title_size_m", "label": "Title size (mobile, px)", "min": 18, "max": 36, "step": 1, "default": 28 },
+    { "type": "range", "id": "title_size_d", "label": "Title size (desktop, px)", "min": 24, "max": 48, "step": 1, "default": 36 },
+
+    { "type": "header", "content": "Behavior" },
+    { "type": "checkbox", "id": "single_open", "label": "Allow only one item open at a time", "default": true },
+    { "type": "checkbox", "id": "open_first", "label": "Open the first item by default", "default": true }
   ],
   "blocks": [
     {
       "type": "faq_item",
       "name": "FAQ item",
       "settings": [
-        {
-          "type": "text",
-          "id": "question",
-          "label": "Question",
-          "default": "Your question title"
-        },
-        {
-          "type": "richtext",
-          "id": "answer",
-          "label": "Answer",
-          "default": "<p>Write a helpful answer here. You can include links and formatting.</p>"
-        }
+        { "type": "text", "id": "question", "label": "Question", "default": "Your question title" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Write a helpful answer here. You can include links and formatting.</p>" },
+
+        { "type": "header", "content": "Item appearance" },
+        { "type": "range", "id": "question_size", "label": "Question font size (px)", "min": 12, "max": 28, "step": 1, "default": 16 },
+        { "type": "range", "id": "answer_size", "label": "Answer font size (px)", "min": 12, "max": 22, "step": 1, "default": 14 },
+        { "type": "color", "id": "item_bg", "label": "Card background color", "default": "#ffffff" }
       ]
     }
   ],
@@ -386,42 +307,20 @@
           "type": "faq_item",
           "settings": {
             "question": "Who can take Easy Shape Probiotic?",
-            "answer": "<p>Easy Shape Probiotic is designed for ages 3 and above and is perfect for anyone targeting their waist and abdominal area—whether you're dealing with stubborn waist fat or trying to curb persistent cravings. Pregnant and breastfeeding women should consult their healthcare provider before starting any new supplement.</p>"
+            "answer": "<p>Easy Shape Probiotic is designed for ages 3 and above and is perfect for anyone targeting their waist and abdominal area—whether you're dealing with stubborn waist fat or trying to curb persistent cravings. Pregnant and breastfeeding women should consult their healthcare provider before starting any new supplement.</p>",
+            "question_size": 16,
+            "answer_size": 14,
+            "item_bg": "#ffffff"
           }
         },
         {
           "type": "faq_item",
           "settings": {
             "question": "What does Easy Shape Probiotic do?",
-            "answer": "<p>It supports waist and abdominal goals, helps curb cravings, and promotes digestive balance by nurturing beneficial gut bacteria.</p>"
-          }
-        },
-        {
-          "type": "faq_item",
-          "settings": {
-            "question": "How do I take Easy Shape Probiotic?",
-            "answer": "<p>Take once daily with water or your favorite beverage. It can be taken with or without food. For best results, take it at the same time each day.</p>"
-          }
-        },
-        {
-          "type": "faq_item",
-          "settings": {
-            "question": "What is the shelf life of Easy Shape Probiotic?",
-            "answer": "<p>Unopened products typically last 24 months when stored in a cool, dry place away from heat and sunlight. Always check the expiration date.</p>"
-          }
-        },
-        {
-          "type": "faq_item",
-          "settings": {
-            "question": "What is the shelf life of Easy Shape Probiotic?",
-            "answer": "<p>Shelf life remains the same after opening if stored properly with the lid tightly closed. For peak potency, use within 60 days of opening.</p>"
-          }
-        },
-        {
-          "type": "faq_item",
-          "settings": {
-            "question": "Can I take this with other supplements? What about medications?",
-            "answer": "<p>Generally safe with most supplements. If you’re taking prescription medications or have a medical condition, consult your healthcare provider first.</p>"
+            "answer": "<p>It supports waist and abdominal goals, helps curb cravings, and promotes digestive balance by nurturing beneficial gut bacteria.</p>",
+            "question_size": 16,
+            "answer_size": 14,
+            "item_bg": "#ffffff"
           }
         }
       ]
