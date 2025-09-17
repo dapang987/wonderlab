@@ -73,12 +73,37 @@
             "btn2_radius": 12,
             "btn2_bg_color": "#111111"
           }
+        },
+        "cert_info_gzU7Jj": {
+          "type": "cert_info",
+          "settings": {
+            "heading": "认证信息",
+            "text": "<p>ISO 9001 / CE / RoHS</p>",
+            "link_url": "",
+            "link_target": "_self",
+            "bg_color": "#111111",
+            "bg_opacity": 80,
+            "text_color": "#ffffff",
+            "font_size": 14,
+            "radius": 14,
+            "pad_x": 16,
+            "pad_y": 10,
+            "width_desktop": 320,
+            "width_mobile": 300,
+            "edge_inset": 16,
+            "position_desktop": "bottom-center",
+            "position_mobile": "bottom-right",
+            "shadow": true,
+            "z_index": 3,
+            "show_on_mobile": true
+          }
         }
       },
       "block_order": [
         "heading_jjV78L",
         "text_jCPBMg",
-        "buttons_JLtpcz"
+        "buttons_JLtpcz",
+        "cert_info_gzU7Jj"
       ],
       "custom_css": [],
       "name": "t:sections.image-banner.presets.name",
