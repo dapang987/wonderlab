@@ -8,7 +8,6 @@
   <style>
     .section-{{ section.id }}{
       /* ===== Section-level tokens ===== */
-      --page-width: {{ section.settings.page_width }}px;
       --radius: {{ section.settings.radius }}px;
       --gap: {{ section.settings.gap }}px;
 
@@ -262,7 +261,6 @@
   "max_blocks": 20,
   "settings": [
     { "type": "text", "id": "title", "label": "Section title", "default": "Questions? We’ve got answers" },
-    { "type": "range", "id": "page_width", "label": "Max content width (px)", "min": 720, "max": 1400, "step": 10, "default": 980 },
     { "type": "range", "id": "gap", "label": "Card spacing (px)", "min": 6, "max": 32, "step": 1, "default": 12 },
     { "type": "range", "id": "radius", "label": "Card radius (px)", "min": 0, "max": 20, "step": 1, "default": 12 },
 
