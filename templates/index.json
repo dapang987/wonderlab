@@ -132,6 +132,8 @@
         "image": "shopify://shop_images/Rectangle_2_1.png",
         "image_mobile": "shopify://shop_images/Rectangle_2_2.png",
         "mobile_adapt_to_image": true,
+        "mobile_height_mode": "image",
+        "mobile_height_vh": 60,
         "image_overlay_opacity": 0,
         "image_height": "large",
         "image_fit": "contain",
@@ -190,7 +192,7 @@
         "section_color_scheme": "",
         "color_scheme": "",
         "image_behavior": "zoom-in",
-        "mobile_content_alignment": "left",
+        "mobile_content_alignment": "center",
         "padding_top": 36,
         "padding_bottom": 36
       }
