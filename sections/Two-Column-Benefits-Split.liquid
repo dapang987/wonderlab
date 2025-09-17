@@ -9,7 +9,6 @@
   <style>
     /* ===== Scope to this section only ===== */
     #benefits-split-{{ section.id }}{
-      --page-width: {{ section.settings.page_width }}px;
       --radius: {{ section.settings.radius }}px;
       --gap: {{ section.settings.gap }}px;
       --pad-m: {{ section.settings.pad_m }}px;
@@ -54,7 +53,7 @@
     /* ===== Grid layout (FIXED: 3 columns on desktop) ===== */
     #benefits-split-{{ section.id }} .bsx__grid{
       display: grid !important;
-      grid-template-columns: 1fr !important;   /* mobile: stack */
+      grid-template-columns: 1fr;   /* mobile: stack */
       row-gap: 20px !important;
       align-items: start !important;
     }
