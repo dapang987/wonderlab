@@ -275,9 +275,10 @@
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
+        "image": "shopify://shop_images/792609f6c299f3fb566806fa8d7d8934c06d9e00.jpg",
         "height": "large",
         "image_radius": 0,
-        "desktop_image_width": "medium",
+        "desktop_image_width": "large",
         "layout": "text_first",
         "desktop_content_position": "middle",
         "desktop_content_alignment": "left",
