@@ -1,7 +1,8 @@
 {% comment %}
-  Section: Benefits split (2 columns) — hardened v2
-  - Fixes narrow column/wrapping by minmax(0,1fr) + min-width:0
-  - Resets any multi-column styles on lists
+  Section: Benefits split (2 columns) — fixed grid (3 columns) & hardened styles
+  - Desktop uses 3 columns: left | dotted divider | right
+  - Mobile stacks and shows horizontal dotted divider
+  - Strongly-scoped styles to avoid theme conflicts
 {% endcomment %}
 
 <section id="benefits-split-{{ section.id }}" aria-label="Benefits overview">
@@ -36,8 +37,8 @@
       }
     }
 
-    #benefits-split-{{ section.id }} *, 
-    #benefits-split-{{ section.id }} *::before, 
+    #benefits-split-{{ section.id }} *,
+    #benefits-split-{{ section.id }} *::before,
     #benefits-split-{{ section.id }} *::after{ box-sizing: border-box; }
 
     /* Card wrapper */
@@ -50,25 +51,27 @@
       padding: 20px !important;
     }
 
-    /* Grid layout (use minmax + min-width:0 on items) */
+    /* ===== Grid layout (FIXED: 3 columns on desktop) ===== */
     #benefits-split-{{ section.id }} .bsx__grid{
       display: grid !important;
-      grid-template-columns: 1fr !important;
+      grid-template-columns: 1fr !important;   /* mobile: stack */
       row-gap: 20px !important;
       align-items: start !important;
     }
     @media (min-width:1024px){
       #benefits-split-{{ section.id }} .bsx__grid{
-        grid-template-columns: 1fr 1fr;
+        /* left | divider | right */
+        grid-template-columns: minmax(0,1fr) 2px minmax(0,1fr) !important;
         column-gap: var(--gap) !important;
         row-gap: 0 !important;
       }
     }
+    /* allow items to shrink within grid */
+    #benefits-split-{{ section.id }} .bsx__grid > *{ min-width: 0 !important; }
 
     #benefits-split-{{ section.id }} .bsx__col{
-      min-width: 0 !important;  /* allow content to shrink inside grid */
       width: auto !important;
-      /* kill any multi-column inheritance */
+      /* cancel any multi-column rules from theme */
       columns: auto !important;
       column-count: initial !important;
       column-width: auto !important;
@@ -98,8 +101,6 @@
       font-weight: 600 !important;
       font-size: var(--title-size-m) !important;
       color: var(--text) !important;
-      word-break: normal !important;
-      overflow-wrap: break-word !important;
     }
     @media (min-width:1024px){
       #benefits-split-{{ section.id }} .bsx__title{ font-size: var(--title-size-d) !important; }
@@ -114,7 +115,7 @@
       color: var(--muted) !important;
       line-height: 1.7 !important;
       font-size: var(--list-size) !important;
-      /* ensure no multi-columns */
+      /* hard reset multi-column inheritance */
       columns: auto !important;
       column-count: initial !important;
       column-width: auto !important;
@@ -192,16 +193,29 @@
     { "type": "color", "id": "cl_rule",  "label": "Divider color",   "default": "#bdbdbd" }
   ],
   "blocks": [
-    { "type": "left_item",  "name": "Left bullet",  "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Naturally curb cravings where they start" } ] },
-    { "type": "right_item", "name": "Right bullet", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Probiotics for a healthier gut" } ] }
+    {
+      "type": "left_item",
+      "name": "Left bullet",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Naturally curb cravings where they start" }
+      ]
+    },
+    {
+      "type": "right_item",
+      "name": "Right bullet",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Probiotics for a healthier gut" }
+      ]
+    }
   ],
   "presets": [
     {
-      "name": "Benefits split (2 columns) – hardened v2",
+      "name": "Benefits split (2 columns) – fixed grid",
       "blocks": [
         { "type": "left_item",  "settings": { "text": "Naturally curb cravings where they start" } },
         { "type": "left_item",  "settings": { "text": "Stop carbs and fats from being absorbed right at the gut" } },
         { "type": "left_item",  "settings": { "text": "Enhance calorie expenditure, supercharge metabolic efficiency" } },
+
         { "type": "right_item", "settings": { "text": "Probiotics for a healthier gut" } },
         { "type": "right_item", "settings": { "text": "Fibers and prebiotics feed good bacteria, boosting growth" } },
         { "type": "right_item", "settings": { "text": "Strains survive stomach acid & bile, thriving for max benefits" } }
