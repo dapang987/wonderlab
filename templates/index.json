@@ -133,11 +133,11 @@
         "image_overlay_opacity": 0,
         "image_height": "large",
         "image_fit": "contain",
-        "image_position": "center",
+        "image_position": "top-left",
         "desktop_content_position": "middle-left",
         "show_text_box": true,
         "desktop_content_alignment": "left",
-        "image_behavior": "zoom-in",
+        "image_behavior": "none",
         "mobile_content_alignment": "center",
         "stack_images_on_mobile": true,
         "show_text_below": true
