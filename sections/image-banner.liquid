@@ -269,6 +269,15 @@
           {%- when 'cert_info' -%}
             {%- comment -%} 覆盖块：认证信息（cert_info） {%- endcomment -%}
             {%- assign rgb = block.settings.bg_color | color_to_rgb | remove: 'rgb(' | remove: ')' -%}
+            {%- liquid
+  assign jc = 'flex-start'
+  if block.settings.text_align == 'center'
+    assign jc = 'center'
+  elsif block.settings.text_align == 'right'
+    assign jc = 'flex-end'
+  endif
+-%}
+
       {%- style -%}
   /* 让 Banner 成为定位上下文 */
   #Banner-{{ section.id }}{ position: relative; }
