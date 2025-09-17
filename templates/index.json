@@ -55,30 +55,55 @@
             "text_style": "subtitle"
           }
         },
-        "buttons_qBghTK": {
+        "buttons_JLtpcz": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "Take the quiz",
+            "button_label_1": "Button label",
             "button_link_1": "",
-            "button_style_secondary_1": true,
-            "button_label_2": "Shop Now",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
             "button_link_2": "",
             "button_style_secondary_2": false,
             "btn1_font_size": 16,
             "btn1_text_color": "#ffffff",
-            "btn1_radius": 6,
-            "btn1_bg_color": "#0d0d0d",
+            "btn1_radius": 12,
+            "btn1_bg_color": "#111111",
             "btn2_font_size": 16,
-            "btn2_text_color": "#000000",
+            "btn2_text_color": "#ffffff",
             "btn2_radius": 12,
-            "btn2_bg_color": "#ebe9e9"
+            "btn2_bg_color": "#111111"
+          }
+        },
+        "cert_info_myz3fe": {
+          "type": "cert_info",
+          "settings": {
+            "heading": "认证信息",
+            "text": "<p>ISO 9001 / CE / RoHS</p>",
+            "link_url": "",
+            "link_target": "_self",
+            "bg_color": "#111111",
+            "bg_opacity": 80,
+            "text_color": "#ffffff",
+            "font_size": 14,
+            "radius": 14,
+            "pad_x": 16,
+            "pad_y": 10,
+            "width_desktop": 320,
+            "width_mobile": 300,
+            "edge_inset": 16,
+            "position_desktop": "bottom-right",
+            "position_mobile": "bottom-right",
+            "shadow": true,
+            "z_index": 3,
+            "show_on_mobile": true
           }
         }
       },
       "block_order": [
         "heading_jjV78L",
         "text_jCPBMg",
-        "buttons_qBghTK"
+        "buttons_JLtpcz",
+        "cert_info_myz3fe"
       ],
       "custom_css": [],
       "name": "t:sections.image-banner.presets.name",
