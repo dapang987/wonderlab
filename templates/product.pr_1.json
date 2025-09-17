@@ -392,42 +392,60 @@
           "type": "faq_item",
           "settings": {
             "question": "Who can take Easy Shape Probiotic?",
-            "answer": "<p>Easy Shape Probiotic is designed for ages 3 and above and is perfect for anyone targeting their waist and abdominal area—whether you're dealing with stubborn waist fat or trying to curb persistent cravings. Pregnant and breastfeeding women should consult their healthcare provider before starting any new supplement.</p>"
+            "answer": "<p>Easy Shape Probiotic is designed for ages 3 and above and is perfect for anyone targeting their waist and abdominal area—whether you're dealing with stubborn waist fat or trying to curb persistent cravings. Pregnant and breastfeeding women should consult their healthcare provider before starting any new supplement.</p>",
+            "question_size": 16,
+            "answer_size": 14,
+            "item_bg": "#efefef"
           }
         },
         "faq_item_dQjU7C": {
           "type": "faq_item",
           "settings": {
             "question": "What does Easy Shape Probiotic do?",
-            "answer": "<p>It supports waist and abdominal goals, helps curb cravings, and promotes digestive balance by nurturing beneficial gut bacteria.</p>"
+            "answer": "<p>It supports waist and abdominal goals, helps curb cravings, and promotes digestive balance by nurturing beneficial gut bacteria.</p>",
+            "question_size": 16,
+            "answer_size": 14,
+            "item_bg": "#ffffff"
           }
         },
         "faq_item_kdjhA9": {
           "type": "faq_item",
           "settings": {
             "question": "How do I take Easy Shape Probiotic?",
-            "answer": "<p>Take once daily with water or your favorite beverage. It can be taken with or without food. For best results, take it at the same time each day.</p>"
+            "answer": "<p>Take once daily with water or your favorite beverage. It can be taken with or without food. For best results, take it at the same time each day.</p>",
+            "question_size": 16,
+            "answer_size": 14,
+            "item_bg": "#ffffff"
           }
         },
         "faq_item_JehBY9": {
           "type": "faq_item",
           "settings": {
             "question": "What is the shelf life of Easy Shape Probiotic?",
-            "answer": "<p>Unopened products typically last 24 months when stored in a cool, dry place away from heat and sunlight. Always check the expiration date.</p>"
+            "answer": "<p>Unopened products typically last 24 months when stored in a cool, dry place away from heat and sunlight. Always check the expiration date.</p>",
+            "question_size": 16,
+            "answer_size": 14,
+            "item_bg": "#ffffff"
           }
         },
         "faq_item_X9EHU4": {
           "type": "faq_item",
           "settings": {
             "question": "What is the shelf life of Easy Shape Probiotic?",
-            "answer": "<p>Shelf life remains the same after opening if stored properly with the lid tightly closed. For peak potency, use within 60 days of opening.</p>"
+            "answer": "<p>Shelf life remains the same after opening if stored properly with the lid tightly closed. For peak potency, use within 60 days of opening.</p>",
+            "question_size": 16,
+            "answer_size": 14,
+            "item_bg": "#ffffff"
           }
         },
         "faq_item_yqAKd7": {
           "type": "faq_item",
           "settings": {
             "question": "Can I take this with other supplements? What about medications?",
-            "answer": "<p>Generally safe with most supplements. If you’re taking prescription medications or have a medical condition, consult your healthcare provider first.</p>"
+            "answer": "<p>Generally safe with most supplements. If you’re taking prescription medications or have a medical condition, consult your healthcare provider first.</p>",
+            "question_size": 16,
+            "answer_size": 14,
+            "item_bg": "#ffffff"
           }
         }
       },
