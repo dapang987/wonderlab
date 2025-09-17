@@ -177,6 +177,22 @@
       #philosophy-{{ section.id }} .card,
       #philosophy-{{ section.id }} .card__details{ transition: none !important; }
     }
+
+    #philosophy-{{ section.id }} .card__chev{
+  width: 20px;
+  height: 20px;
+  flex: none;
+  display: inline-block;
+  object-fit: contain;
+  margin-left: 2px;
+  transition: transform var(--transition);
+  border: 0;               /* 覆盖旧样式 */
+  background: transparent; /* 覆盖旧样式 */
+}
+#philosophy-{{ section.id }} .card.is-open .card__chev{
+  transform: rotate(90deg);
+}
+
   </style>
 
   <div class="wrap">
