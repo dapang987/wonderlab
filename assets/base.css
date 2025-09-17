@@ -1494,6 +1494,7 @@ details[open] > .share-button__fallback {
 
 .share-button__fallback button:hover svg {
   transform: scale(1.07);
+  color:#fff;
 }
 
 .share-button__close:not(.hidden) + .share-button__copy {
