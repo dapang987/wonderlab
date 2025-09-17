@@ -429,42 +429,10 @@
     "logo_marquee_ra9MhX": {
       "type": "logo-marquee",
       "blocks": {
-        "logo_TnhEgr": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/Shopping_bag.svg",
-            "alt": "Alt 文本（可选",
-            "link": ""
-          }
-        },
-        "logo_iNy8Wx": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/User.svg",
-            "alt": "Alt 文本（可选",
-            "link": ""
-          }
-        },
         "logo_mDNcqJ": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/Group.svg",
-            "alt": "Alt 文本（可选",
-            "link": ""
-          }
-        },
-        "logo_dVfET6": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/Search.svg",
-            "alt": "Alt 文本（可选",
-            "link": ""
-          }
-        },
-        "logo_fWFUJG": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/Group.svg",
+            "image": "shopify://shop_images/9c7af7824f97d9ea6edc83339dd95b0a968bb769.png",
             "alt": "Alt 文本（可选",
             "link": ""
           }
@@ -472,15 +440,7 @@
         "logo_aTER3Y": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/Group.svg",
-            "alt": "Alt 文本（可选",
-            "link": ""
-          }
-        },
-        "logo_ghBAqN": {
-          "type": "logo",
-          "settings": {
-            "image": "shopify://shop_images/Group.svg",
+            "image": "shopify://shop_images/d49821bb736a3534aaa8176b03bb62023d239921.png",
             "alt": "Alt 文本（可选",
             "link": ""
           }
@@ -488,39 +448,34 @@
         "logo_VW3VVY": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/Group.svg",
+            "image": "shopify://shop_images/80d53b79e42df4e233eaa04f42365ff7c6d78444.png",
             "alt": "Alt 文本（可选",
             "link": ""
           }
         },
-        "logo_CqL7C4": {
+        "logo_9Mn3kq": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/Group.svg",
+            "image": "shopify://shop_images/19c5183f28994cc0a9b0de42940fd4ac81d71076.png",
             "alt": "Alt 文本（可选",
             "link": ""
           }
         },
-        "logo_nVLwgG": {
+        "logo_6AUPVd": {
           "type": "logo",
           "settings": {
-            "image": "shopify://shop_images/Group.svg",
+            "image": "shopify://shop_images/d17042d48e233f066d306bdb89595fa4f5433d8b.png",
             "alt": "Alt 文本（可选",
             "link": ""
           }
         }
       },
       "block_order": [
-        "logo_TnhEgr",
-        "logo_iNy8Wx",
         "logo_mDNcqJ",
-        "logo_dVfET6",
-        "logo_fWFUJG",
         "logo_aTER3Y",
-        "logo_ghBAqN",
         "logo_VW3VVY",
-        "logo_CqL7C4",
-        "logo_nVLwgG"
+        "logo_9Mn3kq",
+        "logo_6AUPVd"
       ],
       "name": "Logo Marquee（无缝连续）",
       "settings": {
