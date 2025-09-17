@@ -402,7 +402,7 @@
         "radius": 12,
         "gap": 22,
         "pad": 22,
-        "padding_top": 28,
+        "padding_top": 32,
         "padding_bottom": 28
       }
     },
