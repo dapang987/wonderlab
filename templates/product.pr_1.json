@@ -446,12 +446,12 @@
         "radius": 12,
         "cl_bg": "#ffffff",
         "cl_text": "#111111",
-        "cl_muted": "#666666",
+        "cl_muted": "#121212",
         "cl_border": "#e5e7eb",
         "padding_top": 32,
         "padding_bottom": 32,
-        "title_size_m": 28,
-        "title_size_d": 36,
+        "title_size_m": 36,
+        "title_size_d": 25,
         "single_open": true,
         "open_first": true
       }
