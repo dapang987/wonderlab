@@ -553,7 +553,15 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
         { "type": "range", "id": "btn2_font_size", "label": "按钮2 字体大小（px）", "min": 12, "max": 28, "step": 1, "default": 16 },
         { "type": "color", "id": "btn2_text_color", "label": "按钮2 字体颜色", "default": "#ffffff" },
         { "type": "range", "id": "btn2_radius", "label": "按钮2 圆角（px）", "min": 0, "max": 40, "step": 2, "default": 12 },
-        { "type": "color", "id": "btn2_bg_color", "label": "按钮2 背景色", "default": "#111111" }
+        { "type": "color", "id": "btn2_bg_color", "label": "按钮2 背景色", "default": "#111111" },
+        { "type": "header", "content": "按钮1边框" },
+{ "type": "range",  "id": "btn1_border_width", "label": "按钮1 边框粗细（px）", "min": 0, "max": 8, "step": 1, "default": 0 },
+{ "type": "color",  "id": "btn1_border_color", "label": "按钮1 边框颜色", "default": "#111111" },
+
+{ "type": "header", "content": "按钮2边框" },
+{ "type": "range",  "id": "btn2_border_width", "label": "按钮2 边框粗细（px）", "min": 0, "max": 8, "step": 1, "default": 0 },
+{ "type": "color",  "id": "btn2_border_color", "label": "按钮2 边框颜色", "default": "#111111" }
+
       ]
     },
     {
