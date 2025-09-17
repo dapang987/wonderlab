@@ -1,8 +1,8 @@
 {% comment %}
-  Section: Benefits split (2 columns) — fixed divider stretch & 3-col grid
-  - Desktop: 3 columns => left | dotted divider | right
-  - Mobile: stacked with horizontal dotted rule
-  - Strongly scoped to #benefits-split-{{ section.id }}
+  Section: Benefits split (2 columns) — fixed grid (3 columns) & hardened styles
+  - Desktop uses 3 columns: left | dotted divider | right
+  - Mobile stacks and shows horizontal dotted divider
+  - Strongly-scoped styles to avoid theme conflicts
 {% endcomment %}
 
 <section id="benefits-split-{{ section.id }}" aria-label="Benefits overview">
@@ -50,18 +50,18 @@
       padding: 20px !important;
     }
 
-    /* ===== Grid layout ===== */
+    /* ===== Grid layout (FIXED: 3 columns on desktop) ===== */
     #benefits-split-{{ section.id }} .bsx__grid{
       display: grid !important;
-      grid-template-columns: 1fr !important;   /* mobile: stack */
+      grid-template-columns: 1fr;   /* mobile: stack */
       row-gap: 20px !important;
-      align-items: start !important;           /* items不再默认拉伸 */
+      align-items: start !important;
     }
     @media (min-width:1024px){
       #benefits-split-{{ section.id }} .bsx__grid{
         /* left | divider | right */
         grid-template-columns: 1fr 1fr;
-        column-gap: var(--gap) !important;
+   
         row-gap: 0 !important;
       }
     }
@@ -76,22 +76,16 @@
       column-width: auto !important;
     }
 
-    /* ===== Dotted divider ===== */
-    /* Mobile: horizontal dotted rule */
+    /* Divider switches orientation */
     #benefits-split-{{ section.id }} .bsx__divider{
       height: 2px !important;
       width: 100% !important;
       background: repeating-linear-gradient(to right, var(--rule) 0 2px, transparent 2px 6px) !important;
-      justify-self: stretch !important;
-      align-self: center !important;
     }
-    /* Desktop: vertical dotted rule — 强制拉伸填满轨道 */
     @media (min-width:1024px){
       #benefits-split-{{ section.id }} .bsx__divider{
         width: 2px !important;
-        height: auto !important;                 /* 由拉伸决定高度 */
-        align-self: stretch !important;          /* 关键：让divider占满轨道高度 */
-        justify-self: center !important;
+        height: 100% !important;
         background: repeating-linear-gradient(to bottom, var(--rule) 0 2px, transparent 2px 6px) !important;
       }
     }
@@ -120,7 +114,7 @@
       color: var(--muted) !important;
       line-height: 1.7 !important;
       font-size: var(--list-size) !important;
-      /* 防止主题多栏样式影响 */
+      /* hard reset multi-column inheritance */
       columns: auto !important;
       column-count: initial !important;
       column-width: auto !important;
@@ -180,6 +174,7 @@
     { "type": "text", "id": "right_title", "label": "Right title", "default": "Healthy Microbiome & Digestion" },
 
     { "type": "header", "content": "Layout & spacing" },
+    { "type": "range", "id": "page_width", "label": "Max content width (px)", "min": 720, "max": 1600, "step": 10, "default": 1100 },
     { "type": "range", "id": "gap", "label": "Column gap (px, desktop)", "min": 24, "max": 96, "step": 2, "default": 56 },
     { "type": "range", "id": "radius", "label": "Card radius (px)", "min": 0, "max": 24, "step": 1, "default": 12 },
     { "type": "range", "id": "pad_m", "label": "Padding top/bottom (mobile, px)", "min": 12, "max": 64, "step": 2, "default": 24 },
@@ -197,16 +192,29 @@
     { "type": "color", "id": "cl_rule",  "label": "Divider color",   "default": "#bdbdbd" }
   ],
   "blocks": [
-    { "type": "left_item",  "name": "Left bullet",  "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Naturally curb cravings where they start" } ] },
-    { "type": "right_item", "name": "Right bullet", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Probiotics for a healthier gut" } ] }
+    {
+      "type": "left_item",
+      "name": "Left bullet",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Naturally curb cravings where they start" }
+      ]
+    },
+    {
+      "type": "right_item",
+      "name": "Right bullet",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Probiotics for a healthier gut" }
+      ]
+    }
   ],
   "presets": [
     {
-      "name": "Benefits split (2 columns) – fixed divider",
+      "name": "Benefits split (2 columns) – fixed grid",
       "blocks": [
         { "type": "left_item",  "settings": { "text": "Naturally curb cravings where they start" } },
         { "type": "left_item",  "settings": { "text": "Stop carbs and fats from being absorbed right at the gut" } },
         { "type": "left_item",  "settings": { "text": "Enhance calorie expenditure, supercharge metabolic efficiency" } },
+
         { "type": "right_item", "settings": { "text": "Probiotics for a healthier gut" } },
         { "type": "right_item", "settings": { "text": "Fibers and prebiotics feed good bacteria, boosting growth" } },
         { "type": "right_item", "settings": { "text": "Strains survive stomach acid & bile, thriving for max benefits" } }
