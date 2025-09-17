@@ -156,28 +156,47 @@
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
-
-       {%- when 'heading' -%}
+{%- when 'heading' -%}
   {%- style -%}
+  /* 桌面默认 */
   #Banner-{{ section.id }} .heading-{{ block.id }}{
     color: {{ block.settings.heading_color }};
     {% if block.settings.heading_font_size > 0 %}font-size: {{ block.settings.heading_font_size }}px;{% endif %}
   }
+  /* 手机端覆盖（≤989px） */
+  @media screen and (max-width: 989px){
+    #Banner-{{ section.id }} .heading-{{ block.id }}{
+      color: {{ block.settings.heading_color_mobile }};
+      {% if block.settings.heading_font_size_mobile > 0 %}font-size: {{ block.settings.heading_font_size_mobile }}px;{% endif %}
+    }
+  }
   {%- endstyle -%}
+
   <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }} heading-{{ block.id }}" {{ block.shopify_attributes }}>
     {{ block.settings.heading }}
   </h2>
 
+
 {%- when 'text' -%}
   {%- style -%}
+  /* 桌面默认 */
   #Banner-{{ section.id }} .text-{{ block.id }}{
     color: {{ block.settings.text_color }};
     {% if block.settings.text_font_size > 0 %}font-size: {{ block.settings.text_font_size }}px;{% endif %}
   }
+  /* 手机端覆盖（≤989px） */
+  @media screen and (max-width: 989px){
+    #Banner-{{ section.id }} .text-{{ block.id }}{
+      color: {{ block.settings.text_color_mobile }};
+      {% if block.settings.text_font_size_mobile > 0 %}font-size: {{ block.settings.text_font_size_mobile }}px;{% endif %}
+    }
+  }
   {%- endstyle -%}
+
   <div class="banner__text rte {{ block.settings.text_style }} text-{{ block.id }}" {{ block.shopify_attributes }}>
     <p>{{ block.settings.text }}</p>
   </div>
+
 
 
           {%- when 'buttons' -%}
