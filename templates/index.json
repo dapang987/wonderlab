@@ -168,6 +168,71 @@
         "padding_bottom": 36
       }
     },
+    "two_column_benefits_split_Vd9izr": {
+      "type": "Two-Column-Benefits-Split",
+      "blocks": {
+        "left_item_kyYHkA": {
+          "type": "left_item",
+          "settings": {
+            "text": "Naturally curb cravings where they start"
+          }
+        },
+        "left_item_aVP7AP": {
+          "type": "left_item",
+          "settings": {
+            "text": "Stop carbs and fats from being absorbed right at the gut"
+          }
+        },
+        "left_item_8pGe8V": {
+          "type": "left_item",
+          "settings": {
+            "text": "Enhance calorie expenditure, supercharge metabolic efficiency"
+          }
+        },
+        "right_item_eetmey": {
+          "type": "right_item",
+          "settings": {
+            "text": "Probiotics for a healthier gut"
+          }
+        },
+        "right_item_D7Hh9H": {
+          "type": "right_item",
+          "settings": {
+            "text": "Fibers and prebiotics feed good bacteria, boosting growth"
+          }
+        },
+        "right_item_7QFPWg": {
+          "type": "right_item",
+          "settings": {
+            "text": "Strains survive stomach acid & bile, thriving for max benefits"
+          }
+        }
+      },
+      "block_order": [
+        "left_item_kyYHkA",
+        "left_item_aVP7AP",
+        "left_item_8pGe8V",
+        "right_item_eetmey",
+        "right_item_D7Hh9H",
+        "right_item_7QFPWg"
+      ],
+      "name": "Benefits split (2 columns) – fixed divider",
+      "settings": {
+        "left_title": "Weight Management Support",
+        "right_title": "Healthy Microbiome & Digestion",
+        "gap": 56,
+        "radius": 12,
+        "pad_m": 24,
+        "pad_d": 44,
+        "title_size_m": 24,
+        "title_size_d": 32,
+        "list_size": 15,
+        "cl_text": "#111111",
+        "cl_muted": "#666666",
+        "cl_card": "#efefef",
+        "cl_rule": "#bdbdbd"
+      }
+    },
     "image_with_text_cpqBUU": {
       "type": "image-with-text",
       "blocks": {
@@ -490,78 +555,13 @@
         "point_title_size": 12,
         "point_body_size": 15
       }
-    },
-    "two_column_benefits_split_d8KffN": {
-      "type": "Two-Column-Benefits-Split",
-      "blocks": {
-        "left_item_qqqhQa": {
-          "type": "left_item",
-          "settings": {
-            "text": "Naturally curb cravings where they start"
-          }
-        },
-        "left_item_6YLrX8": {
-          "type": "left_item",
-          "settings": {
-            "text": "Stop carbs and fats from being absorbed right at the gut"
-          }
-        },
-        "left_item_q7Rzhy": {
-          "type": "left_item",
-          "settings": {
-            "text": "Enhance calorie expenditure, supercharge metabolic efficiency"
-          }
-        },
-        "right_item_LqL93D": {
-          "type": "right_item",
-          "settings": {
-            "text": "Probiotics for a healthier gut"
-          }
-        },
-        "right_item_4TTh6P": {
-          "type": "right_item",
-          "settings": {
-            "text": "Fibers and prebiotics feed good bacteria, boosting growth"
-          }
-        },
-        "right_item_R878yQ": {
-          "type": "right_item",
-          "settings": {
-            "text": "Strains survive stomach acid & bile, thriving for max benefits"
-          }
-        }
-      },
-      "block_order": [
-        "left_item_qqqhQa",
-        "left_item_6YLrX8",
-        "left_item_q7Rzhy",
-        "right_item_LqL93D",
-        "right_item_4TTh6P",
-        "right_item_R878yQ"
-      ],
-      "name": "Benefits split (2 columns) – fixed divider",
-      "settings": {
-        "left_title": "Weight Management Support",
-        "right_title": "Healthy Microbiome & Digestion",
-        "gap": 56,
-        "radius": 12,
-        "pad_m": 24,
-        "pad_d": 44,
-        "title_size_m": 24,
-        "title_size_d": 32,
-        "list_size": 15,
-        "cl_text": "#111111",
-        "cl_muted": "#666666",
-        "cl_card": "#efefef",
-        "cl_rule": "#bdbdbd"
-      }
     }
   },
   "order": [
     "featured_collection",
     "image_banner_Cx3d8j",
     "image_with_text_izDx6t",
-    "two_column_benefits_split_d8KffN",
+    "two_column_benefits_split_Vd9izr",
     "image_with_text_cpqBUU",
     "custom_liquid_GG3ynB",
     "kpi_metrics_3aW3cC",
