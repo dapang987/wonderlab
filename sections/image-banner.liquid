@@ -492,7 +492,10 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
             { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" }
           ],
           "label": "t:sections.all.heading_size.label"
-        }
+        },
+        { "type": "color", "id": "heading_color", "label": "标题颜色", "default": "#111111" },
+{ "type": "range", "id": "heading_font_size", "label": "标题字号（px，0=跟随主题）", "min": 0, "max": 96, "step": 1, "default": 0 }
+
       ]
     },
     {
@@ -509,7 +512,8 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
             { "value": "caption-with-letter-spacing", "label": "t:sections.image-banner.blocks.text.settings.text_style.options__3.label" }
           ],
           "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
-        }
+        },
+        
       ]
     },
     {
