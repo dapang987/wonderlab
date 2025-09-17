@@ -1,0 +1,426 @@
+{% comment %}
+  Section: Feel the Difference — Week by Week (Cards + Mobile Tabs)
+  Author: ChatGPT
+  Notes:
+  - 桌面/平板：4/2列卡片网格
+  - 手机：上方为可横向滚动的 tab，下面仅显示当前 tab 的单卡内容
+  - 所有样式与脚本均已作用域到 .section-{{ section.id }}
+{% endcomment %}
+
+<section id="diff-{{ section.id }}" class="diff section-{{ section.id }} color-{{ section.settings.color_scheme }} gradient"
+  style="--bg: {{ section.settings.bg_color }};">
+  <div class="section-{{ section.id }}-padding" aria-labelledby="diff-title-{{ section.id }}">
+    <div class="{% if section.settings.container == 'page' %}page-width{% else %}page-width page-width--full{% endif %}">
+      {% if section.settings.heading != blank %}
+        <h2 id="diff-title-{{ section.id }}" class="diff__title">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      <!-- Mobile Tabs -->
+      <div id="tabs-{{ section.id }}" class="tabs" role="tablist" aria-label="Progress timeline">
+        {% for block in section.blocks %}
+          {% if block.type == 'stage' %}
+            <button class="tabs__btn"
+              id="tab-{{ section.id }}-{{ forloop.index0 }}"
+              role="tab"
+              aria-selected="{{ forloop.first }}"
+              aria-controls="panel-{{ section.id }}"
+              tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+              {{ block.shopify_attributes }}>
+              {{ block.settings.title | escape }}
+            </button>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Desktop / Tablet Grid -->
+      <div class="diff__grid" aria-hidden="false">
+        {% for block in section.blocks %}
+          {% if block.type == 'stage' %}
+            <article class="card" {{ block.shopify_attributes }}>
+              <div class="card__media">
+                {% if block.settings.image != blank %}
+                  <img
+                    alt="{{ block.settings.alt | escape }}"
+                    src="{{ block.settings.image | image_url: width: 800 }}"
+                    width="800"
+                    height="{{ 800 | divided_by: 4 | times: 3 }}"
+                    loading="lazy">
+                {% else %}
+                  <img
+                    alt="{{ block.settings.alt | default: 'Illustration' | escape }}"
+                    src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 120'><rect width='160' height='120' fill='%23f1f1f1'/><rect x='44' y='34' width='72' height='52' rx='6' ry='6' fill='none' stroke='%23999' stroke-width='3'/><circle cx='70' cy='54' r='6' fill='none' stroke='%23999' stroke-width='3'/><polyline points='60,78 80,62 104,86' fill='none' stroke='%23999' stroke-width='3'/></svg>">
+                {% endif %}
+              </div>
+
+              {% if section.settings.show_hr %}
+                <hr class="card__hr" />
+              {% endif %}
+
+              {% if block.settings.title != blank %}
+                <h3 class="card__h">{{ block.settings.title }}</h3>
+              {% endif %}
+
+              <p class="card__desc">
+                {{ block.settings.bullet_1 | escape }}{% if block.settings.bullet_1 != blank and block.settings.bullet_2 != blank %}<br>{% endif %}
+                {{ block.settings.bullet_2 | escape }}
+              </p>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Mobile single-card panel -->
+      <div id="panel-{{ section.id }}" class="panel" role="tabpanel" aria-labelledby="tab-{{ section.id }}-0"></div>
+
+      {%- comment -%}
+        将 blocks 序列化为 JSON，供移动端脚本使用
+      {%- endcomment -%}
+      {% capture stages_json -%}
+      [
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'stage' -%}
+            {
+              "title": {{ block.settings.title | json }},
+              "bullets": [{{ block.settings.bullet_1 | json }}, {{ block.settings.bullet_2 | json }}],
+              "alt": {{ block.settings.alt | json }},
+              "img": {%- if block.settings.image != blank -%}{{ block.settings.image | image_url: width: 800 | json }}{%- else -%}null{%- endif -%}
+            }{%- unless forloop.last -%},{%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+      {%- endcapture %}
+      <script type="application/json" id="stages-{{ section.id }}">{{ stages_json | strip | escape }}</script>
+    </div>
+  </div>
+
+  {%- style -%}
+    .section-{{ section.id }}{
+      --gap: 24px;
+      --radius: {{ section.settings.radius }}px;
+      --border: {{ section.settings.border_color }};
+      --text: {{ section.settings.text_color }};
+      --muted: {{ section.settings.muted_color }};
+      --rule: {{ section.settings.rule_color }};
+      --bg: {{ section.settings.bg_color }};
+      --shadow: {% if section.settings.enable_shadow %}0 6px 16px rgba(0,0,0,.06){% else %}none{% endif %};
+      --tab-h: {{ section.settings.tab_height }}px;
+      --focus-c: {{ section.settings.focus_color }};
+      --dash: {{ section.settings.dash_length }}px;
+      --gaplen: {{ section.settings.gap_length }}px;
+    }
+
+    .section-{{ section.id }} *{ box-sizing:border-box; }
+    .section-{{ section.id }} .diff{ padding: 48px 16px 36px; }
+    .section-{{ section.id }} .diff__title{
+      margin:0 0 16px;
+      text-align:center;
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing:.2px;
+      font-size: clamp(24px, 3.5vw, 36px);
+      color: var(--text);
+    }
+
+    /* ===== Desktop/Tablet grid ===== */
+    .section-{{ section.id }} .diff__grid{
+      display:grid;
+      gap:var(--gap);
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 12px;
+    }
+    @media (max-width: 1023.98px){
+      .section-{{ section.id }} .diff__grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767.98px){
+      .section-{{ section.id }} .diff__grid{ display:none; }
+    }
+
+    .section-{{ section.id }} .card{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding:16px;
+      background:#fff;
+      min-height: 260px;
+      color: var(--text);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .section-{{ section.id }} .card__media{
+      border:1px solid var(--border);
+      border-radius: calc(var(--radius) - 4px);
+      background:#f6f6f6;
+      overflow:hidden;
+      aspect-ratio: 4 / 3;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .section-{{ section.id }} .card__media img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .section-{{ section.id }} .card__h{
+      margin: 4px 0 0;
+      font-size: 1.1rem;
+      line-height: 1.35;
+    }
+
+    .section-{{ section.id }} .card__hr{
+      border:0;
+      border-top: 1px dashed var(--rule);
+      margin: 2px 0 4px;
+    }
+
+    .section-{{ section.id }} .card__desc{
+      margin:0;
+      font-size:.92rem;
+      color:var(--muted);
+    }
+
+    /* ===== Mobile tabs ===== */
+    .section-{{ section.id }} .tabs{ display:none; }
+    @media (max-width: 767.98px){
+      .section-{{ section.id }} .tabs{
+        display:flex;
+        gap: 12px;
+        align-items:center;
+        overflow-x:auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 6px 0 2px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--rule);
+        scrollbar-width: thin;
+      }
+    }
+    .section-{{ section.id }} .tabs__btn{
+      flex:0 0 auto;
+      height: var(--tab-h);
+      display:inline-flex;
+      align-items:center;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      cursor: pointer;
+      position: relative;
+      padding: 0 12px;
+    }
+    .section-{{ section.id }} .tabs__btn[aria-selected="true"]{ font-weight: 600; }
+    .section-{{ section.id }} .tabs__btn[aria-selected="true"]::after{
+      content:"";
+      position:absolute;
+      left:10px; right:10px; bottom:-8px;
+      height:2px; background:var(--text); border-radius:2px;
+    }
+    .section-{{ section.id }} .tabs__btn:focus-visible{
+      outline: 2px solid var(--focus-c); outline-offset: 2px;
+    }
+
+    /* 可配置：按钮顶部虚线（每个按钮单独一段，长度/间隔可调） */
+    @media (max-width: 767.98px){
+      {% if section.settings.enable_top_dashed %}
+      .section-{{ section.id }} .tabs__btn::before{
+        content: "";
+        position: absolute;
+        left: 0; right: 0; top: 0;
+        height: 1px;
+        background: repeating-linear-gradient(
+          to right,
+          var(--rule) 0 var(--dash),
+          transparent var(--dash) calc(var(--dash) + var(--gaplen))
+        );
+        pointer-events: none;
+      }
+      {% endif %}
+    }
+
+    /* ===== Mobile panel (single card) ===== */
+    .section-{{ section.id }} .panel{ display:none; }
+    @media (max-width: 767.98px){
+      .section-{{ section.id }} .panel{ display:block; }
+    }
+    .section-{{ section.id }} .panel__card{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:16px;
+      background:#fff;
+      box-shadow: var(--shadow);
+      animation: fadeIn-{{ section.id }} .2s ease;
+    }
+
+    @keyframes fadeIn-{{ section.id }}{
+      from{ opacity:0; transform: translateY(4px); }
+      to{ opacity:1; transform:none; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .section-{{ section.id }} .panel__card{ animation:none; }
+    }
+
+    /* Mobile: 可选隐藏卡片标题 */
+    {% if section.settings.hide_card_h_mobile %}
+    @media (max-width: 767.98px){
+      .section-{{ section.id }} .panel__card .card__h{ display:none; }
+    }
+    {% endif %}
+  {%- endstyle -%}
+
+  <script>
+    (function(){
+      const root = document.getElementById('diff-{{ section.id }}');
+      if(!root) return;
+
+      const panel = root.querySelector('#panel-{{ section.id }}');
+      const tabsWrap = root.querySelector('#tabs-{{ section.id }}');
+      const tabs = Array.from(root.querySelectorAll('.tabs__btn'));
+
+      // 从内联 JSON 读取数据
+      const jsonEl = root.querySelector('#stages-{{ section.id }}');
+      let STAGES = [];
+      try { STAGES = JSON.parse(jsonEl?.textContent || '[]'); } catch(e){ STAGES = []; }
+
+      // 占位图（当 block 未上传图片时）
+      const placeholderSVG = encodeURIComponent(`<?xml version='1.0' encoding='UTF-8'?>
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 120'>
+        <rect width='160' height='120' fill='#f1f1f1'/>
+        <rect x='44' y='34' width='72' height='52' rx='6' ry='6' fill='none' stroke='#999' stroke-width='3'/>
+        <circle cx='70' cy='54' r='6' fill='none' stroke='#999' stroke-width='3'/>
+        <polyline points='60,78 80,62 104,86' fill='none' stroke='#999' stroke-width='3'/>
+      </svg>`);
+
+      function renderPanel(index){
+        const d = STAGES[index] || {};
+        const imgSrc = d.img || `data:image/svg+xml;utf8,${placeholderSVG}`;
+        panel.innerHTML = `
+          <article class="panel__card" aria-label="${(d.title||'').replace(/"/g,'&quot;')}">
+            <div class="card__media">
+              <img alt="${(d.alt||'Illustration').replace(/"/g,'&quot;')}" src="${imgSrc}">
+            </div>
+            {% if section.settings.show_hr %}<hr class="card__hr" />{% endif %}
+            <h3 class="card__h">${d.title || ''}</h3>
+            <p class="card__desc">
+              ${(d.bullets && d.bullets[0]) ? d.bullets[0] : ''}${(d.bullets && d.bullets[0] && d.bullets[1]) ? '<br>' : ''}${(d.bullets && d.bullets[1]) ? d.bullets[1] : ''}
+            </p>
+          </article>
+        `;
+      }
+
+      function setActive(nextIndex){
+        tabs.forEach((btn, i) => {
+          const on = i === nextIndex;
+          btn.setAttribute('aria-selected', on ? 'true' : 'false');
+          btn.tabIndex = on ? 0 : -1;
+          if(on){ panel.setAttribute('aria-labelledby', btn.id); }
+        });
+        renderPanel(nextIndex);
+      }
+
+      // Click activation
+      tabs.forEach((btn, i) => {
+        btn.addEventListener('click', () => {
+          setActive(i);
+          btn.focus({preventScroll:true});
+        });
+      });
+
+      // Keyboard navigation (roving tabindex)
+      tabsWrap?.addEventListener('keydown', (e) => {
+        const current = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+        let next = current;
+        if(e.key === 'ArrowRight'){ next = (current + 1) % tabs.length; }
+        else if(e.key === 'ArrowLeft'){ next = (current - 1 + tabs.length) % tabs.length; }
+        else if(e.key === 'Home'){ next = 0; }
+        else if(e.key === 'End'){ next = tabs.length - 1; }
+        else if(e.key === 'Enter' || e.key === ' '){
+          const focused = document.activeElement;
+          const idx = tabs.indexOf(focused);
+          if(idx > -1){ setActive(idx); }
+          e.preventDefault();
+          return;
+        } else {
+          return;
+        }
+        tabs[next].focus();
+        e.preventDefault();
+      });
+
+      // Initial render for mobile
+      setActive(0);
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Feel the Difference",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "标题", "default": "Feel the Difference—Week by Week" },
+    {
+      "type": "select",
+      "id": "container",
+      "label": "容器宽度",
+      "default": "page",
+      "options": [
+        { "value": "page", "label": "跟随主题 page-width（居中定宽）" },
+        { "value": "full", "label": "全宽（满屏）" }
+      ]
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "颜色方案（跟随主题）", "default": "scheme-1" },
+    { "type": "color", "id": "bg_color", "label": "背景颜色", "default": "#FFFFFF" },
+    { "type": "color", "id": "text_color", "label": "正文颜色", "default": "#111111" },
+    { "type": "color", "id": "muted_color", "label": "次级文字颜色", "default": "#666666" },
+    { "type": "color", "id": "border_color", "label": "边框颜色", "default": "#e5e7eb" },
+    { "type": "color", "id": "rule_color", "label": "分隔线/虚线颜色", "default": "#d9d9d9" },
+    { "type": "color", "id": "focus_color", "label": "焦点高亮颜色", "default": "#111111" },
+
+    { "type": "range", "id": "radius", "min": 8, "max": 24, "step": 1, "unit": "px", "label": "卡片圆角", "default": 16 },
+    { "type": "checkbox", "id": "enable_shadow", "label": "移动端卡片阴影", "default": true },
+
+    { "type": "range", "id": "tab_height", "min": 36, "max": 56, "step": 1, "unit": "px", "label": "手机端 Tab 高度", "default": 44 },
+    { "type": "checkbox", "id": "enable_top_dashed", "label": "手机端 Tab 顶部虚线", "default": true },
+    { "type": "range", "id": "dash_length", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "虚线：实线长度", "default": 8 },
+    { "type": "range", "id": "gap_length", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "虚线：间隔长度", "default": 8 },
+
+    { "type": "checkbox", "id": "show_hr", "label": "显示卡片分隔线（hr）", "default": true },
+    { "type": "checkbox", "id": "hide_card_h_mobile", "label": "手机端隐藏卡片标题（仅单卡面板）", "default": false },
+
+    { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "上内边距（PC）", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "下内边距（PC）", "default": 36 }
+  ],
+  "blocks": [
+    {
+      "type": "stage",
+      "name": "阶段卡片",
+      "settings": [
+        { "type": "text", "id": "title", "label": "标题", "default": "3–7 Days" },
+        { "type": "text", "id": "bullet_1", "label": "要点 1", "default": "Daily, regular poops" },
+        { "type": "text", "id": "bullet_2", "label": "要点 2", "default": "Less bloating" },
+        { "type": "image_picker", "id": "image", "label": "图片（可选）" },
+        { "type": "text", "id": "alt", "label": "图片替代文字", "default": "Illustration" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feel the Difference (Tabs + Cards)",
+      "blocks": [
+        { "type": "stage", "settings": { "title": "3–7 Days", "bullet_1": "Daily, regular poops", "bullet_2": "Less bloating" } },
+        { "type": "stage", "settings": { "title": "1–2 Weeks", "bullet_1": "Fewer cravings", "bullet_2": "Fuller for longer (3–4 hrs)" } },
+        { "type": "stage", "settings": { "title": "1 Month+", "bullet_1": "See slimmer waist/thighs", "bullet_2": "Keep losing (~1 lb/week)" } },
+        { "type": "stage", "settings": { "title": "3 Months+", "bullet_1": "Drop a pants size", "bullet_2": "Fit into tight jeans" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
