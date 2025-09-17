@@ -257,7 +257,7 @@
         "aria_label": "Benefits overview",
         "radius": 12,
         "gap": 96,
-        "pad_m": 60,
+        "pad_m": 50,
         "pad_d": 100,
         "cl_text": "#111111",
         "cl_muted": "#666666",
