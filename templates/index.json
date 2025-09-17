@@ -188,7 +188,7 @@
       "settings": {
         "image": "shopify://shop_images/18aa55877e6467922fb0832b1a23c6deab02212f.jpg",
         "height": "adapt",
-        "image_radius": 0,
+        "image_radius": 10,
         "desktop_image_width": "medium",
         "layout": "image_first",
         "desktop_content_position": "middle",
