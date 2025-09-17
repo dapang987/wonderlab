@@ -170,7 +170,12 @@
             "button_label": "Shop Now",
             "button_link": "",
             "button_style_secondary": false,
-            "button_radius": 8
+            "button_radius": 8,
+            "button_custom_style": false,
+            "button_bg": "#0000e1",
+            "button_text": "#ffffff",
+            "button_width": 0,
+            "button_height": 0
           }
         }
       },
@@ -191,6 +196,8 @@
         "content_layout": "no-overlap",
         "section_color_scheme": "",
         "color_scheme": "",
+        "use_section_bg": false,
+        "section_bg": "#ffffff",
         "image_behavior": "zoom-in",
         "mobile_content_alignment": "center",
         "padding_top": 36,
@@ -286,7 +293,12 @@
             "button_label": "Button label",
             "button_link": "",
             "button_style_secondary": false,
-            "button_radius": 8
+            "button_radius": 8,
+            "button_custom_style": false,
+            "button_bg": "#111111",
+            "button_text": "#ffffff",
+            "button_width": 0,
+            "button_height": 0
           }
         }
       },
@@ -307,6 +319,8 @@
         "content_layout": "no-overlap",
         "section_color_scheme": "",
         "color_scheme": "",
+        "use_section_bg": false,
+        "section_bg": "#ffffff",
         "image_behavior": "none",
         "mobile_content_alignment": "left",
         "padding_top": 36,
