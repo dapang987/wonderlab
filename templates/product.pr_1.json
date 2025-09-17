@@ -247,76 +247,6 @@
         "padding_top": 56,
         "padding_bottom": 56
       }
-    },
-    "week_by_week_LBpexF": {
-      "type": "Week-by-Week",
-      "blocks": {
-        "stage_W4nDR9": {
-          "type": "stage",
-          "settings": {
-            "title": "3–7 Days",
-            "bullet_1": "Daily, regular poops",
-            "bullet_2": "Less bloating",
-            "image": "shopify://shop_images/Group.svg",
-            "alt": "Illustration"
-          }
-        },
-        "stage_T9BCpq": {
-          "type": "stage",
-          "settings": {
-            "title": "1–2 Weeks",
-            "bullet_1": "Fewer cravings",
-            "bullet_2": "Fuller for longer (3–4 hrs)",
-            "alt": "Illustration"
-          }
-        },
-        "stage_CQGpq7": {
-          "type": "stage",
-          "settings": {
-            "title": "1 Month+",
-            "bullet_1": "See slimmer waist/thighs",
-            "bullet_2": "Keep losing (~1 lb/week)",
-            "alt": "Illustration"
-          }
-        },
-        "stage_Dx8n3L": {
-          "type": "stage",
-          "settings": {
-            "title": "3 Months+",
-            "bullet_1": "Drop a pants size",
-            "bullet_2": "Fit into tight jeans",
-            "alt": "Illustration"
-          }
-        }
-      },
-      "block_order": [
-        "stage_W4nDR9",
-        "stage_T9BCpq",
-        "stage_CQGpq7",
-        "stage_Dx8n3L"
-      ],
-      "name": "Feel the Difference (Tabs + Cards)",
-      "settings": {
-        "heading": "Feel the Difference—Week by Week",
-        "container": "page",
-        "color_scheme": "",
-        "bg_color": "#FFFFFF",
-        "text_color": "#111111",
-        "muted_color": "#666666",
-        "border_color": "#e5e7eb",
-        "rule_color": "#d9d9d9",
-        "focus_color": "#111111",
-        "radius": 16,
-        "enable_shadow": true,
-        "tab_height": 44,
-        "enable_top_dashed": true,
-        "dash_length": 8,
-        "gap_length": 8,
-        "show_hr": true,
-        "hide_card_h_mobile": false,
-        "padding_top": 48,
-        "padding_bottom": 36
-      }
     }
   },
   "order": [
@@ -324,7 +254,6 @@
     "related-products",
     "feature_split_card_LDP3bW",
     "stats_feature_split_abTmBf",
-    "comparison_matrix_cifVii",
-    "week_by_week_LBpexF"
+    "comparison_matrix_cifVii"
   ]
 }
