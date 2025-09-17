@@ -248,20 +248,19 @@
         "padding_bottom": 56
       }
     },
-    "week_by_week_nPWwJg": {
+    "week_by_week_emwRXH": {
       "type": "Week-by-Week",
       "blocks": {
-        "stage_8rBMnm": {
+        "stage_kM3tyP": {
           "type": "stage",
           "settings": {
             "title": "3–7 Days",
             "bullet_1": "Daily, regular poops",
             "bullet_2": "Less bloating",
-            "image": "shopify://shop_images/Group.svg",
             "alt": "Illustration"
           }
         },
-        "stage_bqGwH8": {
+        "stage_HdM3VE": {
           "type": "stage",
           "settings": {
             "title": "1–2 Weeks",
@@ -270,7 +269,7 @@
             "alt": "Illustration"
           }
         },
-        "stage_kQ6xUw": {
+        "stage_RFKmDb": {
           "type": "stage",
           "settings": {
             "title": "1 Month+",
@@ -279,7 +278,7 @@
             "alt": "Illustration"
           }
         },
-        "stage_xfwwFG": {
+        "stage_xhXxVz": {
           "type": "stage",
           "settings": {
             "title": "3 Months+",
@@ -290,12 +289,12 @@
         }
       },
       "block_order": [
-        "stage_8rBMnm",
-        "stage_bqGwH8",
-        "stage_kQ6xUw",
-        "stage_xfwwFG"
+        "stage_kM3tyP",
+        "stage_HdM3VE",
+        "stage_RFKmDb",
+        "stage_xhXxVz"
       ],
-      "name": "Feel the Difference (Isolated)",
+      "name": "Feel the Difference (Isolated + Font Controls)",
       "settings": {
         "heading": "Feel the Difference—Week by Week",
         "container": "page",
@@ -323,6 +322,6 @@
     "feature_split_card_LDP3bW",
     "stats_feature_split_abTmBf",
     "comparison_matrix_cifVii",
-    "week_by_week_nPWwJg"
+    "week_by_week_emwRXH"
   ]
 }
