@@ -384,6 +384,77 @@
         "card_desc_mobile": 14,
         "card_desc_desktop": 14
       }
+    },
+    "faq_hy8QM3": {
+      "type": "FAQ",
+      "blocks": {
+        "faq_item_Q9BjyX": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Who can take Easy Shape Probiotic?",
+            "answer": "<p>Easy Shape Probiotic is designed for ages 3 and above and is perfect for anyone targeting their waist and abdominal area—whether you're dealing with stubborn waist fat or trying to curb persistent cravings. Pregnant and breastfeeding women should consult their healthcare provider before starting any new supplement.</p>"
+          }
+        },
+        "faq_item_dQjU7C": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What does Easy Shape Probiotic do?",
+            "answer": "<p>It supports waist and abdominal goals, helps curb cravings, and promotes digestive balance by nurturing beneficial gut bacteria.</p>"
+          }
+        },
+        "faq_item_kdjhA9": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I take Easy Shape Probiotic?",
+            "answer": "<p>Take once daily with water or your favorite beverage. It can be taken with or without food. For best results, take it at the same time each day.</p>"
+          }
+        },
+        "faq_item_JehBY9": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is the shelf life of Easy Shape Probiotic?",
+            "answer": "<p>Unopened products typically last 24 months when stored in a cool, dry place away from heat and sunlight. Always check the expiration date.</p>"
+          }
+        },
+        "faq_item_X9EHU4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is the shelf life of Easy Shape Probiotic?",
+            "answer": "<p>Shelf life remains the same after opening if stored properly with the lid tightly closed. For peak potency, use within 60 days of opening.</p>"
+          }
+        },
+        "faq_item_yqAKd7": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can I take this with other supplements? What about medications?",
+            "answer": "<p>Generally safe with most supplements. If you’re taking prescription medications or have a medical condition, consult your healthcare provider first.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_Q9BjyX",
+        "faq_item_dQjU7C",
+        "faq_item_kdjhA9",
+        "faq_item_JehBY9",
+        "faq_item_X9EHU4",
+        "faq_item_yqAKd7"
+      ],
+      "name": "FAQ — Accordion",
+      "settings": {
+        "title": "Questions? We’ve got answers",
+        "gap": 12,
+        "radius": 12,
+        "cl_bg": "#ffffff",
+        "cl_text": "#111111",
+        "cl_muted": "#666666",
+        "cl_border": "#e5e7eb",
+        "padding_top": 32,
+        "padding_bottom": 32,
+        "title_size_m": 28,
+        "title_size_d": 36,
+        "single_open": true,
+        "open_first": true
+      }
     }
   },
   "order": [
@@ -393,6 +464,7 @@
     "stats_feature_split_abTmBf",
     "comparison_matrix_cifVii",
     "week_by_week_emwRXH",
-    "science_backed_ingredients_La4x6X"
+    "science_backed_ingredients_La4x6X",
+    "faq_hy8QM3"
   ]
 }
