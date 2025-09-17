@@ -304,6 +304,9 @@
     gap: 8px;
     box-sizing: border-box;
     width: var(--w);
+    justify-content: {{ jc }};                 /* 整体（含图标+文字）在盒子内的水平对齐 */
+text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/正文） */
+
   }
 
   {%- if block.settings.shadow -%}
