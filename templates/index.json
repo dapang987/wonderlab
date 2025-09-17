@@ -490,72 +490,6 @@
         "point_title_size": 12,
         "point_body_size": 15
       }
-    },
-    "two_column_benefits_split_Y9yaTf": {
-      "type": "Two-Column-Benefits-Split",
-      "blocks": {
-        "left_item_yKGByJ": {
-          "type": "left_item",
-          "settings": {
-            "text": "Naturally curb cravings where they start"
-          }
-        },
-        "left_item_JngwAm": {
-          "type": "left_item",
-          "settings": {
-            "text": "Stop carbs and fats from being absorbed right at the gut"
-          }
-        },
-        "left_item_nk4nVA": {
-          "type": "left_item",
-          "settings": {
-            "text": "Enhance calorie expenditure, supercharge metabolic efficiency"
-          }
-        },
-        "right_item_PdJQki": {
-          "type": "right_item",
-          "settings": {
-            "text": "Probiotics for a healthier gut"
-          }
-        },
-        "right_item_jUFnqC": {
-          "type": "right_item",
-          "settings": {
-            "text": "Fibers and prebiotics feed good bacteria, boosting growth"
-          }
-        },
-        "right_item_tx6nN8": {
-          "type": "right_item",
-          "settings": {
-            "text": "Strains survive stomach acid & bile, thriving for max benefits"
-          }
-        }
-      },
-      "block_order": [
-        "left_item_yKGByJ",
-        "left_item_JngwAm",
-        "left_item_nk4nVA",
-        "right_item_PdJQki",
-        "right_item_jUFnqC",
-        "right_item_tx6nN8"
-      ],
-      "name": "Benefits split (2 columns) – hardened",
-      "settings": {
-        "left_title": "Weight Management Support",
-        "right_title": "Healthy Microbiome & Digestion",
-        "page_width": 1100,
-        "gap": 56,
-        "radius": 12,
-        "pad_m": 24,
-        "pad_d": 44,
-        "title_size_m": 24,
-        "title_size_d": 32,
-        "list_size": 15,
-        "cl_text": "#111111",
-        "cl_muted": "#666666",
-        "cl_card": "#efefef",
-        "cl_rule": "#bdbdbd"
-      }
     }
   },
   "order": [
@@ -567,7 +501,6 @@
     "kpi_metrics_3aW3cC",
     "logo_marquee_ra9MhX",
     "five_star_reviews_gQCNgB",
-    "clinical_backed_feature_card_BiqqaT",
-    "two_column_benefits_split_Y9yaTf"
+    "clinical_backed_feature_card_BiqqaT"
   ]
 }
