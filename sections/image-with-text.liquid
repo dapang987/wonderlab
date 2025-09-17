@@ -25,7 +25,13 @@
   assign _img_radius = section.settings.image_radius | default: 0 | at_least: 0 | at_most: 64
 -%}
 
-<div class="section-{{ section.id }}-padding gradient color-{{ section.settings.section_color_scheme }}">
+{%- capture _section_style -%}
+  {%- if section.settings.use_section_bg and section.settings.section_bg != blank -%}
+    background: {{ section.settings.section_bg }};
+  {%- endif -%}
+{%- endcapture -%}
+
+<div class="section-{{ section.id }}-padding gradient color-{{ section.settings.section_color_scheme }}" style="{{ _section_style | strip | strip_newlines }}">
   <div class="page-width">
     <div class="image-with-text image-with-text--{{ section.settings.content_layout }} isolate{% if settings.text_boxes_border_thickness > 0 and settings.text_boxes_border_opacity > 0 and settings.media_border_thickness > 0 and settings.media_border_opacity > 0 %} collapse-borders{% endif %}{% unless section.settings.color_scheme == section.settings.section_color_scheme and settings.media_border_thickness > 0 and settings.text_boxes_shadow_opacity == 0 and settings.text_boxes_border_thickness == 0 or settings.text_boxes_border_opacity == 0 %} collapse-corners{% endunless %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <div class="image-with-text__grid grid grid--gapless grid--1-col grid--{% if section.settings.desktop_image_width == 'medium' %}2-col-tablet{% else %}3-col-tablet{% endif %}{% if section.settings.layout == 'text_first' %} image-with-text__grid--reverse{% endif %}">
@@ -93,6 +99,15 @@
                 {%- when 'button' -%}
                   {%- if block.settings.button_label != blank -%}
                     {%- assign _btn_radius = block.settings.button_radius | default: 8 | at_least: 0 | at_most: 64 -%}
+                    {%- capture _btn_style -%}
+                      border-radius: {{ _btn_radius }}px;
+                      {%- if block.settings.button_custom_style -%}
+                        {%- if block.settings.button_bg != blank -%}background-color: {{ block.settings.button_bg }};{%- endif -%}
+                        {%- if block.settings.button_text != blank -%}color: {{ block.settings.button_text }};{%- endif -%}
+                      {%- endif -%}
+                      {%- if block.settings.button_width > 0 -%}width: {{ block.settings.button_width }}px;{%- endif -%}
+                      {%- if block.settings.button_height > 0 -%}height: {{ block.settings.button_height }}px; display: inline-flex; align-items: center; justify-content: center; padding-top: 0; padding-bottom: 0;{%- endif -%}
+                    {%- endcapture -%}
                     <a
                       {% if block.settings.button_link == blank %}
                         role="link" aria-disabled="true"
@@ -100,7 +115,7 @@
                         href="{{ block.settings.button_link }}"
                       {% endif %}
                       class="button{% if block.settings.button_style_secondary %} button--secondary{% else %} button--primary{% endif %}"
-                      style="border-radius: {{ _btn_radius }}px;"
+                      style="{{ _btn_style | strip | strip_newlines }}"
                       {{ block.shopify_attributes }}
                     >
                       {{ block.settings.button_label | escape }}
@@ -132,22 +147,10 @@
       "type": "select",
       "id": "height",
       "options": [
-        {
-          "value": "adapt",
-          "label": "t:sections.image-with-text.settings.height.options__1.label"
-        },
-        {
-          "value": "small",
-          "label": "t:sections.image-with-text.settings.height.options__2.label"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.image-with-text.settings.height.options__3.label"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.image-with-text.settings.height.options__4.label"
-        }
+        { "value": "adapt", "label": "t:sections.image-with-text.settings.height.options__1.label" },
+        { "value": "small", "label": "t:sections.image-with-text.settings.height.options__2.label" },
+        { "value": "medium", "label": "t:sections.image-with-text.settings.height.options__3.label" },
+        { "value": "large", "label": "t:sections.image-with-text.settings.height.options__4.label" }
       ],
       "default": "adapt",
       "label": "t:sections.image-with-text.settings.height.label"
@@ -166,18 +169,9 @@
       "type": "select",
       "id": "desktop_image_width",
       "options": [
-        {
-          "value": "small",
-          "label": "t:sections.image-with-text.settings.desktop_image_width.options__1.label"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.image-with-text.settings.desktop_image_width.options__2.label"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.image-with-text.settings.desktop_image_width.options__3.label"
-        }
+        { "value": "small", "label": "t:sections.image-with-text.settings.desktop_image_width.options__1.label" },
+        { "value": "medium", "label": "t:sections.image-with-text.settings.desktop_image_width.options__2.label" },
+        { "value": "large", "label": "t:sections.image-with-text.settings.desktop_image_width.options__3.label" }
       ],
       "default": "medium",
       "label": "t:sections.image-with-text.settings.desktop_image_width.label",
@@ -187,14 +181,8 @@
       "type": "select",
       "id": "layout",
       "options": [
-        {
-          "value": "image_first",
-          "label": "t:sections.image-with-text.settings.layout.options__1.label"
-        },
-        {
-          "value": "text_first",
-          "label": "t:sections.image-with-text.settings.layout.options__2.label"
-        }
+        { "value": "image_first", "label": "t:sections.image-with-text.settings.layout.options__1.label" },
+        { "value": "text_first", "label": "t:sections.image-with-text.settings.layout.options__2.label" }
       ],
       "default": "image_first",
       "label": "t:sections.image-with-text.settings.layout.label",
@@ -204,18 +192,9 @@
       "type": "select",
       "id": "desktop_content_position",
       "options": [
-        {
-          "value": "top",
-          "label": "t:sections.image-with-text.settings.desktop_content_position.options__1.label"
-        },
-        {
-          "value": "middle",
-          "label": "t:sections.image-with-text.settings.desktop_content_position.options__2.label"
-        },
-        {
-          "value": "bottom",
-          "label": "t:sections.image-with-text.settings.desktop_content_position.options__3.label"
-        }
+        { "value": "top", "label": "t:sections.image-with-text.settings.desktop_content_position.options__1.label" },
+        { "value": "middle", "label": "t:sections.image-with-text.settings.desktop_content_position.options__2.label" },
+        { "value": "bottom", "label": "t:sections.image-with-text.settings.desktop_content_position.options__3.label" }
       ],
       "default": "top",
       "label": "t:sections.image-with-text.settings.desktop_content_position.label"
@@ -224,18 +203,9 @@
       "type": "select",
       "id": "desktop_content_alignment",
       "options": [
-        {
-          "value": "left",
-          "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__2.label"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__3.label"
-        }
+        { "value": "left", "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__1.label" },
+        { "value": "center", "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__2.label" },
+        { "value": "right", "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__3.label" }
       ],
       "default": "left",
       "label": "t:sections.image-with-text.settings.desktop_content_alignment.label"
@@ -244,14 +214,8 @@
       "type": "select",
       "id": "content_layout",
       "options": [
-        {
-          "value": "no-overlap",
-          "label": "t:sections.image-with-text.settings.content_layout.options__1.label"
-        },
-        {
-          "value": "overlap",
-          "label": "t:sections.image-with-text.settings.content_layout.options__2.label"
-        }
+        { "value": "no-overlap", "label": "t:sections.image-with-text.settings.content_layout.options__1.label" },
+        { "value": "overlap", "label": "t:sections.image-with-text.settings.content_layout.options__2.label" }
       ],
       "default": "no-overlap",
       "label": "t:sections.image-with-text.settings.content_layout.label"
@@ -270,24 +234,31 @@
     },
     {
       "type": "header",
+      "content": "Section 背景"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_section_bg",
+      "label": "使用自定义Section背景色",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section背景色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
       "content": "t:sections.all.animation.content"
     },
     {
       "type": "select",
       "id": "image_behavior",
       "options": [
-        {
-          "value": "none",
-          "label": "t:sections.all.animation.image_behavior.options__1.label"
-        },
-        {
-          "value": "ambient",
-          "label": "t:sections.all.animation.image_behavior.options__2.label"
-        },
-        {
-          "value": "zoom-in",
-          "label": "t:sections.all.animation.image_behavior.options__4.label"
-        }
+        { "value": "none", "label": "t:sections.all.animation.image_behavior.options__1.label" },
+        { "value": "ambient", "label": "t:sections.all.animation.image_behavior.options__2.label" },
+        { "value": "zoom-in", "label": "t:sections.all.animation.image_behavior.options__4.label" }
       ],
       "default": "none",
       "label": "t:sections.all.animation.image_behavior.label"
@@ -300,18 +271,9 @@
       "type": "select",
       "id": "mobile_content_alignment",
       "options": [
-        {
-          "value": "left",
-          "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__1.label"
-        },
-        {
-          "value": "center",
-          "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__2.label"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__3.label"
-        }
+        { "value": "left", "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__1.label" },
+        { "value": "center", "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__2.label" },
+        { "value": "right", "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__3.label" }
       ],
       "default": "left",
       "label": "t:sections.image-with-text.settings.mobile_content_alignment.label"
@@ -357,18 +319,9 @@
           "type": "select",
           "id": "heading_size",
           "options": [
-            {
-              "value": "h2",
-              "label": "t:sections.all.heading_size.options__1.label"
-            },
-            {
-              "value": "h1",
-              "label": "t:sections.all.heading_size.options__2.label"
-            },
-            {
-              "value": "h0",
-              "label": "t:sections.all.heading_size.options__3.label"
-            }
+            { "value": "h2", "label": "t:sections.all.heading_size.options__1.label" },
+            { "value": "h1", "label": "t:sections.all.heading_size.options__2.label" },
+            { "value": "h0", "label": "t:sections.all.heading_size.options__3.label" }
           ],
           "default": "h1",
           "label": "t:sections.all.heading_size.label"
@@ -390,14 +343,8 @@
           "type": "select",
           "id": "text_style",
           "options": [
-            {
-              "value": "subtitle",
-              "label": "t:sections.image-with-text.blocks.caption.settings.text_style.options__1.label"
-            },
-            {
-              "value": "caption-with-letter-spacing",
-              "label": "t:sections.image-with-text.blocks.caption.settings.text_style.options__2.label"
-            }
+            { "value": "subtitle", "label": "t:sections.image-with-text.blocks.caption.settings.text_style.options__1.label" },
+            { "value": "caption-with-letter-spacing", "label": "t:sections.image-with-text.blocks.caption.settings.text_style.options__2.label" }
           ],
           "default": "caption-with-letter-spacing",
           "label": "t:sections.image-with-text.blocks.caption.settings.text_style.label"
@@ -406,18 +353,9 @@
           "type": "select",
           "id": "text_size",
           "options": [
-            {
-              "value": "small",
-              "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__1.label"
-            },
-            {
-              "value": "medium",
-              "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__2.label"
-            },
-            {
-              "value": "large",
-              "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__3.label"
-            }
+            { "value": "small", "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__1.label" },
+            { "value": "medium", "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__2.label" },
+            { "value": "large", "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__3.label" }
           ],
           "default": "medium",
           "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.label"
@@ -439,14 +377,8 @@
           "type": "select",
           "id": "text_style",
           "options": [
-            {
-              "value": "body",
-              "label": "t:sections.image-with-text.blocks.text.settings.text_style.options__1.label"
-            },
-            {
-              "value": "subtitle",
-              "label": "t:sections.image-with-text.blocks.text.settings.text_style.options__2.label"
-            }
+            { "value": "body", "label": "t:sections.image-with-text.blocks.text.settings.text_style.options__1.label" },
+            { "value": "subtitle", "label": "t:sections.image-with-text.blocks.text.settings.text_style.options__2.label" }
           ],
           "default": "body",
           "label": "t:sections.image-with-text.blocks.text.settings.text_style.label"
@@ -485,6 +417,48 @@
           "step": 1,
           "unit": "px",
           "default": 8
+        },
+        {
+          "type": "header",
+          "content": "自定义按钮样式"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_custom_style",
+          "label": "启用自定义按钮颜色/尺寸",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "button_bg",
+          "label": "按钮背景颜色",
+          "default": "#111111"
+        },
+        {
+          "type": "color",
+          "id": "button_text",
+          "label": "按钮文字颜色",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "button_width",
+          "label": "按钮宽度（px，0=自适应）",
+          "min": 0,
+          "max": 600,
+          "step": 10,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "button_height",
+          "label": "按钮高度（px，0=自适应）",
+          "min": 0,
+          "max": 120,
+          "step": 10,
+          "unit": "px",
+          "default": 0
         }
       ]
     }
@@ -493,15 +467,9 @@
     {
       "name": "t:sections.image-with-text.presets.name",
       "blocks": [
-        {
-          "type": "heading"
-        },
-        {
-          "type": "text"
-        },
-        {
-          "type": "button"
-        }
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
       ]
     }
   ]
