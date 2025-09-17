@@ -491,6 +491,34 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
       "info": "t:sections.image-banner.settings.image_height.info"
     },
     {
+  "type": "select",
+  "id": "image_fit",
+  "label": "图片适配方式",
+  "default": "cover",
+  "options": [
+    { "value": "cover", "label": "铺满（可能裁切）" },
+    { "value": "contain", "label": "完整显示（不裁切，可能留白）" }
+  ]
+},
+{
+  "type": "select",
+  "id": "image_position",
+  "label": "图片对齐位置",
+  "default": "center",
+  "options": [
+    { "value": "top-left", "label": "左上" },
+    { "value": "top", "label": "上中" },
+    { "value": "top-right", "label": "右上" },
+    { "value": "left", "label": "中左" },
+    { "value": "center", "label": "正中" },
+    { "value": "right", "label": "中右" },
+    { "value": "bottom-left", "label": "左下" },
+    { "value": "bottom", "label": "下中" },
+    { "value": "bottom-right", "label": "右下" }
+  ]
+},
+
+    {
       "type": "select", "id": "desktop_content_position", "default": "middle-center",
       "options": [
         { "value": "top-left", "label": "t:sections.image-banner.settings.desktop_content_position.options__1.label" },
