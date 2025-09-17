@@ -28,22 +28,21 @@
     opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
   }
 {%- endstyle -%}
+
 {%- style -%}
 /* === 仅作用于这个 Banner 与这个 buttons block（移动端修正）=== */
 @media screen and (max-width: 989px){
   #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK{
-    /* 仍保持上下排列，但让容器内元素在横向居中 */
     display: flex;
     flex-direction: column !important;
-    align-items: center !important;     /* 关键：从原来的 flex-start 改为 center */
+    align-items: center !important;
     justify-content: flex-start;
     width: 100%;
   }
   #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK .button{
-    /* 390px，窄屏不溢出，同时居中 */
     padding: 9px 19px !important;
     box-sizing: border-box;
-    margin-inline: auto !important;     /* 关键：按钮自身也水平居中 */
+    margin-inline: auto !important;
   }
 }
 
@@ -52,7 +51,7 @@
   #Banner-template--25249586446649__image_banner_Cx3d8j .buttons-buttons_qBghTK{
     display: flex;
     flex-direction: row !important;
-    justify-content: flex-start !important; /* 左对齐 */
+    justify-content: flex-start !important;
     align-items: center;
     gap: 10px;
     flex-wrap: nowrap;
@@ -65,8 +64,6 @@
   }
 }
 {%- endstyle -%}
-
-
 
 {%- liquid
   assign full_width = '100vw'
@@ -121,7 +118,6 @@
           fetchpriority: fetch_priority
       }}
     </div>
-    
   {%- elsif section.settings.image_2 == blank -%}
     <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
       {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -161,11 +157,9 @@
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
+
           {%- when 'heading' -%}
-            <h2
-              class="banner__heading inline-richtext {{ block.settings.heading_size }}"
-              {{ block.shopify_attributes }}
-            >
+            <h2 class="banner__heading inline-richtext {{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
               {{ block.settings.heading }}
             </h2>
 
@@ -200,8 +194,8 @@
               /* —— 默认（移动端）上下排列，左对齐 —— */
               #Banner-{{ section.id }} .buttons-{{ block.id }}{
                 display: flex;
-                flex-direction: column;     /* 上下排列 */
-                align-items: flex-start;    /* 左对齐 */
+                flex-direction: column;
+                align-items: flex-start;
                 justify-content: flex-start;
                 gap: 10px;
               }
@@ -220,9 +214,9 @@
               /* —— PC 端（≥990px）横向排列，左对齐 —— */
               @media screen and (min-width: 990px){
                 #Banner-{{ section.id }} .buttons-{{ block.id }}{
-                  flex-direction: row !important;     /* 横向 */
+                  flex-direction: row !important;
                   align-items: center;
-                  justify-content: flex-start !important; /* 左对齐 */
+                  justify-content: flex-start !important;
                   gap: 10px;
                   flex-wrap: nowrap;
                 }
@@ -235,7 +229,7 @@
                   align-items: center;
                   gap: 10px;
                   flex-shrink: 0;
-                  box-sizing: border-box; /* 确保总宽 300px */
+                  box-sizing: border-box;
                 }
               }
 
@@ -273,6 +267,114 @@
                 </a>
               {%- endif -%}
             </div>
+
+          {%- when 'cert_info' -%}
+            {%- comment -%} 覆盖块：认证信息（cert_info） {%- endcomment -%}
+            {%- assign rgb = block.settings.bg_color | color_to_rgb | remove: 'rgb(' | remove: ')' -%}
+            {%- style -%}
+              /* 让 Banner 成为定位上下文 */
+              #Banner-{{ section.id }}{ position: relative; }
+
+              /* 基础样式（通用） */
+              #Banner-{{ section.id }} .cert-{{ block.id }}{
+                position: absolute;
+                z-index: {{ block.settings.z_index }};
+                border-radius: {{ block.settings.radius }}px;
+                padding: {{ block.settings.pad_y }}px {{ block.settings.pad_x }}px;
+                background-color: rgba({{ rgb }}, {{ block.settings.bg_opacity | divided_by: 100.0 }});
+                color: {{ block.settings.text_color }};
+                font-size: {{ block.settings.font_size }}px;
+                line-height: 1.4;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-sizing: border-box;
+                width: var(--w);
+              }
+              /* 阴影可选 */
+              {%- if block.settings.shadow -%}
+                #Banner-{{ section.id }} .cert-{{ block.id }}{ box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+              {%- endif -%}
+
+              #Banner-{{ section.id }} .cert-{{ block.id }} .cert-link{
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+                color: inherit;
+              }
+              #Banner-{{ section.id }} .cert-{{ block.id }} .cert-icon{
+                width: 20px; height: 20px; object-fit: contain; flex: 0 0 20px;
+              }
+              #Banner-{{ section.id }} .cert-{{ block.id }} .cert-title{
+                font-weight: 600; margin: 0; padding: 0;
+              }
+              #Banner-{{ section.id }} .cert-{{ block.id }} .cert-text{
+                margin: 0; opacity: .95;
+              }
+
+              /* 桌面定位 */
+              @media (min-width: 750px){
+                #Banner-{{ section.id }} .cert-{{ block.id }}{ --w: {{ block.settings.width_desktop }}px; --inset: {{ block.settings.edge_inset }}px; transform: none; }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-left{ top: var(--inset); left: var(--inset); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-center{ top: var(--inset); left: 50%; transform: translateX(-50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-right{ top: var(--inset); right: var(--inset); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center-left{ top: 50%; left: var(--inset); transform: translateY(-50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center{ top: 50%; left: 50%; transform: translate(-50%, -50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center-right{ top: 50%; right: var(--inset); transform: translateY(-50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-left{ bottom: var(--inset); left: var(--inset); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-center{ bottom: var(--inset); left: 50%; transform: translateX(-50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-right{ bottom: var(--inset); right: var(--inset); }
+              }
+
+              /* 手机定位 */
+              @media (max-width: 749px){
+                #Banner-{{ section.id }} .cert-{{ block.id }}{
+                  --w: {{ block.settings.width_mobile }}px;
+                  --inset: {{ block.settings.edge_inset }}px;
+                  transform: none;
+                }
+                {%- unless block.settings.show_on_mobile -%}
+                #Banner-{{ section.id }} .cert-{{ block.id }}{ display: none !important; }
+                {%- endunless -%}
+
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-left{ top: var(--inset); left: var(--inset); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-center{ top: var(--inset); left: 50%; transform: translateX(-50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-right{ top: var(--inset); right: var(--inset); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center-left{ top: 50%; left: var(--inset); transform: translateY(-50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center{ top: 50%; left: 50%; transform: translate(-50%, -50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center-right{ top: 50%; right: var(--inset); transform: translateY(-50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-left{ bottom: var(--inset); left: var(--inset); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-center{ bottom: var(--inset); left: 50%; transform: translateX(-50%); }
+                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-right{ bottom: var(--inset); right: var(--inset); }
+              }
+            {%- endstyle -%}
+
+            {%- assign dpos = 'cert--d-' | append: block.settings.position_desktop -%}
+            {%- assign mpos = 'cert--m-' | append: block.settings.position_mobile -%}
+            <div class="cert-{{ block.id }} cert-overlay {{ dpos }} {{ mpos }}" {{ block.shopify_attributes }}>
+              {%- if block.settings.link_url != blank -%}
+                <a class="cert-link" href="{{ block.settings.link_url }}" target="{{ block.settings.link_target }}">
+              {%- endif -%}
+
+                {%- if block.settings.icon != blank -%}
+                  {{ block.settings.icon | image_url: width: 40 | image_tag: class: 'cert-icon', loading: 'lazy' }}
+                {%- endif -%}
+
+                <div class="cert-body">
+                  {%- if block.settings.heading != blank -%}
+                    <p class="cert-title">{{ block.settings.heading | escape }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="cert-text">{{ block.settings.text }}</div>
+                  {%- endif -%}
+                </div>
+
+              {%- if block.settings.link_url != blank -%}
+                </a>
+              {%- endif -%}
+            </div>
+
         {%- endcase -%}
       {%- endfor -%}
     </div>
@@ -413,71 +515,69 @@
       ]
     },
     {
-  "type": "cert_info",
-  "name": "认证信息（覆盖块）",
-  "settings": [
-    { "type": "text",       "id": "heading",         "label": "标题", "default": "认证信息" },
-    { "type": "richtext",   "id": "text",            "label": "正文", "default": "<p>ISO 9001 / CE / RoHS</p>" },
-    { "type": "image_picker","id": "icon",           "label": "可选图标" },
+      "type": "cert_info",
+      "name": "认证信息（覆盖块）",
+      "settings": [
+        { "type": "text",       "id": "heading",         "label": "标题", "default": "认证信息" },
+        { "type": "richtext",   "id": "text",            "label": "正文", "default": "<p>ISO 9001 / CE / RoHS</p>" },
+        { "type": "image_picker","id": "icon",           "label": "可选图标" },
 
-    { "type": "url",        "id": "link_url",        "label": "可选链接" },
-    { "type": "select",     "id": "link_target",     "label": "链接打开方式", "default": "_self",
-      "options": [
-        { "value": "_self", "label": "当前窗口" },
-        { "value": "_blank","label": "新窗口" }
+        { "type": "url",        "id": "link_url",        "label": "可选链接" },
+        { "type": "select",     "id": "link_target",     "label": "链接打开方式", "default": "_self",
+          "options": [
+            { "value": "_self", "label": "当前窗口" },
+            { "value": "_blank","label": "新窗口" }
+          ]
+        },
+
+        { "type": "color",      "id": "bg_color",        "label": "背景色", "default": "#111111" },
+        { "type": "range",      "id": "bg_opacity",      "label": "背景不透明度（%）", "min": 0, "max": 100, "step": 5, "default": 80 },
+
+        { "type": "color",      "id": "text_color",      "label": "文字颜色", "default": "#FFFFFF" },
+        { "type": "range",      "id": "font_size",       "label": "正文字号（px）", "min": 12, "max": 24, "step": 1, "default": 14 },
+
+        { "type": "range",      "id": "radius",          "label": "圆角（px）", "min": 0, "max": 24, "step": 2, "default": 14 },
+        { "type": "range",      "id": "pad_x",           "label": "左右内边距（px）", "min": 8, "max": 32, "step": 2, "default": 16 },
+        { "type": "range",      "id": "pad_y",           "label": "上下内边距（px）", "min": 6, "max": 24, "step": 2, "default": 10 },
+
+        { "type": "range",      "id": "width_desktop",   "label": "桌面宽度（px）", "min": 200, "max": 600, "step": 10, "default": 320 },
+        { "type": "range",      "id": "width_mobile",    "label": "手机宽度（px）", "min": 200, "max": 420, "step": 10, "default": 300 },
+
+        { "type": "range",      "id": "edge_inset",      "label": "边缘内缩（px）", "min": 0, "max": 80, "step": 4, "default": 16 },
+
+        { "type": "select",     "id": "position_desktop","label": "桌面位置", "default": "bottom-right",
+          "options": [
+            { "value": "top-left", "label": "左上" },
+            { "value": "top-center", "label": "上中" },
+            { "value": "top-right", "label": "右上" },
+            { "value": "center-left", "label": "中左" },
+            { "value": "center", "label": "正中" },
+            { "value": "center-right", "label": "中右" },
+            { "value": "bottom-left", "label": "左下" },
+            { "value": "bottom-center", "label": "下中" },
+            { "value": "bottom-right", "label": "右下" }
+          ]
+        },
+
+        { "type": "select",     "id": "position_mobile", "label": "手机位置", "default": "bottom-right",
+          "options": [
+            { "value": "top-left", "label": "左上" },
+            { "value": "top-center", "label": "上中" },
+            { "value": "top-right", "label": "右上" },
+            { "value": "center-left", "label": "中左" },
+            { "value": "center", "label": "正中" },
+            { "value": "center-right", "label": "中右" },
+            { "value": "bottom-left", "label": "左下" },
+            { "value": "bottom-center", "label": "下中" },
+            { "value": "bottom-right", "label": "右下" }
+          ]
+        },
+
+        { "type": "checkbox",   "id": "shadow",          "label": "开启阴影", "default": true },
+        { "type": "range",      "id": "z_index",         "label": "层级（z-index）", "min": 1, "max": 10, "step": 1, "default": 3 },
+        { "type": "checkbox",   "id": "show_on_mobile",  "label": "手机端显示", "default": true }
       ]
-    },
-
-    { "type": "color",      "id": "bg_color",        "label": "背景色", "default": "#111111" },
-    { "type": "range",      "id": "bg_opacity",      "label": "背景不透明度（%）", "min": 0, "max": 100, "step": 5, "default": 80 },
-
-    { "type": "color",      "id": "text_color",      "label": "文字颜色", "default": "#FFFFFF" },
-    { "type": "range",      "id": "font_size",       "label": "正文字号（px）", "min": 12, "max": 24, "step": 1, "default": 14 },
-
-    { "type": "range",      "id": "radius",          "label": "圆角（px）", "min": 0, "max": 24, "step": 2, "default": 14 },
-    { "type": "range",      "id": "pad_x",           "label": "左右内边距（px）", "min": 8, "max": 32, "step": 2, "default": 16 },
-    { "type": "range",      "id": "pad_y",           "label": "上下内边距（px）", "min": 6, "max": 24, "step": 2, "default": 10 },
-
-    { "type": "range",      "id": "width_desktop",   "label": "桌面宽度（px）", "min": 200, "max": 600, "step": 10, "default": 320 },
-    { "type": "range",      "id": "width_mobile",    "label": "手机宽度（px）", "min": 200, "max": 420, "step": 10, "default": 300 },
-
-    { "type": "range",      "id": "edge_inset",      "label": "边缘内缩（px）", "min": 0, "max": 80, "step": 4, "default": 16 },
-
-    { "type": "select",     "id": "position_desktop","label": "桌面位置", "default": "bottom-right",
-      "options": [
-        { "value": "top-left", "label": "左上" },
-        { "value": "top-center", "label": "上中" },
-        { "value": "top-right", "label": "右上" },
-        { "value": "center-left", "label": "中左" },
-        { "value": "center", "label": "正中" },
-        { "value": "center-right", "label": "中右" },
-        { "value": "bottom-left", "label": "左下" },
-        { "value": "bottom-center", "label": "下中" },
-        { "value": "bottom-right", "label": "右下" }
-      ]
-    },
-
-    { "type": "select",     "id": "position_mobile", "label": "手机位置", "default": "bottom-right",
-      "options": [
-        { "value": "top-left", "label": "左上" },
-        { "value": "top-center", "label": "上中" },
-        { "value": "top-right", "label": "右上" },
-        { "value": "center-left", "label": "中左" },
-        { "value": "center", "label": "正中" },
-        { "value": "center-right", "label": "中右" },
-        { "value": "bottom-left", "label": "左下" },
-        { "value": "bottom-center", "label": "下中" },
-        { "value": "bottom-right", "label": "右下" }
-      ]
-    },
-
-    { "type": "checkbox",   "id": "shadow",          "label": "开启阴影", "default": true },
-    { "type": "range",      "id": "z_index",         "label": "层级（z-index）", "min": 1, "max": 10, "step": 1, "default": 3 },
-    { "type": "checkbox",   "id": "show_on_mobile",  "label": "手机端显示", "default": true }
-  ]
-}
-
-
+    }
   ],
   "presets": [
     { "name": "t:sections.image-banner.presets.name", "blocks": [ { "type": "heading" }, { "type": "text" }, { "type": "buttons" } ] }
