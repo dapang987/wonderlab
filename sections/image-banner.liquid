@@ -144,6 +144,24 @@
       {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
     </div>
   {%- endif -%}
+{%- if section.settings.image_fit == 'contain' and section.settings.image != blank -%}
+  {%- style -%}
+    /* 用图片真实宽高比给容器设定高度占位，避免裁切 */
+    #Banner-{{ section.id }}::before,
+    #Banner-{{ section.id }} .banner__media::before{
+      padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;
+      content: '';
+      display: block;
+    }
+    /* 覆盖主题里固定高造成的挤压/裁切 */
+    #Banner-{{ section.id }}.banner--small,
+    #Banner-{{ section.id }}.banner--medium,
+    #Banner-{{ section.id }}.banner--large{
+      height: auto;
+    }
+    #Banner-{{ section.id }} .banner__media{ height: auto; }
+  {%- endstyle -%}
+{%- endif -%}
 
   {%- if section.settings.image_2 != blank -%}
     <div class="banner__media media{% if section.settings.image != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
