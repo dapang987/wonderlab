@@ -99,6 +99,48 @@
   endif
 -%}
 
+{%- liquid
+  assign objpos = 'center center'
+  case section.settings.image_position
+    when 'top-left'
+      assign objpos = 'left top'
+    when 'top'
+      assign objpos = 'center top'
+    when 'top-right'
+      assign objpos = 'right top'
+    when 'left'
+      assign objpos = 'left center'
+    when 'center'
+      assign objpos = 'center center'
+    when 'right'
+      assign objpos = 'right center'
+    when 'bottom-left'
+      assign objpos = 'left bottom'
+    when 'bottom'
+      assign objpos = 'center bottom'
+    when 'bottom-right'
+      assign objpos = 'right bottom'
+  endcase
+-%}
+
+{%- style -%}
+/* 让媒体容器可被子元素绝对填充（应用 image_fit / image_position） */
+#Banner-{{ section.id }} .banner__media{
+  position: relative;
+  overflow: hidden;
+}
+#Banner-{{ section.id }} .banner__media picture,
+#Banner-{{ section.id }} .banner__media img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: {{ section.settings.image_fit }};
+  object-position: {{ objpos }};
+}
+{%- endstyle -%}
+
 <div
   id="Banner-{{ section.id }}"
   class="banner banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.image_height == 'adapt' and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
@@ -117,8 +159,8 @@
   {%- if img != blank -%}
     {%- liquid
       assign image_height = img.width | divided_by: img.aspect_ratio
-      assign sizes = '100vw'
-      assign widths_in_use = '375, 550, 750, 1100, 1500, 2000, 3000, 3840, 5120'
+      assign sizes = stacked_sizes | default: '100vw'
+      assign widths_in_use = widths | default: '375, 550, 750, 1100, 1500, 2000, 3000, 3840, 5120'
     -%}
 
     <picture>
