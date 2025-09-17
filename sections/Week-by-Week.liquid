@@ -1,24 +1,24 @@
 {% comment %}
-  Section: Feel the Difference — Week by Week (Cards + Mobile Tabs)
+  Section: Feel the Difference — Week by Week (Isolated)
+  说明：所有样式/脚本均作用于 #fdiff-{{ section.id }} 作用域内，类名带 fdiff- 前缀，避免与主题冲突。
 {% endcomment %}
 
-<section id="diff-{{ section.id }}" class="diff section-{{ section.id }} color-{{ section.settings.color_scheme }} gradient"
-  style="--bg: {{ section.settings.bg_color }};">
-  <div class="section-{{ section.id }}-padding" aria-labelledby="diff-title-{{ section.id }}">
+<section id="fdiff-{{ section.id }}" class="fdiff section-{{ section.id }}" style="--bg: {{ section.settings.bg_color }};">
+  <div class="fdiff__pad" aria-labelledby="fdiff-title-{{ section.id }}">
     <div class="{% if section.settings.container == 'page' %}page-width{% else %}page-width page-width--full{% endif %}">
       {% if section.settings.heading != blank %}
-        <h2 id="diff-title-{{ section.id }}" class="diff__title">{{ section.settings.heading }}</h2>
+        <h2 id="fdiff-title-{{ section.id }}" class="fdiff__title">{{ section.settings.heading }}</h2>
       {% endif %}
 
       <!-- Mobile Tabs -->
-      <div id="tabs-{{ section.id }}" class="tabs" role="tablist" aria-label="Progress timeline">
+      <div id="fdiff-tabs-{{ section.id }}" class="fdiff-tabs" role="tablist" aria-label="Progress timeline">
         {% for block in section.blocks %}
           {% if block.type == 'stage' %}
-            <button class="tabs__btn"
-              id="tab-{{ section.id }}-{{ forloop.index0 }}"
+            <button class="fdiff-tabs__btn"
+              id="fdiff-tab-{{ section.id }}-{{ forloop.index0 }}"
               role="tab"
               aria-selected="{{ forloop.first }}"
-              aria-controls="panel-{{ section.id }}"
+              aria-controls="fdiff-panel-{{ section.id }}"
               tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
               {{ block.shopify_attributes }}>
               {{ block.settings.title | escape }}
@@ -28,11 +28,11 @@
       </div>
 
       <!-- Desktop / Tablet Grid -->
-      <div class="diff__grid" aria-hidden="false">
+      <div class="fdiff__grid" aria-hidden="false">
         {% for block in section.blocks %}
           {% if block.type == 'stage' %}
-            <article class="card" {{ block.shopify_attributes }}>
-              <div class="card__media">
+            <article class="fdiff-card" {{ block.shopify_attributes }}>
+              <div class="fdiff-card__media">
                 {% if block.settings.image != blank %}
                   {{ block.settings.image
                     | image_url: width: 800
@@ -45,14 +45,14 @@
               </div>
 
               {% if section.settings.show_hr %}
-                <hr class="card__hr" />
+                <hr class="fdiff-card__hr" />
               {% endif %}
 
               {% if block.settings.title != blank %}
-                <h3 class="card__h">{{ block.settings.title }}</h3>
+                <h3 class="fdiff-card__h">{{ block.settings.title }}</h3>
               {% endif %}
 
-              <p class="card__desc">
+              <p class="fdiff-card__desc">
                 {{ block.settings.bullet_1 | escape }}{% if block.settings.bullet_1 != blank and block.settings.bullet_2 != blank %}<br>{% endif %}
                 {{ block.settings.bullet_2 | escape }}
               </p>
@@ -62,9 +62,9 @@
       </div>
 
       <!-- Mobile single-card panel -->
-      <div id="panel-{{ section.id }}" class="panel" role="tabpanel" aria-labelledby="tab-{{ section.id }}-0"></div>
+      <div id="fdiff-panel-{{ section.id }}" class="fdiff-panel" role="tabpanel" aria-labelledby="fdiff-tab-{{ section.id }}-0"></div>
 
-      {%- comment -%} blocks -> JSON（注意：不再 escape） {%- endcomment -%}
+      {%- comment -%} blocks -> JSON（不 escape，JS 直接读取） {%- endcomment -%}
       {% capture stages_json -%}
       [
         {%- for block in section.blocks -%}
@@ -79,29 +79,43 @@
         {%- endfor -%}
       ]
       {%- endcapture %}
-      <script type="application/json" id="stages-{{ section.id }}">{{ stages_json | strip }}</script>
+      <script type="application/json" id="fdiff-stages-{{ section.id }}">{{ stages_json | strip }}</script>
     </div>
   </div>
 
   {%- style -%}
-    .section-{{ section.id }}{
+    /* ========== Scope Root ========== */
+    #fdiff-{{ section.id }}{
+      isolation:isolate;              /* 防止混合模式/定位影响外部 */
+      background: var(--bg);
       --gap: 24px;
       --radius: {{ section.settings.radius }}px;
       --border: {{ section.settings.border_color }};
       --text: {{ section.settings.text_color }};
       --muted: {{ section.settings.muted_color }};
       --rule: {{ section.settings.rule_color }};
-      --bg: {{ section.settings.bg_color }};
       --shadow: {% if section.settings.enable_shadow %}0 6px 16px rgba(0,0,0,.06){% else %}none{% endif %};
       --tab-h: {{ section.settings.tab_height }}px;
       --focus-c: {{ section.settings.focus_color }};
       --dash: {{ section.settings.dash_length }}px;
       --gaplen: {{ section.settings.gap_length }}px;
     }
+    #fdiff-{{ section.id }} *{ box-sizing: border-box; }
 
-    .section-{{ section.id }} *{ box-sizing:border-box; }
-    .section-{{ section.id }} .diff{ padding: 48px 16px 36px; }
-    .section-{{ section.id }} .diff__title{
+    /* Spacing */
+    #fdiff-{{ section.id }} .fdiff__pad{
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+    @media (min-width: 750px){
+      #fdiff-{{ section.id }} .fdiff__pad{
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+
+    /* Title */
+    #fdiff-{{ section.id }} .fdiff__title{
       margin:0 0 16px;
       text-align:center;
       font-family: ui-serif, Georgia, "Times New Roman", serif;
@@ -112,145 +126,105 @@
       color: var(--text);
     }
 
-    .section-{{ section.id }} .diff__grid{
+    /* Grid */
+    #fdiff-{{ section.id }} .fdiff__grid{
       display:grid;
       gap:var(--gap);
       grid-template-columns: repeat(4, 1fr);
       margin-top: 12px;
     }
     @media (max-width: 1023.98px){
-      .section-{{ section.id }} .diff__grid{ grid-template-columns: repeat(2, 1fr); }
+      #fdiff-{{ section.id }} .fdiff__grid{ grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 767.98px){
-      .section-{{ section.id }} .diff__grid{ display:none; }
+      #fdiff-{{ section.id }} .fdiff__grid{ display:none; }
     }
 
-    .section-{{ section.id }} .card{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      padding:16px;
-      background:#fff;
-      min-height: 260px;
-      color: var(--text);
+    /* Card */
+    #fdiff-{{ section.id }} .fdiff-card{
+      display:flex; flex-direction:column; gap:12px;
+      padding:16px; min-height:260px;
+      background:#fff; color:var(--text);
       border-radius: var(--radius);
-      border: 1px solid var(--border);
+      border:1px solid var(--border);
     }
-
-    .section-{{ section.id }} .card__media{
+    #fdiff-{{ section.id }} .fdiff-card__media{
       border:1px solid var(--border);
       border-radius: calc(var(--radius) - 4px);
-      background:#f6f6f6;
-      overflow:hidden;
-      aspect-ratio: 4 / 3;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      background:#f6f6f6; overflow:hidden;
+      aspect-ratio: 4 / 3; display:flex; align-items:center; justify-content:center;
     }
-    .section-{{ section.id }} .card__media img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
+    #fdiff-{{ section.id }} .fdiff-card__media img{ width:100%; height:100%; object-fit:cover; display:block; }
+    #fdiff-{{ section.id }} .fdiff-card__h{ margin:4px 0 0; font-size:1.1rem; line-height:1.35; }
+    #fdiff-{{ section.id }} .fdiff-card__hr{ border:0; border-top:1px dashed var(--rule); margin:2px 0 4px; }
+    #fdiff-{{ section.id }} .fdiff-card__desc{ margin:0; font-size:.92rem; color:var(--muted); }
 
-    .section-{{ section.id }} .card__h{ margin: 4px 0 0; font-size: 1.1rem; line-height: 1.35; }
-    .section-{{ section.id }} .card__hr{ border:0; border-top: 1px dashed var(--rule); margin: 2px 0 4px; }
-    .section-{{ section.id }} .card__desc{ margin:0; font-size:.92rem; color:var(--muted); }
-
-    /* ===== Mobile tabs ===== */
-    .section-{{ section.id }} .tabs{ display:none; }
+    /* Tabs (Mobile) */
+    #fdiff-{{ section.id }} .fdiff-tabs{ display:none; }
     @media (max-width: 767.98px){
-      .section-{{ section.id }} .tabs{
-        display:flex;
-        gap: 12px;
-        align-items:center;
-        overflow-x:auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 6px 0 2px;
-        margin-bottom: 10px;
-        border-bottom: 1px solid var(--rule);
+      #fdiff-{{ section.id }} .fdiff-tabs{
+        display:flex; gap:12px; align-items:center;
+        overflow-x:auto; -webkit-overflow-scrolling:touch;
+        padding:6px 0 2px; margin-bottom:10px;
+        border-bottom:1px solid var(--rule);
         scrollbar-width: thin;
       }
     }
-    .section-{{ section.id }} .tabs__btn{
-      flex:0 0 auto;
-      height: var(--tab-h);
-      display:inline-flex;
-      align-items:center;
-      border-radius: 999px;
-      border: 0;
-      background: transparent;
-      color: var(--text);
-      font: inherit;
-      cursor: pointer;
-      position: relative;
-      padding: 0 12px;
+    #fdiff-{{ section.id }} .fdiff-tabs__btn{
+      flex:0 0 auto; height:var(--tab-h);
+      display:inline-flex; align-items:center;
+      border-radius:999px; border:0; background:transparent;
+      color:var(--text); font:inherit; cursor:pointer; position:relative; padding:0 12px;
     }
-    .section-{{ section.id }} .tabs__btn[aria-selected="true"]{ font-weight: 600; }
-    .section-{{ section.id }} .tabs__btn[aria-selected="true"]::after{
-      content:"";
-      position:absolute;
-      left:10px; right:10px; bottom:-8px;
-      height:2px; background:var(--text); border-radius:2px;
+    #fdiff-{{ section.id }} .fdiff-tabs__btn[aria-selected="true"]{ font-weight:600; }
+    #fdiff-{{ section.id }} .fdiff-tabs__btn[aria-selected="true"]::after{
+      content:""; position:absolute; left:10px; right:10px; bottom:-8px; height:2px; background:var(--text); border-radius:2px;
     }
-    .section-{{ section.id }} .tabs__btn:focus-visible{ outline: 2px solid var(--focus-c); outline-offset: 2px; }
+    #fdiff-{{ section.id }} .fdiff-tabs__btn:focus-visible{ outline:2px solid var(--focus-c); outline-offset:2px; }
 
-    /* 手机端每个按钮顶部的独立虚线（可调长度/间隔） */
+    /* 独立虚线（每个按钮一段，可调长度/间隔） */
     @media (max-width: 767.98px){
       {% if section.settings.enable_top_dashed %}
-      .section-{{ section.id }} .tabs__btn::before{
-        content: "";
-        position: absolute;
-        left: 0; right: 0; top: 0;
-        height: 1px;
+      #fdiff-{{ section.id }} .fdiff-tabs__btn::before{
+        content:""; position:absolute; left:0; right:0; top:0; height:1px;
         background: repeating-linear-gradient(
           to right,
           var(--rule) 0 var(--dash),
           transparent var(--dash) calc(var(--dash) + var(--gaplen))
         );
-        pointer-events: none;
+        pointer-events:none;
       }
       {% endif %}
     }
 
-    /* ===== Mobile panel (single card) ===== */
-    .section-{{ section.id }} .panel{ display:none; }
+    /* Panel (Mobile) */
+    #fdiff-{{ section.id }} .fdiff-panel{ display:none; }
     @media (max-width: 767.98px){
-      .section-{{ section.id }} .panel{ display:block; }
+      #fdiff-{{ section.id }} .fdiff-panel{ display:block; }
     }
-    .section-{{ section.id }} .panel__card{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:16px;
-      background:#fff;
-      box-shadow: var(--shadow);
-      animation: fadeIn-{{ section.id }} .2s ease;
+    #fdiff-{{ section.id }} .fdiff-panel__card{
+      display:flex; flex-direction:column; gap:12px;
+      border:1px solid var(--border); border-radius:var(--radius);
+      padding:16px; background:#fff; box-shadow:var(--shadow);
+      animation: fdiff-fadeIn-{{ section.id }} .2s ease;
     }
-
-    @keyframes fadeIn-{{ section.id }}{
-      from{ opacity:0; transform: translateY(4px); }
-      to{ opacity:1; transform:none; }
-    }
+    @keyframes fdiff-fadeIn-{{ section.id }}{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
     @media (prefers-reduced-motion: reduce){
-      .section-{{ section.id }} .panel__card{ animation:none; }
+      #fdiff-{{ section.id }} .fdiff-panel__card{ animation:none; }
     }
   {%- endstyle -%}
 
   <script>
     (function(){
-      const root = document.getElementById('diff-{{ section.id }}');
+      const root = document.getElementById('fdiff-{{ section.id }}');
       if(!root) return;
 
-      const panel = root.querySelector('#panel-{{ section.id }}');
-      const tabsWrap = root.querySelector('#tabs-{{ section.id }}');
-      const tabs = Array.from(root.querySelectorAll('.tabs__btn'));
+      const panel = root.querySelector('#fdiff-panel-{{ section.id }}');
+      const tabsWrap = root.querySelector('#fdiff-tabs-{{ section.id }}');
+      const tabs = Array.from(root.querySelectorAll('.fdiff-tabs__btn'));
 
-      // 读取 JSON（已去掉 escape）
-      const jsonEl = root.querySelector('#stages-{{ section.id }}');
+      // 数据
+      const jsonEl = root.querySelector('#fdiff-stages-{{ section.id }}');
       let STAGES = [];
       try { STAGES = JSON.parse(jsonEl?.textContent || '[]'); } catch(e){ STAGES = []; }
 
@@ -267,13 +241,13 @@
         const d = STAGES[index] || {};
         const imgSrc = d.img || `data:image/svg+xml;utf8,${placeholderSVG}`;
         panel.innerHTML = `
-          <article class="panel__card" aria-label="${(d.title||'').replace(/"/g,'&quot;')}">
-            <div class="card__media">
+          <article class="fdiff-panel__card" aria-label="${(d.title||'').replace(/"/g,'&quot;')}">
+            <div class="fdiff-card__media">
               <img alt="${(d.alt||'Illustration').replace(/"/g,'&quot;')}" src="${imgSrc}" onerror="this.src='data:image/svg+xml;utf8,${placeholderSVG}'">
             </div>
-            {% if section.settings.show_hr %}<hr class="card__hr" />{% endif %}
-            <h3 class="card__h">${d.title || ''}</h3>
-            <p class="card__desc">
+            {% if section.settings.show_hr %}<hr class="fdiff-card__hr" />{% endif %}
+            <h3 class="fdiff-card__h">${d.title || ''}</h3>
+            <p class="fdiff-card__desc">
               ${(d.bullets && d.bullets[0]) ? d.bullets[0] : ''}${(d.bullets && d.bullets[0] && d.bullets[1]) ? '<br>' : ''}${(d.bullets && d.bullets[1]) ? d.bullets[1] : ''}
             </p>
           </article>
@@ -328,7 +302,6 @@
         { "value": "full", "label": "全宽（满屏）" }
       ]
     },
-    { "type": "color_scheme", "id": "color_scheme", "label": "颜色方案（跟随主题）", "default": "scheme-1" },
     { "type": "color", "id": "bg_color", "label": "背景颜色", "default": "#FFFFFF" },
     { "type": "color", "id": "text_color", "label": "正文颜色", "default": "#111111" },
     { "type": "color", "id": "muted_color", "label": "次级文字颜色", "default": "#666666" },
@@ -360,7 +333,7 @@
   ],
   "presets": [
     {
-      "name": "Feel the Difference (Tabs + Cards)",
+      "name": "Feel the Difference (Isolated)",
       "blocks": [
         { "type": "stage", "settings": { "title": "3–7 Days", "bullet_1": "Daily, regular poops", "bullet_2": "Less bloating" } },
         { "type": "stage", "settings": { "title": "1–2 Weeks", "bullet_1": "Fewer cravings", "bullet_2": "Fuller for longer (3–4 hrs)" } },
