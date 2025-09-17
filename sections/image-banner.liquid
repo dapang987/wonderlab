@@ -143,74 +143,21 @@ assign image_height_desktop = section.settings.image.width | divided_by: section
       }}
     {%- endif -%}
 
-   {%- if section.settings.mobile_height_mode == 'image' -%}
-  {%- style -%}
-  @media screen and (max-width: 749px){
-    /* 关闭 small/medium/large 的固定最小高，改用比例撑高 */
-    #Banner-{{ section.id }}.banner--small,
-    #Banner-{{ section.id }}.banner--medium,
-    #Banner-{{ section.id }}.banner--large { min-height: 0 !important; }
-
-    /* 用手机图的比例撑高；没有手机图则退化用 PC 图 */
-    #Banner-{{ section.id }}::before,
-    #Banner-{{ section.id }} .banner__media::before,
-    #Banner-{{ section.id }}:not(.banner--mobile-bottom) .banner__content::before {
-      padding-bottom:
-        {%- if section.settings.image_mobile != blank -%}
-          {{ 1 | divided_by: section.settings.image_mobile.aspect_ratio | times: 100 }}%
-        {%- elsif section.settings.image != blank -%}
-          {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%
-        {%- else -%}
-          56.25%  /* 兜底 16:9 */
-        {%- endif -%};
-      content: '';
-      display: block;
-    }
-  }
-  {%- endstyle -%}
-
-{%- elsif section.settings.mobile_height_mode == 'fixed' -%}
-  {%- style -%}
-  @media screen and (max-width: 749px){
-    /* 禁用比例伪元素，防止双重高度 */
-    #Banner-{{ section.id }}::before,
-    #Banner-{{ section.id }} .banner__media::before,
-    #Banner-{{ section.id }}:not(.banner--mobile-bottom) .banner__content::before {
-      display: none !important; padding-bottom: 0 !important; content: none !important;
-    }
-    #Banner-{{ section.id }}.banner--small,
-    #Banner-{{ section.id }}.banner--medium,
-    #Banner-{{ section.id }}.banner--large { min-height: 0 !important; }
-
-    /* 直接指定高度（px） */
-    #Banner-{{ section.id }} .banner__media{ height: {{ section.settings.mobile_height_px }}px; }
-    /* 确保图片填满容器（保留你之前的 object-fit/position 逻辑） */
-    #Banner-{{ section.id }} .banner__media > img{ width:100%; height:100%; object-fit: {{ section.settings.image_fit }}; }
-  }
-  {%- endstyle -%}
-
-{%- elsif section.settings.mobile_height_mode == 'vh' -%}
-  {%- style -%}
-  @media screen and (max-width: 749px){
-    /* 禁用比例伪元素 */
-    #Banner-{{ section.id }}::before,
-    #Banner-{{ section.id }} .banner__media::before,
-    #Banner-{{ section.id }}:not(.banner--mobile-bottom) .banner__content::before {
-      display: none !important; padding-bottom: 0 !important; content: none !important;
-    }
-    #Banner-{{ section.id }}.banner--small,
-    #Banner-{{ section.id }}.banner--medium,
-    #Banner-{{ section.id }}.banner--large { min-height: 0 !important; }
-
-    /* 先写 vh 作为兜底，再用 svh 覆盖（新浏览器防地址栏压缩问题） */
-    #Banner-{{ section.id }} .banner__media{
-      height: {{ section.settings.mobile_height_vh }}vh;
-      height: {{ section.settings.mobile_height_vh }}svh;
-    }
-    #Banner-{{ section.id }} .banner__media > img{ width:100%; height:100%; object-fit: {{ section.settings.image_fit }}; }
-  }
-  {%- endstyle -%}
-{%- endif -%}
+    {%- if section.settings.image_mobile != blank -%}
+      {%- liquid
+        assign image_height_mobile = section.settings.image_mobile.width | divided_by: section.settings.image_mobile.aspect_ratio
+      -%}
+      {{
+        section.settings.image_mobile
+        | image_url: width: 3840
+        | image_tag:
+          width: section.settings.image_mobile.width,
+          height: image_height_mobile,
+          class: 'only-mobile',
+          sizes: sizes_mobile,
+          widths: widths
+      }}
+    {%- endif -%}
   </div>
 {%- else -%}
   <div class="banner__media media placeholder{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
