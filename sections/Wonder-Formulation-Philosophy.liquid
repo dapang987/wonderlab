@@ -81,15 +81,15 @@
     }
 
     /* Card (collapsible) */
-    #philosophy-{{ section.id }} .card{
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: var(--pad);
-      display: flex;
-      flex-direction: column;
-      transition: box-shadow var(--transition), transform var(--transition);
-      min-height: 110px;
-    }
+#philosophy-{{ section.id }} .card{
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--transition), transform var(--transition), background-color var(--transition);
+  min-height: 110px;
+}
     #philosophy-{{ section.id }} .card[data-collapsible]{ cursor: pointer; }
     #philosophy-{{ section.id }} .card:hover{ transform: translateY(-1px); box-shadow: var(--shadow); }
     #philosophy-{{ section.id }} .card:focus-visible{ outline: 2px solid #000; outline-offset: 2px; }
@@ -151,7 +151,10 @@
     }
 
     .card.is-open .card__details{ opacity: 1; transform: translateY(0); pointer-events: auto; }
-    .card.is-open .card__chev{ transform: rotate(135deg); }
+
+    #philosophy-{{ section.id }} .card.is-open{
+  background: var(--card-bg-open);
+}
 
     /* Mobile: masonry (2 columns) */
     @media (max-width: 768px){
