@@ -574,6 +574,7 @@
         "pad_y": 18,
         "radius": 0,
         "enable_shadow": true,
+        "image": "shopify://shop_images/46a47d1303d376568449714db69983537486c24e.jpg",
         "image_alt": "Product image",
         "heading": "Clinical-backed ingredients & formulas",
         "heading_size": 54,
