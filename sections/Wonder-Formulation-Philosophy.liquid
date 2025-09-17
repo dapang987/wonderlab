@@ -59,7 +59,16 @@
 
     /* ===== Layout ===== */
     #philosophy-{{ section.id }} *{ box-sizing: border-box; }
-    #philosophy-{{ section.id }} .wrap{ max-width: min(100%, var(--max-width)); margin: 0 auto; padding: 0 16px; }
+#philosophy-{{ section.id }} .wrap{
+  max-width: min(100%, var(--max-width));
+  margin: 0 auto;
+  padding: 0 16px;
+
+  /* new: section border */
+  border: var(--section-border-width) solid var(--section-border-color);
+  border-radius: var(--section-border-radius);
+}
+
 
     .sec-title{
       margin: 0 0 28px;
