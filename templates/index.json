@@ -316,7 +316,7 @@
         "image": "shopify://shop_images/792609f6c299f3fb566806fa8d7d8934c06d9e00.jpg",
         "height": "medium",
         "image_radius": 10,
-        "desktop_image_width": "large",
+        "desktop_image_width": "medium",
         "layout": "text_first",
         "desktop_content_position": "middle",
         "desktop_content_alignment": "left",
