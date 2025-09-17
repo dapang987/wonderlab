@@ -271,84 +271,98 @@
           {%- when 'cert_info' -%}
             {%- comment -%} 覆盖块：认证信息（cert_info） {%- endcomment -%}
             {%- assign rgb = block.settings.bg_color | color_to_rgb | remove: 'rgb(' | remove: ')' -%}
-            {%- style -%}
-              /* 让 Banner 成为定位上下文 */
-              #Banner-{{ section.id }}{ position: relative; }
+      {%- style -%}
+  /* 让 Banner 成为定位上下文 */
+  #Banner-{{ section.id }}{ position: relative; }
 
-              /* 基础样式（通用） */
-              #Banner-{{ section.id }} .cert-{{ block.id }}{
-                position: absolute;
-                z-index: {{ block.settings.z_index }};
-                border-radius: {{ block.settings.radius }}px;
-                padding: {{ block.settings.pad_y }}px {{ block.settings.pad_x }}px;
-                background-color: rgba({{ rgb }}, {{ block.settings.bg_opacity | divided_by: 100.0 }});
-                color: {{ block.settings.text_color }};
-                font-size: {{ block.settings.font_size }}px;
-                line-height: 1.4;
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                box-sizing: border-box;
-                width: var(--w);
-              }
-              /* 阴影可选 */
-              {%- if block.settings.shadow -%}
-                #Banner-{{ section.id }} .cert-{{ block.id }}{ box-shadow: 0 8px 24px rgba(0,0,0,.12); }
-              {%- endif -%}
+  /* 计算用的 RGB（已在上方 assign 了 rgb） */
 
-              #Banner-{{ section.id }} .cert-{{ block.id }} .cert-link{
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                text-decoration: none;
-                color: inherit;
-              }
-              #Banner-{{ section.id }} .cert-{{ block.id }} .cert-icon{
-                width: 20px; height: 20px; object-fit: contain; flex: 0 0 20px;
-              }
-              #Banner-{{ section.id }} .cert-{{ block.id }} .cert-title{
-                font-weight: 600; margin: 0; padding: 0;
-              }
-              #Banner-{{ section.id }} .cert-{{ block.id }} .cert-text{
-                margin: 0; opacity: .95;
-              }
+  /* 基础样式（通用） */
+  #Banner-{{ section.id }} .cert-{{ block.id }}{
+    /* 默认用桌面变量，手机端在 @media 内覆盖 */
+    --fs: {{ block.settings.font_size }}px;
+    --pad-x: {{ block.settings.pad_x }}px;
+    --pad-y: {{ block.settings.pad_y }}px;
 
-              /* 桌面定位 */
-              @media (min-width: 750px){
-                #Banner-{{ section.id }} .cert-{{ block.id }}{ --w: {{ block.settings.width_desktop }}px; --inset: {{ block.settings.edge_inset }}px; transform: none; }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-left{ top: var(--inset); left: var(--inset); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-center{ top: var(--inset); left: 50%; transform: translateX(-50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-right{ top: var(--inset); right: var(--inset); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center-left{ top: 50%; left: var(--inset); transform: translateY(-50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center{ top: 50%; left: 50%; transform: translate(-50%, -50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center-right{ top: 50%; right: var(--inset); transform: translateY(-50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-left{ bottom: var(--inset); left: var(--inset); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-center{ bottom: var(--inset); left: 50%; transform: translateX(-50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-right{ bottom: -50%; right: -80%; }
-              }
+    position: absolute;
+    z-index: {{ block.settings.z_index }};
+    border-radius: {{ block.settings.radius }}px;
+    padding: var(--pad-y) var(--pad-x);
+    background-color: rgba({{ rgb }}, {{ block.settings.bg_opacity | divided_by: 100.0 }});
+    color: {{ block.settings.text_color }};
+    font-size: var(--fs);
+    line-height: 1.4;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+    width: var(--w);
+  }
 
-              /* 手机定位 */
-              @media (max-width: 749px){
-                #Banner-{{ section.id }} .cert-{{ block.id }}{
-                  --w: {{ block.settings.width_mobile }}px;
-                  --inset: {{ block.settings.edge_inset }}px;
-                  transform: none;
-                }
-                {%- unless block.settings.show_on_mobile -%}
-                #Banner-{{ section.id }} .cert-{{ block.id }}{ display: none !important; }
-                {%- endunless -%}
+  {%- if block.settings.shadow -%}
+    #Banner-{{ section.id }} .cert-{{ block.id }}{ box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+  {%- endif -%}
 
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-left{ top: var(--inset); left: var(--inset); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-center{ top: var(--inset); left: 50%; transform: translateX(-50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-right{ top: var(--inset); right: var(--inset); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center-left{ top: 50%; left: var(--inset); transform: translateY(-50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center{ top: 50%; left: 50%; transform: translate(-50%, -50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center-right{ top: 50%; right: var(--inset); transform: translateY(-50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-left{ bottom: var(--inset); left: var(--inset); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-center{ bottom: var(--inset); left: 50%; transform: translateX(-50%); }
-                #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-right{ bottom: var(--inset); right: var(--inset); }
-              }
-            {%- endstyle -%}
+  #Banner-{{ section.id }} .cert-{{ block.id }} .cert-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+  #Banner-{{ section.id }} .cert-{{ block.id }} .cert-icon{
+    width: 20px; height: 20px; object-fit: contain; flex: 0 0 20px;
+  }
+  #Banner-{{ section.id }} .cert-{{ block.id }} .cert-title{
+    font-weight: 600; margin: 0; padding: 0;
+    /* 新增：标题字号可独立控制 */
+    font-size: {{ block.settings.title_font_size }}px;
+    line-height: 1.2;
+  }
+  #Banner-{{ section.id }} .cert-{{ block.id }} .cert-text{ margin: 0; opacity: .95; }
+
+  /* 桌面定位 */
+  @media (min-width: 750px){
+    #Banner-{{ section.id }} .cert-{{ block.id }}{ --w: {{ block.settings.width_desktop }}px; --inset: {{ block.settings.edge_inset }}px; transform: none; }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-left{ top: var(--inset); left: var(--inset); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-center{ top: var(--inset); left: 50%; transform: translateX(-50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-top-right{ top: var(--inset); right: var(--inset); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center-left{ top: 50%; left: var(--inset); transform: translateY(-50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center{ top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-center-right{ top: 50%; right: var(--inset); transform: translateY(-50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-left{ bottom: var(--inset); left: var(--inset); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-center{ bottom: var(--inset); left: 50%; transform: translateX(-50%); }
+    /* 建议：这里原来是 bottom:-50% / right:-80%，会把卡片移出 Banner，改为常规右下角 */
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--d-bottom-right{ bottom: var(--inset); right: var(--inset); }
+  }
+
+  /* 手机定位 + 手机专属字号/内边距 */
+  @media (max-width: 749px){
+    #Banner-{{ section.id }} .cert-{{ block.id }}{
+      --w: {{ block.settings.width_mobile }}px;
+      --inset: {{ block.settings.edge_inset }}px;
+      /* 新增：手机端可独立字体与内边距 */
+      --fs: {{ block.settings.font_size_mobile }}px;
+      --pad-x: {{ block.settings.pad_x_mobile }}px;
+      --pad-y: {{ block.settings.pad_y_mobile }}px;
+      transform: none;
+    }
+    {%- unless block.settings.show_on_mobile -%}
+    #Banner-{{ section.id }} .cert-{{ block.id }}{ display: none !important; }
+    {%- endunless -%}
+
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-left{ top: var(--inset); left: var(--inset); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-center{ top: var(--inset); left: 50%; transform: translateX(-50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-top-right{ top: var(--inset); right: var(--inset); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center-left{ top: 50%; left: var(--inset); transform: translateY(-50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center{ top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-center-right{ top: 50%; right: var(--inset); transform: translateY(-50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-left{ bottom: var(--inset); left: var(--inset); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-center{ bottom: var(--inset); left: 50%; transform: translateX(-50%); }
+    #Banner-{{ section.id }} .cert-{{ block.id }}.cert--m-bottom-right{ bottom: var(--inset); right: var(--inset); }
+  }
+{%- endstyle -%}
+
 
             {%- assign dpos = 'cert--d-' | append: block.settings.position_desktop -%}
             {%- assign mpos = 'cert--m-' | append: block.settings.position_mobile -%}
