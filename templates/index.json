@@ -294,11 +294,11 @@
         "button_87TnRz": {
           "type": "button",
           "settings": {
-            "button_label": "Button label",
+            "button_label": "Learn More",
             "button_link": "",
             "button_style_secondary": true,
             "button_radius": 10,
-            "button_custom_style": false,
+            "button_custom_style": true,
             "button_bg": "#0000e1",
             "button_text": "#ffffff",
             "button_width": 300,
