@@ -85,28 +85,6 @@
     assign fetch_priority = 'high'
   endif
 -%}
-{%- liquid
-  assign img_pos = 'center center'
-  case section.settings.image_position
-    when 'top-left'     then assign img_pos = 'left top'
-    when 'top'          then assign img_pos = 'center top'
-    when 'top-right'    then assign img_pos = 'right top'
-    when 'left'         then assign img_pos = 'left center'
-    when 'center'       then assign img_pos = 'center center'
-    when 'right'        then assign img_pos = 'right center'
-    when 'bottom-left'  then assign img_pos = 'left bottom'
-    when 'bottom'       then assign img_pos = 'center bottom'
-    when 'bottom-right' then assign img_pos = 'right bottom'
-  endcase
--%}
-
-{%- style -%}
-  /* 统一控制当前 section 的图片贴合与对齐 */
-  #Banner-{{ section.id }} .banner__media img{
-    object-fit: {{ section.settings.image_fit }};
-    object-position: {{ img_pos }};
-  }
-{%- endstyle -%}
 
 <div
   id="Banner-{{ section.id }}"
@@ -144,24 +122,6 @@
       {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
     </div>
   {%- endif -%}
-{%- if section.settings.image_fit == 'contain' and section.settings.image != blank -%}
-  {%- style -%}
-    /* 用图片真实宽高比给容器设定高度占位，避免裁切 */
-    #Banner-{{ section.id }}::before,
-    #Banner-{{ section.id }} .banner__media::before{
-      padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;
-      content: '';
-      display: block;
-    }
-    /* 覆盖主题里固定高造成的挤压/裁切 */
-    #Banner-{{ section.id }}.banner--small,
-    #Banner-{{ section.id }}.banner--medium,
-    #Banner-{{ section.id }}.banner--large{
-      height: auto;
-    }
-    #Banner-{{ section.id }} .banner__media{ height: auto; }
-  {%- endstyle -%}
-{%- endif -%}
 
   {%- if section.settings.image_2 != blank -%}
     <div class="banner__media media{% if section.settings.image != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
