@@ -255,6 +255,27 @@
 
               /* 防止主题样式令按钮占满一行 */
               #Banner-{{ section.id }} .buttons-{{ block.id }} .button{ width: auto; }
+
+
+
+                 /* === Mobile overrides (≤989px)：边框颜色 & 文字颜色 === */
+    @media screen and (max-width: 989px){
+      /* 按钮1 */
+      #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1,
+      #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:hover,
+      #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-1:focus{
+        color: {{ block.settings.btn1_text_color_mobile }};
+        border-color: {{ block.settings.btn1_border_color_mobile }};
+      }
+
+      /* 按钮2 */
+      #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2,
+      #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:hover,
+      #Banner-{{ section.id }} .buttons-{{ block.id }} .btn-2:focus{
+        color: {{ block.settings.btn2_text_color_mobile }};
+        border-color: {{ block.settings.btn2_border_color_mobile }};
+      }
+    }
             {%- endstyle -%}
 
             <div
