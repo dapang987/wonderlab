@@ -1,0 +1,328 @@
+{% comment %}
+  Section: Science-backed Ingredients Grid
+  Converts a static HTML file into a configurable Shopify section.
+  - Add/remove cards via blocks
+  - Customize title, colors, spacing, radius, page width, paddings
+{% endcomment %}
+
+<section class="section-{{ section.id }} ingr" aria-labelledby="ingr-title-{{ section.id }}">
+  <style>
+    .section-{{ section.id }}{
+      /* Design tokens (configurable) */
+      --page-width: {{ section.settings.page_width }}px;
+      --gap: {{ section.settings.gap }}px;
+      --radius: {{ section.settings.radius }}px;
+
+      --text: {{ section.settings.cl_text }};
+      --muted: {{ section.settings.cl_muted }};
+      --border: {{ section.settings.cl_border }};
+      --bg: {{ section.settings.cl_bg }};
+      --tile: {{ section.settings.cl_tile }};
+
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      background: var(--bg);
+      color: var(--text);
+    }
+    @media (min-width: 750px){
+      .section-{{ section.id }}{
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+
+    /* Base (scoped) */
+    .section-{{ section.id }} * { box-sizing: border-box; }
+    .section-{{ section.id }} .ingr__wrap{
+      width: min(var(--page-width), 100%);
+      margin: 0 auto;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .section-{{ section.id }} .ingr__title{
+      margin: 0 0 16px;
+      text-align: center;
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      line-height: 1.25;
+      font-size: clamp(24px, 3.2vw, 36px);
+      letter-spacing: .2px;
+    }
+
+    /* Grid */
+    .section-{{ section.id }} .ingr__grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--gap);
+      margin-top: 12px;
+    }
+    @media (min-width: 768px){
+      .section-{{ section.id }} .ingr__grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px){
+      .section-{{ section.id }} .ingr__grid{ grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* Card */
+    .section-{{ section.id }} .ingr-card{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color .15s ease, box-shadow .15s ease, transform .02s ease;
+    }
+
+    .section-{{ section.id }} .ingr-card__media{
+      background: var(--tile);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 4px);
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      display: grid;
+      place-items: center;
+    }
+    .section-{{ section.id }} .ingr-card__img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .section-{{ section.id }} .ingr-card__h{
+      margin: 6px 0 0;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+    @media (max-width: 767.98px){
+      .section-{{ section.id }} .ingr-card__h{ font-size: 16px; }
+    }
+
+    .section-{{ section.id }} .ingr-card__desc{
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* Hover (desktop only) */
+    @media (hover: hover) and (pointer: fine) and (min-width: 1024px){
+      .section-{{ section.id }} .ingr-card:hover{
+        border-color: #d7dbe3;
+        box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      }
+    }
+
+    /* Utility */
+    .section-{{ section.id }} .sr-only{
+      position:absolute!important; height:1px;width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px);
+      white-space:nowrap; border:0; padding:0; margin:-1px;
+    }
+  </style>
+
+  <div class="ingr__wrap">
+    {% if section.settings.title != blank %}
+      <h2 id="ingr-title-{{ section.id }}" class="ingr__title">{{ section.settings.title | escape }}</h2>
+    {% endif %}
+
+    <div class="ingr__grid">
+      {% for block in section.blocks %}
+        {% assign title = block.settings.title | default: 'Ingredient' %}
+        <article class="ingr-card" {{ block.shopify_attributes }} aria-label="{{ title | escape }}">
+          <div class="ingr-card__media" aria-hidden="true">
+            {% if block.settings.image != blank %}
+              {% assign sizes_attr = "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw" %}
+              {% assign widths_attr = "360, 533, 720, 940, 1200" %}
+              {% assign img_alt = block.settings.image_alt | default: title | escape %}
+              {{ block.settings.image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: sizes_attr,
+                  widths: widths_attr,
+                  alt: img_alt,
+                  class: 'ingr-card__img'
+              }}
+            {% else %}
+              <svg class="ingr-card__img" viewBox="0 0 240 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder">
+                <rect width="240" height="180" rx="10" fill="#f2f3f5"></rect>
+                <rect x="24" y="24" width="192" height="132" rx="8" fill="none" stroke="#c8ccd3" stroke-width="3"></rect>
+                <g stroke="#9aa3af" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="100" cy="82" r="12"></circle>
+                  <path d="M74 124l44-34 48 44"></path>
+                </g>
+              </svg>
+            {% endif %}
+          </div>
+
+          <h3 class="ingr-card__h">{{ title | escape }}</h3>
+
+          {% if block.settings.desc != blank %}
+            <p class="ingr-card__desc">{{ block.settings.desc }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Science-backed",
+  "class": "section-science-ingredients",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Science-backed ingredients that deliver real results"
+    },
+    {
+      "type": "range",
+      "id": "page_width",
+      "label": "Max content width (px)",
+      "min": 720,
+      "max": 1600,
+      "step": 10,
+      "default": 1100
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Card gap (px)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Card radius (px)",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "cl_bg",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cl_text",
+      "label": "Text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "cl_muted",
+      "label": "Muted text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "cl_border",
+      "label": "Border color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "color",
+      "id": "cl_tile",
+      "label": "Image tile color",
+      "default": "#f2f3f5"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text",
+          "info": "Improves accessibility and SEO."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Ingredient title"
+        },
+        {
+          "type": "richtext",
+          "id": "desc",
+          "label": "Description",
+          "default": "<p>Write a short, clear description of the ingredient and its benefits.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Science-backed ingredients",
+      "blocks": [
+        {
+          "type": "ingredient",
+          "settings": {
+            "title": "Bifidobacterium animalis subsp. lactis B420",
+            "desc": "<p>B420 is a <em>Bifidobacterium animalis</em> subsp. <em>lactis</em> strain that supports weight management. Studies have shown that B420 can reduce body fat, waist circumference, energy intake, and increase the abundance of <em>Akkermansia muciniphila</em>, supporting intestinal health.</p>"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "title": "Bifidobacterium animalis subsp. lactis HN019",
+            "desc": "<p>HN019 is a <em>Bifidobacterium animalis</em> subsp. <em>lactis</em> strain that supports digestive health. Studies have shown that HN019 can increase bowel movements, regulating intestinal health.</p>"
+          }
+        },
+        {
+          "type": "ingredient",
+          "settings": {
+            "title": "Prebiotic Blend",
+            "desc": "<p>Prebiotic blend contains isomaltooligosaccharides and polydextrose, which promote the proliferation of beneficial bacteria in the intestines and support digestive health.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
