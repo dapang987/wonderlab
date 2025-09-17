@@ -91,7 +91,7 @@
             "width_desktop": 320,
             "width_mobile": 300,
             "edge_inset": 16,
-            "position_desktop": "bottom-center",
+            "position_desktop": "bottom-right",
             "position_mobile": "top-center",
             "shadow": true,
             "z_index": 3,
