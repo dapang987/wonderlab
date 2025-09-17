@@ -1,0 +1,188 @@
+{% comment %}
+  Section: Two-Column Benefits Split (with dotted divider)
+  - Desktop: left & right columns with vertical dotted divider
+  - Mobile: stacked with horizontal dotted divider
+  - Editable titles, bullets (via blocks), colors, spacing, sizes
+{% endcomment %}
+
+<section class="split section-{{ section.id }}" aria-label="Benefits overview">
+  <style>
+    .section-{{ section.id }}{
+      /* ===== Design tokens ===== */
+      --radius: {{ section.settings.radius }}px;
+      --gap: {{ section.settings.gap }}px;
+      --pad-m: {{ section.settings.pad_m }}px;
+      --pad-d: {{ section.settings.pad_d }}px;
+
+      --text: {{ section.settings.cl_text }};
+      --muted: {{ section.settings.cl_muted }};
+      --card-bg: {{ section.settings.cl_card }};
+      --rule: {{ section.settings.cl_rule }};
+
+      --shadow: 0 8px 24px rgba(0,0,0,.06);
+
+      --title-size-m: {{ section.settings.title_size_m }}px;
+      --title-size-d: {{ section.settings.title_size_d }}px;
+      --list-size: {{ section.settings.list_size }}px;
+    }
+
+    /* Base */
+    .section-{{ section.id }} *, .section-{{ section.id }} *::before, .section-{{ section.id }} *::after{ box-sizing: border-box; }
+    .section-{{ section.id }}{ padding: var(--pad-m) 16px; color: var(--text); }
+    @media (min-width:1024px){
+      .section-{{ section.id }}{ padding-top: var(--pad-d); padding-bottom: var(--pad-d); }
+    }
+
+    .section-{{ section.id }} .split__wrap{
+      width: min(var(--page-width), 100%);
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .section-{{ section.id }} .split__grid{
+      display: grid;
+      grid-template-columns: 1fr;
+      row-gap: 20px;
+      align-items: start;
+    }
+    @media (min-width:1024px){
+      .section-{{ section.id }} .split__grid{
+        grid-template-columns: 1fr 2px 1fr; /* left | divider | right */
+        column-gap: var(--gap);
+        row-gap: 0;
+      }
+    }
+
+    /* Divider switches orientation by breakpoint */
+    .section-{{ section.id }} .split__divider{
+      height: 2px;
+      width: 100%;
+      background: repeating-linear-gradient(to right, var(--rule) 0 2px, transparent 2px 6px);
+    }
+    @media (min-width:1024px){
+      .section-{{ section.id }} .split__divider{
+        width: 2px;
+        height: 100%;
+        background: repeating-linear-gradient(to bottom, var(--rule) 0 2px, transparent 2px 6px);
+      }
+    }
+
+    .section-{{ section.id }} .split__title{
+      margin: 0 0 10px;
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      line-height: 1.25;
+      font-weight: 600;
+      font-size: var(--title-size-m);
+    }
+    @media (min-width:1024px){
+      .section-{{ section.id }} .split__title{ font-size: var(--title-size-d); }
+    }
+
+    .section-{{ section.id }} .split__list{
+      margin: 0;
+      padding-left: 1.1em;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: var(--list-size);
+    }
+    .section-{{ section.id }} .split__list li{ margin: .25em 0; }
+  </style>
+
+  <div class="split__wrap">
+    <div class="split__grid">
+      <!-- Left column -->
+      <section class="split__col" aria-labelledby="title-left-{{ section.id }}">
+        <h2 id="title-left-{{ section.id }}" class="split__title">
+          {{ section.settings.left_title | escape }}
+        </h2>
+        <ul class="split__list">
+          {% for block in section.blocks %}
+            {% if block.type == 'left_item' %}
+              <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </section>
+
+      <!-- Divider -->
+      <div class="split__divider" role="separator" aria-hidden="true"></div>
+
+      <!-- Right column -->
+      <section class="split__col" aria-labelledby="title-right-{{ section.id }}">
+        <h2 id="title-right-{{ section.id }}" class="split__title">
+          {{ section.settings.right_title | escape }}
+        </h2>
+        <ul class="split__list">
+          {% for block in section.blocks %}
+            {% if block.type == 'right_item' %}
+              <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </section>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Benefits split",
+  "class": "section-benefits-split",
+  "max_blocks": 24,
+  "settings": [
+    { "type": "text", "id": "left_title",  "label": "Left title",  "default": "Weight Management Support" },
+    { "type": "text", "id": "right_title", "label": "Right title", "default": "Healthy Microbiome & Digestion" },
+
+    { "type": "header", "content": "Layout & spacing" },
+    { "type": "range", "id": "page_width", "label": "Max content width (px)", "min": 720, "max": 1600, "step": 10, "default": 1100 },
+    { "type": "range", "id": "gap", "label": "Column gap (px, desktop)", "min": 24, "max": 96, "step": 2, "default": 56 },
+    { "type": "range", "id": "radius", "label": "Card radius (px)", "min": 0, "max": 24, "step": 1, "default": 12 },
+    { "type": "range", "id": "pad_m", "label": "Padding top/bottom (mobile, px)", "min": 12, "max": 64, "step": 2, "default": 24 },
+    { "type": "range", "id": "pad_d", "label": "Padding top/bottom (desktop, px)", "min": 24, "max": 96, "step": 2, "default": 44 },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "title_size_m", "label": "Title size (mobile, px)", "min": 16, "max": 32, "step": 1, "default": 24 },
+    { "type": "range", "id": "title_size_d", "label": "Title size (desktop, px)", "min": 20, "max": 40, "step": 1, "default": 32 },
+    { "type": "range", "id": "list_size", "label": "List text size (px)", "min": 12, "max": 18, "step": 1, "default": 15 },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "cl_text",  "label": "Text color",      "default": "#111111" },
+    { "type": "color", "id": "cl_muted", "label": "Muted text color","default": "#666666" },
+    { "type": "color", "id": "cl_card",  "label": "Card background", "default": "#efefef" },
+    { "type": "color", "id": "cl_rule",  "label": "Divider color",   "default": "#bdbdbd" }
+  ],
+  "blocks": [
+    {
+      "type": "left_item",
+      "name": "Left bullet",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Naturally curb cravings where they start" }
+      ]
+    },
+    {
+      "type": "right_item",
+      "name": "Right bullet",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Probiotics for a healthier gut" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Benefits split (2 columns)",
+      "blocks": [
+        { "type": "left_item",  "settings": { "text": "Naturally curb cravings where they start" } },
+        { "type": "left_item",  "settings": { "text": "Stop carbs and fats from being absorbed right at the gut" } },
+        { "type": "left_item",  "settings": { "text": "Enhance calorie expenditure, supercharge metabolic efficiency" } },
+
+        { "type": "right_item", "settings": { "text": "Probiotics for a healthier gut" } },
+        { "type": "right_item", "settings": { "text": "Fibers and prebiotics feed good bacteria, boosting growth" } },
+        { "type": "right_item", "settings": { "text": "Strains survive stomach acid & bile, thriving for max benefits" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
