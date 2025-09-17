@@ -267,7 +267,7 @@
         "left_title": "Weight Management Support",
         "right_title": "Healthy Microbiome & Digestion",
         "title_size_m": 26,
-        "title_size_d": 24,
+        "title_size_d": 30,
         "text_size_m": 16,
         "text_size_d": 16,
         "padding_top": 28,
@@ -280,8 +280,8 @@
         "heading_6Vy3AM": {
           "type": "heading",
           "settings": {
-            "heading": "Image with text",
-            "heading_size": "h1"
+            "heading": "Tired of weight yo-yos? Cravings out of control?",
+            "heading_size": "h0"
           }
         },
         "text_mfgGb6": {
