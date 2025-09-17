@@ -161,7 +161,7 @@
           "type": "text",
           "settings": {
             "text": "<p>Our 20 Billion CFU blend features clinically proven strains B420 & HN019—a weight-management powerhouse. Exclusive packaging locks in full potency, ensuring every dose helps inhibit appetite, reduce energy intake, and boost metabolism.<br/><br/></p>",
-            "text_style": "body"
+            "text_style": "subtitle"
           }
         },
         "button_7cfkVq": {
@@ -287,8 +287,8 @@
         "text_mfgGb6": {
           "type": "text",
           "settings": {
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
-            "text_style": "body"
+            "text": "<p>Evidence from top-tier research papers on Nature, Cell showed the high relativity between gut bacteria and obesity.</p>",
+            "text_style": "subtitle"
           }
         },
         "button_87TnRz": {
