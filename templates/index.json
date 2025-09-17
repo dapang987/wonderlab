@@ -490,6 +490,16 @@
         "point_title_size": 12,
         "point_body_size": 15
       }
+    },
+    "custom_liquid_RpaXgX": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\" />\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n<title>Two-Column Benefits Split</title>\n<style>\n/* =========================================================\n   Editable design tokens\n   ========================================================= */\n:root{\n  --radius: 12px;\n  --gap: 56px;        /* desktop columns gap */\n  --pad-m: 24px;      /* mobile padding */\n  --pad-d: 44px;      /* desktop padding */\n\n  --text: #111;\n  --muted:#666;\n  --bg:   #efefef;\n  --rule: #bdbdbd;\n  --shadow: 0 8px 24px rgba(0,0,0,.06);\n}\n\n/* Base */\n*{ box-sizing:border-box; }\nhtml,body{ height:100%; }\nbody{\n  margin:0;\n  font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,\"Apple Color Emoji\",\"Segoe UI Emoji\";\n  color:var(--text);\n  background:#fff;\n  -webkit-font-smoothing:antialiased;\n  -moz-osx-font-smoothing:grayscale;\n  overflow-x:hidden;\n  word-break:break-word;\n  overflow-wrap:anywhere;\n}\n\n/* ===== Split section ===== */\n.split{\n  padding: var(--pad-m) 16px;\n}\n@media (min-width:1024px){\n  .split{ padding-top: var(--pad-d); padding-bottom: var(--pad-d); }\n}\n\n.split__wrap{\n  width: min(var(--page-width), 100%);\n  margin: 0 auto;\n  background: var(--bg);\n  border-radius: var(--radius);\n  box-shadow: var(--shadow);\n  padding: 20px;\n}\n\n.split__grid{\n  display: grid;\n  grid-template-columns: 1fr;             /* mobile stack */\n  row-gap: 20px;\n  align-items: start;\n}\n@media (min-width:1024px){\n  .split__grid{\n    grid-template-columns: 1fr 2px 1fr;   /* left | divider | right */\n    column-gap: var(--gap);\n    row-gap: 0;\n  }\n}\n\n/* Divider: re-orient by breakpoint */\n.split__divider{\n  height: 2px;\n  width: 100%;\n  background: repeating-linear-gradient(\n    to right,\n    var(--rule) 0 2px,\n    transparent 2px 6px\n  );\n}\n@media (min-width:1024px){\n  .split__divider{\n    width: 2px;\n    height: 100%;\n    background: repeating-linear-gradient(\n      to bottom,\n      var(--rule) 0 2px,\n      transparent 2px 6px\n    );\n  }\n}\n\n/* Columns */\n.split__col{ }\n\n.split__title{\n  margin: 0 0 10px;\n  font-family: ui-serif, Georgia, \"Times New Roman\", serif;\n  line-height: 1.25;\n  font-weight: 600;\n  font-size: clamp(20px, 4.8vw, 24px);   /* mobile */\n}\n@media (min-width:1024px){\n  .split__title{ font-size: clamp(26px, 2.6vw, 32px); }\n}\n\n.split__list{\n  margin: 0;\n  padding-left: 1.1em;\n  color: var(--muted);\n  line-height: 1.7;\n  font-size: 15.5px;\n}\n.split__list li{ margin: .25em 0; }\n\n/* Round outer corners nicely on small screens */\n@media (max-width:1023.98px){\n  .split__wrap{ padding: 22px; }\n}\n</style>\n</head>\n<body>\n<section class=\"split\" aria-label=\"Benefits overview\">\n  <div class=\"split__wrap\">\n    <div class=\"split__grid\">\n      <!-- Left column -->\n      <section class=\"split__col\" aria-labelledby=\"title-left\">\n        <h2 id=\"title-left\" class=\"split__title\">Weight Management Support</h2>\n        <ul class=\"split__list\">\n          <li>Naturally curb cravings where they start</li>\n          <li>Stop carbs and fats from being absorbed right at the gut</li>\n          <li>Enhance calorie expenditure, supercharge metabolic efficiency</li>\n        </ul>\n      </section>\n\n      <!-- Divider (turns vertical on desktop, horizontal on mobile) -->\n      <div class=\"split__divider\" role=\"separator\" aria-hidden=\"true\"></div>\n\n      <!-- Right column -->\n      <section class=\"split__col\" aria-labelledby=\"title-right\">\n        <h2 id=\"title-right\" class=\"split__title\">Healthy Microbiome &amp; Digestion</h2>\n        <ul class=\"split__list\">\n          <li>Probiotics for a healthier gut</li>\n          <li>Fibers and prebiotics feed good bacteria, boosting growth</li>\n          <li>Strains survive stomach acid &amp; bile, thriving for max benefits</li>\n        </ul>\n      </section>\n    </div>\n  </div>\n</section>\n</body>\n</html>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
@@ -501,6 +511,7 @@
     "kpi_metrics_3aW3cC",
     "logo_marquee_ra9MhX",
     "five_star_reviews_gQCNgB",
-    "clinical_backed_feature_card_BiqqaT"
+    "clinical_backed_feature_card_BiqqaT",
+    "custom_liquid_RpaXgX"
   ]
 }
