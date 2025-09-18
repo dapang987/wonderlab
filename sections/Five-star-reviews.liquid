@@ -111,17 +111,24 @@
       margin: 0 0 8px;
       line-height: 0;
     }
-    .section-{{ section.id }} .reviews__star{
-      display: inline-flex;
-      width: 18px;
-      height: 18px;
-      color: var(--text);
-    }
-    .section-{{ section.id }} .reviews__star svg{
-      display: block;
-      width: 18px;
-      height: 18px;
-    }
+.section-{{ section.id }} .reviews__star{
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  line-height: 0;
+}
+.section-{{ section.id }} .reviews__star svg{
+  display: block;
+  width: 18px;
+  height: 18px;
+  /* 让填充色跟随 currentColor */
+  fill: currentColor;
+}
+/* 实心（按评分高亮） */
+.section-{{ section.id }} .reviews__star--filled{ color: #FFC107; }  /* 亮黄色 */
+/* 未填充（低于评分） */
+.section-{{ section.id }} .reviews__star--empty{ color: #E5E7EB; }   /* 浅灰 */
+
 
     .section-{{ section.id }} .reviews__card-title{
       margin: 0 0 10px;
