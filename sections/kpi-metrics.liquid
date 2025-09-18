@@ -220,6 +220,19 @@ font-size: clamp(var(--item-title-size-m), 2.8vw, var(--item-title-size-d));
       "label": "渐变角度（桌面端）",
       "default": 180
     },
+{ "type": "header", "content": "文字大小（可视化控制）" },
+
+{ "type": "range", "id": "title_size_m", "min": 16, "max": 64, "step": 1, "unit": "px", "label": "标题字号（手机）", "default": 28 },
+{ "type": "range", "id": "title_size_d", "min": 16, "max": 72, "step": 1, "unit": "px", "label": "标题字号（桌面）", "default": 42 },
+
+{ "type": "range", "id": "num_size_m", "min": 16, "max": 64, "step": 1, "unit": "px", "label": "数字字号（手机）", "default": 28 },
+{ "type": "range", "id": "num_size_d", "min": 16, "max": 72, "step": 1, "unit": "px", "label": "数字字号（桌面）", "default": 36 },
+
+{ "type": "range", "id": "item_title_size_m", "min": 12, "max": 32, "step": 1, "unit": "px", "label": "小标题字号（手机）", "default": 14 },
+{ "type": "range", "id": "item_title_size_d", "min": 12, "max": 36, "step": 1, "unit": "px", "label": "小标题字号（桌面）", "default": 16 },
+
+{ "type": "range", "id": "desc_size_m", "min": 12, "max": 24, "step": 0.5, "unit": "px", "label": "描述字号（手机）", "default": 13.5 },
+{ "type": "range", "id": "desc_size_d", "min": 12, "max": 28, "step": 0.5, "unit": "px", "label": "描述字号（桌面）", "default": 14 },
 
     { "type": "range", "id": "gap", "min": 12, "max": 60, "step": 2, "unit": "px", "label": "列间距", "default": 36 },
     { "type": "range", "id": "pad_top", "min": 0, "max": 140, "step": 4, "unit": "px", "label": "上内边距", "default": 64 },
