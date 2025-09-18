@@ -172,70 +172,34 @@
       ],
       "name": "Feature split card",
       "settings": {
+        "title": "Tired of diets? Let science do the work.",
+        "lead": "<p>Science-backed ingredients deliver real results on efficacy of weight management.</p>",
         "image": "shopify://shop_images/Rectangle_44.png",
         "image_mobile": "shopify://shop_images/Rectangle_43.png",
-        "img_alt": "Hand holding a small blue bottle",
-        "aspect_desktop": "3-4",
-        "aspect_mobile": "3-4",
-        "title_line1": "Tired of diets?",
-        "title_line2": "Let science do the work.",
-        "lead": "Science-backed ingredients deliver real results on efficacy of weight management.",
+        "image_alt": "Lifestyle product photo",
+        "fetch_high": false,
+        "reverse_on_desktop": false,
+        "equal_height": true,
+        "card_h_m": 380,
+        "card_h_d": 560,
+        "pad_card_m": 22,
+        "pad_card_d": 28,
+        "gap": 28,
+        "stat_gap": 22,
+        "radius": 16,
         "card_bg": "#efefef",
         "text_color": "#0b1f33",
         "muted_color": "#516170",
         "number_color": "#0b1f33",
         "rule_color": "#d9e1ec",
-        "radius": 16,
-        "gap": 28,
-        "pad_d": 48,
-        "pad_m": 22,
-        "shadow": "medium"
-      }
-    },
-    "stats_feature_split_abTmBf": {
-      "type": "stats-feature-split",
-      "blocks": {
-        "stat_9C8jpd": {
-          "type": "stat",
-          "settings": {
-            "number": "28+",
-            "label": "Years of Probiotic Expertise"
-          }
-        },
-        "stat_RTEDHA": {
-          "type": "stat",
-          "settings": {
-            "number": "100,000+",
-            "label": "Strain Library"
-          }
-        },
-        "stat_9YtqVG": {
-          "type": "stat",
-          "settings": {
-            "number": "1,412+",
-            "label": "Scientific Studies"
-          }
-        }
-      },
-      "block_order": [
-        "stat_9C8jpd",
-        "stat_RTEDHA",
-        "stat_9YtqVG"
-      ],
-      "name": "Stats feature split (scoped)",
-      "settings": {
-        "heading_line1": "Tired of diets?",
-        "heading_line2": "Let science do the work.",
-        "subheading": "Science-backed ingredients that deliver real results",
-        "image_alt": "",
-        "layout": "text-left",
-        "card_bg": "#efefef",
-        "card_min_height_mobile": 320,
-        "card_min_height_desktop": 520,
-        "full_width": false,
-        "color_scheme": "",
-        "padding_top": 56,
-        "padding_bottom": 56
+        "h1_m": 24,
+        "h1_d": 36,
+        "lead_m": 13,
+        "lead_d": 16,
+        "kpi_num_m": 28,
+        "kpi_num_d": 40,
+        "kpi_label_m": 11,
+        "kpi_label_d": 13
       }
     },
     "comparison_matrix_cifVii": {
@@ -300,6 +264,30 @@
             "c_mark": "ring",
             "c_text": "123"
           }
+        },
+        "row_iaRaCf": {
+          "type": "row",
+          "settings": {
+            "feature": "Patented weight management strains",
+            "a_mark": "dot",
+            "a_text": "3123",
+            "b_mark": "ring",
+            "b_text": "123",
+            "c_mark": "ring",
+            "c_text": "123123"
+          }
+        },
+        "row_TXkMt6": {
+          "type": "row",
+          "settings": {
+            "feature": "Patented weight management strains",
+            "a_mark": "dot",
+            "a_text": "3123",
+            "b_mark": "ring",
+            "b_text": "123",
+            "c_mark": "ring",
+            "c_text": "123123"
+          }
         }
       },
       "block_order": [
@@ -307,7 +295,9 @@
         "row_JDeRTj",
         "row_6hnUEm",
         "row_7pbQJt",
-        "row_x9ypkA"
+        "row_x9ypkA",
+        "row_iaRaCf",
+        "row_TXkMt6"
       ],
       "name": "Comparison matrix",
       "settings": {
@@ -554,7 +544,6 @@
     "related-products",
     "why_easy_shape_probiotic_JVnPMT",
     "feature_split_card_LDP3bW",
-    "stats_feature_split_abTmBf",
     "comparison_matrix_cifVii",
     "week_by_week_emwRXH",
     "science_backed_ingredients_La4x6X",
