@@ -196,6 +196,47 @@
     position:absolute !important; width:1px;height:1px; padding:0;margin:-1px;overflow:hidden;
     clip:rect(0,0,0,0);white-space:nowrap;border:0;
   }
+
+
+  /* === Menu heading & levels (new) === */
+#footer-{{ section.id }} .menu__heading{
+  margin: 0 0 10px;
+  font-size: var(--heading-size);
+  color: var(--heading-color, var(--text));
+  font-weight: 700;
+  line-height: 1.3;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--rule);
+}
+#footer-{{ section.id }} .menu__heading a{
+  color: inherit; text-decoration: none;
+}
+#footer-{{ section.id }} .menu__heading a:hover{
+  text-decoration: underline;
+}
+
+/* 顶级项（当不启用“用第一个顶级项当标题”时）更醒目 */
+#footer-{{ section.id }} .lvl1 > li > a{
+  font-weight: 600;
+  font-size: calc(var(--link-size) + 1px);
+}
+
+/* 子级通用样式（你原来已有，这里补充更明显的层级差） */
+#footer-{{ section.id }} .sub{
+  margin-top: 6px;
+  padding-left: 16px;
+  border-left: 1px dashed var(--rule);
+}
+#footer-{{ section.id }} .sub a{
+  font-size: var(--sublink-size);
+  opacity: .9;
+}
+#footer-{{ section.id }} .sub.sub--lvl3{
+  margin-top: 4px;
+  padding-left: 14px;
+  border-left-style: dotted;
+}
+
   {%- endstyle -%}
 
   {%- liquid
