@@ -556,7 +556,7 @@
       ],
       "name": "Logo Marquee（无缝连续）",
       "settings": {
-        "strip_bg": "#f3f3f3",
+        "strip_bg": "#ffffff",
         "speed": 60,
         "gap": 80,
         "logo_h_mobile": 48,
