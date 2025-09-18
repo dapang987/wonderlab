@@ -575,7 +575,7 @@
           "type": "review",
           "settings": {
             "rating": 5,
-            "title": "Works better than expected!",
+            "title": "",
             "quote": "I was skeptical, but after a month, I've lost 6 lbs without major diet changes. Will keep using it! My stomach is flatter, and I have more energy throughout the day."
           }
         },
@@ -583,7 +583,7 @@
           "type": "review",
           "settings": {
             "rating": 5,
-            "title": "Love it so far",
+            "title": "",
             "quote": "Shipping was fast and the product quality is great. I've noticed steady progress without side effects."
           }
         },
@@ -591,7 +591,7 @@
           "type": "review",
           "settings": {
             "rating": 5,
-            "title": "Game changer",
+            "title": "",
             "quote": "Energy levels are up and cravings are down. Exactly what I needed to stay consistent."
           }
         },
@@ -599,7 +599,7 @@
           "type": "review",
           "settings": {
             "rating": 5,
-            "title": "Highly recommend",
+            "title": "",
             "quote": "Customer service is responsive, and the product does what it promises. Very satisfied!"
           }
         }
