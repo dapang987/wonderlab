@@ -112,7 +112,7 @@
         "mb_d": 0,
         "ml_d": 0,
         "mr_d": 0,
-        "mt_m": 0,
+        "mt_m": 10,
         "mb_m": 0,
         "ml_m": 10,
         "mr_m": 12,
@@ -138,6 +138,16 @@
         "scrim_m": 65,
         "focal_d": "right center",
         "focal_m": "center 60%"
+      }
+    },
+    "custom_liquid_eAr8QV": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
       }
     },
     "feature_split_card_LDP3bW": {
@@ -517,6 +527,7 @@
     "main",
     "related-products",
     "why_easy_shape_probiotic_JVnPMT",
+    "custom_liquid_eAr8QV",
     "feature_split_card_LDP3bW",
     "stats_feature_split_abTmBf",
     "comparison_matrix_cifVii",
