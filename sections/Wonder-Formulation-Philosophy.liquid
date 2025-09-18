@@ -304,6 +304,12 @@
 #philosophy-{{ section.id }} .card.is-open .card__details-inner{
   padding-top: 0;
 }
+@media (max-width: 768px){
+  /* 展开任意卡片时，临时切成单列，避免多列重排把最后一张挤到另一列 */
+  #philosophy-{{ section.id }}.masonry-locked .ph-grid{
+    column-count: 1;
+  }
+}
 
 
   </style>
