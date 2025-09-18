@@ -17,7 +17,16 @@
       color: var(--text);
       /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
       padding: var(--pad-top) 0 var(--pad-bottom);
+        /* === Section 背景渐变（可开关） === */
+  --bg-angle: {{ section.settings.bg_angle }}deg;
+  --bg-c1: {{ section.settings.bg_c1 }};
+  --bg-c2: {{ section.settings.bg_c2 }};
+  --bg-gradient: {% if section.settings.bg_grad_enable %}linear-gradient(var(--bg-angle), var(--bg-c1), var(--bg-c2)){% else %}transparent{% endif %};
+
     }
+
+
+    
 .section-{{ section.id }}{
   --text: {{ section.settings.text_color }};
   --muted: {{ section.settings.muted_color }};
