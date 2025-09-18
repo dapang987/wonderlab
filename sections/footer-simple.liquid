@@ -72,6 +72,12 @@
   .rule-wrap{ padding-block: 10px 22px; }
 
   .footer__grid{ display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 3vw, 28px); }
+
+  #footer-{{ section.id }} .footer__grid > .col.subscribebox{
+    grid-column: 1 / -1;              /* 跨两列 = 占满一整行 */
+  }
+
+
   .col{ padding-block: 12px; position: relative; }
 
   .col h3{
