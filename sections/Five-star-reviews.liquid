@@ -177,13 +177,17 @@
         {%- if block.type == 'review' -%}
           <article class="reviews__card" role="article" tabindex="0" aria-label="{{ block.settings.title | escape }}" {{ block.shopify_attributes }}>
             <div class="reviews__rating" aria-label="Rated {{ block.settings.rating }} out of 5">
-              {%- for i in (1..5) -%}
-                <span class="reviews__star" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3.6l2.62 5.31 5.86.85-4.24 4.13 1 5.83L12 17.8l-5.24 2.72 1-5.83L3.5 9.76l5.86-.85L12 3.6z"/>
-                  </svg>
-                </span>
-              {%- endfor -%}
+          {%- liquid
+  assign r = block.settings.rating | default: 5 | at_least: 0 | at_most: 5
+-%}
+{%- for i in (1..5) -%}
+  <span class="reviews__star {% if i <= r %}reviews__star--filled{% else %}reviews__star--empty{% endif %}" aria-hidden="true">
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+      <path d="M12 3.6l2.62 5.31 5.86.85-4.24 4.13 1 5.83L12 17.8l-5.24 2.72 1-5.83L3.5 9.76l5.86-.85L12 3.6z"/>
+    </svg>
+  </span>
+{%- endfor -%}
+
             </div>
             <h3 class="reviews__card-title">{{ block.settings.title | escape }}</h3>
             <p class="reviews__quote">“{{ block.settings.quote | escape }}”</p>
