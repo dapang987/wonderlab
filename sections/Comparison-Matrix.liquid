@@ -5,29 +5,37 @@
 
 {%- style -%}
   .section-{{ section.id }}{
-    /* ===== 可配置的颜色变量 ===== */
+    /* 颜色变量 */
     --cm-text: {{ section.settings.cl_text | default: '#111111' }};
     --cm-muted: {{ section.settings.cl_muted | default: '#666666' }};
     --cm-rule: {{ section.settings.cl_rule | default: '#d9d9d9' }};
 
-    /* 标记（点 / 圆）颜色 */
+    /* 标记颜色 */
     --cm-dot: {{ section.settings.cl_mark_dot | default: '#111111' }};
     --cm-ring-border: {{ section.settings.cl_mark_ring_border | default: '#999999' }};
     --cm-ring-fill: {{ section.settings.cl_mark_ring_fill | default: 'transparent' }};
 
-    /* ===== 可配置的字号变量（px） ===== */
-    --cm-heading-size: {{ section.settings.heading_size | default: 28 }}px;
-    --cm-subtitle-size: {{ section.settings.subtitle_size | default: 14 }}px;
-    --cm-header-size: {{ section.settings.header_size | default: 13 }}px;     /* 表头每列标题 */
-    --cm-feature-size: {{ section.settings.feature_size | default: 14 }}px;   /* 左侧特性一列 */
-    --cm-cell-size: {{ section.settings.cell_size | default: 14 }}px;         /* 其它单元格 */
+    /* —— 手机端字号（默认） —— */
+    --cm-heading-size: {{ section.settings.heading_size_m | default: 24 }}px;
+    --cm-subtitle-size: {{ section.settings.subtitle_size_m | default: 13 }}px;
+    --cm-header-size: {{ section.settings.header_size_m | default: 12 }}px;
+    --cm-feature-size: {{ section.settings.feature_size_m | default: 13 }}px;
+    --cm-cell-size: {{ section.settings.cell_size_m | default: 13 }}px;
 
     color: var(--cm-text);
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
+
   @media (min-width: 750px){
     .section-{{ section.id }}{
+      /* —— 桌面端覆盖字号 —— */
+      --cm-heading-size: {{ section.settings.heading_size_d | default: 28 }}px;
+      --cm-subtitle-size: {{ section.settings.subtitle_size_d | default: 14 }}px;
+      --cm-header-size: {{ section.settings.header_size_d | default: 13 }}px;
+      --cm-feature-size: {{ section.settings.feature_size_d | default: 14 }}px;
+      --cm-cell-size: {{ section.settings.cell_size_d | default: 14 }}px;
+
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
@@ -52,22 +60,22 @@
     font-size: var(--cm-subtitle-size);
   }
 
-  /* 取消横向滚动容器的滚动行为（保留节点以便后续扩展） */
+  /* 不滚动容器 */
   .section-{{ section.id }} .cm-scroller{ overflow-x:hidden; }
 
-  /* 表格样式（作用域化，避免冲突） */
+  /* 表格样式 */
   .section-{{ section.id }} .cm-table{
     width:100%;
     border-collapse: collapse;
-    table-layout: fixed;          /* 固定布局以避免超宽 */
-    word-break: break-word;       /* 特性列可换行 */
+    table-layout: fixed;
+    word-break: break-word;
   }
   .section-{{ section.id }} .cm-table caption{
     position:absolute; width:1px; height:1px; overflow:hidden;
     clip:rect(0 0 0 0); clip-path: inset(50%); white-space:nowrap; padding:0; margin:-1px; border:0;
   }
 
-  /* 百分比列宽：左 46%，后三列平均分配 */
+  /* 百分比列宽：左 46%，后三列平均 */
   .section-{{ section.id }} .cm-table colgroup col:first-child{ width: 46%; }
   .section-{{ section.id }} .cm-table colgroup col:not(:first-child){ width: calc((54%)/3); }
 
@@ -92,7 +100,7 @@
     font-size: var(--cm-header-size);
   }
 
-  /* 标记（更小屏进一步缩小） */
+  /* 标记 */
   .section-{{ section.id }} .cm-mark{ display:inline-grid; place-items:center; min-height:18px; }
   .section-{{ section.id }} .cm-dot{
     width:9px; height:9px; border-radius:50%; background: var(--cm-dot); display:inline-block;
@@ -101,14 +109,11 @@
     width:11px; height:11px; border-radius:50%;
     border: 1.6px solid var(--cm-ring-border); background: transparent; display:inline-block;
   }
-  /* 新增：可填充的空心圆（带边框 + 填充颜色） */
-  .section-{{ section.id }} .cm-ring.cm-ring--fill{
-    background: var(--cm-ring-fill);
-  }
+  .section-{{ section.id }} .cm-ring.cm-ring--fill{ background: var(--cm-ring-fill); }
 
   .section-{{ section.id }} .cm-rare{ font-style: italic; color: var(--cm-muted); font-size: 12px; white-space: nowrap; }
 
-  /* 更窄屏的压缩策略（≤ 420px） */
+  /* ≤420px 更紧凑 */
   @media (max-width: 420px){
     .section-{{ section.id }} .cm-th, .section-{{ section.id }} .cm-td{ padding: 8px 8px; }
     .section-{{ section.id }} .cm-table colgroup col:first-child{ width: 50%; }
@@ -118,7 +123,7 @@
     .section-{{ section.id }} .cm-ring{ width:10px; height:10px; border-width:1.4px; }
   }
 
-  /* 1) 基线：把组件正文回到常规权重（避免主题全局样式影响） */
+  /* 避免主题全局粗体影响左侧“特性”一列 */
   .cm-td.cm-feature,
   .cm-td .cm-feature {
     font-weight: 400;
@@ -210,12 +215,7 @@
   "name": "comparison-matrix",
   "settings": [
     { "type": "text", "id": "heading", "label": "标题", "default": "Revolutionary Probiotics Delivery for Better Results" },
-    {
-      "type": "richtext",
-      "id": "subheading",
-      "label": "副标题",
-      "default": "<p>EasyShape is formulated with 300+ clinical study strains specifically designed for weight management and digestion, not commonly found in other probiotics or foods.</p>"
-    },
+    { "type": "richtext", "id": "subheading", "label": "副标题", "default": "<p>EasyShape is formulated with 300+ clinical study strains specifically designed for weight management and digestion, not commonly found in other probiotics or foods.</p>" },
     { "type": "text", "id": "col_a_label", "label": "列 A 标题", "default": "EasyShape Probiotics" },
     { "type": "text", "id": "col_b_label", "label": "列 B 标题", "default": "OTC Probiotics" },
     { "type": "text", "id": "col_c_label", "label": "列 C 标题", "default": "Consumer Diet" },
@@ -223,7 +223,7 @@
     { "type": "checkbox", "id": "full_width", "label": "全宽（不使用 page-width 容器）", "default": false },
     { "type": "color_scheme", "id": "color_scheme", "label": "配色方案", "default": "background-1" },
 
-    /* 颜色控制 */
+    { "type": "header", "content": "颜色" },
     { "type": "color", "id": "cl_text", "label": "文本颜色（主）", "default": "#111111" },
     { "type": "color", "id": "cl_muted", "label": "文本颜色（次要/说明）", "default": "#666666" },
     { "type": "color", "id": "cl_rule", "label": "分隔线颜色", "default": "#D9D9D9" },
@@ -233,14 +233,21 @@
     { "type": "color", "id": "cl_mark_ring_border", "label": "○ 空心圆边框色", "default": "#999999" },
     { "type": "color", "id": "cl_mark_ring_fill", "label": "○ 空心圆填充色（用于“可填充空心圆”）", "default": "#111111" },
 
-    /* 字号控制（px） */
-    { "type": "header", "content": "字号（px）" },
-    { "type": "range", "id": "heading_size", "min": 16, "max": 48, "step": 1, "unit": "px", "label": "标题字号", "default": 28 },
-    { "type": "range", "id": "subtitle_size", "min": 10, "max": 24, "step": 1, "unit": "px", "label": "副标题字号", "default": 14 },
-    { "type": "range", "id": "header_size", "min": 10, "max": 22, "step": 1, "unit": "px", "label": "表头列名字号", "default": 13 },
-    { "type": "range", "id": "feature_size", "min": 10, "max": 22, "step": 1, "unit": "px", "label": "左侧特性字号", "default": 14 },
-    { "type": "range", "id": "cell_size", "min": 10, "max": 22, "step": 1, "unit": "px", "label": "单元格字号", "default": 14 },
+    { "type": "header", "content": "字号（手机端）" },
+    { "type": "range", "id": "heading_size_m", "min": 14, "max": 48, "step": 1, "unit": "px", "label": "标题字号（M）", "default": 24 },
+    { "type": "range", "id": "subtitle_size_m", "min": 10, "max": 24, "step": 1, "unit": "px", "label": "副标题字号（M）", "default": 13 },
+    { "type": "range", "id": "header_size_m", "min": 10, "max": 22, "step": 1, "unit": "px", "label": "表头列名字号（M）", "default": 12 },
+    { "type": "range", "id": "feature_size_m", "min": 10, "max": 22, "step": 1, "unit": "px", "label": "左侧特性字号（M）", "default": 13 },
+    { "type": "range", "id": "cell_size_m", "min": 10, "max": 22, "step": 1, "unit": "px", "label": "单元格字号（M）", "default": 13 },
 
+    { "type": "header", "content": "字号（桌面端）" },
+    { "type": "range", "id": "heading_size_d", "min": 16, "max": 56, "step": 1, "unit": "px", "label": "标题字号（D）", "default": 28 },
+    { "type": "range", "id": "subtitle_size_d", "min": 10, "max": 28, "step": 1, "unit": "px", "label": "副标题字号（D）", "default": 14 },
+    { "type": "range", "id": "header_size_d", "min": 10, "max": 24, "step": 1, "unit": "px", "label": "表头列名字号（D）", "default": 13 },
+    { "type": "range", "id": "feature_size_d", "min": 10, "max": 24, "step": 1, "unit": "px", "label": "左侧特性字号（D）", "default": 14 },
+    { "type": "range", "id": "cell_size_d", "min": 10, "max": 24, "step": 1, "unit": "px", "label": "单元格字号（D）", "default": 14 },
+
+    { "type": "header", "content": "上下内边距" },
     { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "上内边距", "default": 56 },
     { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "下内边距", "default": 56 }
   ],
