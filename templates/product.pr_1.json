@@ -308,6 +308,17 @@
         "col_c_label": "Consumer Diet",
         "full_width": false,
         "color_scheme": "",
+        "cl_text": "#111111",
+        "cl_muted": "#666666",
+        "cl_rule": "#d9d9d9",
+        "cl_mark_dot": "#17b7e4",
+        "cl_mark_ring_border": "#17b7e4",
+        "cl_mark_ring_fill": "#111111",
+        "heading_size": 28,
+        "subtitle_size": 14,
+        "header_size": 13,
+        "feature_size": 14,
+        "cell_size": 14,
         "padding_top": 56,
         "padding_bottom": 56
       }
