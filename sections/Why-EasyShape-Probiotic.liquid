@@ -86,6 +86,45 @@
       /* 手机端文字左右铺满并靠底，符合参考图 */
       #hero-{{ section.id }} .content{ width: 100%; max-width: none; }
     }
+    /* ====== 调试：画线看谁在占空间 ====== */
+#hero-{{ section.id }} .box{ outline: 1px dashed #e11; }
+#hero-{{ section.id }} .page-width{ outline: 1px dashed #17e; }
+
+/* ====== 1) 去掉 .page-width 的左右内边距（容易被误以为是外边距） ====== */
+#shopify-section-{{ section.id }} .page-width{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* ====== 2) 去掉本节上下的“模板间距” ====== */
+/* Dawn 某些布局类会给 section 加上下 padding，这里就地清零 */
+#shopify-section-{{ section.id }}{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* ====== 3) 清除常见元素的默认 margin ====== */
+#hero-{{ section.id }} figure,
+#hero-{{ section.id }} h1,
+#hero-{{ section.id }} h2,
+#hero-{{ section.id }} p{
+  margin: 0 !important;
+}
+
+/* ====== 4) 确保 .box 本身没有外边距，并水平居中 ====== */
+#hero-{{ section.id }} .box{
+  margin: 0 auto !important;                 /* 居中且无额外外边距 */
+  width: min(100%, var(--page-width));       /* 宽度受 --page-width 限制 */
+}
+
+/* ====== 5) 如果你之前给 #hero-… 设过“安全边距”，先关掉 ====== */
+#hero-{{ section.id }}{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
   </style>
 
   <div class="box">
