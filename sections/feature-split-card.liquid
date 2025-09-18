@@ -151,15 +151,13 @@
     /* Fade-in */
     #feature-{{ section.id }} .reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease; }
     #feature-{{ section.id }} .reveal.is-in{ opacity:1; transform:none; }
-    
-  {%- endstyle -%}
-  {%- style -%}
-  /* 只在这个 section 里把 .section 的左右边距清零，避免与 .page-width 叠加 */
-  #feature-{{ section.id }}{
+     #feature-{{ section.id }}{
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
-{%- endstyle -%}
+  {%- endstyle -%}
+
+
 
 
   <div class="page-width feature__grid">
