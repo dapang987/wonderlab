@@ -140,16 +140,6 @@
         "focal_m": "center 60%"
       }
     },
-    "custom_liquid_eAr8QV": {
-      "type": "custom-liquid",
-      "name": "t:sections.custom-liquid.presets.name",
-      "settings": {
-        "custom_liquid": "",
-        "color_scheme": "",
-        "padding_top": 40,
-        "padding_bottom": 52
-      }
-    },
     "feature_split_card_LDP3bW": {
       "type": "feature-split-card",
       "name": "Feature split card",
@@ -527,7 +517,6 @@
     "main",
     "related-products",
     "why_easy_shape_probiotic_JVnPMT",
-    "custom_liquid_eAr8QV",
     "feature_split_card_LDP3bW",
     "stats_feature_split_abTmBf",
     "comparison_matrix_cifVii",
