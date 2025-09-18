@@ -313,6 +313,40 @@
 #philosophy-{{ section.id }} .card.is-open .card__title{ font-family: var(--ff-title); }  /* 改成你想要的字体 */
 #philosophy-{{ section.id }} .card.is-open .card__desc{  font-family: var(--ff-body);  }
 
+/* 1) 彻底关掉旧的边框箭头样式对 <img> 的影响 */
+#philosophy-{{ section.id }} img.card__chev{
+  width: 20px;              /* 或 24/28，按需 */
+  height: 20px;
+  flex: 0 0 auto;
+  display: inline-block !important;
+  object-fit: contain;
+  margin-left: 8px;
+  border: 0 !important;
+  background: transparent !important;
+  transform: none !important;     /* 关键：关闭 -45° 旋转 */
+  vertical-align: middle;
+}
+
+/* 2) 摆放更稳，避免被标题换行“挤没了” */
+#philosophy-{{ section.id }} .card__summary{
+  justify-content: space-between;  /* 原来是 space-around */
+}
+#philosophy-{{ section.id }} .card__title{
+  flex: 1 1 auto;                  /* 让标题占满剩余空间 */
+  min-width: 0;                    /* 防止溢出 */
+}
+
+/* 3) 手机端强制可见（若被别处覆盖） */
+@media (max-width: 768px){
+  #philosophy-{{ section.id }} img.card__chev{
+    display: inline-block !important;
+  }
+}
+
+/* 4) 展开后按你的需求隐藏（若需要隐藏时保留占位，用 visibility:hidden） */
+#philosophy-{{ section.id }} .card.card--with-desc.is-open img.card__chev{
+  display: none !important;
+}
 
   </style>
 
