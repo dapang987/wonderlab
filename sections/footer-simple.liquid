@@ -1,250 +1,387 @@
-{% comment %} Simple Footer (Dynamic Menus, 2 cols on all breakpoints) {% endcomment %}
+{% comment %}
+  Section: Footer — WONDERBIOTICS
+  Notes:
+  - Strongly scoped by section.id to avoid style collision
+  - Uses link list blocks for flexible columns
+  - Includes a native Shopify newsletter form
+{% endcomment %}
 
-{{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
-
-{%- style -%}
-/* Footer Simple — clean */
-
-/* Layout */
-.footer-simple{ padding:36px 0; }
-.footer-simple__top{ display:grid; gap:32px; align-items:stretch; }   /* 等高 */
-@media (min-width:990px){ .footer-simple__top{ grid-template-columns:1fr 1fr; } }
-
-/* Newsletter */
-.newsletter-card{
-  background:#fff; border:1px solid #e5e5e5; border-radius:8px; padding:24px;
-}
-.newsletter-title{ font-weight:600; line-height:1.3; margin:0 0 12px; }
-.newsletter-desc{ color:#555; line-height:1.5; margin:0 0 20px; }
-.newsletter-form label{ display:block; font-size:14px; margin:0 0 6px; color:#222; }
-.newsletter-input{
-  width:100%; padding:12px; margin:0 0 16px; border:1px solid #ccc; border-radius:6px; font-size:14px; box-sizing:border-box;
-}
-.newsletter-input:focus{ outline:none; border-color:#111; }
-.btn-submit{
-  width:100%; background:#111; color:#fff; border:0; border-radius:6px; padding:14px; font-size:16px; cursor:pointer; transition:background .2s;
-}
-.btn-submit:hover{ background:#333; }
-.newsletter-message{ font-size:13px; margin-top:10px; }
-.newsletter-message.error{ color:#d00; }
-.newsletter-message.success{ color:#090; }
-
-/* Right menus: always 2 columns */
-.footer-simple__cols{
-  display:grid; gap:24px;
-  grid-template-columns:repeat(2, minmax(0,1fr));         /* 移动 & 桌面均 2 列 */
-  padding:0 40px; 
-  background:#fff;  
-  border-radius:8px;
-  box-sizing:border-box; 
-  align-content:start;     
-
-}
-.footer-simple__cols > .footer-block{ min-width:0; }
-
-.footer-parent-link{ display:block; text-decoration:none; }
-.footer-parent-text{
-  display:block; margin:0 0 12px; line-height:1.3; font-weight:600;
-  color:rgb(var(--color-foreground)); text-align:left; word-wrap:break-word;
-}
-
-.footer-simple__cols ul,
-.footer-simple__cols .list-unstyled{ margin:0; padding:0; list-style:none; }
-
-.footer-submenu{ display:grid; gap:8px; margin:6px 0 0; }
-.footer-submenu__link{ opacity:.9; }
-
-/* Bottom */
-.footer-simple__bottom{ border-top:1px solid rgba(0,0,0,.08); margin-top:32px; padding-top:20px; }
-.footer-simple__bottom-inner{ display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-
-.footer-block--newsletter,
-.footer-simple__cols{ align-self:stretch; height:100%; }
-
-/* Mobile: 卡片内描述隐藏；底部描述显示 */
-@media (max-width:767px){
-  .newsletter-card .newsletter-desc{ display:none; }
-  .footer-legal-mobile{ display:block; }
-  .footer-legal-mobile .newsletter-desc--mobile{
-    font-size:12px; line-height:1.6; color:#6b6b6b;
-    border-top:1px dashed rgba(0,0,0,.25); padding-top:16px; margin-top:16px;
-
-  }
-}
-/* Desktop: 底部描述隐藏，仅显示卡片内描述 */
-@media (min-width:768px){ 
-.footer-legal-mobile{ display:none; } }
-/* 桌面端：右侧两行等高；底行内容贴底 */
-@media (min-width: 990px){
-  .footer-simple__cols{
-    grid-template-rows: 1fr 1fr;      /* 两行等高 */
-    align-content: stretch;
+<section id="footer-{{ section.id }}" role="contentinfo">
+  {%- style -%}
+  /* ===== Scope root (variables) ===== */
+  #footer-{{ section.id }}{
+    --brand: {{ section.settings.brand | default: '#0B19FF' }};
+    --text: {{ section.settings.text | default: '#ffffff' }};
+    --muted: {{ section.settings.muted | default: '#cfd8ff' }};
+    --rule: {{ section.settings.rule | default: 'rgba(255,255,255,.35)' }};
+    --gap: {{ section.settings.gap | default: 24 }}px;
+    --radius: {{ section.settings.radius | default: 8 }}px;
+    --gutter: {{ section.settings.gutter | default: 16 }}px;
   }
 
-  /* 让所有菜单块成为列方向的弹性容器（顶对齐为默认） */
-  .footer-simple__cols > .footer-block{
+  /* ===== Base reset (scoped) ===== */
+  #footer-{{ section.id }} *{ box-sizing: border-box; }
+  #footer-{{ section.id }}{
+    background: var(--brand);
+    color: var(--text);
+  }
+  #footer-{{ section.id }} a{ color: var(--text); text-decoration: none; }
+  #footer-{{ section.id }} a:hover{ text-decoration: underline; }
+  #footer-{{ section.id }} a:focus-visible,
+  #footer-{{ section.id }} button:focus-visible,
+  #footer-{{ section.id }} input:focus-visible{
+    outline: 2px solid rgba(255,255,255,.9);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  #footer-{{ section.id }} .footer__inner{
+    max-width: var(--page-width, 1100px);
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Brand row */
+  #footer-{{ section.id }} .footer__brand{
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding-block: 60px;
+    text-align: center;
+  }
+  #footer-{{ section.id }} .logo-text{
+    letter-spacing: .5px;
+    font-weight: 600;
+    font-size: clamp(18px, 2.2vw, 22px);
+    line-height: 1.2;
+  }
+  #footer-{{ section.id }} .logo-mark{
+    width: 28px; height: 28px; flex: 0 0 28px;
   }
 
-  /* 选中“最后两块”（即底行的 Information / Account），把内容推到底部 */
-  .footer-simple__cols > .footer-block:nth-last-child(-n+2){
-    justify-content: flex-end;        /* 整块内容贴底 */
+  /* Dashed rule aligned to container */
+  #footer-{{ section.id }} .rule{
+    border: 0; margin: 0;
+    border-top: 1px dashed var(--rule);
+    height: 0;
   }
-}
-/* Desktop: 右侧两列整体在容器里垂直居中 */
-@media (min-width: 990px){
-  .footer-simple__cols{
-    /* 行按内容高度，不要 1fr 1fr 撑满 */
-    grid-template-rows: auto auto;
-    /* 把两行在容器高度中居中 */
-    align-content: center;
-  }
+  #footer-{{ section.id }} .rule-wrap{ padding-block: 10px 22px; }
 
-  /* 如果之前加过“底行贴底”的规则，复位 */
-  .footer-simple__cols > .footer-block:nth-last-child(-n+2){
-    justify-content: initial;
+  /* Grid (columns) — mobile first */
+  #footer-{{ section.id }} .footer__grid{
+    display: grid;
+    grid-template-columns: 1fr;           /* <768px: 1列 */
+    gap: clamp(16px, 3vw, 28px);
   }
 
-  /* 如果之前把 .footer-block 设成 flex，这里还原为普通块 */
-  .footer-simple__cols > .footer-block{
-    display: block;
+  #footer-{{ section.id }} .col h3{
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--rule);
   }
-}
+  #footer-{{ section.id }} .col ul{ list-style: none; margin: 0; padding: 0; }
+  #footer-{{ section.id }} .col li + li{ margin-top: 8px; }
+  #footer-{{ section.id }} .col a{ opacity: .9; }
+  #footer-{{ section.id }} .col a:hover{ opacity: 1; }
 
-{%- endstyle -%}
+  /* Column spacing */
+  #footer-{{ section.id }} .col{
+    padding-block: 12px;
+    position: relative;
+  }
 
-<footer class="footer footer-simple color-{{ section.settings.color_scheme }} gradient">
-  <div class="page-width footer-simple__top">
+  /* Subscribe column (form) */
+  #footer-{{ section.id }} .subscribebox form{
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  #footer-{{ section.id }} .input,
+  #footer-{{ section.id }} .button{
+    height: 40px;
+    width: 100%;
+    padding: 0 14px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,.6);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+  }
+  #footer-{{ section.id }} .input::placeholder{ color: rgba(255,255,255,.7); }
+  #footer-{{ section.id }} .button{
+    cursor: pointer;
+    background: #fff;
+    color: #0B19FF;
+    border-color: #fff;
+    font-weight: 600;
+  }
+  #footer-{{ section.id }} .button:hover{ filter: brightness(.98); }
+  #footer-{{ section.id }} .button:disabled{ opacity:.6; cursor:not-allowed; }
 
-    {%- comment -%} LEFT: Newsletter {%- endcomment -%}
-    <section class="footer-block footer-block--newsletter" aria-labelledby="FooterNewsletterHeading">
-      {%- if section.settings.newsletter_enable -%}
-        <div class="newsletter-card">
-          <h2 id="FooterNewsletterHeading" class="newsletter-title">{{ section.settings.newsletter_heading }}</h2>
-          {%- if section.settings.newsletter_desc != blank -%}
-            <div class="newsletter-desc">{{ section.settings.newsletter_desc }}</div>
-          {%- endif -%}
+  /* Social row */
+  #footer-{{ section.id }} .social{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-block: 60px 18px;
+  }
+  #footer-{{ section.id }} .social a{
+    display: inline-flex;
+    width: 20px; height: 20px;
+    opacity: .9;
+    transform: translateZ(0);
+  }
+  #footer-{{ section.id }} .social a:hover{ opacity: 1; transform: scale(1.05); }
 
-          {%- form 'customer', id: 'FooterNewsletterForm', class: 'newsletter-form' -%}
-            <input type="hidden" name="contact[tags]" value="newsletter">
-            <label for="FooterNewsletterEmail">Your email</label>
-            <input type="email" id="FooterNewsletterEmail" name="contact[email]" class="newsletter-input" value="{{ form.email }}" required placeholder="Value">
-            <label for="FooterNewsletterPhone">Your mobile # (optional - save 15%)</label>
-            <input type="tel" id="FooterNewsletterPhone" name="contact[phone]" class="newsletter-input" placeholder="Value">
-            <button type="submit" class="btn-submit">Subscribe</button>
-            {%- if form.errors -%}
-              <small class="newsletter-message error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</small>
-            {%- endif -%}
-            {%- if form.posted_successfully? -%}
-              <p class="newsletter-message success">{{ 'newsletter.success' | t }}</p>
-            {%- endif -%}
-          {%- endform -%}
-        </div>
-      {%- endif -%}
-    </section>
+  /* Bottom info grid */
+  #footer-{{ section.id }} .footer__bottom{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding-block: 18px 0;
+  }
+  #footer-{{ section.id }} .info h4{
+    margin: 0 0 4px;
+    font-size: 12px;
+    text-transform: none;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: .2px;
+  }
+  #footer-{{ section.id }} .info p{
+    margin: 0;
+    font-size: 14px;
+  }
 
-    {%- comment -%} RIGHT: Dynamic menu columns (blocks) {%- endcomment -%}
-    <nav class="footer-simple__cols" aria-label="Footer navigation">
+  /* Tablet: ≥768px → 2列；订阅可单独占一行以增强可读性 */
+  @media (min-width: 768px){
+    #footer-{{ section.id }} .footer__grid{
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      column-gap: 40px;
+      row-gap: 24px;
+    }
+    #footer-{{ section.id }} .col{ padding-block: 0; }
+    #footer-{{ section.id }} .subscribebox{ grid-column: 1 / -1; } /* 平板时可独占整行（可按需去掉） */
+  }
+
+  /* Desktop: ≥1024px → 6列；订阅跨两列（第5-6列），并固定在第一行 */
+  @media (min-width: 1024px){
+    #footer-{{ section.id }} .footer__grid{
+      grid-template-columns: repeat(6, minmax(0,1fr)); /* 6 列 */
+      grid-auto-flow: row dense; /* 避免空洞 */
+      column-gap: 40px;
+    }
+    #footer-{{ section.id }} .footer__grid > .subscribebox{
+      grid-column: 5 / -1; /* 第5-6列 */
+      grid-row: 1;         /* 第一行 */
+    }
+    #footer-{{ section.id }} .footer__bottom{
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      column-gap: 24px;
+    }
+  }
+
+  /* Visually hidden (for accessible labels) */
+  #footer-{{ section.id }} .sr-only{
+    position:absolute !important;
+    width:1px;height:1px;
+    padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+  {%- endstyle -%}
+
+  <div class="footer__inner">
+    <!-- Brand row -->
+    <div class="footer__brand">
+      {% if section.settings.logo_image != blank %}
+        {{ section.settings.logo_image | image_url: width: 80 | image_tag: class: 'logo-mark', alt: section.settings.logo_text | default: shop.name, loading: 'lazy' }}
+      {% else %}
+        <!-- Fallback inline SVG mark -->
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <circle cx="16" cy="16" r="15" fill="#fff" opacity=".95"></circle>
+          <path d="M18 6h-4v2.2c0 .4-.2.8-.6 1.1l-.6.4c-.5.3-.8.9-.8 1.4V24c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V11.1c0-.6-.3-1.1-.8-1.4l-.6-.4c-.4-.2-.6-.6-.6-1.1V6z" fill="#0B19FF"></path>
+        </svg>
+      {% endif %}
+      <div class="logo-text">{{ section.settings.logo_text | default: shop.name }}</div>
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="footer__inner">
+    <div class="footer__grid">
       {%- for block in section.blocks -%}
-        {%- if block.type == 'menu_column' and block.settings.menu != blank -%}
-          <div class="footer-block footer-block--menu" {{ block.shopify_attributes }}>
-            <ul class="list-unstyled">
-              {% for link in block.settings.menu.links %}
-                {% assign parent_title = link.title | strip | default: link.object.title %}
-                <li class="footer-parent">
-                  <a href="{{ link.url | default: '#' }}" class="footer-parent-link">
-                    <h2 class="footer-parent-text">{{ parent_title | escape }}</h2>
-                  </a>
-                  {% if link.links != blank %}
-                    <ul class="footer-submenu list-unstyled">
-                      {% for child_link in link.links %}
-                        <li>
-                          <a href="{{ child_link.url }}" class="link link--text list-menu__item list-menu__item--link footer-submenu__link">
-                            {{ child_link.title | strip | default: child_link.object.title | escape }}
-                          </a>
-                        </li>
-                      {% endfor %}
-                    </ul>
+        {%- case block.type -%}
+          {%- when 'menu' -%}
+            <div class="col" {{ block.shopify_attributes }}>
+              {% if block.settings.heading != blank %}
+                <h3>{{ block.settings.heading }}</h3>
+              {% endif %}
+              {% if block.settings.menu != blank %}
+                <ul role="list">
+                  {% for link in block.settings.menu.links %}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+
+          {%- when 'subscribe' -%}
+            <div class="col subscribebox" {{ block.shopify_attributes }}>
+              <h3>{{ block.settings.heading | default: 'Stay Up To Date' }}</h3>
+              {%- form 'customer', id: 'FooterSubscribe', class: 'footer__newsletter-form' -%}
+                {%- if form.posted_successfully? -%}
+                  <p role="status">{{ block.settings.success_text | default: 'Thanks for subscribing.' }}</p>
+                {%- else -%}
+                  {%- if form.errors -%}
+                    <p role="alert">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</p>
+                  {%- endif -%}
+
+                  <label class="sr-only" for="FooterSubscribe-email-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+                  <input class="input" id="FooterSubscribe-email-{{ section.id }}" type="email" name="contact[email]" autocomplete="email" placeholder="{{ block.settings.placeholder | default: 'Your email' }}" required>
+
+                  {% if block.settings.show_phone %}
+                    <label class="sr-only" for="FooterSubscribe-phone-{{ section.id }}">Phone</label>
+                    <input class="input" id="FooterSubscribe-phone-{{ section.id }}" type="tel" inputmode="tel" name="contact[phone]" autocomplete="tel" placeholder="{{ block.settings.placeholder_phone | default: 'Your mobile # (optional)' }}">
                   {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        {%- endif -%}
+
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <button class="button" type="submit">{{ block.settings.button_label | default: 'Subscribe' }}</button>
+                {%- endif -%}
+              {%- endform -%}
+            </div>
+        {%- endcase -%}
       {%- endfor -%}
-    </nav>
+    </div>
 
-  </div>
+    <!-- Social row -->
+    {% if section.settings.show_social %}
+      <div class="social" aria-label="Social links">
+        {% if section.settings.ig_url != blank %}
+          <a href="{{ section.settings.ig_url }}" aria-label="Instagram" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11A5.5 5.5 0 0 1 12 7.5zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm5.75-2.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/>
+            </svg>
+          </a>
+        {% endif %}
+        {% if section.settings.fb_url != blank %}
+          <a href="{{ section.settings.fb_url }}" aria-label="Facebook" title="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d="M13.5 22v-9h3l.5-4h-3.5V6.5c0-.9.3-1.5 1.7-1.5H17V1.3C16.5 1.2 15.4 1 14.1 1 11.4 1 9.5 2.7 9.5 6v3H6v4h3.5v9h4z"/>
+            </svg>
+          </a>
+        {% endif %}
+        {% if section.settings.x_url != blank %}
+          <a href="{{ section.settings.x_url }}" aria-label="X (Twitter)" title="X (Twitter)">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d="M3 3h3.7l5 6.6L17.9 3H21l-7.1 9.4L21.4 21h-3.7l-5.5-7.2L6.1 21H2.6l7.8-10.2L3 3z"/>
+            </svg>
+          </a>
+        {% endif %}
+        {% if section.settings.tt_url != blank %}
+          <a href="{{ section.settings.tt_url }}" aria-label="TikTok" title="TikTok">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+              <path d="M14.5 2h3a5.8 5.8 0 0 0 3 4.5A8.2 8.2 0 0 0 23 7v3a9.4 9.4 0 0 1-4.8-1.5v7.4A6.6 6.6 0 1 1 11 9.6v3a3.6 3.6 0 1 0 2.5 3.4V2z"/>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
 
-  <!-- Mobile-only bottom disclaimer -->
-  <div class="page-width footer-legal-mobile">
-    <div class="newsletter-desc newsletter-desc--mobile">
-      <div>{{ section.settings.newsletter_desc }}</div>
+    <div class="rule"></div>
+
+    <!-- Bottom info -->
+    <div class="footer__bottom">
+      {% if section.settings.address != blank %}
+        <div class="info">
+          <h4>{{ section.settings.address_label | default: 'Address :' }}</h4>
+          <p>{{ section.settings.address | newline_to_br }}</p>
+        </div>
+      {% endif %}
+      {% if section.settings.phone != blank %}
+        <div class="info">
+          <h4>{{ section.settings.phone_label | default: 'Telephone :' }}</h4>
+          <p><a href="tel:{{ section.settings.phone | replace: ' ', '' | replace: '-', '' }}">{{ section.settings.phone }}</a></p>
+        </div>
+      {% endif %}
+      {% if section.settings.email != blank %}
+        <div class="info">
+          <h4>{{ section.settings.email_label | default: 'Email :' }}</h4>
+          <p><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></p>
+        </div>
+      {% endif %}
     </div>
   </div>
-
-  {%- comment -%} Bottom: localization + payments {%- endcomment -%}
-  <div class="footer-simple__bottom">
-    <div class="footer-simple__bottom-inner page-width">
-      <div class="footer__column footer__localization isolate">
-        {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
-          {%- render 'country-localization', localPosition: 'FooterCountry' -%}
-        {%- endif -%}
-        {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
-          {%- render 'language-localization', localPosition: 'FooterLanguage' -%}
-        {%- endif -%}
-      </div>
-
-      <div class="footer__column footer__column--info">
-        {%- if section.settings.payment_enable -%}
-          <div class="footer__payment">
-            <ul class="list list-payment" role="list">
-              {%- for type in shop.enabled_payment_types -%}
-                <li class="list-payment__item">{{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}</li>
-              {%- endfor -%}
-            </ul>
-          </div>
-        {%- endif -%}
-      </div>
-    </div>
-  </div>
-</footer>
+</section>
 
 {% schema %}
 {
-  "name": "Footer",
-  "tag": "footer",
-  "enabled_on": { "groups": ["footer"] },
+  "name": "Footer — WONDERBIOTICS",
+  "tag": "section",
+  "class": "section-footer-wonder",
   "settings": [
-    { "type": "color_scheme", "id": "color_scheme", "label": "Colors", "default": "scheme-1" },
+    { "type": "color", "id": "brand", "label": "Background (brand)", "default": "#0B19FF" },
+    { "type": "color", "id": "text", "label": "Text", "default": "#ffffff" },
+    { "type": "color", "id": "muted", "label": "Muted (labels)", "default": "#cfd8ff" },
+    { "type": "text",  "id": "rule",  "label": "Rule color (supports rgba)", "default": "rgba(255,255,255,.35)" },
 
-    { "type": "header", "content": "Newsletter" },
-    { "type": "checkbox", "id": "newsletter_enable", "label": "Enable newsletter", "default": true },
-    { "type": "inline_richtext", "id": "newsletter_heading", "label": "Title", "default": "Stay Up To Date" },
-    { "type": "richtext", "id": "newsletter_desc", "label": "Description", "default": "<p>By submitting this form, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from {{ shop.name }} at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg and data rates may apply. View Terms &amp; Privacy.</p>" },
+    { "type": "range", "id": "gap", "min": 8, "max": 40, "step": 1, "unit": "px", "label": "Grid gap", "default": 24 },
+    { "type": "range", "id": "radius", "min": 0, "max": 24, "step": 1, "unit": "px", "label": "Control radius", "default": 8 },
+    { "type": "range", "id": "gutter", "min": 0, "max": 40, "step": 2, "unit": "px", "label": "Side padding (gutter)", "default": 16 },
 
-    { "type": "header", "content": "Localization & payments" },
-    { "type": "checkbox", "id": "enable_country_selector", "label": "Show country selector", "default": true },
-    { "type": "checkbox", "id": "enable_language_selector", "label": "Show language selector", "default": true },
-    { "type": "checkbox", "id": "payment_enable", "label": "Show payment icons", "default": true }
+    { "type": "image_picker", "id": "logo_image", "label": "Logo image (mark)" },
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "WONDERBIOTICS" },
+
+    { "type": "checkbox", "id": "show_social", "label": "Show social icons", "default": true },
+    { "type": "url", "id": "ig_url", "label": "Instagram URL" },
+    { "type": "url", "id": "fb_url", "label": "Facebook URL" },
+    { "type": "url", "id": "x_url",  "label": "X (Twitter) URL" },
+    { "type": "url", "id": "tt_url", "label": "TikTok URL" },
+
+    { "type": "text", "id": "address_label", "label": "Address label", "default": "Address :" },
+    { "type": "textarea", "id": "address", "label": "Address text", "default": "17800 Castleton St Ste 665, City of Industry, California 91748" },
+    { "type": "text", "id": "phone_label", "label": "Telephone label", "default": "Telephone :" },
+    { "type": "text", "id": "phone", "label": "Telephone number", "default": "+1 8589051168" },
+    { "type": "text", "id": "email_label", "label": "Email label", "default": "Email :" },
+    { "type": "text", "id": "email", "label": "Email address", "default": "contact@wonderbiotics.com" }
   ],
   "blocks": [
     {
-      "type": "menu_column",
+      "type": "menu",
       "name": "Menu column",
-      "limit": 8,
       "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Menu" },
         { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    },
+    {
+      "type": "subscribe",
+      "name": "Subscribe box",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Stay Up To Date" },
+        { "type": "text", "id": "placeholder", "label": "Email placeholder", "default": "Your email" },
+        { "type": "checkbox", "id": "show_phone", "label": "Show phone field", "default": true },
+        { "type": "text", "id": "placeholder_phone", "label": "Phone placeholder", "default": "Your mobile # (optional)" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Subscribe" },
+        { "type": "text", "id": "success_text", "label": "Success text", "default": "Thanks for subscribing." }
       ]
     }
   ],
+  "max_blocks": 12,
   "presets": [
     {
-      "name": "Footer: Dynamic 2-col menus",
+      "name": "Footer — WONDERBIOTICS",
       "blocks": [
-        { "type": "menu_column" },
-        { "type": "menu_column" }
+        { "type": "menu", "settings": { "heading": "Shop" } },
+        { "type": "menu", "settings": { "heading": "About" } },
+        { "type": "menu", "settings": { "heading": "Information" } },
+        { "type": "menu", "settings": { "heading": "Account" } },
+        { "type": "subscribe" }
       ]
     }
   ]
