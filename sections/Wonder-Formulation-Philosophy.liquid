@@ -211,6 +211,30 @@
   border: 0;               /* 覆盖旧样式 */
   background: transparent; /* 覆盖旧样式 */
 }
+#philosophy-{{ section.id }} .card{
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  min-height: 110px;
+  /* 新增：边框相关的过渡 */
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    border-width var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+}
+
+/* 打开时：背景 + 边框（颜色/粗细/线型） */
+#philosophy-{{ section.id }} .card.card--with-desc.is-open{
+  background: var(--card-bg-open);
+  border: var(--card-open-border-width) var(--card-open-border-style) var(--card-open-border-color);
+}
+#philosophy-{{ section.id }} .card{
+  border: var(--card-open-border-width) solid transparent;
+}
 
 
   </style>
