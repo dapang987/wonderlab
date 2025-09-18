@@ -218,6 +218,12 @@
   background: var(--card-bg-open);
 }
 
+/* 展开后隐藏右侧图标 */
+#philosophy-{{ section.id }} .card.card--with-desc.is-open .card__chev{
+  display: none !important;
+}
+
+
     /* Mobile: masonry (2 columns) */
     @media (max-width: 768px){
       .section-{{ section.id }}-padding{ padding-left: 14px; padding-right: 14px; }
