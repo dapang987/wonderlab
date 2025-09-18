@@ -202,6 +202,35 @@
   "settings": [
     { "type": "text", "id": "title", "label": "标题", "default": "Industry Leader Trusted by Doctors" },
     { "type": "checkbox", "id": "serif_title", "label": "标题使用衬线字体", "default": true },
+    {
+  "type": "checkbox",
+  "id": "bg_grad_enable",
+  "label": "启用 Section 背景渐变",
+  "default": false
+},
+{
+  "type": "color",
+  "id": "bg_c1",
+  "label": "渐变起始色",
+  "default": "#ffffff"
+},
+{
+  "type": "color",
+  "id": "bg_c2",
+  "label": "渐变结束色",
+  "default": "#f7f7f7"
+},
+{
+  "type": "range",
+  "id": "bg_angle",
+  "min": 0,
+  "max": 360,
+  "step": 10,
+  "unit": "deg",
+  "label": "渐变角度（桌面端）",
+  "default": 180
+},
+
 
     { "type": "range", "id": "gap", "min": 12, "max": 60, "step": 2, "unit": "px", "label": "列间距", "default": 36 },
     { "type": "range", "id": "pad_top", "min": 0, "max": 140, "step": 4, "unit": "px", "label": "上内边距", "default": 64 },
