@@ -18,16 +18,20 @@
     }
 
     /* 基础布局：图片与文字同层叠加，文字可在九宫格内定位 */
-    #hero-{{ section.id }} .box{
-      position: relative;
-      display: grid;
-      grid-template-areas: "stack";
-      height: var(--h-d);
-      border-radius: var(--radius);
-      overflow: hidden;
-      isolation: isolate;
-      width:var(--page-width);
-    }
+#hero-{{ section.id }} .box{
+  position: relative;
+  display: grid;
+  grid-template-areas: "stack";
+  height: var(--h-d);
+  border-radius: var(--radius);
+  overflow: hidden;
+  isolation: isolate;
+
+  /* 关键：宽度受 --page-width 限制并在容器中居中 */
+  width: min(100%, var(--page-width));
+  margin-inline: auto; /* 水平居中 */
+}
+
     #hero-{{ section.id }} .media{ grid-area: stack; position: relative; }
     #hero-{{ section.id }} .media picture,
     #hero-{{ section.id }} .media img{ position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
