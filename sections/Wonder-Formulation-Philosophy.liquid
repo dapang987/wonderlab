@@ -266,6 +266,14 @@
   background: var(--card-bg-open);
   border: var(--card-open-border-width) var(--card-open-border-style) var(--card-open-border-color);
 }
+/* 绑定到标题与描述 */
+#philosophy-{{ section.id }} .card__title{ font-family: var(--ff-title); }
+#philosophy-{{ section.id }} .card__desc{  font-family: var(--ff-body);  }
+
+/* 若担心展开动画导致渲染差异，可轻微优化合成层 */
+#philosophy-{{ section.id }} .card__details{ backface-visibility: hidden; transform: translateZ(0); }
+#philosophy-{{ section.id }} .card.is-open .card__title{ font-family: var(--ff-title); }  /* 改成你想要的字体 */
+#philosophy-{{ section.id }} .card.is-open .card__desc{  font-family: var(--ff-body);  }
 
 
   </style>
