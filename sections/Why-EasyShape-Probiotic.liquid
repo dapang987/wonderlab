@@ -87,6 +87,7 @@
       #hero-{{ section.id }} .content{ width: 100%; max-width: none; }
     }
     
+
 /* ====== 3) 清除常见元素的默认 margin ====== */
 #hero-{{ section.id }} figure,
 #hero-{{ section.id }} h1,
@@ -96,6 +97,25 @@
 }
 
 
+/* —— 本节外边距（桌面 / 手机分开） —— */
+#shopify-section-{{ section.id }}{
+  /* 桌面默认值来自 schema，可在编辑器里调 */
+  margin-top: {{ section.settings.mt_d | default: 0 }}px;
+  margin-bottom: {{ section.settings.mb_d | default: 0 }}px;
+  /* 如需左右外边距，这两行打开即可（默认 0） */
+  margin-left: {{ section.settings.ml_d | default: 0 }}px;
+  margin-right: {{ section.settings.mr_d | default: 0 }}px;
+}
+
+@media (max-width: 749px){
+  #shopify-section-{{ section.id }}{
+    /* 手机端覆盖 */
+    margin-top: {{ section.settings.mt_m | default: 0 }}px;
+    margin-bottom: {{ section.settings.mb_m | default: 0 }}px;
+    margin-left: {{ section.settings.ml_m | default: 0 }}px;
+    margin-right: {{ section.settings.mr_m | default: 0 }}px;
+  }
+}
 
 
   </style>
