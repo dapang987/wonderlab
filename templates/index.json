@@ -477,7 +477,7 @@
         "bg_angle": 180,
         "bg_slice_enable": true,
         "bg_slice_anchor": "top",
-        "bg_slice_h_m": 370,
+        "bg_slice_h_m": 1000,
         "bg_slice_h_d": 900,
         "bg_slice_radius": 0,
         "gap": 36,
