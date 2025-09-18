@@ -1,0 +1,202 @@
+<section id="hero-{{ section.id }}" aria-label="{{ section.settings.title | default: 'Hero' }}">
+  <style>
+    /* ========== Scope to this section only ========== */
+    #hero-{{ section.id }}{
+      --h-d: {{ section.settings.height_d | default: 420 }}px;
+      --h-m: {{ section.settings.height_m | default: 620 }}px;
+      --radius: {{ section.settings.radius | default: 14 }}px;
+      --pad: {{ section.settings.pad | default: 28 }}px;
+      --copy-max: 56ch;
+
+      /* 桌面：字号/颜色/渐变强度/焦点 */
+      --h-size: {{ section.settings.h_size_d | default: 36 }}px;
+      --p-size: {{ section.settings.p_size_d | default: 16 }}px;
+      --h-color: {{ section.settings.h_color_d | default: '#ffffff' }};
+      --p-color: {{ section.settings.p_color_d | default: 'rgba(255,255,255,.88)' }};
+      --scrim-o: {{ section.settings.scrim_d | default: 28 | times: 0.01 }};
+      --focal: {{ section.settings.focal_d | default: 'right center' }};
+    }
+
+    /* 基础布局：图片与文字同层叠加，文字可在九宫格内定位 */
+    #hero-{{ section.id }} .box{
+      position: relative;
+      display: grid;
+      grid-template-areas: "stack";
+      height: var(--h-d);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #ddd;
+      box-shadow: 0 8px 24px rgba(0,0,0,.10);
+      isolation: isolate;
+    }
+    #hero-{{ section.id }} .media{ grid-area: stack; position: relative; }
+    #hero-{{ section.id }} .media picture,
+    #hero-{{ section.id }} .media img{ position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #hero-{{ section.id }} .media img{ object-fit: cover; object-position: var(--focal); }
+    #hero-{{ section.id }} .media::after{
+      content:""; position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,var(--scrim-o)) 0 45%, rgba(0,0,0,0) 60%);
+      pointer-events:none; z-index:1;
+    }
+
+    #hero-{{ section.id }} .content{
+      grid-area: stack; z-index: 2; padding: var(--pad);
+      max-width: var(--copy-max);
+      color: var(--h-color);
+      text-shadow: 0 1px 1px rgba(0,0,0,.18);
+      justify-self: var(--jx, start); /* 水平位置变量 */
+      align-self: var(--jy, center);  /* 垂直位置变量 */
+    }
+    #hero-{{ section.id }} h2{
+      margin: 0 0 10px; font-weight: 700; line-height: 1.2; font-size: var(--h-size); color: var(--h-color);
+    }
+    #hero-{{ section.id }} p{
+      margin: 0; line-height: 1.65; font-size: var(--p-size); color: var(--p-color);
+    }
+
+    /* —— 桌面位置映射（九宫格） —— */
+    #hero-{{ section.id }} .content[data-x-d="left"]{ --jx: start; }
+    #hero-{{ section.id }} .content[data-x-d="center"]{ --jx: center; }
+    #hero-{{ section.id }} .content[data-x-d="right"]{ --jx: end; }
+    #hero-{{ section.id }} .content[data-y-d="top"]{ --jy: start; }
+    #hero-{{ section.id }} .content[data-y-d="center"]{ --jy: center; }
+    #hero-{{ section.id }} .content[data-y-d="bottom"]{ --jy: end; }
+
+    /* ========== Mobile (≤749px) ========== */
+    @media (max-width: 749px){
+      #hero-{{ section.id }}{
+        --h-size: {{ section.settings.h_size_m | default: 24 }}px;
+        --p-size: {{ section.settings.p_size_m | default: 14 }}px;
+        --h-color: {{ section.settings.h_color_m | default: '#ffffff' }};
+        --p-color: {{ section.settings.p_color_m | default: 'rgba(255,255,255,.88)' }};
+        --scrim-o: {{ section.settings.scrim_m | default: 65 | times: 0.01 }};
+        --focal: {{ section.settings.focal_m | default: 'center 60%' }};
+      }
+      #hero-{{ section.id }} .box{ height: var(--h-m); }
+      /* 手机端位置映射（九宫格） */
+      #hero-{{ section.id }} .content[data-x-m="left"]{ --jx: start; }
+      #hero-{{ section.id }} .content[data-x-m="center"]{ --jx: center; }
+      #hero-{{ section.id }} .content[data-x-m="right"]{ --jx: end; }
+      #hero-{{ section.id }} .content[data-y-m="top"]{ --jy: start; }
+      #hero-{{ section.id }} .content[data-y-m="center"]{ --jy: center; }
+      #hero-{{ section.id }} .content[data-y-m="bottom"]{ --jy: end; }
+      /* 手机端文字左右铺满并靠底，符合参考图 */
+      #hero-{{ section.id }} .content{ width: 100%; max-width: none; }
+    }
+  </style>
+
+  <div class="box">
+    <figure class="media" aria-hidden="true">
+      <picture>
+        {%- if section.settings.image_mobile != blank -%}
+          <source media="(max-width: 749px)"
+                  srcset="{{ section.settings.image_mobile | image_url: width: 1200 }} 1x, {{ section.settings.image_mobile | image_url: width: 2400 }} 2x">
+        {%- endif -%}
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 1600 }}"
+            srcset="{{ section.settings.image | image_url: width: 1600 }} 1x, {{ section.settings.image | image_url: width: 2400 }} 2x"
+            alt="{{ section.settings.image.alt | default: section.settings.title | escape }}"
+            loading="eager" fetchpriority="high" decoding="async">
+        {%- else -%}
+          <img src="{{ 'placeholder-image.png' | asset_url }}" alt="Upload a hero image">
+        {%- endif -%}
+      </picture>
+    </figure>
+
+    <div
+      class="content"
+      data-x-d="{{ section.settings.align_x_d }}"
+      data-y-d="{{ section.settings.align_y_d }}"
+      data-x-m="{{ section.settings.align_x_m }}"
+      data-y-m="{{ section.settings.align_y_m }}"
+    >
+      <h2>{{ section.settings.title | default: 'Why EasyShape Probiotic?' }}</h2>
+      <p>{{ section.settings.body | default: '2-in-1 daily dose of pre & probiotics for 360 microbiome support. Clinically proven strains help curb cravings, boost metabolism, and deliver real results.' }}</p>
+    </div>
+  </div>
+
+  {% schema %}
+  {
+    "name": "Hero — 响应式（图/字分端配置）",
+    "settings": [
+      { "type": "image_picker", "id": "image", "label": "桌面图片（≥750px）" },
+      { "type": "image_picker", "id": "image_mobile", "label": "手机图片（≤749px）" },
+
+      { "type": "text", "id": "title", "label": "标题", "default": "Why EasyShape Probiotic?" },
+      { "type": "textarea", "id": "body", "label": "正文", "default": "2-in-1 daily dose of pre & probiotics for 360 microbiome support. Clinically proven strains help curb cravings, boost metabolism, and deliver real results." },
+
+      { "type": "range", "id": "h_size_d", "label": "桌面标题字号(px)", "min": 16, "max": 64, "step": 1, "default": 36 },
+      { "type": "range", "id": "p_size_d", "label": "桌面正文字号(px)", "min": 12, "max": 28, "step": 1, "default": 16 },
+      { "type": "color", "id": "h_color_d", "label": "桌面标题颜色", "default": "#ffffff" },
+      { "type": "color", "id": "p_color_d", "label": "桌面正文颜色", "default": "#ffffff" },
+
+      { "type": "range", "id": "h_size_m", "label": "手机标题字号(px)", "min": 14, "max": 40, "step": 1, "default": 24 },
+      { "type": "range", "id": "p_size_m", "label": "手机正文字号(px)", "min": 12, "max": 24, "step": 1, "default": 14 },
+      { "type": "color", "id": "h_color_m", "label": "手机标题颜色", "default": "#ffffff" },
+      { "type": "color", "id": "p_color_m", "label": "手机正文颜色", "default": "#ffffff" },
+
+      { "type": "select", "id": "align_x_d", "label": "桌面水平位置", "default": "left",
+        "options": [
+          { "value": "left", "label": "左" },
+          { "value": "center", "label": "中" },
+          { "value": "right", "label": "右" }
+        ]
+      },
+      { "type": "select", "id": "align_y_d", "label": "桌面垂直位置", "default": "center",
+        "options": [
+          { "value": "top", "label": "上" },
+          { "value": "center", "label": "中" },
+          { "value": "bottom", "label": "下" }
+        ]
+      },
+
+      { "type": "select", "id": "align_x_m", "label": "手机水平位置", "default": "left",
+        "options": [
+          { "value": "left", "label": "左" },
+          { "value": "center", "label": "中" },
+          { "value": "right", "label": "右" }
+        ]
+      },
+      { "type": "select", "id": "align_y_m", "label": "手机垂直位置", "default": "bottom",
+        "options": [
+          { "value": "top", "label": "上" },
+          { "value": "center", "label": "中" },
+          { "value": "bottom", "label": "下" }
+        ]
+      },
+
+      { "type": "range", "id": "height_d", "label": "桌面高度(px)", "min": 280, "max": 800, "step": 10, "default": 420 },
+      { "type": "range", "id": "height_m", "label": "手机高度(px)", "min": 360, "max": 900, "step": 10, "default": 620 },
+      { "type": "range", "id": "radius", "label": "圆角(px)", "min": 0, "max": 32, "step": 1, "default": 14 },
+      { "type": "range", "id": "pad", "label": "内容内边距(px)", "min": 0, "max": 48, "step": 2, "default": 28 },
+
+      { "type": "range", "id": "scrim_d", "label": "桌面底部渐变强度(%)", "min": 0, "max": 90, "step": 1, "default": 28 },
+      { "type": "range", "id": "scrim_m", "label": "手机底部渐变强度(%)", "min": 0, "max": 90, "step": 1, "default": 65 },
+
+      { "type": "select", "id": "focal_d", "label": "桌面图片焦点(object-position)", "default": "right center",
+        "options": [
+          { "value": "left center", "label": "左中" },
+          { "value": "center center", "label": "中中" },
+          { "value": "right center", "label": "右中" },
+          { "value": "center top", "label": "中上" },
+          { "value": "center bottom", "label": "中下" }
+        ]
+      },
+      { "type": "select", "id": "focal_m", "label": "手机图片焦点(object-position)", "default": "center 60%",
+        "options": [
+          { "value": "left center", "label": "左中" },
+          { "value": "center center", "label": "中中" },
+          { "value": "right center", "label": "右中" },
+          { "value": "center top", "label": "中上" },
+          { "value": "center 60%", "label": "中部偏下(60%)" },
+          { "value": "center bottom", "label": "中下" }
+        ]
+      }
+    ],
+    "presets": [
+      { "name": "Hero — 响应式（不同图/字）" }
+    ]
+  }
+  {% endschema %}
+</section>
