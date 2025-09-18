@@ -71,7 +71,7 @@
   .rule{ border: 0; margin: 0; border-top: 1px dashed var(--rule); height: 0; }
   .rule-wrap{ padding-block: 10px 22px; }
 
-  .footer__grid{ display: grid; grid-template-columns: 1fr; gap: clamp(16px, 3vw, 28px); }
+  .footer__grid{ display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 3vw, 28px); }
   .col{ padding-block: 12px; position: relative; }
 
   .col h3{
@@ -499,6 +499,7 @@
     { "type": "range", "id": "logo_width", "min": 16, "max": 96, "step": 2, "unit": "px", "label": "Logo mark size", "default": 28 },
     { "type": "range", "id": "logo_text_size", "min": 12, "max": 36, "step": 1, "unit": "px", "label": "Logo text size", "default": 20 },
     { "type": "text", "id": "logo_text", "label": "Logo text", "default": "WONDERBIOTICS" },
+    
 
     { "type": "checkbox", "id": "show_social", "label": "Show social icons", "default": true },
 
