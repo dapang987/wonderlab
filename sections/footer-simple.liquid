@@ -3,26 +3,24 @@
   - Strongly scoped by section.id
   - Menu supports nested (up to 3 levels)
   - Newsletter form included
+  - Social links: handle/domain/url normalization (IG/FB/X/TikTok/YouTube/LinkedIn/Pinterest/WhatsApp/Telegram/LINE)
 {% endcomment %}
 
 <section id="footer-{{ section.id }}" role="contentinfo">
   {%- style -%}
   /* ===== Scope root (variables) ===== */
   #footer-{{ section.id }}{
-    /* base colors */
     --brand: {{ section.settings.brand | default: '#0B19FF' }};
     --text: {{ section.settings.text | default: '#ffffff' }};
     --muted: {{ section.settings.muted | default: '#cfd8ff' }};
     --rule: {{ section.settings.rule | default: 'rgba(255,255,255,.35)' }};
 
-    /* typographic colors */
     --heading-color: {{ section.settings.heading_color | default: '#ffffff' }};
     --link-color: {{ section.settings.link_color | default: '#ffffff' }};
     --link-hover-color: {{ section.settings.link_hover_color | default: '#ffffff' }};
     --info-label-color: {{ section.settings.info_label_color | default: '#cfd8ff' }};
     --info-text-color: {{ section.settings.info_text_color | default: '#ffffff' }};
 
-    /* sizes */
     --gap: {{ section.settings.gap | default: 24 }}px;
     --radius: {{ section.settings.radius | default: 8 }}px;
     --gutter: {{ section.settings.gutter | default: 16 }}px;
@@ -33,24 +31,15 @@
     --bottom-label-size: {{ section.settings.bottom_label_size | default: 12 }}px;
     --bottom-text-size: {{ section.settings.bottom_text_size | default: 14 }}px;
 
-    /* logo */
     --logo-w: {{ section.settings.logo_width | default: 28 }}px;
     --logo-text-size: {{ section.settings.logo_text_size | default: 20 }}px;
 
-    /* social */
     --social-size: {{ section.settings.social_icon_size | default: 20 }}px;
   }
 
-  /* ===== Base reset (scoped) ===== */
   #footer-{{ section.id }} *{ box-sizing: border-box; }
-  #footer-{{ section.id }}{
-    background: var(--brand);
-    color: var(--text);
-  }
-  #footer-{{ section.id }} a{
-    color: var(--link-color);
-    text-decoration: none;
-  }
+  #footer-{{ section.id }}{ background: var(--brand); color: var(--text); }
+  #footer-{{ section.id }} a{ color: var(--link-color); text-decoration: none; }
   #footer-{{ section.id }} a:hover{ color: var(--link-hover-color); text-decoration: underline; }
   #footer-{{ section.id }} a:focus-visible,
   #footer-{{ section.id }} button:focus-visible,
@@ -67,186 +56,84 @@
     padding-inline: var(--gutter);
   }
 
-  /* Brand row */
-  #footer-{{ section.id }} .footer__brand{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding-block: 60px;
-    text-align: center;
+  .footer__brand{
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; padding-block: 60px; text-align: center;
   }
-  #footer-{{ section.id }} .logo-text{
-    letter-spacing: .5px;
-    font-weight: 600;
-    font-size: var(--logo-text-size);
-    line-height: 1.2;
-    color: var(--text);
-  }
-  #footer-{{ section.id }} .logo-mark{
-    width: var(--logo-w); height: var(--logo-w); flex: 0 0 var(--logo-w);
+  .logo-text{ letter-spacing: .5px; font-weight: 600; font-size: var(--logo-text-size); line-height: 1.2; color: var(--text); }
+  .logo-mark{ width: var(--logo-w); height: var(--logo-w); flex: 0 0 var(--logo-w); }
+
+  .rule{ border: 0; margin: 0; border-top: 1px dashed var(--rule); height: 0; }
+  .rule-wrap{ padding-block: 10px 22px; }
+
+  .footer__grid{ display: grid; grid-template-columns: 1fr; gap: clamp(16px, 3vw, 28px); }
+  .col{ padding-block: 12px; position: relative; }
+
+  .col h3{
+    margin: 0 0 10px; font-size: var(--heading-size); font-weight: 600; line-height: 1.3;
+    padding-bottom: 10px; border-bottom: 1px dashed var(--rule); color: var(--heading-color);
   }
 
-  /* Dashed rule aligned to container */
-  #footer-{{ section.id }} .rule{
-    border: 0; margin: 0;
-    border-top: 1px dashed var(--rule);
-    height: 0;
+  .menu__heading{
+    margin: 0 0 10px; font-size: var(--heading-size); color: var(--heading-color, var(--text));
+    font-weight: 700; line-height: 1.3; padding-bottom: 10px; border-bottom: 1px dashed var(--rule);
   }
-  #footer-{{ section.id }} .rule-wrap{ padding-block: 10px 22px; }
+  .menu__heading a{ color: inherit; text-decoration: none; }
+  .menu__heading a:hover{ text-decoration: underline; }
 
-  /* Grid (columns) — mobile first */
-  #footer-{{ section.id }} .footer__grid{
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(16px, 3vw, 28px);
-  }
+  .col ul{ list-style: none; margin: 0; padding: 0; }
+  .col li{ margin: 0; }
+  .lvl1 > li + li{ margin-top: 8px; }
+  .lvl1 > li > a{ font-weight: 600; font-size: calc(var(--link-size) + 1px); opacity: .95; }
+  .col a{ opacity: .92; font-size: var(--link-size); }
+  .col a:hover{ opacity: 1; }
 
-  /* columns */
-  #footer-{{ section.id }} .col{ padding-block: 12px; position: relative; }
-  #footer-{{ section.id }} .col h3{
-    margin: 0 0 10px;
-    font-size: var(--heading-size);
-    color: var(--heading-color);
-    font-weight: 600;
-    line-height: 1.3;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed var(--rule);
-  }
+  .sub{ margin-top: 6px; padding-left: 16px; border-left: 1px dashed var(--rule); }
+  .sub li + li{ margin-top: 6px; }
+  .sub a{ font-size: var(--sublink-size); opacity: .9; }
+  .sub.sub--lvl3{ margin-top: 4px; padding-left: 14px; border-left-style: dotted; }
 
-  /* menu lists (support nested) */
-  #footer-{{ section.id }} .col ul{ list-style: none; margin: 0; padding: 0; }
-  #footer-{{ section.id }} .col li{ margin: 0; }
-  #footer-{{ section.id }} .col > ul > li + li{ margin-top: 8px; }
-  #footer-{{ section.id }} .col a{ opacity: .92; font-size: var(--link-size); }
-  #footer-{{ section.id }} .col a:hover{ opacity: 1; }
+  .subscribebox form{ display: grid; gap: 10px; align-content: start; }
+  .input, .button{
+    height: 40px; width: 100%; padding: 0 14px; border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,.6); background: transparent; color: var(--text); font: inherit;
+  }
+  .input::placeholder{ color: rgba(255,255,255,.7); }
+  .button{ cursor: pointer; background: #fff; color: #0B19FF; border-color: #fff; font-weight: 600; }
+  .button:hover{ filter: brightness(.98); }
+  .button:disabled{ opacity:.6; cursor:not-allowed; }
 
-  #footer-{{ section.id }} .sub{ margin-top: 6px; padding-left: 14px; border-left: 1px dashed var(--rule); }
-  #footer-{{ section.id }} .sub li + li{ margin-top: 6px; }
-  #footer-{{ section.id }} .sub a{ font-size: var(--sublink-size); opacity: .9; }
-  #footer-{{ section.id }} .sub.sub--lvl3{ margin-top: 4px; padding-left: 14px; border-left-style: dotted; }
+  .social{ display: flex; align-items: center; gap: 18px; padding-block: 60px 18px; }
+  .social a{ display: inline-flex; width: var(--social-size); height: var(--social-size); opacity: .9; transform: translateZ(0); }
+  .social a:hover{ opacity: 1; transform: scale(1.05); }
 
-  /* Subscribe column (form) */
-  #footer-{{ section.id }} .subscribebox form{
-    display: grid; gap: 10px; align-content: start;
-  }
-  #footer-{{ section.id }} .input,
-  #footer-{{ section.id }} .button{
-    height: 40px; width: 100%;
-    padding: 0 14px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(255,255,255,.6);
-    background: transparent;
-    color: var(--text); font: inherit;
-  }
-  #footer-{{ section.id }} .input::placeholder{ color: rgba(255,255,255,.7); }
-  #footer-{{ section.id }} .button{
-    cursor: pointer; background: #fff; color: #0B19FF; border-color: #fff; font-weight: 600;
-  }
-  #footer-{{ section.id }} .button:hover{ filter: brightness(.98); }
-  #footer-{{ section.id }} .button:disabled{ opacity:.6; cursor:not-allowed; }
+  .footer__bottom{ display: grid; grid-template-columns: 1fr; gap: 14px; padding-block: 18px 0; }
+  .info h4{ margin: 0 0 4px; font-size: var(--bottom-label-size); color: var(--info-label-color); font-weight: 500; letter-spacing: .2px; }
+  .info p{ margin: 0; font-size: var(--bottom-text-size); color: var(--info-text-color); }
 
-  /* Social row */
-  #footer-{{ section.id }} .social{
-    display: flex; align-items: center; gap: 18px; padding-block: 60px 18px;
-  }
-  #footer-{{ section.id }} .social a{
-    display: inline-flex; width: var(--social-size); height: var(--social-size); opacity: .9; transform: translateZ(0);
-  }
-  #footer-{{ section.id }} .social a:hover{ opacity: 1; transform: scale(1.05); }
-
-  /* Bottom info grid */
-  #footer-{{ section.id }} .footer__bottom{
-    display: grid; grid-template-columns: 1fr; gap: 14px; padding-block: 18px 0;
-  }
-  #footer-{{ section.id }} .info h4{
-    margin: 0 0 4px; font-size: var(--bottom-label-size);
-    color: var(--info-label-color); font-weight: 500; letter-spacing: .2px;
-  }
-  #footer-{{ section.id }} .info p{
-    margin: 0; font-size: var(--bottom-text-size); color: var(--info-text-color);
-  }
-
-  /* Tablet: ≥768px */
   @media (min-width: 768px){
-    #footer-{{ section.id }} .footer__grid{
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      column-gap: 40px; row-gap: 24px;
-    }
-    #footer-{{ section.id }} .col{ padding-block: 0; }
-    #footer-{{ section.id }} .subscribebox{ grid-column: 1 / -1; }
+    .footer__grid{ grid-template-columns: repeat(2, minmax(0,1fr)); column-gap: 40px; row-gap: 24px; }
+    .col{ padding-block: 0; }
+    .subscribebox{ grid-column: 1 / -1; }
   }
-
-  /* Desktop: ≥1024px  */
   @media (min-width: 1024px){
-    #footer-{{ section.id }} .footer__grid{
-      grid-template-columns: repeat(6, minmax(0,1fr));
-      grid-auto-flow: row dense; column-gap: 40px;
-    }
-    #footer-{{ section.id }} .footer__grid > .subscribebox{
-      grid-column: 5 / -1; grid-row: 1;
-    }
-    #footer-{{ section.id }} .footer__bottom{
-      grid-template-columns: repeat(3, minmax(0,1fr)); column-gap: 24px;
-    }
+    .footer__grid{ grid-template-columns: repeat(6, minmax(0,1fr)); grid-auto-flow: row dense; column-gap: 40px; }
+    .footer__grid > .subscribebox{ grid-column: 5 / -1; grid-row: 1; }
+    .footer__bottom{ grid-template-columns: repeat(3, minmax(0,1fr)); column-gap: 24px; }
   }
 
-  /* Visually hidden (for accessible labels) */
-  #footer-{{ section.id }} .sr-only{
+  .sr-only{
     position:absolute !important; width:1px;height:1px; padding:0;margin:-1px;overflow:hidden;
     clip:rect(0,0,0,0);white-space:nowrap;border:0;
   }
-
-
-  /* === Menu heading & levels (new) === */
-#footer-{{ section.id }} .menu__heading{
-  margin: 0 0 10px;
-  font-size: var(--heading-size);
-  color: var(--heading-color, var(--text));
-  font-weight: 700;
-  line-height: 1.3;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed var(--rule);
-}
-#footer-{{ section.id }} .menu__heading a{
-  color: inherit; text-decoration: none;
-}
-#footer-{{ section.id }} .menu__heading a:hover{
-  text-decoration: underline;
-}
-
-/* 顶级项（当不启用“用第一个顶级项当标题”时）更醒目 */
-#footer-{{ section.id }} .lvl1 > li > a{
-  font-weight: 600;
-  font-size: calc(var(--link-size) + 1px);
-}
-
-/* 子级通用样式（你原来已有，这里补充更明显的层级差） */
-#footer-{{ section.id }} .sub{
-  margin-top: 6px;
-  padding-left: 16px;
-  border-left: 1px dashed var(--rule);
-}
-#footer-{{ section.id }} .sub a{
-  font-size: var(--sublink-size);
-  opacity: .9;
-}
-#footer-{{ section.id }} .sub.sub--lvl3{
-  margin-top: 4px;
-  padding-left: 14px;
-  border-left-style: dotted;
-}
-
   {%- endstyle -%}
 
   {%- liquid
-    # prepare high-dpi logo width
     assign _logo_w = section.settings.logo_width | default: 28
     assign _logo_w_2x = _logo_w | times: 2
   -%}
 
   <div class="footer__inner">
-    <!-- Brand row -->
     <div class="footer__brand">
       {% if section.settings.logo_image != blank %}
         {{ section.settings.logo_image
@@ -255,7 +142,6 @@
                         alt: section.settings.logo_text | default: shop.name,
                         loading: 'lazy' }}
       {% else %}
-        <!-- Fallback inline SVG mark -->
         <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
           <circle cx="16" cy="16" r="15" fill="#fff" opacity=".95"></circle>
           <path d="M18 6h-4v2.2c0 .4-.2.8-.6 1.1l-.6.4c-.5.3-.8.9-.8 1.4V24c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V11.1c0-.6-.3-1.1-.8-1.4l-.6-.4c-.4-.2-.6-.6-.6-1.1V6z" fill="#0B19FF"></path>
@@ -265,124 +151,89 @@
     </div>
   </div>
 
-  <!-- Main grid -->
   <div class="footer__inner">
     <div class="footer__grid">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
 
-{%- when 'menu' -%}
-  <div class="col" {{ block.shopify_attributes }}>
-    {%- assign _menu = block.settings.menu -%}
+          {%- when 'menu' -%}
+            <div class="col" {{ block.shopify_attributes }}>
+              {%- assign _menu = block.settings.menu -%}
 
-    {%- if block.settings.use_first_item_as_heading and _menu != blank and _menu.links.size > 0 -%}
-      {%- assign _parent = _menu.links.first -%}
-
-      <h3 class="menu__heading">
-        {%- if block.settings.heading_clickable and _parent.url != blank -%}
-          <a href="{{ _parent.url }}">{{ _parent.title }}</a>
-      {%- else -%}
-  {%- comment -%} 计算自动标题：优先菜单名；若没有则回退到第一个顶级项标题 {%- endcomment -%}
-  {%- assign _menu_title = '' -%}
-  {%- if _menu and _menu.title != blank -%}
-    {%- assign _menu_title = _menu.title -%}
-  {%- elsif _menu and _menu.links.size > 0 -%}
-    {%- assign _menu_title = _menu.links.first.title -%}
-  {%- endif -%}
-
-  {%- comment -%} 最终标题：如果手动填了 heading 就覆盖，否则用自动标题 {%- endcomment -%}
-  {%- assign heading_text = block.settings.heading | default: _menu_title -%}
-  {%- if heading_text != blank -%}
-    <h3 class="menu__heading">{{ heading_text }}</h3>
-  {%- endif -%}
-
-  {%- if _menu != blank -%}
-    <ul class="lvl1" role="list">
-      {%- for link in _menu.links -%}
-        <li>
-          <a href="{{ link.url }}">{{ link.title }}</a>
-          {%- if link.links != blank -%}
-            <ul class="sub" role="list">
-              {%- for child in link.links -%}
-                <li>
-                  <a href="{{ child.url }}">{{ child.title }}</a>
-                  {%- if child.links != blank -%}
-                    <ul class="sub sub--lvl3" role="list">
-                      {%- for grand in child.links -%}
-                        <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
-                      {%- endfor -%}
-                    </ul>
+              {%- if block.settings.use_first_item_as_heading and _menu != blank and _menu.links.size > 0 -%}
+                {%- assign _parent = _menu.links.first -%}
+                <h3 class="menu__heading">
+                  {%- if block.settings.heading_clickable and _parent.url != blank -%}
+                    <a href="{{ _parent.url }}">{{ _parent.title }}</a>
+                  {%- else -%}
+                    {{ _parent.title }}
                   {%- endif -%}
-                </li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-        </li>
-      {%- endfor -%}
-    </ul>
-  {%- endif -%}
-{%- endif -%}
+                </h3>
 
-      </h3>
+                {%- if _parent.links != blank -%}
+                  <ul class="sub" role="list">
+                    {%- for child in _parent.links -%}
+                      <li>
+                        <a href="{{ child.url }}">{{ child.title }}</a>
+                        {%- if child.links != blank -%}
+                          <ul class="sub sub--lvl3" role="list">
+                            {%- for grand in child.links -%}
+                              <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
+                            {%- endfor -%}
+                          </ul>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
 
-      {%- if _parent.links != blank -%}
-        <ul class="sub" role="list">
-          {%- for child in _parent.links -%}
-            <li>
-              <a href="{{ child.url }}">{{ child.title }}</a>
-              {%- if child.links != blank -%}
-                <ul class="sub sub--lvl3" role="list">
-                  {%- for grand in child.links -%}
-                    <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
-                  {%- endfor -%}
-                </ul>
+                {%- if block.settings.show_siblings and _menu.links.size > 1 -%}
+                  <ul class="lvl1" role="list" style="margin-top:12px">
+                    {%- for top in _menu.links offset:1 -%}
+                      <li><a href="{{ top.url }}">{{ top.title }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+
+              {%- else -%}
+                {%- assign _menu_title = '' -%}
+                {%- if _menu and _menu.title != blank -%}
+                  {%- assign _menu_title = _menu.title -%}
+                {%- elsif _menu and _menu.links.size > 0 -%}
+                  {%- assign _menu_title = _menu.links.first.title -%}
+                {%- endif -%}
+                {%- assign heading_text = block.settings.heading | default: _menu_title -%}
+                {%- if heading_text != blank -%}
+                  <h3 class="menu__heading">{{ heading_text }}</h3>
+                {%- endif -%}
+
+                {%- if _menu != blank -%}
+                  <ul class="lvl1" role="list">
+                    {%- for link in _menu.links -%}
+                      <li>
+                        <a href="{{ link.url }}">{{ link.title }}</a>
+                        {%- if link.links != blank -%}
+                          <ul class="sub" role="list">
+                            {%- for child in link.links -%}
+                              <li>
+                                <a href="{{ child.url }}">{{ child.title }}</a>
+                                {%- if child.links != blank -%}
+                                  <ul class="sub sub--lvl3" role="list">
+                                    {%- for grand in child.links -%}
+                                      <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
+                                    {%- endfor -%}
+                                  </ul>
+                                {%- endif -%}
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
               {%- endif -%}
-            </li>
-          {%- endfor -%}
-        </ul>
-      {%- endif -%}
-
-      {%- if block.settings.show_siblings and _menu.links.size > 1 -%}
-        <ul class="lvl1" role="list" style="margin-top:12px">
-          {%- for top in _menu.links offset:1 -%}
-            <li><a href="{{ top.url }}">{{ top.title }}</a></li>
-          {%- endfor -%}
-        </ul>
-      {%- endif -%}
-
-    {%- else -%}
-      {%- if block.settings.heading != blank -%}
-        <h3 class="menu__heading">{{ block.settings.heading }}</h3>
-      {%- endif -%}
-
-      {%- if _menu != blank -%}
-        <ul class="lvl1" role="list">
-          {%- for link in _menu.links -%}
-            <li>
-              <a href="{{ link.url }}">{{ link.title }}</a>
-              {%- if link.links != blank -%}
-                <ul class="sub" role="list">
-                  {%- for child in link.links -%}
-                    <li>
-                      <a href="{{ child.url }}">{{ child.title }}</a>
-                      {%- if child.links != blank -%}
-                        <ul class="sub sub--lvl3" role="list">
-                          {%- for grand in child.links -%}
-                            <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
-                          {%- endfor -%}
-                        </ul>
-                      {%- endif -%}
-                    </li>
-                  {%- endfor -%}
-                </ul>
-              {%- endif -%}
-            </li>
-          {%- endfor -%}
-        </ul>
-      {%- endif -%}
-    {%- endif -%}
-  </div>
-
+            </div>
 
           {%- when 'subscribe' -%}
             <div class="col subscribebox" {{ block.shopify_attributes }}>
@@ -408,19 +259,17 @@
                 {%- endif -%}
               {%- endform -%}
             </div>
+
         {%- endcase -%}
       {%- endfor -%}
     </div>
 
-    {%- comment -%} === Social links normalization (handle / domain / url) === {%- endcomment -%}
     {%- liquid
-      # existing
       assign ig_raw = section.settings.ig_url | default: settings.social_instagram_link | default: ''
       assign fb_raw = section.settings.fb_url | default: settings.social_facebook_link  | default: ''
       assign x_raw  = section.settings.x_url  | default: settings.social_twitter_link   | default: ''
       assign tt_raw = section.settings.tt_url | default: settings.social_tiktok_link    | default: ''
 
-      # new
       assign yt_raw  = section.settings.yt_url  | default: settings.social_youtube_link   | default: ''
       assign li_raw  = section.settings.li_url  | default: settings.social_linkedin_link  | default: ''
       assign pin_raw = section.settings.pin_url | default: settings.social_pinterest_link | default: ''
@@ -506,7 +355,6 @@
         elsif li contains 'linkedin.com'
           assign li_href = 'https://' | append: li | replace: 'https://https://', 'https://'
         else
-          # 默认按公司主页处理；如需个人，可直接粘完整 URL
           assign li_s = li | remove: '@' | replace: ' ', ''
           assign li_href = 'https://www.linkedin.com/company/' | append: li_s
         endif
@@ -531,7 +379,6 @@
         elsif wa contains 'wa.me' or wa contains 'api.whatsapp.com'
           assign wa_href = 'https://' | append: wa | replace: 'https://https://', 'https://'
         else
-          # 号码：生成 wa.me 链接（去掉非数字）
           assign wa_digits = wa | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '+'
           assign wa_href = 'https://wa.me/' | append: wa_digits
         endif
@@ -562,74 +409,23 @@
       endif
     -%}
 
-    <!-- Social row -->
     {% if section.settings.show_social %}
       <div class="social" aria-label="Social links">
-        {% if ig_href != blank %}
-          <a href="{{ ig_href }}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11A5.5 5.5 0 0 1 12 7.5zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm5.75-2.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if fb_href != blank %}
-          <a href="{{ fb_href }}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M13.5 22v-9h3l.5-4h-3.5V6.5c0-.9.3-1.5 1.7-1.5H17V1.3C16.5 1.2 15.4 1 14.1 1 11.4 1 9.5 2.7 9.5 6v3H6v4h3.5v9h4z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if x_href != blank %}
-          <a href="{{ x_href }}" target="_blank" rel="noopener" aria-label="X (Twitter)" title="X (Twitter)">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 3h3.7l5 6.6L17.9 3H21l-7.1 9.4L21.4 21h-3.7l-5.5-7.2L6.1 21H2.6l7.8-10.2L3 3z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if tt_href != blank %}
-          <a href="{{ tt_href }}" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M14.5 2h3a5.8 5.8 0 0 0 3 4.5A8.2 8.2 0 0 0 23 7v3a9.4 9.4 0 0 1-4.8-1.5v7.4A6.6 6.6 0 1 1 11 9.6v3a3.6 3.6 0 1 0 2.5 3.4V2z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if yt_href != blank %}
-          <a href="{{ yt_href }}" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M23 8.2v7.6c0 2-1.6 3.6-3.6 3.6H4.6A3.6 3.6 0 0 1 1 15.8V8.2C1 6.2 2.6 4.6 4.6 4.6h14.8C21.4 4.6 23 6.2 23 8.2zM10 8.5v7l6-3.5-6-3.5z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if li_href != blank %}
-          <a href="{{ li_href }}" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7 0h3.8v2.05h.05c.53-1 1.82-2.05 3.75-2.05 4.01 0 4.75 2.64 4.75 6.08V23h-4v-6.64c0-1.58-.03-3.62-2.2-3.62-2.2 0-2.54 1.72-2.54 3.5V23h-4V8z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if pin_href != blank %}
-          <a href="{{ pin_href }}" target="_blank" rel="noopener" aria-label="Pinterest" title="Pinterest">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12.2 1.8C6.8 1.8 3 5.4 3 9.7c0 2.4 1.3 4.3 3.4 5 .3.1.5 0 .6-.3l.4-1.5c.1-.2 0-.3-.1-.5-.7-.9-1.1-2.1-1.1-3.4 0-3.3 2.7-6 6.4-6 3.5 0 5.4 2.1 5.4 5 0 3.8-1.7 7-4.2 7-1.4 0-2.4-1.1-2.1-2.5.4-1.6 1.1-3.3 1.1-4.5 0-1-.5-1.9-1.6-1.9-1.3 0-2.3 1.4-2.3 3.3 0 1.2.4 2 0 3-.1.3-.3.4-.5.3-1.5-.6-2.2-2.3-2.2-4 0-3.1 2.2-5.9 6.5-5.9 3.4 0 5.8 2.4 5.8 5.6 0 3.6-2 6.2-4.8 6.2-1 0-2-.5-2.3-1.1l-.6 2.2c-.2.8-.7 1.8-1 2.5.8.2 1.6.3 2.5.3 5.4 0 9.2-3.6 9.2-8.7 0-4.8-3.8-8.1-8.6-8.1z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if wa_href != blank %}
-          <a href="{{ wa_href }}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 15.1L2 22l5.1-1.5A9.9 9.9 0 1 0 12.04 2zm5.9 14.1c-.2.6-1.1 1-1.6 1-3.2-.2-7.1-2.3-8.4-7-.2-.6.2-1.4.8-1.6l1.1-.6c.4-.2.9 0 1.1.4l.9 1.8c.2.4.1.9-.2 1.2l-.3.3c.7 1.7 1.9 2.9 3.6 3.7l.3-.3c.3-.3.8-.4 1.2-.2l1.8.8c.4.2.6.7.5 1.1z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if tg_href != blank %}
-          <a href="{{ tg_href }}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.5 15.6 9.3 20c.4 0 .6-.2.8-.4l2-1.9 4.2 3.1c.8.4 1.4.2 1.6-.8l2.9-13.6c.3-1.2-.4-1.7-1.2-1.4L2.7 9.9c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 11.2-7.1c.5-.3.9-.1.6.2l-9.6 9.6z"/></svg>
-          </a>
-        {% endif %}
-
-        {% if line_href != blank %}
-          <a href="{{ line_href }}" target="_blank" rel="noopener" aria-label="LINE" title="LINE">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.5 2 2 5.8 2 10.5c0 3 2 5.6 5 7.1l-.7 3.2c-.1.5.3.9.8.7l3.7-2c.4 0 .8.1 1.2.1 5.5 0 10-3.8 10-8.5S17.5 2 12 2zm-4.6 10.2h-.9V8.6h.9v3.6zm3.2 0H8.7V8.6h1.9v3.6zm3.3 0h-1V8.6h1v3.6zm3.8 0h-3V8.6h3v.8h-2v.6h1.9v.8H16v.6h1.7v.8z"/></svg>
-          </a>
-        {% endif %}
+        {% if ig_href != blank %}<a href="{{ ig_href }}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11A5.5 5.5 0 0 1 12 7.5zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm5.75-2.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/></svg></a>{% endif %}
+        {% if fb_href != blank %}<a href="{{ fb_href }}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M13.5 22v-9h3l.5-4h-3.5V6.5c0-.9.3-1.5 1.7-1.5H17V1.3C16.5 1.2 15.4 1 14.1 1 11.4 1 9.5 2.7 9.5 6v3H6v4h3.5v9h4z"/></svg></a>{% endif %}
+        {% if x_href != blank %}<a href="{{ x_href }}" target="_blank" rel="noopener" aria-label="X (Twitter)" title="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M3 3h3.7l5 6.6L17.9 3H21l-7.1 9.4L21.4 21h-3.7l-5.5-7.2L6.1 21H2.6l7.8-10.2L3 3z"/></svg></a>{% endif %}
+        {% if tt_href != blank %}<a href="{{ tt_href }}" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M14.5 2h3a5.8 5.8 0 0 0 3 4.5A8.2 8.2 0 0 0 23 7v3a9.4 9.4 0 0 1-4.8-1.5v7.4A6.6 6.6 0 1 1 11 9.6v3a3.6 3.6 0 1 0 2.5 3.4V2z"/></svg></a>{% endif %}
+        {% if yt_href != blank %}<a href="{{ yt_href }}" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M23 8.2v7.6c0 2-1.6 3.6-3.6 3.6H4.6A3.6 3.6 0 0 1 1 15.8V8.2C1 6.2 2.6 4.6 4.6 4.6h14.8C21.4 4.6 23 6.2 23 8.2zM10 8.5v7l6-3.5-6-3.5z"/></svg></a>{% endif %}
+        {% if li_href != blank %}<a href="{{ li_href }}" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7 0h3.8v2.05h.05c.53-1 1.82-2.05 3.75-2.05 4.01 0 4.75 2.64 4.75 6.08V23h-4v-6.64c0-1.58-.03-3.62-2.2-3.62-2.2 0-2.54 1.72-2.54 3.5V23h-4V8z"/></svg></a>{% endif %}
+        {% if pin_href != blank %}<a href="{{ pin_href }}" target="_blank" rel="noopener" aria-label="Pinterest" title="Pinterest"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12.2 1.8C6.8 1.8 3 5.4 3 9.7c0 2.4 1.3 4.3 3.4 5 .3.1.5 0 .6-.3l.4-1.5c.1-.2 0-.3-.1-.5-.7-.9-1.1-2.1-1.1-3.4 0-3.3 2.7-6 6.4-6 3.5 0 5.4 2.1 5.4 5 0 3.8-1.7 7-4.2 7-1.4 0-2.4-1.1-2.1-2.5.4-1.6 1.1-3.3 1.1-4.5 0-1-.5-1.9-1.6-1.9-1.3 0-2.3 1.4-2.3 3.3 0 1.2.4 2 0 3-.1.3-.3.4-.5.3-1.5-.6-2.2-2.3-2.2-4 0-3.1 2.2-5.9 6.5-5.9 3.4 0 5.8 2.4 5.8 5.6 0 3.6-2 6.2-4.8 6.2-1 0-2-.5-2.3-1.1l-.6 2.2c-.2.8-.7 1.8-1 2.5.8.2 1.6.3 2.5.3 5.4 0 9.2-3.6 9.2-8.7 0-4.8-3.8-8.1-8.6-8.1z"/></svg></a>{% endif %}
+        {% if wa_href != blank %}<a href="{{ wa_href }}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 15.1L2 22l5.1-1.5A9.9 9.9 0 1 0 12.04 2zm5.9 14.1c-.2.6-1.1 1-1.6 1-3.2-.2-7.1-2.3-8.4-7-.2-.6.2-1.4.8-1.6l1.1-.6c.4-.2.9 0 1.1.4l.9 1.8c.2.4.1.9-.2 1.2l-.3.3c.7 1.7 1.9 2.9 3.6 3.7l.3-.3c.3-.3.8-.4 1.2-.2l1.8.8c.4.2.6.7.5 1.1z"/></svg></a>{% endif %}
+        {% if tg_href != blank %}<a href="{{ tg_href }}" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.5 15.6 9.3 20c.4 0 .6-.2.8-.4l2-1.9 4.2 3.1c.8.4 1.4.2 1.6-.8l2.9-13.6c.3-1.2-.4-1.7-1.2-1.4L2.7 9.9c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 11.2-7.1c.5-.3.9-.1.6.2l-9.6 9.6z"/></svg></a>{% endif %}
+        {% if line_href != blank %}<a href="{{ line_href }}" target="_blank" rel="noopener" aria-label="LINE" title="LINE"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.5 2 2 5.8 2 10.5c0 3 2 5.6 5 7.1l-.7 3.2c-.1.5.3.9.8.7l3.7-2c.4 0 .8.1 1.2.1 5.5 0 10-3.8 10-8.5S17.5 2 12 2zm-4.6 10.2h-.9V8.6h.9v3.6zm3.2 0H8.7V8.6h1.9v3.6zm3.3 0h-1V8.6h1v3.6zm3.8 0h-3V8.6h3v.8h-2v.6h1.9v.8H16v.6h1.7v.8z"/></svg></a>{% endif %}
       </div>
     {% endif %}
 
     <div class="rule"></div>
 
-    <!-- Bottom info -->
     <div class="footer__bottom">
       {% if section.settings.address != blank %}
         <div class="info">
@@ -681,13 +477,10 @@
 
     { "type": "checkbox", "id": "show_social", "label": "Show social icons", "default": true },
 
-    /* existing */
-    { "type": "text", "id": "ig_url", "label": "Instagram (handle / URL)" },
-    { "type": "text", "id": "fb_url", "label": "Facebook (handle / URL)" },
-    { "type": "text", "id": "x_url",  "label": "X / Twitter (handle / URL)" },
-    { "type": "text", "id": "tt_url", "label": "TikTok (handle / URL)" },
-
-    /* new socials */
+    { "type": "text", "id": "ig_url",  "label": "Instagram (handle / URL)" },
+    { "type": "text", "id": "fb_url",  "label": "Facebook (handle / URL)" },
+    { "type": "text", "id": "x_url",   "label": "X / Twitter (handle / URL)" },
+    { "type": "text", "id": "tt_url",  "label": "TikTok (handle / URL)" },
     { "type": "text", "id": "yt_url",  "label": "YouTube (handle / URL)" },
     { "type": "text", "id": "li_url",  "label": "LinkedIn (company/personal URL or handle)" },
     { "type": "text", "id": "pin_url", "label": "Pinterest (handle / URL)" },
@@ -715,8 +508,11 @@
       "type": "menu",
       "name": "Menu column",
       "settings": [
-        { "type": "text", "id": "heading", "label": "Heading", "default": "Menu" },
-        { "type": "link_list", "id": "menu", "label": "Menu" }
+        { "type": "text", "id": "heading", "label": "Heading (留空=使用菜单名称)", "default": "menu" },
+        { "type": "link_list", "id": "menu", "label": "Menu" },
+        { "type": "checkbox", "id": "use_first_item_as_heading", "label": "用第一个顶级链接作为标题，只展示它的子链接", "default": false },
+        { "type": "checkbox", "id": "heading_clickable", "label": "标题可点击（指向该顶级链接）", "default": true },
+        { "type": "checkbox", "id": "show_siblings", "label": "在下方显示其他顶级链接（作为同级项）", "default": false }
       ]
     },
     {
@@ -738,10 +534,10 @@
     {
       "name": "footer-wonderbiotics",
       "blocks": [
-        { "type": "menu", "settings": { "heading": "Shop" } },
-        { "type": "menu", "settings": { "heading": "About" } },
-        { "type": "menu", "settings": { "heading": "Information" } },
-        { "type": "menu", "settings": { "heading": "Account" } },
+        { "type": "menu" },
+        { "type": "menu" },
+        { "type": "menu" },
+        { "type": "menu" },
         { "type": "subscribe" }
       ]
     }
