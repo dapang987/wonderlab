@@ -419,7 +419,10 @@
         "card_bg_open": "#ffffff",
         "card_open_border_color": "#25aef7",
         "card_open_border_width": 1,
-        "card_open_border_style": "solid"
+        "card_open_border_style": "solid",
+        "card_border_color": "#25aef7",
+        "card_border_width": 1,
+        "card_border_style": "solid"
       }
     },
     "kpi_metrics_3aW3cC": {
