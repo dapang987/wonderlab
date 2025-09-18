@@ -304,6 +304,18 @@
 #philosophy-{{ section.id }} .card.is-open .card__details-inner{
   padding-top: 0;
 }
+@media (max-width: 768px){
+  /* 默认 2 列 */
+  #philosophy-{{ section.id }} .ph-grid{
+    display: block;
+    column-count: 2;
+    column-gap: var(--gap);
+  }
+  /* 锁列：展开时切成单列，避免重排 */
+  #philosophy-{{ section.id }}.masonry-locked .ph-grid{
+    column-count: 1;
+  }
+}
 
 
   </style>
