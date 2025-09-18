@@ -156,11 +156,19 @@
             "number": "273+",
             "label": "Research Papers"
           }
+        },
+        "stat_JR4yzC": {
+          "type": "stat",
+          "settings": {
+            "number": "100,000+",
+            "label": "Strains in our Library"
+          }
         }
       },
       "block_order": [
         "stat_XegPbD",
-        "stat_HFyzmD"
+        "stat_HFyzmD",
+        "stat_JR4yzC"
       ],
       "name": "Feature split card",
       "settings": {
