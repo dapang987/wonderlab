@@ -73,11 +73,17 @@
 
   .footer__grid{ display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 3vw, 28px); }
 
+@media (max-width: 767.98px){
+  #footer-{{ section.id }} .footer__grid{
+    grid-template-columns: 1fr 1fr;   /* 你已设置 */
+    grid-auto-flow: row dense;        /* 避免空洞，自动把卡片往前填 */
+  }
   #footer-{{ section.id }} .footer__grid > .col.subscribebox{
     grid-column: 1 / -1;              /* 跨两列 = 占满一整行 */
   }
+}
 
-
+  
   .col{ padding-block: 12px; position: relative; }
 
   .col h3{
