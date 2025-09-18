@@ -409,8 +409,8 @@
         "enable_shadow": true,
         "tab_height": 44,
         "enable_top_dashed": true,
-        "dash_length": 8,
-        "gap_length": 8,
+        "dash_length": 6,
+        "gap_length": 5,
         "show_hr": true,
         "padding_top": 48,
         "padding_bottom": 36
