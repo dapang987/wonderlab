@@ -270,37 +270,79 @@
     <div class="footer__grid">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
-          {%- when 'menu' -%}
-            <div class="col" {{ block.shopify_attributes }}>
-              {% if block.settings.heading != blank %}
-                <h3>{{ block.settings.heading }}</h3>
-              {% endif %}
-              {% if block.settings.menu != blank %}
-                <ul role="list">
-                  {% for link in block.settings.menu.links %}
-                    <li>
-                      <a href="{{ link.url }}">{{ link.title }}</a>
-                      {% if link.links != blank %}
-                        <ul class="sub" role="list">
-                          {% for child in link.links %}
-                            <li>
-                              <a href="{{ child.url }}">{{ child.title }}</a>
-                              {% if child.links != blank %}
-                                <ul class="sub sub--lvl3" role="list">
-                                  {% for grand in child.links %}
-                                    <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
-                                  {% endfor %}
-                                </ul>
-                              {% endif %}
-                            </li>
-                          {% endfor %}
-                        </ul>
-                      {% endif %}
-                    </li>
-                  {% endfor %}
+{%- when 'menu' -%}
+  <div class="col" {{ block.shopify_attributes }}>
+    {%- assign _menu = block.settings.menu -%}
+
+    {%- if block.settings.use_first_item_as_heading and _menu != blank and _menu.links.size > 0 -%}
+      {%- assign _parent = _menu.links.first -%}
+
+      <h3 class="menu__heading">
+        {%- if block.settings.heading_clickable and _parent.url != blank -%}
+          <a href="{{ _parent.url }}">{{ _parent.title }}</a>
+        {%- else -%}
+          {{ _parent.title }}
+        {%- endif -%}
+      </h3>
+
+      {%- if _parent.links != blank -%}
+        <ul class="sub" role="list">
+          {%- for child in _parent.links -%}
+            <li>
+              <a href="{{ child.url }}">{{ child.title }}</a>
+              {%- if child.links != blank -%}
+                <ul class="sub sub--lvl3" role="list">
+                  {%- for grand in child.links -%}
+                    <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
+                  {%- endfor -%}
                 </ul>
-              {% endif %}
-            </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if block.settings.show_siblings and _menu.links.size > 1 -%}
+        <ul class="lvl1" role="list" style="margin-top:12px">
+          {%- for top in _menu.links offset:1 -%}
+            <li><a href="{{ top.url }}">{{ top.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+    {%- else -%}
+      {%- if block.settings.heading != blank -%}
+        <h3 class="menu__heading">{{ block.settings.heading }}</h3>
+      {%- endif -%}
+
+      {%- if _menu != blank -%}
+        <ul class="lvl1" role="list">
+          {%- for link in _menu.links -%}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+              {%- if link.links != blank -%}
+                <ul class="sub" role="list">
+                  {%- for child in link.links -%}
+                    <li>
+                      <a href="{{ child.url }}">{{ child.title }}</a>
+                      {%- if child.links != blank -%}
+                        <ul class="sub sub--lvl3" role="list">
+                          {%- for grand in child.links -%}
+                            <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+
 
           {%- when 'subscribe' -%}
             <div class="col subscribebox" {{ block.shopify_attributes }}>
