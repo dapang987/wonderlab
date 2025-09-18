@@ -26,6 +26,16 @@
       --bg-slice-h-m: {{ section.settings.bg_slice_h_m }}px;
       --bg-slice-radius: {{ section.settings.bg_slice_radius }}px;
 
+      /* ===== 字号变量（手机 / 桌面） ===== */
+      --title-size-m: {{ section.settings.title_size_m }}px;
+      --title-size-d: {{ section.settings.title_size_d }}px;
+      --num-size-m: {{ section.settings.num_size_m }}px;
+      --num-size-d: {{ section.settings.num_size_d }}px;
+      --item-title-size-m: {{ section.settings.item_title_size_m }}px;
+      --item-title-size-d: {{ section.settings.item_title_size_d }}px;
+      --desc-size-m: {{ section.settings.desc_size_m }}px;
+      --desc-size-d: {{ section.settings.desc_size_d }}px;
+
       color: var(--text);
       /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
       padding: var(--pad-top) 0 var(--pad-bottom);
@@ -67,7 +77,8 @@
       font-weight: 500;
       line-height: 1.15;
       letter-spacing: .01em;
-      font-size: clamp(28px, 4vw, 42px);
+      font-size: clamp(var(--title-size-m), 4vw, var(--title-size-d));
+      {% if section.settings.serif_title %}font-family: ui-serif, Georgia, "Times New Roman", serif;{% endif %}
     }
 
     /* 栅格 */
@@ -82,7 +93,7 @@
       margin: 0 0 12px;
       font-weight: 700;
       line-height: 1.1;
-      font-size: clamp(28px, 5vw, 36px);
+      font-size: clamp(var(--num-size-m), 5vw, var(--num-size-d));
       letter-spacing: .02em;
     }
     .section-{{ section.id }} .kpi-rule{
@@ -94,13 +105,13 @@
     .section-{{ section.id }} .kpi-item-title{
       margin: 0 0 6px;
       font-weight: 600;
-      font-size: 15px;
+      font-size: clamp(var(--item-title-size-m), 2.8vw, var(--item-title-size-d));
       line-height: 1.35;
     }
     .section-{{ section.id }} .kpi-desc{
       margin: 0;
       color: var(--muted);
-      font-size: 13.5px;
+      font-size: clamp(var(--desc-size-m), 2.6vw, var(--desc-size-d));
       line-height: 1.8;
     }
 
@@ -249,9 +260,19 @@
         { "label": "贴底部", "value": "bottom" }
       ]
     },
-    { "type": "range", "id": "bg_slice_h_m", "min": 0, "max": 1000, "step": 10, "unit": "px", "label": "背景条高度（手机）", "default": 320 },
+    { "type": "range", "id": "bg_slice_h_m", "min": 0, "max": 1000, "step": 20, "unit": "px", "label": "背景条高度（手机）", "default": 320 },
     { "type": "range", "id": "bg_slice_h_d", "min": 0, "max": 1200, "step": 20, "unit": "px", "label": "背景条高度（桌面）", "default": 420 },
     { "type": "range", "id": "bg_slice_radius", "min": 0, "max": 80, "step": 1, "unit": "px", "label": "背景条圆角", "default": 0 },
+
+    { "type": "header", "content": "文字大小（可视化控制）" },
+    { "type": "range", "id": "title_size_m", "min": 16, "max": 64, "step": 1, "unit": "px", "label": "标题字号（手机）", "default": 28 },
+    { "type": "range", "id": "title_size_d", "min": 16, "max": 72, "step": 1, "unit": "px", "label": "标题字号（桌面）", "default": 42 },
+    { "type": "range", "id": "num_size_m", "min": 16, "max": 64, "step": 1, "unit": "px", "label": "数字字号（手机）", "default": 28 },
+    { "type": "range", "id": "num_size_d", "min": 16, "max": 72, "step": 1, "unit": "px", "label": "数字字号（桌面）", "default": 36 },
+    { "type": "range", "id": "item_title_size_m", "min": 12, "max": 32, "step": 1, "unit": "px", "label": "小标题字号（手机）", "default": 15 },
+    { "type": "range", "id": "item_title_size_d", "min": 12, "max": 36, "step": 1, "unit": "px", "label": "小标题字号（桌面）", "default": 16 },
+    { "type": "range", "id": "desc_size_m", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "描述字号（手机）", "default": 14 },
+    { "type": "range", "id": "desc_size_d", "min": 12, "max": 28, "step": 1, "unit": "px", "label": "描述字号（桌面）", "default": 14 },
 
     { "type": "range", "id": "gap", "min": 12, "max": 60, "step": 2, "unit": "px", "label": "列间距", "default": 36 },
     { "type": "range", "id": "pad_top", "min": 0, "max": 140, "step": 4, "unit": "px", "label": "上内边距", "default": 64 },
