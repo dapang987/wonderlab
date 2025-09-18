@@ -1,10 +1,9 @@
 {% comment %}
-  Section: Feature — Science Split (image + stats)
-  - Desktop: left text card, right image; Mobile: image on top, card below
-  - All styles and scripts are scoped to this section via section.id
+  Section: Feature — Let science do the work
+  File: sections/feature-science.liquid
 {% endcomment %}
 
-<section id="feature-{{ section.id }}" class="feature section-{{ section.id }}" aria-labelledby="feature-title-{{ section.id }}">
+<section id="feature-{{ section.id }}" class="feature section-{{ section.id }}-padding" aria-labelledby="feature-title-{{ section.id }}">
   {%- liquid
     # ===== Aspect ratio mapping =====
     assign ar_m = '4 / 3'
@@ -16,284 +15,240 @@
 
     assign ar_d = '4 / 5'
     case section.settings.aspect_desktop
-      when '1-1'  then assign ar_d = '1 / 1'
       when '3-4'  then assign ar_d = '3 / 4'
+      when '4-3'  then assign ar_d = '4 / 3'
       when '4-5'  then assign ar_d = '4 / 5'
-      when '16-9' then assign ar_d = '16 / 9'
-    endcase
-
-    # ===== Shadow mapping =====
-    assign shadow_val = '0 8px 28px rgba(0,0,0,.08)'
-    case section.settings.shadow
-      when 'none'  then assign shadow_val = 'none'
-      when 'soft'  then assign shadow_val = '0 6px 18px rgba(0,0,0,.06)'
-      when 'medium'then assign shadow_val = '0 8px 28px rgba(0,0,0,.08)'
-      when 'deep'  then assign shadow_val = '0 16px 48px rgba(0,0,0,.12)'
     endcase
   -%}
 
   {%- style -%}
-    /* ===== Scoped variables ===== */
+    /* ===== Scope to this section only ===== */
     #feature-{{ section.id }}{
       --gap: {{ section.settings.gap }}px;
       --radius: {{ section.settings.radius }}px;
-      --shadow: {{ shadow_val }};
+      --shadow: {% if section.settings.use_shadow %}0 8px 28px rgba(0,0,0,.08){% else %}none{% endif %};
+
       --card-bg: {{ section.settings.card_bg }};
       --text: {{ section.settings.text_color }};
       --muted: {{ section.settings.muted_color }};
       --number: {{ section.settings.number_color }};
-      --rule: {{ section.settings.rule_color }};
-      --pad-d: {{ section.settings.pad_d }}px;
-      --pad-m: {{ section.settings.pad_m }}px;
-      --ar-m: {{ ar_m }};
-      --ar-d: {{ ar_d }};
+      --rule: rgba(11,31,51,.12);
+
+      --stat-gap: {{ section.settings.stat_gap }}px;
+      --pad-card: {{ section.settings.pad_card }}px;
+      --pad-card-m: {{ section.settings.pad_card_m }}px;
+
+      /* type scales (保持与你示例的视觉比例) */
+      --h1: clamp(24px, 3.2vw, 36px);
+      --lead: clamp(13px, 1.7vw, 16px);
+      --kpi-number: clamp(28px, 4.2vw, 40px);
+      --kpi-label: clamp(11px, 1.6vw, 13px);
     }
 
-    #feature-{{ section.id }} *{ box-sizing:border-box; }
-
-    #feature-{{ section.id }} .feature{
-      color: var(--text);
+    .section-{{ section.id }}-padding{
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+    @media screen and (min-width: 750px){
+      .section-{{ section.id }}-padding{
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
     }
 
-    #feature-{{ section.id }} .feature__grid{
-      display:grid;
+    #feature-{{ section.id }} .wrap{ max-width: var(--page-width); margin-inline: auto; padding-inline: 16px; }
+
+    #feature-{{ section.id }}{ color: var(--text); }
+    #feature-{{ section.id }} .grid{
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: stretch;
       gap: var(--gap);
     }
-
-    /* Mobile: stack, image first */
-    #feature-{{ section.id }} .feature__media{ order:-1; }
-    #feature-{{ section.id }} .feature__media,
-    #feature-{{ section.id }} .feature__card{
-      border-radius: var(--radius);
-      overflow:hidden;
-    }
-    #feature-{{ section.id }} .feature__media{
-      position:relative;
-      box-shadow: var(--shadow);
-      background:#ddd;
-    }
-    #feature-{{ section.id }} .feature__media picture,
-    #feature-{{ section.id }} .feature__media img{
-      width:100%;
-      height:100%;
-      display:block;
-    }
-    #feature-{{ section.id }} .feature__media img{
-      object-fit:cover;
-      object-position:center;
-      aspect-ratio: var(--ar-m);
+    @media (min-width: 750px){
+      #feature-{{ section.id }} .grid{ grid-template-columns: 1fr 1fr; }
     }
 
-    #feature-{{ section.id }} .feature__card{
+    /* Card (left) */
+    #feature-{{ section.id }} .card{
       background: var(--card-bg);
+      color: var(--text);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: var(--pad-m);
-      display:grid;
-      align-content:start;
-      gap: clamp(12px, 2.2vw, 18px);
+      padding: var(--pad-card-m);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 360px;
+    }
+    @media (min-width: 750px){
+      #feature-{{ section.id }} .card{ padding: var(--pad-card); }
     }
 
-    #feature-{{ section.id }} .feature__title{
-      margin:0;
-      line-height:1.22;
-      font-weight:700;;
-      letter-spacing:-.01em;
-    }
-    #feature-{{ section.id }} .feature__title .break{ display:block; }
+    #feature-{{ section.id }} .title{ font-size: var(--h1); line-height: 1.25; margin: 0 0 14px; letter-spacing: .2px; }
+    #feature-{{ section.id }} .lead{ font-size: var(--lead); color: var(--muted); margin: 0 0 24px; line-height: 1.6; }
 
-    #feature-{{ section.id }} .feature__lead{
-      margin: 4px 0 8px;
-      color: var(--muted);
-    }
+    #feature-{{ section.id }} .stats{ display: grid; gap: var(--stat-gap); }
+    #feature-{{ section.id }} .stat{ display: grid; gap: 6px; }
+    #feature-{{ section.id }} .stat .num{ font-size: var(--kpi-number); font-weight: 700; color: var(--number); letter-spacing: .2px; }
+    #feature-{{ section.id }} .stat .label{ font-size: var(--kpi-label); color: var(--muted); }
 
-    #feature-{{ section.id }} .stats{
-      display:grid;
-      gap: 14px;
-      margin: 8px 0 0;
-      padding:0;
+    /* Media (right) */
+    #feature-{{ section.id }} .media{
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: stretch;
+      background: #e8ecef;
+      aspect-ratio: {{ ar_m }}; /* mobile default */
     }
-    #feature-{{ section.id }} .stat{
-      padding-block: 12px;
-      border-top: 1px dashed var(--rule);
-      display:grid;
-      gap:6px;
-    }
-    #feature-{{ section.id }} .stat:first-child{ border-top:0; padding-top:0; }
-
-    #feature-{{ section.id }} .stat__num{
-      font-weight:800;
-      color: var(--number);
-      line-height:1.1;
-      font-variant-numeric: lining-nums tabular-nums;
-      letter-spacing:-.01em;
-    }
-    #feature-{{ section.id }} .stat__num sup{
-      font-weight:800;
-      top:-.25em;
-      position:relative;
-    }
-    #feature-{{ section.id }} .stat__label{
-      margin:0;
-      color: var(--muted);
+    @media (min-width: 750px){
+      #feature-{{ section.id }} .media{ aspect-ratio: {{ ar_d }}; }
     }
 
-    /* Desktop ≥ 992px */
-    @media (min-width: 992px){
-      #feature-{{ section.id }} .feature__grid{
-        grid-template-columns: 1fr 1fr;
-        align-items: stretch;
-      }
-      #feature-{{ section.id }} .feature__media{ order:0; }
-      #feature-{{ section.id }} .feature__card{ padding: var(--pad-d); }
-      #feature-{{ section.id }} .feature__media img{ aspect-ratio: var(--ar-d); }
-    }
+    #feature-{{ section.id }} .media img{ width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* Fade-in */
-    #feature-{{ section.id }} .reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease; }
-    #feature-{{ section.id }} .reveal.is-in{ opacity:1; transform:none; }
-    
+    /* Accessibility helper */
+    #feature-{{ section.id }} .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
   {%- endstyle -%}
 
+  <div class="wrap">
+    <div class="grid">
+      <!-- Left: Card Content -->
+      <article class="card">
+        {%- if section.settings.title != blank -%}
+          <h2 id="feature-title-{{ section.id }}" class="title">
+            {{ section.settings.title | newline_to_br }}
+          </h2>
+        {%- endif -%}
 
+        {%- if section.settings.lead != blank -%}
+          <p class="lead">{{ section.settings.lead }}</p>
+        {%- endif -%}
 
+        <div class="stats" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'stat' -%}
+              <div class="stat" role="listitem" {{ block.shopify_attributes }}>
+                {%- if block.settings.number != blank -%}
+                  <div class="num">{{ block.settings.number }}</div>
+                {%- endif -%}
+                {%- if block.settings.label != blank -%}
+                  <div class="label">{{ block.settings.label }}</div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </article>
 
-  <div class="page-width feature__grid">
-    <!-- Card -->
-    <article class="feature__card reveal" aria-describedby="feature-lead-{{ section.id }}">
-      <h2 id="feature-title-{{ section.id }}" class="feature__title">
-        <span class="break">{{ section.settings.title_line1 }}</span>
-        <span class="break">{{ section.settings.title_line2 }}</span>
-      </h2>
-      {%- if section.settings.lead != blank -%}
-        <p id="feature-lead-{{ section.id }}" class="feature__lead">{{ section.settings.lead }}</p>
-      {%- endif -%}
-
-      <dl class="stats" aria-label="Key scientific metrics">
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'stat' -%}
-            <div class="stat" {{ block.shopify_attributes }}>
-              <dt class="stat__num">{{ block.settings.number }}</dt>
-              <dd class="stat__label">{{ block.settings.label }}</dd>
-            </div>
+      <!-- Right: Feature Image -->
+      <figure class="media">
+        <picture>
+          {%- assign mob = section.settings.image_mobile | default: section.settings.image -%}
+          {%- if mob != blank -%}
+            <source media="(max-width: 749px)"
+              srcset="{{ mob | image_url: width: 800 }} 800w, {{ mob | image_url: width: 1600 }} 1600w"
+              sizes="(max-width: 749px) 100vw, 50vw">
           {%- endif -%}
-        {%- endfor -%}
-      </dl>
-    </article>
 
-    <!-- Media -->
-    <figure class="feature__media reveal" aria-label="Product photo">
-      <picture>
-        {%- assign mobile_img = section.settings.image_mobile | default: section.settings.image -%}
-        {%- if mobile_img != blank -%}
-          <source
-            media="(max-width: 991px)"
-            srcset="
-              {{ mobile_img | image_url: width: 720 }} 720w,
-              {{ mobile_img | image_url: width: 960 }} 960w,
-              {{ mobile_img | image_url: width: 1200 }} 1200w
-            "
-            sizes="100vw">
-        {%- endif -%}
+          {%- if section.settings.image != blank -%}
+            <source media="(min-width: 750px)"
+              srcset="{{ section.settings.image | image_url: width: 1000 }} 1000w, {{ section.settings.image | image_url: width: 2000 }} 2000w"
+              sizes="(min-width: 750px) 50vw, 100vw">
+          {%- endif -%}
 
-        {%- if section.settings.image != blank -%}
-          <img
-            src="{{ section.settings.image | image_url: width: 1400 }}"
-            srcset="
-              {{ section.settings.image | image_url: width: 900 }} 900w,
-              {{ section.settings.image | image_url: width: 1200 }} 1200w,
-              {{ section.settings.image | image_url: width: 1600 }} 1600w
-            "
-            sizes="(min-width: 992px) 50vw, 100vw"
-            alt="{{ section.settings.img_alt | escape }}"
-            loading="lazy" decoding="async">
-        {%- else -%}
-          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- if section.settings.image != blank -%}
+            {{ section.settings.image
+              | image_url: width: 1200
+              | image_tag:
+                  alt: section.settings.image_alt | default: section.settings.title,
+                  loading: 'lazy',
+                  decoding: 'async'
+            }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </picture>
+        {%- if section.settings.image_alt != blank -%}
+          <figcaption class="sr-only">{{ section.settings.image_alt }}</figcaption>
         {%- endif -%}
-      </picture>
-    </figure>
+      </figure>
+    </div>
   </div>
-
-  <script>
-    (function(){
-      var root = document.getElementById('feature-{{ section.id }}');
-      if(!root) return;
-      var els = root.querySelectorAll('.reveal');
-      if(!('IntersectionObserver' in window)){ els.forEach(function(el){ el.classList.add('is-in'); }); return; }
-      var io = new IntersectionObserver(function(entries){
-        entries.forEach(function(e){
-          if(e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); }
-        });
-      }, {threshold:.15});
-      els.forEach(function(el){ io.observe(el); });
-    })();
-  </script>
 </section>
 
 {% schema %}
 {
-  "name": "Feature — Science Split",
+  "name": "Feature — Science",
   "tag": "section",
   "class": "section",
-  "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Tired of diets?\nLet science do the work." },
+    { "type": "textarea", "id": "lead", "label": "Lead text", "default": "Science-backed ingredients deliver real results on efficacy of weight management." },
+
     { "type": "image_picker", "id": "image", "label": "Desktop image" },
     { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (optional)" },
-    { "type": "text", "id": "img_alt", "label": "Image alt text", "default": "Hand holding a small blue bottle" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text" },
 
-    { "type": "select", "id": "aspect_desktop", "label": "Desktop image aspect ratio", "default": "4-5",
+    {
+      "type": "select",
+      "id": "aspect_mobile",
+      "label": "Mobile aspect ratio",
+      "default": "4-3",
       "options": [
-        { "value": "4-5", "label": "4 / 5" },
-        { "value": "3-4", "label": "3 / 4" },
-        { "value": "1-1", "label": "1 / 1" },
-        { "value": "16-9", "label": "16 / 9" }
+        { "value": "1-1", "label": "1 : 1" },
+        { "value": "3-4", "label": "3 : 4" },
+        { "value": "4-3", "label": "4 : 3" }
       ]
     },
-    { "type": "select", "id": "aspect_mobile", "label": "Mobile image aspect ratio", "default": "4-3",
+    {
+      "type": "select",
+      "id": "aspect_desktop",
+      "label": "Desktop aspect ratio",
+      "default": "4-5",
       "options": [
-        { "value": "4-3", "label": "4 / 3" },
-        { "value": "1-1", "label": "1 / 1" },
-        { "value": "3-4", "label": "3 / 4" }
+        { "value": "4-5", "label": "4 : 5" },
+        { "value": "3-4", "label": "3 : 4" },
+        { "value": "4-3", "label": "4 : 3" }
       ]
     },
-
-    { "type": "text", "id": "title_line1", "label": "Title line 1", "default": "Tired of diets?" },
-    { "type": "text", "id": "title_line2", "label": "Title line 2", "default": "Let science do the work." },
-    { "type": "textarea", "id": "lead", "label": "Lead text", "default": "Science-backed ingredients deliver real results on efficacy of weight management." },
 
     { "type": "color", "id": "card_bg", "label": "Card background", "default": "#EAF4FF" },
     { "type": "color", "id": "text_color", "label": "Text color", "default": "#0B1F33" },
-    { "type": "color", "id": "muted_color", "label": "Muted text color", "default": "#516170" },
+    { "type": "color", "id": "muted_color", "label": "Muted color", "default": "#516170" },
     { "type": "color", "id": "number_color", "label": "Number color", "default": "#0B1F33" },
-    { "type": "color", "id": "rule_color", "label": "Divider color", "default": "#D9E1EC" },  // ← 修正为十六进制
 
-    { "type": "range", "id": "radius", "label": "Corner radius", "min": 0, "max": 32, "step": 1, "default": 16, "unit": "px" },
-    { "type": "range", "id": "gap", "label": "Column gap", "min": 8, "max": 48, "step": 1, "default": 28, "unit": "px" },
-    { "type": "range", "id": "pad_d", "label": "Card padding (desktop)", "min": 16, "max": 80, "step": 2, "default": 48, "unit": "px" },
-    { "type": "range", "id": "pad_m", "label": "Card padding (mobile)", "min": 12, "max": 40, "step": 1, "default": 22, "unit": "px" },
+    { "type": "checkbox", "id": "use_shadow", "label": "Enable card/media shadow", "default": true },
 
-    { "type": "select", "id": "shadow", "label": "Shadow", "default": "medium",
-      "options": [
-        { "value": "none", "label": "None" },
-        { "value": "soft", "label": "Soft" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "deep", "label": "Deep" }
-      ]
-    }
+    { "type": "range", "id": "gap", "label": "Column gap", "min": 0, "max": 64, "step": 1, "unit": "px", "default": 28 },
+    { "type": "range", "id": "radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "stat_gap", "label": "Stat row gap", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 22 },
+    { "type": "range", "id": "pad_card", "label": "Card padding (desktop)", "min": 8, "max": 64, "step": 1, "unit": "px", "default": 28 },
+    { "type": "range", "id": "pad_card_m", "label": "Card padding (mobile)", "min": 8, "max": 64, "step": 1, "unit": "px", "default": 22 },
+
+    { "type": "range", "id": "padding_top", "label": "Section padding top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "label": "Section padding bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 60 }
   ],
   "blocks": [
     {
       "type": "stat",
-      "name": "Statistic",
+      "name": "Stat",
+      "limit": 6,
       "settings": [
         { "type": "text", "id": "number", "label": "Number", "default": "28+" },
         { "type": "text", "id": "label", "label": "Label", "default": "Years of Probiotic Expertise" }
       ]
     }
   ],
-  "max_blocks": 6,
   "presets": [
     {
-      "name": "Feature — Science Split",
+      "name": "Feature — Science Card + Image",
+      "category": "Custom",
       "blocks": [
         { "type": "stat", "settings": { "number": "28+", "label": "Years of Probiotic Expertise" } },
         { "type": "stat", "settings": { "number": "273+", "label": "Research Papers" } },
@@ -303,4 +258,3 @@
   ]
 }
 {% endschema %}
-
