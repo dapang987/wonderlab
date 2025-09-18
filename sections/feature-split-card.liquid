@@ -96,8 +96,7 @@
     #feature-{{ section.id }} .feature__title{
       margin:0;
       line-height:1.22;
-      font-weight:700;
-      font-size: clamp(24px, 6vw, 28px);
+      font-weight:700;;
       letter-spacing:-.01em;
     }
     #feature-{{ section.id }} .feature__title .break{ display:block; }
@@ -105,7 +104,6 @@
     #feature-{{ section.id }} .feature__lead{
       margin: 4px 0 8px;
       color: var(--muted);
-      font-size: clamp(14px, 3.8vw, 15px);
     }
 
     #feature-{{ section.id }} .stats{
@@ -125,21 +123,18 @@
     #feature-{{ section.id }} .stat__num{
       font-weight:800;
       color: var(--number);
-      font-size: clamp(28px, 9vw, 32px);
       line-height:1.1;
       font-variant-numeric: lining-nums tabular-nums;
       letter-spacing:-.01em;
     }
     #feature-{{ section.id }} .stat__num sup{
       font-weight:800;
-      font-size:.6em;
       top:-.25em;
       position:relative;
     }
     #feature-{{ section.id }} .stat__label{
       margin:0;
       color: var(--muted);
-      font-size: 12.5px;
     }
 
     /* Desktop ≥ 992px */
@@ -150,9 +145,6 @@
       }
       #feature-{{ section.id }} .feature__media{ order:0; }
       #feature-{{ section.id }} .feature__card{ padding: var(--pad-d); }
-      #feature-{{ section.id }} .feature__title{ font-size: clamp(36px, 3.8vw, 44px); }
-      #feature-{{ section.id }} .feature__lead{ font-size:16px; max-width:50ch; }
-      #feature-{{ section.id }} .stat__num{ font-size: clamp(40px, 3.5vw, 48px); }
       #feature-{{ section.id }} .feature__media img{ aspect-ratio: var(--ar-d); }
     }
 
