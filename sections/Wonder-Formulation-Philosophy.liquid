@@ -15,6 +15,10 @@
   --section-border-color: {{ section.settings.section_border_color }};
   --section-border-width: {{ section.settings.section_border_width }}px;
   --section-border-radius: {{ section.settings.section_border_radius }}px;
+    --card-open-border-color: {{ section.settings.card_open_border_color }};
+  --card-open-border-width: {{ section.settings.card_open_border_width }}px;
+  --card-open-border-style: {{ section.settings.card_open_border_style | default: 'solid' }};
+
 
   /* Card open-state background */
   --card-bg-open: {{ section.settings.card_bg_open }};
