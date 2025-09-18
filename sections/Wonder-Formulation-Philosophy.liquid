@@ -410,50 +410,39 @@
   </div>
 
   <script>
-    (() => {
-      const root = document.getElementById('philosophy-{{ section.id }}');
-      if (!root) return;
-      const cards = root.querySelectorAll('.card[data-collapsible]');
+(() => {
+  const root = document.getElementById('philosophy-{{ section.id }}');
+  if (!root) return;
+  const cards = root.querySelectorAll('.card[data-collapsible]');
 
-      function openDetails(details){
-        details.style.maxHeight = 'none';
-        const target = details.scrollHeight;
-        details.style.maxHeight = '0px';
-        requestAnimationFrame(() => { details.style.maxHeight = target + 'px'; });
-        const onEnd = (e) => {
-          if (e.propertyName === 'max-height') {
-            details.style.maxHeight = 'none';
-            details.removeEventListener('transitionend', onEnd);
-          }
-        };
-        details.addEventListener('transitionend', onEnd);
-      }
+  function updateLock(){
+    const anyOpen = root.querySelector('.card.is-open');
+    root.classList.toggle('masonry-locked', !!anyOpen);
+  }
 
-      function closeDetails(details){
-        const current = details.scrollHeight;
-        details.style.maxHeight = current + 'px';
-        requestAnimationFrame(() => { details.style.maxHeight = '0px'; });
-      }
+  // 你原来的 open/close 逻辑...
+  // 在每次切换后调用：
+  cards.forEach(card => {
+    const details = card.querySelector('.card__details');
+    if (!details) return;
 
-      cards.forEach(card => {
-        const details = card.querySelector('.card__details');
-        if (!details) return;
+    const toggle = (evt) => {
+      const controlEl = evt.target.closest('a, button, [role="button"]:not(.card)');
+      if (controlEl) return;
 
-        const toggle = (evt) => {
-          const controlEl = evt.target.closest('a, button, [role="button"]:not(.card)');
-          if (controlEl) return;
+      const isOpen = card.classList.toggle('is-open');
+      card.setAttribute('aria-expanded', String(isOpen));
+      isOpen ? openDetails(details) : closeDetails(details);
+      updateLock(); // ★ 新增：切换“锁列”状态
+    };
 
-          const isOpen = card.classList.toggle('is-open');
-          card.setAttribute('aria-expanded', String(isOpen));
-          isOpen ? openDetails(details) : closeDetails(details);
-        };
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); }
+    });
+  });
+})();
 
-        card.addEventListener('click', toggle);
-        card.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); }
-        });
-      });
-    })();
   </script>
 </section>
 
