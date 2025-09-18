@@ -69,7 +69,6 @@
 
   .section-{{ section.id }} thead .cm-th{
     color: var(--cm-muted);
-    font-size: 12px;
     font-weight: 600;
     letter-spacing: .2px;
   }
@@ -95,6 +94,14 @@
     .section-{{ section.id }} .cm-dot{ width:8px; height:8px; }
     .section-{{ section.id }} .cm-ring{ width:10px; height:10px; border-width:1.4px; }
   }
+
+  /* 1) 基线：把组件正文回到常规权重 */
+.cm-td.cm-feature,
+.cm-td .cm-feature {  /* 两种写法都兜底 */
+  font-weight: 400;                 /* 普通 */
+  font-synthesis: none;             /* 禁止浏览器合成粗体/斜体 */
+  font-variation-settings: 'wght' 400; /* 可变字体时，明确wght轴 */
+}
 {%- endstyle -%}
 
 <section class="section-{{ section.id }} color-{{ section.settings.color_scheme }}">
