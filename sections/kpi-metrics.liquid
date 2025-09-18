@@ -2,7 +2,7 @@
   Section: KPI Metrics + Bottom Image (follow theme --page-width)
 {% endcomment %}
 
-<section class="kpi-section section-{{ section.id }}" aria-label="{{ section.settings.title | escape }}">
+<section class="kpi-section section-{{ section.id }}{% if section.settings.bg_slice_enable and section.settings.bg_slice_anchor == 'bottom' %} is-bg-bottom{% endif %}" aria-label="{{ section.settings.title | escape }}">
   <style>
     .section-{{ section.id }}{
       --text: {{ section.settings.text_color }};
@@ -14,26 +14,51 @@
       --radius: {{ section.settings.radius }}px;
       --figure-bg: {{ section.settings.figure_bg }};
       --figure-border: {{ section.settings.figure_border }};
+
       /* === Section 背景渐变（可开关） === */
       --bg-angle: {{ section.settings.bg_angle }}deg;
       --bg-c1: {{ section.settings.bg_c1 }};
       --bg-c2: {{ section.settings.bg_c2 }};
       --bg-gradient: {% if section.settings.bg_grad_enable %}linear-gradient(var(--bg-angle), var(--bg-c1), var(--bg-c2)){% else %}transparent{% endif %};
 
+      /* B 方案：背景条高度/圆角变量 */
+      --bg-slice-h-d: {{ section.settings.bg_slice_h_d }}px;
+      --bg-slice-h-m: {{ section.settings.bg_slice_h_m }}px;
+      --bg-slice-radius: {{ section.settings.bg_slice_radius }}px;
+
       color: var(--text);
       /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
       padding: var(--pad-top) 0 var(--pad-bottom);
-      background: var(--bg-gradient);
-      --title-size-d: {{ section.settings.title_size_d }}px;
---title-size-m: {{ section.settings.title_size_m }}px;
---num-size-d: {{ section.settings.num_size_d }}px;
---num-size-m: {{ section.settings.num_size_m }}px;
---item-title-size-d: {{ section.settings.item_title_size_d }}px;
---item-title-size-m: {{ section.settings.item_title_size_m }}px;
---desc-size-d: {{ section.settings.desc_size_d }}px;
---desc-size-m: {{ section.settings.desc_size_m }}px;
 
+      /* 当启用“背景条”时，让 section 自身背景透明；否则用整段渐变 */
+      background: {% if section.settings.bg_slice_enable %}transparent{% else %}var(--bg-gradient){% endif %};
     }
+
+    /* ====== 背景条（仅在启用时输出） ====== */
+    {% if section.settings.bg_slice_enable %}
+    .section-{{ section.id }}{ position: relative; }
+    .section-{{ section.id }}::before{
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      top: 0;                                 /* 默认贴顶部 */
+      height: var(--bg-slice-h-m);            /* 手机高度 */
+      background: var(--bg-gradient);
+      border-radius: var(--bg-slice-radius);
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* 贴底时切换定位 */
+    .section-{{ section.id }}.is-bg-bottom::before{
+      top: auto; bottom: 0;
+    }
+    /* 桌面高度 */
+    @media (min-width: 750px){
+      .section-{{ section.id }}::before{ height: var(--bg-slice-h-d); }
+    }
+    /* 确保内容浮在背景条之上 */
+    .section-{{ section.id }} .kpi-wrap{ position: relative; z-index: 1; }
+    {% endif %}
 
     /* 标题 */
     .section-{{ section.id }} .kpi-title{
@@ -42,7 +67,8 @@
       font-weight: 500;
       line-height: 1.15;
       letter-spacing: .01em;
-    font-size: clamp(var(--title-size-m), 4vw, var(--title-size-d));
+      font-size: clamp(28px, 4vw, 42px);
+      {% if section.settings.serif_title %}font-family: ui-serif, Georgia, "Times New Roman", serif;{% endif %}
     }
 
     /* 栅格 */
@@ -57,7 +83,7 @@
       margin: 0 0 12px;
       font-weight: 700;
       line-height: 1.1;
-   font-size: clamp(var(--num-size-m), 5vw, var(--num-size-d));
+      font-size: clamp(28px, 5vw, 36px);
       letter-spacing: .02em;
     }
     .section-{{ section.id }} .kpi-rule{
@@ -69,13 +95,13 @@
     .section-{{ section.id }} .kpi-item-title{
       margin: 0 0 6px;
       font-weight: 600;
-font-size: clamp(var(--item-title-size-m), 2.8vw, var(--item-title-size-d));
+      font-size: 15px;
       line-height: 1.35;
     }
     .section-{{ section.id }} .kpi-desc{
       margin: 0;
       color: var(--muted);
-  font-size: clamp(var(--desc-size-m), 2.6vw, var(--desc-size-d));
+      font-size: 13.5px;
       line-height: 1.8;
     }
 
@@ -210,29 +236,23 @@ font-size: clamp(var(--item-title-size-m), 2.8vw, var(--item-title-size-d));
     { "type": "checkbox", "id": "bg_grad_enable", "label": "启用 Section 背景渐变", "default": false },
     { "type": "color", "id": "bg_c1", "label": "渐变起始色", "default": "#ffffff" },
     { "type": "color", "id": "bg_c2", "label": "渐变结束色", "default": "#f7f7f7" },
+    { "type": "range", "id": "bg_angle", "min": 0, "max": 360, "step": 10, "unit": "deg", "label": "渐变角度（桌面端）", "default": 180 },
+
+    { "type": "header", "content": "背景色填充高度（可选）" },
+    { "type": "checkbox", "id": "bg_slice_enable", "label": "仅让背景色/渐变填充一段高度", "default": false },
     {
-      "type": "range",
-      "id": "bg_angle",
-      "min": 0,
-      "max": 360,
-      "step": 10,
-      "unit": "deg",
-      "label": "渐变角度（桌面端）",
-      "default": 180
+      "type": "select",
+      "id": "bg_slice_anchor",
+      "label": "背景条对齐位置",
+      "default": "top",
+      "options": [
+        { "label": "贴顶部", "value": "top" },
+        { "label": "贴底部", "value": "bottom" }
+      ]
     },
-{ "type": "header", "content": "文字大小（可视化控制）" },
-
-{ "type": "range", "id": "title_size_m", "min": 16, "max": 64, "step": 1, "unit": "px", "label": "标题字号（手机）", "default": 28 },
-{ "type": "range", "id": "title_size_d", "min": 16, "max": 72, "step": 1, "unit": "px", "label": "标题字号（桌面）", "default": 42 },
-
-{ "type": "range", "id": "num_size_m", "min": 16, "max": 64, "step": 1, "unit": "px", "label": "数字字号（手机）", "default": 28 },
-{ "type": "range", "id": "num_size_d", "min": 16, "max": 72, "step": 1, "unit": "px", "label": "数字字号（桌面）", "default": 36 },
-
-{ "type": "range", "id": "item_title_size_m", "min": 12, "max": 32, "step": 1, "unit": "px", "label": "小标题字号（手机）", "default": 14 },
-{ "type": "range", "id": "item_title_size_d", "min": 12, "max": 36, "step": 1, "unit": "px", "label": "小标题字号（桌面）", "default": 16 },
-
-{ "type": "range", "id": "desc_size_m", "min": 12, "max": 24, "step": 0.5, "unit": "px", "label": "描述字号（手机）", "default": 13.5 },
-{ "type": "range", "id": "desc_size_d", "min": 12, "max": 28, "step": 0.5, "unit": "px", "label": "描述字号（桌面）", "default": 14 },
+    { "type": "range", "id": "bg_slice_h_m", "min": 0, "max": 1000, "step": 10, "unit": "px", "label": "背景条高度（手机）", "default": 320 },
+    { "type": "range", "id": "bg_slice_h_d", "min": 0, "max": 1200, "step": 20, "unit": "px", "label": "背景条高度（桌面）", "default": 420 },
+    { "type": "range", "id": "bg_slice_radius", "min": 0, "max": 80, "step": 1, "unit": "px", "label": "背景条圆角", "default": 0 },
 
     { "type": "range", "id": "gap", "min": 12, "max": 60, "step": 2, "unit": "px", "label": "列间距", "default": 36 },
     { "type": "range", "id": "pad_top", "min": 0, "max": 140, "step": 4, "unit": "px", "label": "上内边距", "default": 64 },
