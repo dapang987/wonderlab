@@ -24,6 +24,15 @@
       /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
       padding: var(--pad-top) 0 var(--pad-bottom);
       background: var(--bg-gradient);
+      --title-size-d: {{ section.settings.title_size_d }}px;
+--title-size-m: {{ section.settings.title_size_m }}px;
+--num-size-d: {{ section.settings.num_size_d }}px;
+--num-size-m: {{ section.settings.num_size_m }}px;
+--item-title-size-d: {{ section.settings.item_title_size_d }}px;
+--item-title-size-m: {{ section.settings.item_title_size_m }}px;
+--desc-size-d: {{ section.settings.desc_size_d }}px;
+--desc-size-m: {{ section.settings.desc_size_m }}px;
+
     }
 
     /* 标题 */
