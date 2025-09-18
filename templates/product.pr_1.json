@@ -125,7 +125,7 @@
         "height_d": 420,
         "height_m": 620,
         "radius": 14,
-        "pad": 28,
+        "pad": 36,
         "scrim_d": 28,
         "scrim_m": 65,
         "focal_d": "right center",
