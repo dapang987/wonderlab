@@ -48,7 +48,6 @@
       letter-spacing: .2px;
       font-size: var(--heading-size);
       color: var(--heading-color);
-      font-family: {{ section.settings.heading_font.family | default: 'ui-sans-serif' }}, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
 
     /* ==== Mobile: 横向轮播（Scroll Snap） ==== */
@@ -79,7 +78,7 @@
       scroll-snap-align: start;
       flex: 0 0 86%;
       min-width: 260px;
-      font-family: {{ section.settings.card_font.family | default: 'system-ui' }}, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+
     }
 
     /* 平板：2 列网格 */
