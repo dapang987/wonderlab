@@ -239,12 +239,7 @@
   min-width: 0;                    /* 防止溢出 */
 }
 
-/* 3) 手机端强制可见（若被别处覆盖） */
-@media (max-width: 768px){
-  #philosophy-{{ section.id }} img.card__chev{
-    display: inline-block !important;
-  }
-}
+
 
 /* 4) 展开后按你的需求隐藏（若需要隐藏时保留占位，用 visibility:hidden） */
 #philosophy-{{ section.id }} .card.card--with-desc.is-open img.card__chev{
