@@ -629,47 +629,6 @@
         "text": "#111111",
         "muted": "#666666"
       }
-    },
-    "clinical_backed_feature_card_BiqqaT": {
-      "type": "clinical-backed-feature-card",
-      "blocks": {
-        "point_4GhXNF": {
-          "type": "point",
-          "settings": {
-            "title": "Subscribe & Save",
-            "body": "We meticulously select clinically proven ingredients to address the root causes of your health concerns."
-          }
-        },
-        "point_H3qKdD": {
-          "type": "point",
-          "settings": {
-            "title": "Recycle with Us",
-            "body": "Join our recycle program, you'll receive a special coupon to use on your next WonderBiotics purchase."
-          }
-        }
-      },
-      "block_order": [
-        "point_4GhXNF",
-        "point_H3qKdD"
-      ],
-      "name": "Split media feature",
-      "settings": {
-        "width_mode": "page",
-        "pad_y": 18,
-        "radius": 0,
-        "enable_shadow": true,
-        "image": "shopify://shop_images/46a47d1303d376568449714db69983537486c24e.jpg",
-        "image_alt": "Product image",
-        "heading": "Clinical-backed ingredients & formulas",
-        "heading_size": 54,
-        "left_bg": "#ffffff",
-        "right_bg": "#e8e8e8",
-        "divider": "#dcdcdc",
-        "text": "#111111",
-        "muted": "#666666",
-        "point_title_size": 12,
-        "point_body_size": 15
-      }
     }
   },
   "order": [
@@ -681,7 +640,6 @@
     "wonder_formulation_philosophy_Ln8QHC",
     "kpi_metrics_3aW3cC",
     "logo_marquee_ra9MhX",
-    "five_star_reviews_gQCNgB",
-    "clinical_backed_feature_card_BiqqaT"
+    "five_star_reviews_gQCNgB"
   ]
 }
