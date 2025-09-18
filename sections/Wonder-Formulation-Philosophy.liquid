@@ -77,7 +77,6 @@
     }
 
     /* ===== Layout ===== */
-    #philosophy-{{ section.id }} *{ box-sizing: border-box; }
 #philosophy-{{ section.id }} .wrap{
   max-width: min(100%, var(--max-width));
   margin: 0 auto;
@@ -154,6 +153,25 @@
     #philosophy-{{ section.id }} .card.card--with-desc.is-open .card__title{
   color: var(--card-title-color-open);
 }
+
+
+/* 虚线画在 details 顶部，位置就在 summary 和 desc 之间 */
+#philosophy-{{ section.id }} .card__details::before{
+  content: "";
+  display: block;
+  border-top: var(--open-sep-width) var(--open-sep-style) var(--open-sep-color);
+  margin: 8px 0;                 /* 与上下留空 */
+  opacity: 0;                    /* 关闭时隐藏 */
+  transform: scaleX(.98);        /* 轻微内缩，想要满宽可删这行 */
+  transform-origin: center;
+  transition: opacity var(--transition), transform var(--transition);
+}
+/* 展开时显示虚线 */
+#philosophy-{{ section.id }} .card.card--with-desc.is-open .card__details::before{
+  opacity: 1;
+  transform: scaleX(1);
+}
+
 
     @media (min-width: 750px){
       .card__title{ font-size: var(--card-title-size-d); }
