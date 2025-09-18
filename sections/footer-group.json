@@ -45,6 +45,7 @@
         "gap": 24,
         "radius": 8,
         "gutter": 16,
+        "logo_image": "shopify://shop_images/Group_2.svg",
         "logo_text": "WONDERBIOTICS",
         "show_social": true,
         "ig_url": "",
