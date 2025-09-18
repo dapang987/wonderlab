@@ -142,6 +142,26 @@
     },
     "feature_split_card_LDP3bW": {
       "type": "feature-split-card",
+      "blocks": {
+        "stat_XegPbD": {
+          "type": "stat",
+          "settings": {
+            "number": "28+",
+            "label": "Years of Probiotic Expertise"
+          }
+        },
+        "stat_HFyzmD": {
+          "type": "stat",
+          "settings": {
+            "number": "273+",
+            "label": "Research Papers"
+          }
+        }
+      },
+      "block_order": [
+        "stat_XegPbD",
+        "stat_HFyzmD"
+      ],
       "name": "Feature split card",
       "settings": {
         "image": "shopify://shop_images/Rectangle_44.png",
