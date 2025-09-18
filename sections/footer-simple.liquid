@@ -1,22 +1,41 @@
 {% comment %}
   Section: Footer — WONDERBIOTICS
-  Notes:
-  - Strongly scoped by section.id to avoid style collision
-  - Uses link list blocks for flexible columns
-  - Includes a native Shopify newsletter form
+  - Strongly scoped by section.id
+  - Menu supports nested (up to 3 levels)
+  - Newsletter form included
 {% endcomment %}
 
 <section id="footer-{{ section.id }}" role="contentinfo">
   {%- style -%}
   /* ===== Scope root (variables) ===== */
   #footer-{{ section.id }}{
+    /* base colors */
     --brand: {{ section.settings.brand | default: '#0B19FF' }};
     --text: {{ section.settings.text | default: '#ffffff' }};
     --muted: {{ section.settings.muted | default: '#cfd8ff' }};
     --rule: {{ section.settings.rule | default: 'rgba(255,255,255,.35)' }};
+
+    /* typographic colors (new) */
+    --heading-color: {{ section.settings.heading_color | default: '#ffffff' }};
+    --link-color: {{ section.settings.link_color | default: '#ffffff' }};
+    --link-hover-color: {{ section.settings.link_hover_color | default: '#ffffff' }};
+    --info-label-color: {{ section.settings.info_label_color | default: '#cfd8ff' }};
+    --info-text-color: {{ section.settings.info_text_color | default: '#ffffff' }};
+
+    /* sizes (new) */
     --gap: {{ section.settings.gap | default: 24 }}px;
     --radius: {{ section.settings.radius | default: 8 }}px;
     --gutter: {{ section.settings.gutter | default: 16 }}px;
+
+    --heading-size: {{ section.settings.heading_size | default: 15 }}px;
+    --link-size: {{ section.settings.link_size | default: 14 }}px;
+    --sublink-size: {{ section.settings.sublink_size | default: 13 }}px;
+    --bottom-label-size: {{ section.settings.bottom_label_size | default: 12 }}px;
+    --bottom-text-size: {{ section.settings.bottom_text_size | default: 14 }}px;
+
+    /* logo (new) */
+    --logo-w: {{ section.settings.logo_width | default: 28 }}px;
+    --logo-text-size: {{ section.settings.logo_text_size | default: 20 }}px;
   }
 
   /* ===== Base reset (scoped) ===== */
@@ -25,8 +44,11 @@
     background: var(--brand);
     color: var(--text);
   }
-  #footer-{{ section.id }} a{ color: var(--text); text-decoration: none; }
-  #footer-{{ section.id }} a:hover{ text-decoration: underline; }
+  #footer-{{ section.id }} a{
+    color: var(--link-color);
+    text-decoration: none;
+  }
+  #footer-{{ section.id }} a:hover{ color: var(--link-hover-color); text-decoration: underline; }
   #footer-{{ section.id }} a:focus-visible,
   #footer-{{ section.id }} button:focus-visible,
   #footer-{{ section.id }} input:focus-visible{
@@ -54,11 +76,12 @@
   #footer-{{ section.id }} .logo-text{
     letter-spacing: .5px;
     font-weight: 600;
-    font-size: clamp(18px, 2.2vw, 22px);
+    font-size: var(--logo-text-size);
     line-height: 1.2;
+    color: var(--text);
   }
   #footer-{{ section.id }} .logo-mark{
-    width: 28px; height: 28px; flex: 0 0 28px;
+    width: var(--logo-w); height: var(--logo-w); flex: 0 0 var(--logo-w);
   }
 
   /* Dashed rule aligned to container */
@@ -72,134 +95,121 @@
   /* Grid (columns) — mobile first */
   #footer-{{ section.id }} .footer__grid{
     display: grid;
-    grid-template-columns: 1fr;           /* <768px: 1列 */
+    grid-template-columns: 1fr;
     gap: clamp(16px, 3vw, 28px);
   }
 
+  /* columns */
+  #footer-{{ section.id }} .col{ padding-block: 12px; position: relative; }
   #footer-{{ section.id }} .col h3{
     margin: 0 0 10px;
-    font-size: 15px;
+    font-size: var(--heading-size);
+    color: var(--heading-color);
     font-weight: 600;
     line-height: 1.3;
     padding-bottom: 10px;
     border-bottom: 1px dashed var(--rule);
   }
+
+  /* menu lists (support nested) */
   #footer-{{ section.id }} .col ul{ list-style: none; margin: 0; padding: 0; }
-  #footer-{{ section.id }} .col li + li{ margin-top: 8px; }
-  #footer-{{ section.id }} .col a{ opacity: .9; }
+  #footer-{{ section.id }} .col li{ margin: 0; }
+  #footer-{{ section.id }} .col > ul > li + li{ margin-top: 8px; }
+  #footer-{{ section.id }} .col a{ opacity: .92; font-size: var(--link-size); }
   #footer-{{ section.id }} .col a:hover{ opacity: 1; }
 
-  /* Column spacing */
-  #footer-{{ section.id }} .col{
-    padding-block: 12px;
-    position: relative;
-  }
+  #footer-{{ section.id }} .sub{ margin-top: 6px; padding-left: 14px; border-left: 1px dashed var(--rule); }
+  #footer-{{ section.id }} .sub li + li{ margin-top: 6px; }
+  #footer-{{ section.id }} .sub a{ font-size: var(--sublink-size); opacity: .9; }
+  #footer-{{ section.id }} .sub.sub--lvl3{ margin-top: 4px; padding-left: 14px; border-left-style: dotted; }
 
   /* Subscribe column (form) */
   #footer-{{ section.id }} .subscribebox form{
-    display: grid;
-    gap: 10px;
-    align-content: start;
+    display: grid; gap: 10px; align-content: start;
   }
   #footer-{{ section.id }} .input,
   #footer-{{ section.id }} .button{
-    height: 40px;
-    width: 100%;
+    height: 40px; width: 100%;
     padding: 0 14px;
     border-radius: var(--radius);
     border: 1px solid rgba(255,255,255,.6);
     background: transparent;
-    color: var(--text);
-    font: inherit;
+    color: var(--text); font: inherit;
   }
   #footer-{{ section.id }} .input::placeholder{ color: rgba(255,255,255,.7); }
   #footer-{{ section.id }} .button{
-    cursor: pointer;
-    background: #fff;
-    color: #0B19FF;
-    border-color: #fff;
-    font-weight: 600;
+    cursor: pointer; background: #fff; color: #0B19FF; border-color: #fff; font-weight: 600;
   }
   #footer-{{ section.id }} .button:hover{ filter: brightness(.98); }
   #footer-{{ section.id }} .button:disabled{ opacity:.6; cursor:not-allowed; }
 
   /* Social row */
   #footer-{{ section.id }} .social{
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding-block: 60px 18px;
+    display: flex; align-items: center; gap: 18px; padding-block: 60px 18px;
   }
   #footer-{{ section.id }} .social a{
-    display: inline-flex;
-    width: 20px; height: 20px;
-    opacity: .9;
-    transform: translateZ(0);
+    display: inline-flex; width: 20px; height: 20px; opacity: .9; transform: translateZ(0);
   }
   #footer-{{ section.id }} .social a:hover{ opacity: 1; transform: scale(1.05); }
 
   /* Bottom info grid */
   #footer-{{ section.id }} .footer__bottom{
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 14px;
-    padding-block: 18px 0;
+    display: grid; grid-template-columns: 1fr; gap: 14px; padding-block: 18px 0;
   }
   #footer-{{ section.id }} .info h4{
-    margin: 0 0 4px;
-    font-size: 12px;
-    text-transform: none;
-    color: var(--muted);
-    font-weight: 500;
-    letter-spacing: .2px;
+    margin: 0 0 4px; font-size: var(--bottom-label-size);
+    color: var(--info-label-color); font-weight: 500; letter-spacing: .2px;
   }
   #footer-{{ section.id }} .info p{
-    margin: 0;
-    font-size: 14px;
+    margin: 0; font-size: var(--bottom-text-size); color: var(--info-text-color);
   }
 
-  /* Tablet: ≥768px → 2列；订阅可单独占一行以增强可读性 */
+  /* Tablet: ≥768px */
   @media (min-width: 768px){
     #footer-{{ section.id }} .footer__grid{
       grid-template-columns: repeat(2, minmax(0,1fr));
-      column-gap: 40px;
-      row-gap: 24px;
+      column-gap: 40px; row-gap: 24px;
     }
     #footer-{{ section.id }} .col{ padding-block: 0; }
-    #footer-{{ section.id }} .subscribebox{ grid-column: 1 / -1; } /* 平板时可独占整行（可按需去掉） */
+    #footer-{{ section.id }} .subscribebox{ grid-column: 1 / -1; }
   }
 
-  /* Desktop: ≥1024px → 6列；订阅跨两列（第5-6列），并固定在第一行 */
+  /* Desktop: ≥1024px  */
   @media (min-width: 1024px){
     #footer-{{ section.id }} .footer__grid{
-      grid-template-columns: repeat(6, minmax(0,1fr)); /* 6 列 */
-      grid-auto-flow: row dense; /* 避免空洞 */
-      column-gap: 40px;
+      grid-template-columns: repeat(6, minmax(0,1fr));
+      grid-auto-flow: row dense; column-gap: 40px;
     }
     #footer-{{ section.id }} .footer__grid > .subscribebox{
-      grid-column: 5 / -1; /* 第5-6列 */
-      grid-row: 1;         /* 第一行 */
+      grid-column: 5 / -1; grid-row: 1;
     }
     #footer-{{ section.id }} .footer__bottom{
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      column-gap: 24px;
+      grid-template-columns: repeat(3, minmax(0,1fr)); column-gap: 24px;
     }
   }
 
   /* Visually hidden (for accessible labels) */
   #footer-{{ section.id }} .sr-only{
-    position:absolute !important;
-    width:1px;height:1px;
-    padding:0;margin:-1px;overflow:hidden;
+    position:absolute !important; width:1px;height:1px; padding:0;margin:-1px;overflow:hidden;
     clip:rect(0,0,0,0);white-space:nowrap;border:0;
   }
   {%- endstyle -%}
+
+  {%- liquid
+    # prepare high-dpi logo width
+    assign _logo_w = section.settings.logo_width | default: 28
+    assign _logo_w_2x = _logo_w | times: 2
+  -%}
 
   <div class="footer__inner">
     <!-- Brand row -->
     <div class="footer__brand">
       {% if section.settings.logo_image != blank %}
-        {{ section.settings.logo_image | image_url: width: 80 | image_tag: class: 'logo-mark', alt: section.settings.logo_text | default: shop.name, loading: 'lazy' }}
+        {{ section.settings.logo_image
+           | image_url: width: _logo_w_2x
+           | image_tag: class: 'logo-mark',
+                        alt: section.settings.logo_text | default: shop.name,
+                        loading: 'lazy' }}
       {% else %}
         <!-- Fallback inline SVG mark -->
         <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
@@ -224,7 +234,25 @@
               {% if block.settings.menu != blank %}
                 <ul role="list">
                   {% for link in block.settings.menu.links %}
-                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    <li>
+                      <a href="{{ link.url }}">{{ link.title }}</a>
+                      {% if link.links != blank %}
+                        <ul class="sub" role="list">
+                          {% for child in link.links %}
+                            <li>
+                              <a href="{{ child.url }}">{{ child.title }}</a>
+                              {% if child.links != blank %}
+                                <ul class="sub sub--lvl3" role="list">
+                                  {% for grand in child.links %}
+                                    <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
+                                  {% endfor %}
+                                </ul>
+                              {% endif %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% endif %}
+                    </li>
                   {% endfor %}
                 </ul>
               {% endif %}
@@ -258,32 +286,93 @@
       {%- endfor -%}
     </div>
 
+    {%- comment -%} === Social links normalization (handle / domain / url) === {%- endcomment -%}
+    {%- liquid
+      assign ig_raw = section.settings.ig_url | default: settings.social_instagram_link | default: ''
+      assign fb_raw = section.settings.fb_url | default: settings.social_facebook_link  | default: ''
+      assign x_raw  = section.settings.x_url  | default: settings.social_twitter_link   | default: ''
+      assign tt_raw = section.settings.tt_url | default: settings.social_tiktok_link    | default: ''
+
+      assign ig = ig_raw | strip
+      assign fb = fb_raw | strip
+      assign xx = x_raw  | strip
+      assign tt = tt_raw | strip
+
+      assign ig_href = ''
+      if ig != ''
+        if ig contains '://'
+          assign ig_href = ig
+        elsif ig contains 'instagram.com'
+          assign ig_href = 'https://' | append: ig | replace: 'https://https://', 'https://'
+        else
+          assign ig_s = ig | remove: '@' | replace: ' ', ''
+          assign ig_href = 'https://instagram.com/' | append: ig_s
+        endif
+      endif
+
+      assign fb_href = ''
+      if fb != ''
+        if fb contains '://'
+          assign fb_href = fb
+        elsif fb contains 'facebook.com'
+          assign fb_href = 'https://' | append: fb | replace: 'https://https://', 'https://'
+        else
+          assign fb_s = fb | remove: '@' | replace: ' ', ''
+          assign fb_href = 'https://facebook.com/' | append: fb_s
+        endif
+      endif
+
+      assign x_href = ''
+      if xx != ''
+        if xx contains '://'
+          assign x_href = xx
+        elsif xx contains 'x.com' or xx contains 'twitter.com'
+          assign x_href = 'https://' | append: xx | replace: 'https://https://', 'https://'
+        else
+          assign x_s = xx | remove: '@' | replace: ' ', ''
+          assign x_href = 'https://x.com/' | append: x_s
+        endif
+      endif
+
+      assign tt_href = ''
+      if tt != ''
+        if tt contains '://'
+          assign tt_href = tt
+        elsif tt contains 'tiktok.com'
+          assign tt_href = 'https://' | append: tt | replace: 'https://https://', 'https://'
+        else
+          assign tt_s = tt | remove: '@' | replace: ' ', ''
+          assign tt_href = 'https://tiktok.com/@' | append: tt_s
+        endif
+      endif
+    -%}
+
     <!-- Social row -->
     {% if section.settings.show_social %}
       <div class="social" aria-label="Social links">
-        {% if section.settings.ig_url != blank %}
-          <a href="{{ section.settings.ig_url }}" aria-label="Instagram" title="Instagram">
+        {% if ig_href != blank %}
+          <a href="{{ ig_href }}" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
               <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11A5.5 5.5 0 0 1 12 7.5zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm5.75-2.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/>
             </svg>
           </a>
         {% endif %}
-        {% if section.settings.fb_url != blank %}
-          <a href="{{ section.settings.fb_url }}" aria-label="Facebook" title="Facebook">
+        {% if fb_href != blank %}
+          <a href="{{ fb_href }}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
               <path d="M13.5 22v-9h3l.5-4h-3.5V6.5c0-.9.3-1.5 1.7-1.5H17V1.3C16.5 1.2 15.4 1 14.1 1 11.4 1 9.5 2.7 9.5 6v3H6v4h3.5v9h4z"/>
             </svg>
           </a>
         {% endif %}
-        {% if section.settings.x_url != blank %}
-          <a href="{{ section.settings.x_url }}" aria-label="X (Twitter)" title="X (Twitter)">
+        {% if x_href != blank %}
+          <a href="{{ x_href }}" target="_blank" rel="noopener" aria-label="X (Twitter)" title="X (Twitter)">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
               <path d="M3 3h3.7l5 6.6L17.9 3H21l-7.1 9.4L21.4 21h-3.7l-5.5-7.2L6.1 21H2.6l7.8-10.2L3 3z"/>
             </svg>
           </a>
         {% endif %}
-        {% if section.settings.tt_url != blank %}
-          <a href="{{ section.settings.tt_url }}" aria-label="TikTok" title="TikTok">
+        {% if tt_href != blank %}
+          <a href="{{ tt_href }}" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
               <path d="M14.5 2h3a5.8 5.8 0 0 0 3 4.5A8.2 8.2 0 0 0 23 7v3a9.4 9.4 0 0 1-4.8-1.5v7.4A6.6 6.6 0 1 1 11 9.6v3a3.6 3.6 0 1 0 2.5 3.4V2z"/>
             </svg>
@@ -329,19 +418,39 @@
     { "type": "color", "id": "muted", "label": "Muted (labels)", "default": "#cfd8ff" },
     { "type": "text",  "id": "rule",  "label": "Rule color (supports rgba)", "default": "rgba(255,255,255,.35)" },
 
+    /* === Typography colors (new) === */
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#ffffff" },
+    { "type": "color", "id": "link_color", "label": "Link color", "default": "#ffffff" },
+    { "type": "color", "id": "link_hover_color", "label": "Link hover color", "default": "#ffffff" },
+    { "type": "color", "id": "info_label_color", "label": "Bottom label color", "default": "#cfd8ff" },
+    { "type": "color", "id": "info_text_color", "label": "Bottom text color", "default": "#ffffff" },
+
+    /* === Spacing & radius === */
     { "type": "range", "id": "gap", "min": 8, "max": 40, "step": 1, "unit": "px", "label": "Grid gap", "default": 24 },
     { "type": "range", "id": "radius", "min": 0, "max": 24, "step": 1, "unit": "px", "label": "Control radius", "default": 8 },
     { "type": "range", "id": "gutter", "min": 0, "max": 40, "step": 2, "unit": "px", "label": "Side padding (gutter)", "default": 16 },
 
+    /* === Logo === */
     { "type": "image_picker", "id": "logo_image", "label": "Logo image (mark)" },
+    { "type": "range", "id": "logo_width", "min": 16, "max": 96, "step": 2, "unit": "px", "label": "Logo mark size", "default": 28 },
+    { "type": "range", "id": "logo_text_size", "min": 12, "max": 36, "step": 1, "unit": "px", "label": "Logo text size", "default": 20 },
     { "type": "text", "id": "logo_text", "label": "Logo text", "default": "WONDERBIOTICS" },
 
+    /* === Social (allow handle/URL) === */
     { "type": "checkbox", "id": "show_social", "label": "Show social icons", "default": true },
-    { "type": "url", "id": "ig_url", "label": "Instagram URL" },
-    { "type": "url", "id": "fb_url", "label": "Facebook URL" },
-    { "type": "url", "id": "x_url",  "label": "X (Twitter) URL" },
-    { "type": "url", "id": "tt_url", "label": "TikTok URL" },
+    { "type": "text", "id": "ig_url", "label": "Instagram (handle / URL)" },
+    { "type": "text", "id": "fb_url", "label": "Facebook (handle / URL)" },
+    { "type": "text", "id": "x_url",  "label": "X / Twitter (handle / URL)" },
+    { "type": "text", "id": "tt_url", "label": "TikTok (handle / URL)" },
 
+    /* === Typography sizes (new) === */
+    { "type": "range", "id": "heading_size", "min": 12, "max": 28, "step": 1, "unit": "px", "label": "Column heading size", "default": 15 },
+    { "type": "range", "id": "link_size", "min": 10, "max": 22, "step": 1, "unit": "px", "label": "Link size", "default": 14 },
+    { "type": "range", "id": "sublink_size", "min": 10, "max": 20, "step": 1, "unit": "px", "label": "Sub-link size", "default": 13 },
+    { "type": "range", "id": "bottom_label_size", "min": 10, "max": 20, "step": 1, "unit": "px", "label": "Bottom label size", "default": 12 },
+    { "type": "range", "id": "bottom_text_size", "min": 10, "max": 20, "step": 1, "unit": "px", "label": "Bottom text size", "default": 14 },
+
+    /* === Bottom info === */
     { "type": "text", "id": "address_label", "label": "Address label", "default": "Address :" },
     { "type": "textarea", "id": "address", "label": "Address text", "default": "17800 Castleton St Ste 665, City of Industry, California 91748" },
     { "type": "text", "id": "phone_label", "label": "Telephone label", "default": "Telephone :" },
