@@ -442,7 +442,35 @@
   "id": "card_bg_open",
   "label": "Card background (open state)",
   "default": "#f7f7f7"
+},
+{
+  "type": "color",
+  "id": "card_open_border_color",
+  "label": "Card 边框颜色（展开时）",
+  "default": "#dcdcdc"
+},
+{
+  "type": "range",
+  "id": "card_open_border_width",
+  "min": 0,
+  "max": 8,
+  "step": 1,
+  "unit": "px",
+  "label": "Card 边框粗细（展开时）",
+  "default": 1
+},
+{
+  "type": "select",
+  "id": "card_open_border_style",
+  "label": "Card 边框线型（展开时）",
+  "default": "solid",
+  "options": [
+    { "value": "solid",  "label": "实线" },
+    { "value": "dashed", "label": "虚线（短划）" },
+    { "value": "dotted", "label": "点线" }
+  ]
 }
+
 
   ],
   "blocks": [
