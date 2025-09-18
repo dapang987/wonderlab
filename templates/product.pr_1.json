@@ -315,9 +315,9 @@
         "cl_mark_ring_border": "#17b7e4",
         "cl_mark_ring_fill": "#111111",
         "heading_size": 44,
-        "subtitle_size": 14,
-        "header_size": 13,
-        "feature_size": 14,
+        "subtitle_size": 16,
+        "header_size": 16,
+        "feature_size": 20,
         "cell_size": 14,
         "padding_top": 56,
         "padding_bottom": 56
