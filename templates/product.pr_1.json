@@ -146,8 +146,8 @@
       "settings": {
         "image": "shopify://shop_images/Rectangle_44.png",
         "img_alt": "Hand holding a small blue bottle",
-        "aspect_desktop": "4-5",
-        "aspect_mobile": "1-1",
+        "aspect_desktop": "1-1",
+        "aspect_mobile": "4-3",
         "title_line1": "Tired of diets?",
         "title_line2": "Let science do the work.",
         "lead": "Science-backed ingredients deliver real results on efficacy of weight management.",
