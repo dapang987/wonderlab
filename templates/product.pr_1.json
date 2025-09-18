@@ -118,7 +118,7 @@
         "p_size_m": 14,
         "h_color_m": "#ffffff",
         "p_color_m": "#ffffff",
-        "align_x_d": "left",
+        "align_x_d": "center",
         "align_y_d": "center",
         "align_x_m": "left",
         "align_y_m": "bottom",
