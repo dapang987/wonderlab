@@ -141,8 +141,11 @@
       line-height: 1.2;
       color: var(--card-title-color);
       font-size: var(--card-title-size-m);
-      transition: color var(--transition);
     }
+    #philosophy-{{ section.id }} .card__title{
+  /* 你已有的样式 … */
+  transition: color var(--transition);
+}
     #philosophy-{{ section.id }} .card.card--with-desc.is-open .card__title{
   color: var(--card-title-color-open);
 }
