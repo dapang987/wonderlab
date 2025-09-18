@@ -87,9 +87,11 @@
       #hero-{{ section.id }} .content{ width: 100%; max-width: none; }
     }
     
-/* ====== 调试：画线看谁在占空间 ====== */
-#hero-{{ section.id }} .box{ outline: 1px dashed #e11; }
-#hero-{{ section.id }} .page-width{ outline: 1px dashed #17e; }
+/* ====== 1) 去掉 .page-width 的左右内边距（容易被误以为是外边距） ====== */
+#shopify-section-{{ section.id }} .page-width{
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
 
 
 
