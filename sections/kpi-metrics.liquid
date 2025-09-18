@@ -18,8 +18,20 @@
       /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
       padding: var(--pad-top) 0 var(--pad-bottom);
     }
-
-    .section-{{ section.id }} *{ box-sizing: border-box; }
+.section-{{ section.id }}{
+  --text: {{ section.settings.text_color }};
+  --muted: {{ section.settings.muted_color }};
+  --rule: {{ section.settings.rule_color }};
+  --gap: {{ section.settings.gap }}px;
+  --pad-top: {{ section.settings.pad_top }}px;
+  --pad-bottom: {{ section.settings.pad_bottom }}px;
+  --radius: {{ section.settings.radius }}px;
+  --figure-bg: {{ section.settings.figure_bg }};
+  --figure-border: {{ section.settings.figure_border }};
+  color: var(--text);
+  /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
+  padding: var(--pad-top) 0 var(--pad-bottom);
+}
 
     /* 标题 */
     .section-{{ section.id }} .kpi-title{
