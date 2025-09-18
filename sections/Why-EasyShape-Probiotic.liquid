@@ -87,10 +87,12 @@
       #hero-{{ section.id }} .content{ width: 100%; max-width: none; }
     }
     
-/* ====== 1) 去掉 .page-width 的左右内边距（容易被误以为是外边距） ====== */
-#shopify-section-{{ section.id }} .page-width{
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+/* ====== 3) 清除常见元素的默认 margin ====== */
+#hero-{{ section.id }} figure,
+#hero-{{ section.id }} h1,
+#hero-{{ section.id }} h2,
+#hero-{{ section.id }} p{
+  margin: 0 !important;
 }
 
 
