@@ -270,6 +270,7 @@
     <div class="footer__grid">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
+
 {%- when 'menu' -%}
   <div class="col" {{ block.shopify_attributes }}>
     {%- assign _menu = block.settings.menu -%}
@@ -280,9 +281,48 @@
       <h3 class="menu__heading">
         {%- if block.settings.heading_clickable and _parent.url != blank -%}
           <a href="{{ _parent.url }}">{{ _parent.title }}</a>
-        {%- else -%}
-          {{ _parent.title }}
-        {%- endif -%}
+      {%- else -%}
+  {%- comment -%} 计算自动标题：优先菜单名；若没有则回退到第一个顶级项标题 {%- endcomment -%}
+  {%- assign _menu_title = '' -%}
+  {%- if _menu and _menu.title != blank -%}
+    {%- assign _menu_title = _menu.title -%}
+  {%- elsif _menu and _menu.links.size > 0 -%}
+    {%- assign _menu_title = _menu.links.first.title -%}
+  {%- endif -%}
+
+  {%- comment -%} 最终标题：如果手动填了 heading 就覆盖，否则用自动标题 {%- endcomment -%}
+  {%- assign heading_text = block.settings.heading | default: _menu_title -%}
+  {%- if heading_text != blank -%}
+    <h3 class="menu__heading">{{ heading_text }}</h3>
+  {%- endif -%}
+
+  {%- if _menu != blank -%}
+    <ul class="lvl1" role="list">
+      {%- for link in _menu.links -%}
+        <li>
+          <a href="{{ link.url }}">{{ link.title }}</a>
+          {%- if link.links != blank -%}
+            <ul class="sub" role="list">
+              {%- for child in link.links -%}
+                <li>
+                  <a href="{{ child.url }}">{{ child.title }}</a>
+                  {%- if child.links != blank -%}
+                    <ul class="sub sub--lvl3" role="list">
+                      {%- for grand in child.links -%}
+                        <li><a href="{{ grand.url }}">{{ grand.title }}</a></li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+{%- endif -%}
+
       </h3>
 
       {%- if _parent.links != blank -%}
