@@ -465,6 +465,10 @@
       "settings": {
         "title": "Industry Leader Trusted by Doctors",
         "serif_title": true,
+        "bg_grad_enable": true,
+        "bg_c1": "#ffffff",
+        "bg_c2": "#51bcf1",
+        "bg_angle": 360,
         "gap": 36,
         "pad_top": 64,
         "pad_bottom": 64,
