@@ -19,6 +19,14 @@
   --card-open-border-width: {{ section.settings.card_open_border_width }}px;
   --card-open-border-style: {{ section.settings.card_open_border_style | default: 'solid' }};
 
+  /* Card border (closed & open) */
+  --card-border-color: {{ section.settings.card_border_color }};
+  --card-border-width: {{ section.settings.card_border_width }}px;
+  --card-border-style: {{ section.settings.card_border_style | default: 'solid' }};
+
+  --card-open-border-color: {{ section.settings.card_open_border_color | default: section.settings.card_border_color }};
+  --card-open-border-width: {{ section.settings.card_open_border_width | default: section.settings.card_border_width }}px;
+  --card-open-border-style: {{ section.settings.card_open_border_style | default: section.settings.card_border_style }};
 
   /* Card open-state background */
   --card-bg-open: {{ section.settings.card_bg_open }};
@@ -234,6 +242,27 @@
 }
 #philosophy-{{ section.id }} .card{
   border: var(--card-open-border-width) solid transparent;
+}
+#philosophy-{{ section.id }} .card{
+  background: var(--card-bg);
+  border: var(--card-border-width) var(--card-border-style) var(--card-border-color); /* 关闭态边框 */
+  border-radius: var(--radius);
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  min-height: 110px;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    border-width var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+}
+
+/* 展开态：背景 & 边框 */
+#philosophy-{{ section.id }} .card.card--with-desc.is-open{
+  background: var(--card-bg-open);
+  border: var(--card-open-border-width) var(--card-open-border-style) var(--card-open-border-color);
 }
 
 
