@@ -35,6 +35,9 @@
     --logo-text-size: {{ section.settings.logo_text_size | default: 20 }}px;
 
     --social-size: {{ section.settings.social_icon_size | default: 20 }}px;
+    --parent-link-size: {{ section.settings.parent_link_size | default: 15 }}px;
+--parent-link-color: {{ section.settings.parent_link_color | default: section.settings.link_color | default: '#ffffff' }};
+
   }
 
   #footer-{{ section.id }} *{ box-sizing: border-box; }
