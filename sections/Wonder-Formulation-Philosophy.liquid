@@ -21,6 +21,10 @@
   --ff-title: var(--font-heading-family, inherit);
 --ff-body: var(--font-body-family, inherit);
 --card-title-color-open: #ffffff;
+  /* Open-state divider (between summary & desc) */
+  --open-sep-color: {{ section.settings.open_sep_color | default: '#d9d9d9' }};
+  --open-sep-width: {{ section.settings.open_sep_width | default: 1 }}px;
+  --open-sep-style: {{ section.settings.open_sep_style | default: 'dashed' }};
 
   /* Card border (closed & open) */
   --card-border-color: {{ section.settings.card_border_color }};
@@ -141,6 +145,7 @@
       line-height: 1.2;
       color: var(--card-title-color);
       font-size: var(--card-title-size-m);
+      transition: color var(--transition);
     }
     #philosophy-{{ section.id }} .card__title{
   /* 你已有的样式 … */
