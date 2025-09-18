@@ -18,28 +18,40 @@
           "type": "menu",
           "settings": {
             "heading": "",
-            "menu": "shop"
+            "menu": "shop",
+            "use_first_item_as_heading": true,
+            "heading_clickable": true,
+            "show_siblings": false
           }
         },
         "menu_LpXhki": {
           "type": "menu",
           "settings": {
             "heading": "",
-            "menu": "about"
+            "menu": "about",
+            "use_first_item_as_heading": true,
+            "heading_clickable": true,
+            "show_siblings": false
           }
         },
         "menu_A8fwQi": {
           "type": "menu",
           "settings": {
             "heading": "",
-            "menu": "information"
+            "menu": "information",
+            "use_first_item_as_heading": true,
+            "heading_clickable": true,
+            "show_siblings": false
           }
         },
         "menu_TEttyQ": {
           "type": "menu",
           "settings": {
             "heading": "",
-            "menu": "account"
+            "menu": "account",
+            "use_first_item_as_heading": true,
+            "heading_clickable": true,
+            "show_siblings": false
           }
         },
         "subscribe_JDNiKP": {
