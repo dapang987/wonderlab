@@ -74,12 +74,13 @@
         "subscribe_JDNiKP"
       ],
       "settings": {
+        "pad_y": 64,
         "brand": "#0b19ff",
         "text": "#ffffff",
         "muted": "#cfd8ff",
         "rule": "rgba(255,255,255,.35)",
         "parent_link_color": "#ffffff",
-        "parent_link_size": 28,
+        "parent_link_size": 27,
         "heading_color": "#ffffff",
         "link_color": "#ffffff",
         "link_hover_color": "#ffffff",
