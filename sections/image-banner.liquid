@@ -487,25 +487,24 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
   "class": "section",
   "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
-{ "type": "image_picker", "id": "image", "label": "t:sections.image-banner.settings.image.label" },
-{ "type": "image_picker", "id": "image_mobile", "label": "手机端图片" },
-{ "type": "checkbox", "id": "mobile_adapt_to_image", "label": "手机端高度跟随上传图片比例", "default": true, "info": "≤749px 时按手机端图片（image_mobile）的长宽比自适应高度。" },
-{
-  "type": "select",
-  "id": "mobile_height_mode",
-  "label": "手机端高度模式",
-  "default": "image",
-  "options": [
-    { "value": "image", "label": "跟随图片比例（推荐）" },
-    { "value": "fixed", "label": "固定高度（px）" },
-    { "value": "vh", "label": "视口高度（vh）" }
-  ]
-},
-{ "type": "range", "id": "mobile_height_vh", "label": "视口高度（vh）", "min": 10, "max": 100, "step": 5, "default": 60 },
-{"type": "range", "id": "image_overlay_opacity", "min": 0, "max": 100, "step": 10, "unit": "%",
-"label": "t:sections.image-banner.settings.image_overlay_opacity.label", "default": 0},
+    { "type": "image_picker", "id": "image", "label": "t:sections.image-banner.settings.image.label" },
+    { "type": "image_picker", "id": "image_mobile", "label": "手机端图片" },
+    { "type": "checkbox", "id": "mobile_adapt_to_image", "label": "手机端高度跟随上传图片比例", "default": true, "info": "≤749px 时按手机端图片（image_mobile）的长宽比自适应高度。" },
     {
-"type": "select", "id": "image_height", "default": "medium",
+      "type": "select",
+      "id": "mobile_height_mode",
+      "label": "手机端高度模式",
+      "default": "image",
+      "options": [
+        { "value": "image", "label": "跟随图片比例（推荐）" },
+        { "value": "fixed", "label": "固定高度（px）" },
+        { "value": "vh", "label": "视口高度（vh）" }
+      ]
+    },
+    { "type": "range", "id": "mobile_height_vh", "label": "视口高度（vh）", "min": 10, "max": 100, "step": 5, "default": 60 },
+    { "type": "range", "id": "image_overlay_opacity", "min": 0, "max": 100, "step": 10, "unit": "%", "label": "t:sections.image-banner.settings.image_overlay_opacity.label", "default": 0 },
+    {
+      "type": "select", "id": "image_height", "default": "medium",
       "options": [
         { "value": "adapt",  "label": "t:sections.image-banner.settings.image_height.options__1.label" },
         { "value": "small",  "label": "t:sections.image-banner.settings.image_height.options__2.label" },
@@ -516,33 +515,32 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
       "info": "t:sections.image-banner.settings.image_height.info"
     },
     {
-  "type": "select",
-  "id": "image_fit",
-  "label": "图片适配方式",
-  "default": "cover",
-  "options": [
-    { "value": "cover", "label": "铺满（可能裁切）" },
-    { "value": "contain", "label": "完整显示（不裁切，可能留白）" }
-  ]
-},
-{
-  "type": "select",
-  "id": "image_position",
-  "label": "图片对齐位置",
-  "default": "center",
-  "options": [
-    { "value": "top-left", "label": "左上" },
-    { "value": "top", "label": "上中" },
-    { "value": "top-right", "label": "右上" },
-    { "value": "left", "label": "中左" },
-    { "value": "center", "label": "正中" },
-    { "value": "right", "label": "中右" },
-    { "value": "bottom-left", "label": "左下" },
-    { "value": "bottom", "label": "下中" },
-    { "value": "bottom-right", "label": "右下" }
-  ]
-},
-
+      "type": "select",
+      "id": "image_fit",
+      "label": "图片适配方式",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "铺满（可能裁切）" },
+        { "value": "contain", "label": "完整显示（不裁切，可能留白）" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "图片对齐位置",
+      "default": "center",
+      "options": [
+        { "value": "top-left", "label": "左上" },
+        { "value": "top", "label": "上中" },
+        { "value": "top-right", "label": "右上" },
+        { "value": "left", "label": "中左" },
+        { "value": "center", "label": "正中" },
+        { "value": "right", "label": "中右" },
+        { "value": "bottom-left", "label": "左下" },
+        { "value": "bottom", "label": "下中" },
+        { "value": "bottom-right", "label": "右下" }
+      ]
+    },
     {
       "type": "select", "id": "desktop_content_position", "default": "middle-center",
       "options": [
@@ -609,11 +607,9 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
           "label": "t:sections.all.heading_size.label"
         },
         { "type": "color", "id": "heading_color", "label": "标题颜色", "default": "#111111" },
-{ "type": "range", "id": "heading_font_size", "label": "标题字号（px，0=跟随主题）", "min": 0, "max": 96, "step": 1, "default": 0 },
-{ "type": "color", "id": "heading_color_mobile", "label": "标题颜色（手机）", "default": "#111111" },
-{ "type": "range", "id": "heading_font_size_mobile", "label": "标题字号（手机，px，0=跟随桌面/主题）", "min": 0, "max": 96, "step": 1, "default": 0 }
-
-
+        { "type": "range", "id": "heading_font_size", "label": "标题字号（px，0=跟随主题）", "min": 0, "max": 96, "step": 1, "default": 0 },
+        { "type": "color", "id": "heading_color_mobile", "label": "标题颜色（手机）", "default": "#111111" },
+        { "type": "range", "id": "heading_font_size_mobile", "label": "标题字号（手机，px，0=跟随桌面/主题）", "min": 0, "max": 96, "step": 1, "default": 0 }
       ]
     },
     {
@@ -632,11 +628,9 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
           "label": "t:sections.image-banner.blocks.text.settings.text_style.label"
         },
         { "type": "color", "id": "text_color", "label": "文字颜色", "default": "#111111" },
-{ "type": "range", "id": "text_font_size", "label": "正文字号（px，0=跟随主题）", "min": 0, "max": 48, "step": 1, "default": 0 },
-{ "type": "color", "id": "text_color_mobile", "label": "文字颜色（手机）", "default": "#111111" },
-{ "type": "range", "id": "text_font_size_mobile", "label": "正文字号（手机，px，0=跟随桌面/主题）", "min": 0, "max": 48, "step": 1, "default": 0 }
-
-        
+        { "type": "range", "id": "text_font_size", "label": "正文字号（px，0=跟随主题）", "min": 0, "max": 48, "step": 1, "default": 0 },
+        { "type": "color", "id": "text_color_mobile", "label": "文字颜色（手机）", "default": "#111111" },
+        { "type": "range", "id": "text_font_size_mobile", "label": "正文字号（手机，px，0=跟随桌面/主题）", "min": 0, "max": 48, "step": 1, "default": 0 }
       ]
     },
     {
@@ -662,75 +656,113 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
         { "type": "color", "id": "btn2_text_color", "label": "按钮2 字体颜色", "default": "#ffffff" },
         { "type": "range", "id": "btn2_radius", "label": "按钮2 圆角（px）", "min": 0, "max": 40, "step": 2, "default": 12 },
         { "type": "color", "id": "btn2_bg_color", "label": "按钮2 背景色", "default": "#111111" },
+
         { "type": "header", "content": "按钮1边框" },
-{ "type": "range",  "id": "btn1_border_width", "label": "按钮1 边框粗细（px）", "min": 0, "max": 8, "step": 1, "default": 0 },
-{ "type": "color",  "id": "btn1_border_color", "label": "按钮1 边框颜色", "default": "#111111" },
+        { "type": "range", "id": "btn1_border_width", "label": "按钮1 边框粗细（px）", "min": 0, "max": 8, "step": 1, "default": 0 },
+        { "type": "color", "id": "btn1_border_color", "label": "按钮1 边框颜色", "default": "#111111" },
 
-{ "type": "header", "content": "按钮2边框" },
-{ "type": "range",  "id": "btn2_border_width", "label": "按钮2 边框粗细（px）", "min": 0, "max": 8, "step": 1, "default": 0 },
-{ "type": "color",  "id": "btn2_border_color", "label": "按钮2 边框颜色", "default": "#111111" },
-{ "type": "header", "content": "移动端（≤989px）覆盖" },
+        { "type": "header", "content": "按钮2边框" },
+        { "type": "range", "id": "btn2_border_width", "label": "按钮2 边框粗细（px）", "min": 0, "max": 8, "step": 1, "default": 0 },
+        { "type": "color", "id": "btn2_border_color", "label": "按钮2 边框颜色", "default": "#111111" },
 
-{ "type": "color", "id": "btn1_text_color_mobile", "label": "按钮1 文字颜色（手机）", "default": "#ffffff" },
-{ "type": "color", "id": "btn1_border_color_mobile", "label": "按钮1 边框颜色（手机）", "default": "#111111" },
-
-{ "type": "color", "id": "btn2_text_color_mobile", "label": "按钮2 文字颜色（手机）", "default": "#ffffff" },
-{ "type": "color", "id": "btn2_border_color_mobile", "label": "按钮2 边框颜色（手机）", "default": "#111111" }
-
+        { "type": "header", "content": "移动端（≤989px）覆盖" },
+        { "type": "color", "id": "btn1_text_color_mobile", "label": "按钮1 文字颜色（手机）", "default": "#ffffff" },
+        { "type": "color", "id": "btn1_border_color_mobile", "label": "按钮1 边框颜色（手机）", "default": "#111111" },
+        { "type": "color", "id": "btn2_text_color_mobile", "label": "按钮2 文字颜色（手机）", "default": "#ffffff" },
+        { "type": "color", "id": "btn2_border_color_mobile", "label": "按钮2 边框颜色（手机）", "default": "#111111" }
       ]
     },
+
     {
       "type": "cert_info",
-      "name": "认证信息（覆盖块）",
+      "name": "认证信息（覆盖块 UI 样式）",
       "settings": [
-        { "type": "text",       "id": "heading",         "label": "标题", "default": "认证信息" },
-        { "type": "richtext",   "id": "text",            "label": "正文", "default": "<p>ISO 9001 / CE / RoHS</p>" },
-        { "type": "image_picker","id": "icon",           "label": "可选图标" },
+        { "type": "text", "id": "heading", "label": "标题", "default": "DOCTOR TRUSTED" },
+        { "type": "text", "id": "subheading", "label": "副标题", "default": "TRACEABLE STRAIN" },
+        { "type": "image_picker", "id": "icon", "label": "图标（可选）" },
+        { "type": "range", "id": "icon_size", "label": "图标大小（px）", "min": 12, "max": 32, "step": 1, "default": 18 },
 
-        { "type": "url",        "id": "link_url",        "label": "可选链接" },
-        { "type": "select",     "id": "link_target",     "label": "链接打开方式", "default": "_self",
+        { "type": "url", "id": "link_url", "label": "链接（可选）" },
+        {
+          "type": "select", "id": "link_target", "label": "打开方式", "default": "_self",
           "options": [
             { "value": "_self", "label": "当前窗口" },
-            { "value": "_blank","label": "新窗口" }
+            { "value": "_blank", "label": "新窗口" }
           ]
         },
 
+        { "type": "header", "content": "排版" },
+        { "type": "checkbox", "id": "title_uppercase", "label": "标题大写", "default": true },
+        { "type": "checkbox", "id": "sub_uppercase", "label": "副标题大写", "default": true },
+        { "type": "range", "id": "title_weight", "label": "标题字重", "min": 400, "max": 900, "step": 50, "default": 800 },
+        { "type": "range", "id": "sub_weight", "label": "副标题字重", "min": 300, "max": 900, "step": 50, "default": 600 },
+
+
+        { "type": "range", "id": "title_size", "label": "标题字号（px）", "min": 10, "max": 24, "step": 1, "default": 16 },
+        { "type": "range", "id": "sub_size", "label": "副标题字号（px）", "min": 10, "max": 20, "step": 1, "default": 12 },
+
+        { "type": "header", "content": "颜色" },
+        { "type": "color", "id": "bg_color", "label": "背景色", "default": "#DCEFF7" },
+        { "type": "range", "id": "bg_opacity", "label": "背景不透明度（%）", "min": 0, "max": 100, "step": 5, "default": 80 },
+        { "type": "color", "id": "title_color", "label": "标题颜色", "default": "#111111" },
+        { "type": "color", "id": "sub_color", "label": "副标题颜色", "default": "#111111" },
+        { "type": "color", "id": "divider_color", "label": "分隔线颜色", "default": "#111111" },
+
+        { "type": "header", "content": "尺寸（桌面）" },
+        { "type": "range", "id": "radius", "label": "圆角（px）", "min": 0, "max": 32, "step": 1, "default": 14 },
+        { "type": "range", "id": "pad_x", "label": "左右内边距（px）", "min": 6, "max": 32, "step": 1, "default": 16 },
+        { "type": "range", "id": "pad_y", "label": "上下内边距（px）", "min": 6, "max": 24, "step": 1, "default": 10 },
+        { "type": "range", "id": "gap", "label": "元素间距（px）", "min": 0, "max": 24, "step": 1, "default": 10 },
+
+        { "type": "header", "content": "尺寸（手机覆盖）" },
+        { "type": "range", "id": "title_size_mobile", "label": "标题字号（手机，px）", "min": 10, "max": 24, "step": 1, "default": 14 },
+        { "type": "range", "id": "sub_size_mobile", "label": "副标题字号（手机，px）", "min": 10, "max": 20, "step": 1, "default": 12 },
+        { "type": "range", "id": "pad_x_mobile", "label": "左右内边距（手机，px）", "min": 6, "max": 28, "step": 1, "default": 14 },
+        { "type": "range", "id": "pad_y_mobile", "label": "上下内边距（手机，px）", "min": 6, "max": 24, "step": 1, "default": 8 },
+        { "type": "range", "id": "gap_mobile", "label": "元素间距（手机，px）", "min": 0, "max": 24, "step": 1, "default": 8 },
+
+        { "type": "header", "content": "分隔线" },
         {
-  "type": "select",
-  "id": "text_align",
-  "label": "文字对齐",
-  "default": "left",
-  "options": [
-    { "value": "left",   "label": "靠左" },
-    { "value": "center", "label": "居中" },
-    { "value": "right",  "label": "靠右" }
-  ]
-},
+          "type": "select", "id": "divider_style", "label": "分隔线样式", "default": "dashed",
+          "options": [
+            { "value": "dashed", "label": "虚线" },
+            { "value": "dotted", "label": "点线" },
+            { "value": "solid", "label": "实线" },
+            { "value": "none", "label": "无" }
+          ]
+        },
+        { "type": "range", "id": "divider_thickness", "label": "分隔线粗细（px）", "min": 1, "max": 3, "step": 1, "default": 1 },
+        {
+          "type": "select", "id": "divider_height_mode", "label": "分隔线高度", "default": "auto",
+          "options": [
+            { "value": "auto", "label": "自适应内容高度" },
+            { "value": "custom", "label": "自定义高度" }
+          ]
+        },
+        { "type": "range", "id": "divider_height", "label": "自定义高度（px）", "min": 8, "max": 48, "step": 1, "default": 24 },
+        { "type": "checkbox", "id": "show_divider_mobile", "label": "手机端显示分隔线", "default": true },
 
+        { "type": "header", "content": "宽度" },
+        {
+          "type": "select", "id": "width_mode_desktop", "label": "桌面宽度模式", "default": "auto",
+          "options": [
+            { "value": "auto", "label": "自适应" },
+            { "value": "fixed", "label": "固定像素" }
+          ]
+        },
+        { "type": "range", "id": "width_desktop", "label": "桌面固定宽度（px）", "min": 200, "max": 600, "step": 10, "default": 320 },
+        {
+          "type": "select", "id": "width_mode_mobile", "label": "手机宽度模式", "default": "auto",
+          "options": [
+            { "value": "auto", "label": "自适应" },
+            { "value": "fixed", "label": "固定像素" }
+          ]
+        },
+        { "type": "range", "id": "width_mobile", "label": "手机固定宽度（px）", "min": 200, "max": 420, "step": 10, "default": 300 },
 
-        { "type": "color",      "id": "bg_color",        "label": "背景色", "default": "#111111" },
-        { "type": "range",      "id": "bg_opacity",      "label": "背景不透明度（%）", "min": 0, "max": 100, "step": 5, "default": 80 },
-
-        { "type": "color",      "id": "text_color",      "label": "文字颜色", "default": "#FFFFFF" },
-        { "type": "range",      "id": "font_size",       "label": "正文字号（px）", "min": 12, "max": 24, "step": 1, "default": 14 },
-
-        { "type": "range",      "id": "radius",          "label": "圆角（px）", "min": 0, "max": 24, "step": 2, "default": 14 },
-        { "type": "range",      "id": "pad_x",           "label": "左右内边距（px）", "min": 8, "max": 32, "step": 2, "default": 16 },
-        { "type": "range",      "id": "pad_y",           "label": "上下内边距（px）", "min": 6, "max": 24, "step": 2, "default": 10 },
-
-        { "type": "range",      "id": "width_desktop",   "label": "桌面宽度（px）", "min": 200, "max": 600, "step": 10, "default": 320 },
-        { "type": "range",      "id": "width_mobile",    "label": "手机宽度（px）", "min": 200, "max": 420, "step": 10, "default": 300 },
-
-        { "type": "range",      "id": "edge_inset",      "label": "边缘内缩（px）", "min": 0, "max": 80, "step": 4, "default": 16 },
-        { "type": "header", "content": "手机端专属样式（可选）" },
-{ "type": "range", "id": "font_size_mobile", "label": "正文字号（手机，px）", "min": 12, "max": 24, "step": 1, "default": 14 },
-{ "type": "range", "id": "pad_x_mobile", "label": "左右内边距（手机，px）", "min": 6, "max": 32, "step": 2, "default": 14 },
-{ "type": "range", "id": "pad_y_mobile", "label": "上下内边距（手机，px）", "min": 6, "max": 24, "step": 2, "default": 8 },
-
-{ "type": "header", "content": "标题样式（可选）" },
-{ "type": "range", "id": "title_font_size", "label": "标题字号（px）", "min": 12, "max": 28, "step": 1, "default": 16 },
-
-        { "type": "select",     "id": "position_desktop","label": "桌面位置", "default": "bottom-right",
+        { "type": "header", "content": "位置与层级" },
+        {
+          "type": "select", "id": "position_desktop", "label": "桌面位置", "default": "bottom-right",
           "options": [
             { "value": "top-left", "label": "左上" },
             { "value": "top-center", "label": "上中" },
@@ -743,8 +775,8 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
             { "value": "bottom-right", "label": "右下" }
           ]
         },
-
-        { "type": "select",     "id": "position_mobile", "label": "手机位置", "default": "bottom-right",
+        {
+          "type": "select", "id": "position_mobile", "label": "手机位置", "default": "bottom-right",
           "options": [
             { "value": "top-left", "label": "左上" },
             { "value": "top-center", "label": "上中" },
@@ -757,10 +789,29 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
             { "value": "bottom-right", "label": "右下" }
           ]
         },
+        { "type": "range", "id": "edge_inset", "label": "边缘内缩（px）", "min": 0, "max": 80, "step": 2, "default": 16 },
 
-        { "type": "checkbox",   "id": "shadow",          "label": "开启阴影", "default": true },
-        { "type": "range",      "id": "z_index",         "label": "层级（z-index）", "min": 1, "max": 10, "step": 1, "default": 3 },
-        { "type": "checkbox",   "id": "show_on_mobile",  "label": "手机端显示", "default": true }
+        { "type": "range", "id": "offset_x_desktop", "label": "X 偏移（桌面，px）", "min": -200, "max": 200, "step": 10, "default": 0 },
+        { "type": "range", "id": "offset_y_desktop", "label": "Y 偏移（桌面，px）", "min": -200, "max": 200, "step": 10, "default": 0 },
+        { "type": "range", "id": "offset_x_mobile", "label": "X 偏移（手机，px）", "min": -200, "max": 200, "step": 10, "default": 0 },
+        { "type": "range", "id": "offset_y_mobile", "label": "Y 偏移（手机，px）", "min": -200, "max": 200, "step": 10, "default": 0 },
+
+        { "type": "checkbox", "id": "shadow", "label": "阴影", "default": true },
+        { "type": "checkbox", "id": "glass_blur", "label": "磨砂（Backdrop Blur）", "default": false },
+        { "type": "range", "id": "z_index", "label": "层级（z-index）", "min": 1, "max": 10, "step": 1, "default": 3 },
+        { "type": "checkbox", "id": "show_on_mobile", "label": "手机端显示", "default": true },
+
+        { "type": "header", "content": "动画" },
+        {
+          "type": "select", "id": "enter_animation", "label": "进入动画", "default": "fade-in",
+          "options": [
+            { "value": "none", "label": "无" },
+            { "value": "fade-in", "label": "淡入" },
+            { "value": "slide-up", "label": "上滑淡入" }
+          ]
+        },
+        { "type": "range", "id": "anim_duration", "label": "动画时长（ms）", "min": 100, "max": 800, "step": 20, "default": 240 },
+        { "type": "range", "id": "anim_delay", "label": "动画延迟（ms）", "min": 0, "max": 1000, "step": 20, "default": 0 }
       ]
     }
   ],
@@ -769,3 +820,4 @@ text-align: {{ block.settings.text_align }}; /* 文本本身的对齐（标题/�
   ]
 }
 {% endschema %}
+
