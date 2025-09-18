@@ -14,45 +14,49 @@
     "footer_simple": {
       "type": "footer-simple",
       "blocks": {
-        "menu_column_YeiGRp": {
-          "type": "menu_column",
+        "menu_LpXhki": {
+          "type": "menu",
           "settings": {
-            "menu": "shop"
-          }
-        },
-        "menu_column_VRQrE7": {
-          "type": "menu_column",
-          "settings": {
+            "heading": "",
             "menu": "about"
           }
         },
-        "menu_column_npMMWz": {
-          "type": "menu_column",
+        "subscribe_JDNiKP": {
+          "type": "subscribe",
           "settings": {
-            "menu": "information"
-          }
-        },
-        "menu_column_WVFQkA": {
-          "type": "menu_column",
-          "settings": {
-            "menu": "account"
+            "heading": "Stay Up To Date",
+            "placeholder": "Your email",
+            "show_phone": true,
+            "placeholder_phone": "Your mobile # (optional)",
+            "button_label": "Subscribe",
+            "success_text": "Thanks for subscribing."
           }
         }
       },
       "block_order": [
-        "menu_column_YeiGRp",
-        "menu_column_VRQrE7",
-        "menu_column_npMMWz",
-        "menu_column_WVFQkA"
+        "menu_LpXhki",
+        "subscribe_JDNiKP"
       ],
       "settings": {
-        "color_scheme": "",
-        "newsletter_enable": true,
-        "newsletter_heading": "Stay Up To Date",
-        "newsletter_desc": "<p>By submitting this form, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from  at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg and data rates may apply. View Terms & Privacy.</p>",
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "payment_enable": true
+        "brand": "#0b19ff",
+        "text": "#ffffff",
+        "muted": "#cfd8ff",
+        "rule": "rgba(255,255,255,.35)",
+        "gap": 24,
+        "radius": 8,
+        "gutter": 16,
+        "logo_text": "WONDERBIOTICS",
+        "show_social": true,
+        "ig_url": "",
+        "fb_url": "",
+        "x_url": "",
+        "tt_url": "",
+        "address_label": "Address :",
+        "address": "17800 Castleton St Ste 665, City of Industry, California 91748",
+        "phone_label": "Telephone :",
+        "phone": "+1 8589051168",
+        "email_label": "Email :",
+        "email": "contact@wonderbiotics.com"
       }
     }
   },
