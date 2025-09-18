@@ -14,35 +14,17 @@
       --radius: {{ section.settings.radius }}px;
       --figure-bg: {{ section.settings.figure_bg }};
       --figure-border: {{ section.settings.figure_border }};
+      /* === Section 背景渐变（可开关） === */
+      --bg-angle: {{ section.settings.bg_angle }}deg;
+      --bg-c1: {{ section.settings.bg_c1 }};
+      --bg-c2: {{ section.settings.bg_c2 }};
+      --bg-gradient: {% if section.settings.bg_grad_enable %}linear-gradient(var(--bg-angle), var(--bg-c1), var(--bg-c2)){% else %}transparent{% endif %};
+
       color: var(--text);
       /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
       padding: var(--pad-top) 0 var(--pad-bottom);
-        /* === Section 背景渐变（可开关） === */
-  --bg-angle: {{ section.settings.bg_angle }}deg;
-  --bg-c1: {{ section.settings.bg_c1 }};
-  --bg-c2: {{ section.settings.bg_c2 }};
-  --bg-gradient: {% if section.settings.bg_grad_enable %}linear-gradient(var(--bg-angle), var(--bg-c1), var(--bg-c2)){% else %}transparent{% endif %};
-
+      background: var(--bg-gradient);
     }
-
-
-    
-.section-{{ section.id }}{
-  --text: {{ section.settings.text_color }};
-  --muted: {{ section.settings.muted_color }};
-  --rule: {{ section.settings.rule_color }};
-  --gap: {{ section.settings.gap }}px;
-  --pad-top: {{ section.settings.pad_top }}px;
-  --pad-bottom: {{ section.settings.pad_bottom }}px;
-  --radius: {{ section.settings.radius }}px;
-  --figure-bg: {{ section.settings.figure_bg }};
-  --figure-border: {{ section.settings.figure_border }};
-  color: var(--text);
-  /* 只做上下内边距，左右使用 .page-width 的内边距与 --page-width 控制 */
-  padding: var(--pad-top) 0 var(--pad-bottom);
-    background: var(--bg-gradient);
-
-}
 
     /* 标题 */
     .section-{{ section.id }} .kpi-title{
@@ -129,15 +111,14 @@
     }
 
     /* 跟随 Dawn 的分区间距，仅在前面插空隙，不影响首页第一个 section */
-.shopify-section + .shopify-section .section-{{ section.id }}{
-  margin-top: var(--spacing-sections-desktop);
-}
-@media (max-width: 749px){
-  .shopify-section + .shopify-section .section-{{ section.id }}{
-    margin-top: var(--spacing-sections-mobile);
-  }
-}
-
+    .shopify-section + .shopify-section .section-{{ section.id }}{
+      margin-top: var(--spacing-sections-desktop);
+    }
+    @media (max-width: 749px){
+      .shopify-section + .shopify-section .section-{{ section.id }}{
+        margin-top: var(--spacing-sections-mobile);
+      }
+    }
   </style>
 
   <!-- 使用 Dawn 的 .page-width，使宽度与 --page-width 一致 -->
@@ -166,22 +147,37 @@
     </div>
 
     <figure class="kpi-figure" role="group" aria-label="{{ section.settings.figure_alt | default: section.settings.title | escape }}">
-      {% if section.settings.figure != blank %}
-        <img
-          class="kpi-image"
-          srcset="
-            {{ section.settings.figure | image_url: width: 750 }} 750w,
-            {{ section.settings.figure | image_url: width: 1100 }} 1100w,
-            {{ section.settings.figure | image_url: width: 1500 }} 1500w,
-            {{ section.settings.figure | image_url: width: 2048 }} 2048w"
-          src="{{ section.settings.figure | image_url: width: 1500 }}"
-          sizes="(min-width: 1024px) {{ settings.page_width }}px, 100vw"
-          alt="{{ section.settings.figure_alt | escape }}"
-          loading="lazy"
-          decoding="async">
+      {% if section.settings.figure != blank or section.settings.figure_mobile != blank %}
+        <picture>
+          {% if section.settings.figure_mobile != blank %}
+            <source
+              media="(max-width: 749px)"
+              srcset="
+                {{ section.settings.figure_mobile | image_url: width: 480 }} 480w,
+                {{ section.settings.figure_mobile | image_url: width: 750 }} 750w,
+                {{ section.settings.figure_mobile | image_url: width: 1100 }} 1100w"
+              sizes="100vw">
+          {% endif %}
+          {% if section.settings.figure != blank %}
+            <source
+              media="(min-width: 750px)"
+              srcset="
+                {{ section.settings.figure | image_url: width: 750 }} 750w,
+                {{ section.settings.figure | image_url: width: 1100 }} 1100w,
+                {{ section.settings.figure | image_url: width: 1500 }} 1500w,
+                {{ section.settings.figure | image_url: width: 2048 }} 2048w"
+              sizes="(min-width: 1024px) {{ settings.page_width }}px, 100vw">
+          {% endif %}
+          <img
+            class="kpi-image"
+            src="{{ section.settings.figure | default: section.settings.figure_mobile | image_url: width: 1100 }}"
+            alt="{{ section.settings.figure_alt | escape }}"
+            loading="lazy"
+            decoding="async">
+        </picture>
       {% endif %}
 
-      {% unless section.settings.figure %}
+      {% unless section.settings.figure or section.settings.figure_mobile %}
         <div class="kpi-ph" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#9aa0a6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="3"></rect>
@@ -202,35 +198,20 @@
   "settings": [
     { "type": "text", "id": "title", "label": "标题", "default": "Industry Leader Trusted by Doctors" },
     { "type": "checkbox", "id": "serif_title", "label": "标题使用衬线字体", "default": true },
-    {
-  "type": "checkbox",
-  "id": "bg_grad_enable",
-  "label": "启用 Section 背景渐变",
-  "default": false
-},
-{
-  "type": "color",
-  "id": "bg_c1",
-  "label": "渐变起始色",
-  "default": "#ffffff"
-},
-{
-  "type": "color",
-  "id": "bg_c2",
-  "label": "渐变结束色",
-  "default": "#f7f7f7"
-},
-{
-  "type": "range",
-  "id": "bg_angle",
-  "min": 0,
-  "max": 360,
-  "step": 10,
-  "unit": "deg",
-  "label": "渐变角度（桌面端）",
-  "default": 180
-},
 
+    { "type": "checkbox", "id": "bg_grad_enable", "label": "启用 Section 背景渐变", "default": false },
+    { "type": "color", "id": "bg_c1", "label": "渐变起始色", "default": "#ffffff" },
+    { "type": "color", "id": "bg_c2", "label": "渐变结束色", "default": "#f7f7f7" },
+    {
+      "type": "range",
+      "id": "bg_angle",
+      "min": 0,
+      "max": 360,
+      "step": 10,
+      "unit": "deg",
+      "label": "渐变角度（桌面端）",
+      "default": 180
+    },
 
     { "type": "range", "id": "gap", "min": 12, "max": 60, "step": 2, "unit": "px", "label": "列间距", "default": 36 },
     { "type": "range", "id": "pad_top", "min": 0, "max": 140, "step": 4, "unit": "px", "label": "上内边距", "default": 64 },
@@ -241,9 +222,14 @@
     { "type": "color", "id": "muted_color", "label": "说明文字颜色", "default": "#666666" },
     { "type": "color", "id": "rule_color", "label": "分隔线颜色", "default": "#cfcfcf" },
 
-    { "type": "image_picker", "id": "figure", "label": "底部图片" },
+    { "type": "image_picker", "id": "figure", "label": "底部图片（桌面）" },
+    { "type": "image_picker", "id": "figure_mobile", "label": "底部图片（手机）" },
     { "type": "text", "id": "figure_alt", "label": "图片替代文本", "default": "Research and clinical collaborations" },
-    { "type": "select", "id": "figure_aspect", "label": "图片显示比例", "default": "21/9",
+    {
+      "type": "select",
+      "id": "figure_aspect",
+      "label": "图片显示比例",
+      "default": "21/9",
       "options": [
         { "label": "自动（按原图）", "value": "auto" },
         { "label": "21 : 9", "value": "21/9" },
