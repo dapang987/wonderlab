@@ -283,6 +283,27 @@
 #philosophy-{{ section.id }} .card__details{ backface-visibility: hidden; transform: translateZ(0); }
 #philosophy-{{ section.id }} .card.is-open .card__title{ font-family: var(--ff-title); }  /* 改成你想要的字体 */
 #philosophy-{{ section.id }} .card.is-open .card__desc{  font-family: var(--ff-body);  }
+/* 展开时，在 card__summary 与 card__desc 之间显示一条虚线分隔 */
+#philosophy-{{ section.id }} .card__details::before{
+  content: "";
+  display: block;
+  border-top: 1px dashed var(--card-desc-color); /* 颜色沿用描述文字颜色 */
+  margin: 10px 0 12px;                           /* 与上下内容的间距 */
+  opacity: 0;
+  transform: scaleX(.9);
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+/* 只有展开时才显现，并带轻微过渡 */
+#philosophy-{{ section.id }} .card.is-open .card__details::before{
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* 避免上方已有的 8px 内边距和分隔线叠加，展开时把内边距归零 */
+#philosophy-{{ section.id }} .card.is-open .card__details-inner{
+  padding-top: 0;
+}
 
 
   </style>
