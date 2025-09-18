@@ -87,7 +87,14 @@
   .col ul{ list-style: none; margin: 0; padding: 0; }
   .col li{ margin: 0; }
   .lvl1 > li + li{ margin-top: 8px; }
-  .lvl1 > li > a{ font-weight: 600; font-size: calc(var(--link-size) + 1px); opacity: .95; }
+
+#footer-{{ section.id }} .lvl1 > li > a{
+  font-weight: 600;
+  font-size: var(--parent-link-size);
+  color: var(--parent-link-color);
+  opacity: .95;
+}
+
   .col a{ opacity: .92; font-size: var(--link-size); }
   .col a:hover{ opacity: 1; }
 
