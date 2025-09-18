@@ -321,8 +321,8 @@
         "cell_size_m": 13,
         "heading_size_d": 44,
         "subtitle_size_d": 16,
-        "header_size_d": 13,
-        "feature_size_d": 14,
+        "header_size_d": 16,
+        "feature_size_d": 20,
         "cell_size_d": 14,
         "padding_top": 56,
         "padding_bottom": 56
