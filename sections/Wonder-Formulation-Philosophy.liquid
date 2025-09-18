@@ -283,33 +283,6 @@
 #philosophy-{{ section.id }} .card__details{ backface-visibility: hidden; transform: translateZ(0); }
 #philosophy-{{ section.id }} .card.is-open .card__title{ font-family: var(--ff-title); }  /* 改成你想要的字体 */
 #philosophy-{{ section.id }} .card.is-open .card__desc{  font-family: var(--ff-body);  }
-/* 展开时，在 card__summary 与 card__desc 之间显示一条虚线分隔 */
-#philosophy-{{ section.id }} .card__details::before{
-  content: "";
-  display: block;
-  border-top: 1px dashed var(--card-desc-color); /* 颜色沿用描述文字颜色 */
-  margin: 10px 0 12px;                           /* 与上下内容的间距 */
-  opacity: 0;
-  transform: scaleX(.9);
-  transition: opacity var(--transition), transform var(--transition);
-}
-
-/* 只有展开时才显现，并带轻微过渡 */
-#philosophy-{{ section.id }} .card.is-open .card__details::before{
-  opacity: 1;
-  transform: scaleX(1);
-}
-
-/* 避免上方已有的 8px 内边距和分隔线叠加，展开时把内边距归零 */
-#philosophy-{{ section.id }} .card.is-open .card__details-inner{
-  padding-top: 0;
-}
-@media (max-width: 768px){
-  /* 展开任意卡片时，临时切成单列，避免多列重排把最后一张挤到另一列 */
-  #philosophy-{{ section.id }}.masonry-locked .ph-grid{
-    column-count: 1;
-  }
-}
 
 
   </style>
@@ -403,76 +376,52 @@
     </div>
   </div>
 
- <script>
-  (() => {
-    const root = document.getElementById('philosophy-{{ section.id }}');
-    if (!root) return;
+  <script>
+    (() => {
+      const root = document.getElementById('philosophy-{{ section.id }}');
+      if (!root) return;
+      const cards = root.querySelectorAll('.card[data-collapsible]');
 
-    const cards = root.querySelectorAll('.card[data-collapsible]');
+      function openDetails(details){
+        details.style.maxHeight = 'none';
+        const target = details.scrollHeight;
+        details.style.maxHeight = '0px';
+        requestAnimationFrame(() => { details.style.maxHeight = target + 'px'; });
+        const onEnd = (e) => {
+          if (e.propertyName === 'max-height') {
+            details.style.maxHeight = 'none';
+            details.removeEventListener('transitionend', onEnd);
+          }
+        };
+        details.addEventListener('transitionend', onEnd);
+      }
 
-    function openDetails(details){
-      details.style.maxHeight = 'none';
-      const target = details.scrollHeight;
-      details.style.maxHeight = '0px';
-      requestAnimationFrame(() => { details.style.maxHeight = target + 'px'; });
-      const onEnd = (e) => {
-        if (e.propertyName === 'max-height') {
-          details.style.maxHeight = 'none';
-          details.removeEventListener('transitionend', onEnd);
-        }
-      };
-      details.addEventListener('transitionend', onEnd);
-    }
+      function closeDetails(details){
+        const current = details.scrollHeight;
+        details.style.maxHeight = current + 'px';
+        requestAnimationFrame(() => { details.style.maxHeight = '0px'; });
+      }
 
-    function closeDetails(details){
-      const current = details.scrollHeight;
-      details.style.maxHeight = current + 'px';
-      requestAnimationFrame(() => { details.style.maxHeight = '0px'; });
-    }
+      cards.forEach(card => {
+        const details = card.querySelector('.card__details');
+        if (!details) return;
 
-    // 锁/解锁“伪 Masonry”的列数（移动端用）
-    function updateLock() {
-      const anyOpen = !!root.querySelector('.card.is-open');
-      root.classList.toggle('masonry-locked', anyOpen);
-    }
+        const toggle = (evt) => {
+          const controlEl = evt.target.closest('a, button, [role="button"]:not(.card)');
+          if (controlEl) return;
 
-    cards.forEach(card => {
-      const details = card.querySelector('.card__details');
-      if (!details) return;
+          const isOpen = card.classList.toggle('is-open');
+          card.setAttribute('aria-expanded', String(isOpen));
+          isOpen ? openDetails(details) : closeDetails(details);
+        };
 
-      const toggle = (evt) => {
-        const controlEl = evt.target.closest('a, button, [role="button"]:not(.card)');
-        if (controlEl) return;
-
-        const willOpen = !card.classList.contains('is-open');
-        card.classList.toggle('is-open');
-        card.setAttribute('aria-expanded', String(willOpen));
-
-        if (willOpen) {
-          openDetails(details);
-          // 立刻锁列，避免展开过程中重排
-          updateLock();
-        } else {
-          // 先收起，再在动画结束后解锁列，避免回弹时闪动
-          const onCloseEnd = (e) => {
-            if (e.propertyName === 'max-height') {
-              updateLock();
-              details.removeEventListener('transitionend', onCloseEnd);
-            }
-          };
-          details.addEventListener('transitionend', onCloseEnd);
-          closeDetails(details);
-        }
-      };
-
-      card.addEventListener('click', toggle);
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); }
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); }
+        });
       });
-    });
-  })();
-</script>
-
+    })();
+  </script>
 </section>
 
 {% schema %}
