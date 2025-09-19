@@ -381,10 +381,10 @@
       "name": "Week by Week Cards",
       "settings": {
         "title": "Feel the Difference — Week by Week",
-        "brand": "#1B8CFF",
-        "text": "#0B1F33",
+        "brand": "#1b8cff",
+        "text": "#0b1f33",
         "muted": "#516170",
-        "rule": "#E6E9EE",
+        "rule": "#e6e9ee",
         "radius": 16,
         "gap_mobile": 16,
         "gap_desktop": 24,
@@ -392,7 +392,16 @@
         "pad_bottom": 56,
         "show_top_rule": false,
         "hide_kicker_on_mobile": true,
-        "tabs_aria_label": "进度阶段（滑动选择）"
+        "tabs_aria_label": "进度阶段（滑动选择）",
+        "title_color": "#0b1f33",
+        "kicker_color": "#0b1f33",
+        "desc_color": "#516170",
+        "title_size_mobile": 36,
+        "title_size_desktop": 44,
+        "kicker_size_mobile": 16,
+        "kicker_size_desktop": 31,
+        "desc_size_mobile": 14,
+        "desc_size_desktop": 16
       }
     },
     "science_backed_ingredients_La4x6X": {
