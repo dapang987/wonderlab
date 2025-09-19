@@ -14,7 +14,6 @@
       --rule: {{ section.settings.rule | default: '#E6E9EE' }};
       --radius: {{ section.settings.radius | default: 16 }}px;
       --shadow: 0 8px 28px rgba(0,0,0,.08);
-      --gap: {{ section.settings.gap_desktop | default: 24 }}px;
       --gap-m: {{ section.settings.gap_mobile | default: 16 }}px;
     }
 
@@ -42,7 +41,7 @@
 
     /* 布局宽度（兼容主题未定义 --page-width 的情况） */
     #ww-wbw-{{ section.id }} .wbw-wrap{
-      width:min(var(--page-width, 1100px), 100%);
+      width:(var--page-width);
       margin:0 auto;
       padding:0 20px;
     }
