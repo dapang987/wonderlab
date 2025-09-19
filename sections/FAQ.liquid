@@ -10,13 +10,11 @@
       /* ===== Section-level tokens ===== */
       --radius: {{ section.settings.radius }}px;
       --gap: {{ section.settings.gap }}px;
-
       --text: {{ section.settings.cl_text }};
       --muted: {{ section.settings.cl_muted }};
       --border: {{ section.settings.cl_border }};
       --bg: {{ section.settings.cl_bg }};
       --shadow: 0 6px 16px rgba(0,0,0,.06);
-
       --title-size-m: {{ section.settings.title_size_m }}px;
       --title-size-d: {{ section.settings.title_size_d }}px;
 
@@ -39,7 +37,6 @@
     .section-{{ section.id }} .faq__title{
       margin:0 0 18px;
       text-align:center;
-      font-weight:600;
       line-height:1.2;
       letter-spacing:.2px;
       font-size: clamp(22px, 5vw, var(--title-size-m));
@@ -55,7 +52,6 @@
       --item-bg: #fff;            /* fallback if block didn't set */
       --item-q-size: 16px;        /* question font-size fallback */
       --item-a-size: 14px;        /* answer font-size fallback */
-
       border:1px solid var(--border);
       border-radius:var(--radius);
       background: var(--item-bg);
@@ -77,7 +73,6 @@
       color:inherit;
       border:0;
       cursor:pointer;
-      font-weight:600;
       line-height:1.35;
       font-size: var(--item-q-size);
     }
