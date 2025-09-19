@@ -176,12 +176,13 @@
   {%- endstyle -%}
 
   <div class="wrap">
+    {%- if section.settings.title != blank -%}
+          <h2 id="hiw-title-{{ section.id }}">{{ section.settings.title }}</h2>
+        {%- endif -%}
     <div class="hiw-grid">
       <!-- 左列 -->
       <div class="col col--left">
-        {%- if section.settings.title != blank -%}
-          <h2 id="hiw-title-{{ section.id }}">{{ section.settings.title }}</h2>
-        {%- endif -%}
+        
 
         {%- if section.settings.lead != blank -%}
           <div class="lead rte">{{ section.settings.lead }}</div>
