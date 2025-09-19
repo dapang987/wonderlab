@@ -452,7 +452,7 @@
         "cl_tile": "#f2f3f5",
         "padding_top": 32,
         "padding_bottom": 32,
-        "title_size_mobile": 24,
+        "title_size_mobile": 36,
         "title_size_desktop": 44,
         "card_heading_mobile": 16,
         "card_heading_desktop": 18,
