@@ -469,6 +469,68 @@
         "single_open": true,
         "open_first": true
       }
+    },
+    "week_by_week_xKErXx": {
+      "type": "Week-by-Week",
+      "blocks": {
+        "card_dgcBB9": {
+          "type": "card",
+          "settings": {
+            "tab_label": "3–7 Days",
+            "kicker": "3–7 Days",
+            "desc": "Daily, regular poops\nLess bloating",
+            "image": "shopify://shop_images/Rectangle_46.png"
+          }
+        },
+        "card_CwY4Jm": {
+          "type": "card",
+          "settings": {
+            "tab_label": "1–2 Weeks",
+            "kicker": "1–2 Weeks",
+            "desc": "Fewer cravings\nFuller for longer (3–4 hrs)"
+          }
+        },
+        "card_Pb7eP8": {
+          "type": "card",
+          "settings": {
+            "tab_label": "1 Month+",
+            "kicker": "1 Month+",
+            "desc": "See slimmer waist/thighs\nKeep losing (~1 lb/week)"
+          }
+        },
+        "card_iFLPHU": {
+          "type": "card",
+          "settings": {
+            "tab_label": "3 Months+",
+            "kicker": "3 Months+",
+            "desc": "Drop a pants size\nFit into tight jeans"
+          }
+        }
+      },
+      "block_order": [
+        "card_dgcBB9",
+        "card_CwY4Jm",
+        "card_Pb7eP8",
+        "card_iFLPHU"
+      ],
+      "name": "Week by Week（横滑/四列）",
+      "settings": {
+        "title": "Feel the Difference—Week by Week",
+        "show_top_rule": true,
+        "brand": "#1B8CFF",
+        "text": "#0B1F33",
+        "muted": "#516170",
+        "rule": "#E6E9EE",
+        "radius": 16,
+        "gap_m": 16,
+        "gap": 24,
+        "heading_size": 28,
+        "heading_weight": 600,
+        "pad_top": 40,
+        "pad_bottom": 56,
+        "hide_kicker_mobile": true,
+        "enable_hash": false
+      }
     }
   },
   "order": [
@@ -478,6 +540,7 @@
     "feature_split_card_LDP3bW",
     "comparison_matrix_cifVii",
     "science_backed_ingredients_La4x6X",
-    "faq_hy8QM3"
+    "faq_hy8QM3",
+    "week_by_week_xKErXx"
   ]
 }
