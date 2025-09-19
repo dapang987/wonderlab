@@ -282,34 +282,31 @@
         margin-bottom: var(--gap);
       } {% endcomment %}
       
+/* 手机端：2 列，左列显示 left+right（共4个），右列显示 middle（2个） */
 @media (max-width: 768px){
-  /* 用 Grid 做两列，列内垂直堆叠 */
   #philosophy-{{ section.id }} .ph-grid{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--gap);
     align-items: start;
   }
-  #philosophy-{{ section.id }} .ph-col{
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap);
-    min-width: 0;
-  }
-  /* 三个列容器固定到两列网格里（不再“跳列”） */
-  #philosophy-{{ section.id }} .ph-col:nth-child(1){ grid-column: 1; } /* left  列 */
-  #philosophy-{{ section.id }} .ph-col:nth-child(2){ grid-column: 2; } /* middle列 */
-  #philosophy-{{ section.id }} .ph-col:nth-child(3){ grid-column: 1; } /* right 列 → 跟左并在同一列下方 */
+  /* 三个“列容器”的落位： */
+  #philosophy-{{ section.id }} .ph-col:nth-child(1){ grid-column: 1; } /* left   → 左列 */
+  #philosophy-{{ section.id }} .ph-col:nth-child(2){ grid-column: 2; } /* middle → 右列 */
+  #philosophy-{{ section.id }} .ph-col:nth-child(3){ grid-column: 1; } /* right  → 左列（与left同列） */
 
-  /* 移除多栏相关兼容样式，保留正常块级表现 */
+  /* 清理多栏遗留样式（若之前用过 column-count） */
   #philosophy-{{ section.id }} .card{
     width: auto;
     margin: 0;
+    break-inside: auto;
+    -webkit-column-break-inside: auto;
+    page-break-inside: auto;
   }
 }
 
 
-
+      
     }
 
     @media (prefers-reduced-motion: reduce){
