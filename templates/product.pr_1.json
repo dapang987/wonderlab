@@ -331,75 +331,30 @@
     "week_by_week_yUJHcn": {
       "type": "Week-by-Week",
       "blocks": {
-        "card_kHXYQQ": {
+        "card_Wqk3dc": {
           "type": "card",
           "settings": {
             "tab_label": "3–7 Days",
             "kicker": "3–7 Days",
             "desc1": "Daily, regular poops",
             "desc2": "Less bloating",
-            "image": "shopify://shop_images/Rectangle_46.png",
-            "image_mobile": "shopify://shop_images/Rectangle_46.png",
-            "image_alt": "Lifestyle image",
-            "show_badge": false,
-            "badge_text": "NEW"
-          }
-        },
-        "card_xNDCmE": {
-          "type": "card",
-          "settings": {
-            "tab_label": "1–2 Weeks",
-            "kicker": "1–2 Weeks",
-            "desc1": "Fewer cravings",
-            "desc2": "Fuller for longer (3–4 hrs)",
-            "image": "shopify://shop_images/Rectangle_46.png",
-            "image_alt": "Lifestyle image",
-            "show_badge": false,
-            "badge_text": "NEW"
-          }
-        },
-        "card_kJUqFf": {
-          "type": "card",
-          "settings": {
-            "tab_label": "1 Month+",
-            "kicker": "1 Month+",
-            "desc1": "See slimmer waist/thighs",
-            "desc2": "Keep losing (~1 lb/week)",
-            "image": "shopify://shop_images/Rectangle_46.png",
-            "image_alt": "Lifestyle image",
-            "show_badge": false,
-            "badge_text": "NEW"
-          }
-        },
-        "card_nnRLfW": {
-          "type": "card",
-          "settings": {
-            "tab_label": "3 Months+",
-            "kicker": "3 Months+",
-            "desc1": "Drop a pants size",
-            "desc2": "Fit into tight jeans",
-            "image": "shopify://shop_images/Rectangle_46.png",
-            "image_alt": "Lifestyle image",
             "show_badge": false,
             "badge_text": "NEW"
           }
         }
       },
       "block_order": [
-        "card_kHXYQQ",
-        "card_xNDCmE",
-        "card_kJUqFf",
-        "card_nnRLfW"
+        "card_Wqk3dc"
       ],
       "name": "Week by Week（移动端选项卡）",
       "settings": {
         "title": "Feel the Difference—Week by Week",
         "show_top_rule": true,
         "aria_label": "进度阶段（滑动选择）",
-        "brand": "#1B8CFF",
-        "text": "#0B1F33",
+        "brand": "#1b8cff",
+        "text": "#0b1f33",
         "muted": "#516170",
-        "rule": "#E6E9EE",
+        "rule": "#e6e9ee",
         "radius": 16,
         "gap": 24,
         "gap_m": 16,
