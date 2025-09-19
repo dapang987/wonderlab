@@ -1,415 +1,370 @@
 {% comment %}
-  Section: Feel the Difference — Week by Week (Isolated + Section/Block Font Size Controls)
-  作用域：#fdiff-{{ section.id }}，避免与其他 section 冲突
-  新增：
-  - Section settings：整体字体大小调节（标题/卡片标题/卡片正文/Tabs）
-  - Block settings：可对单个卡片覆盖卡片标题/正文字号
+  Section: Week by Week (mobile tabs + scroll-snap cards; desktop 4-col grid)
+  - Scopes all CSS/JS to this section via unique #weekbyweek-{{ section.id }}
+  - Blocks = cards (2–8). Each block controls its tab label, images, and texts.
 {% endcomment %}
 
-<section id="fdiff-{{ section.id }}" class="fdiff section-{{ section.id }}" style="--bg: {{ section.settings.bg_color }};">
-  <div class="fdiff__pad" aria-labelledby="fdiff-title-{{ section.id }}">
-    <div class="{% if section.settings.container == 'page' %}page-width{% else %}page-width page-width--full{% endif %}">
-      {% if section.settings.heading != blank %}
-        <h2 id="fdiff-title-{{ section.id }}" class="fdiff__title">{{ section.settings.heading }}</h2>
-      {% endif %}
-
-      <!-- Mobile Tabs -->
-      <div id="fdiff-tabs-{{ section.id }}" class="fdiff-tabs" role="tablist" aria-label="Progress timeline">
-        {% for block in section.blocks %}
-          {% if block.type == 'stage' %}
-            <button class="fdiff-tabs__btn"
-              id="fdiff-tab-{{ section.id }}-{{ forloop.index0 }}"
-              role="tab"
-              aria-selected="{{ forloop.first }}"
-              aria-controls="fdiff-panel-{{ section.id }}"
-              tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
-              {{ block.shopify_attributes }}>
-              {{ block.settings.title | escape }}
-            </button>
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      <!-- Desktop / Tablet Grid -->
-      <div class="fdiff__grid" aria-hidden="false">
-        {% for block in section.blocks %}
-          {% if block.type == 'stage' %}
-            {%- assign _title_fs = section.settings.card_title_fs_px -%}
-            {%- assign _desc_fs  = section.settings.card_desc_fs_px  -%}
-            {%- if block.settings.override_fs -%}
-              {%- if block.settings.block_title_fs_px and block.settings.block_title_fs_px > 0 -%}
-                {%- assign _title_fs = block.settings.block_title_fs_px -%}
-              {%- endif -%}
-              {%- if block.settings.block_desc_fs_px and block.settings.block_desc_fs_px > 0 -%}
-                {%- assign _desc_fs = block.settings.block_desc_fs_px -%}
-              {%- endif -%}
-            {%- endif -%}
-
-            <article class="fdiff-card" style="--card-title-fs: {{ _title_fs }}px; --card-desc-fs: {{ _desc_fs }}px;" {{ block.shopify_attributes }}>
-              <div class="fdiff-card__media">
-                {% if block.settings.image != blank %}
-                  {{ block.settings.image
-                    | image_url: width: 800
-                    | image_tag: alt: block.settings.alt, loading: 'lazy' }}
-                {% else %}
-                  <img
-                    alt="{{ block.settings.alt | default: 'Illustration' | escape }}"
-                    src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 120'><rect width='160' height='120' fill='%23f1f1f1'/><rect x='44' y='34' width='72' height='52' rx='6' ry='6' fill='none' stroke='%23999' stroke-width='3'/><circle cx='70' cy='54' r='6' fill='none' stroke='%23999' stroke-width='3'/><polyline points='60,78 80,62 104,86' fill='none' stroke='%23999' stroke-width='3'/></svg>">
-                {% endif %}
-              </div>
-
-              {% if section.settings.show_hr %}
-                <hr class="fdiff-card__hr" />
-              {% endif %}
-
-              {% if block.settings.title != blank %}
-                <h3 class="fdiff-card__h">{{ block.settings.title }}</h3>
-              {% endif %}
-
-              <p class="fdiff-card__desc">
-                {{ block.settings.bullet_1 | escape }}{% if block.settings.bullet_1 != blank and block.settings.bullet_2 != blank %}<br>{% endif %}
-                {{ block.settings.bullet_2 | escape }}
-              </p>
-            </article>
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      <!-- Mobile single-card panel -->
-      <div id="fdiff-panel-{{ section.id }}" class="fdiff-panel" role="tabpanel" aria-labelledby="fdiff-tab-{{ section.id }}-0"></div>
-
-      {%- comment -%} blocks -> JSON（附带每个 block 计算后的字号，供移动端面板使用） {%- endcomment -%}
-      {% capture stages_json -%}
-      [
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'stage' -%}
-            {%- assign _title_fs = section.settings.card_title_fs_px -%}
-            {%- assign _desc_fs  = section.settings.card_desc_fs_px  -%}
-            {%- if block.settings.override_fs -%}
-              {%- if block.settings.block_title_fs_px and block.settings.block_title_fs_px > 0 -%}
-                {%- assign _title_fs = block.settings.block_title_fs_px -%}
-              {%- endif -%}
-              {%- if block.settings.block_desc_fs_px and block.settings.block_desc_fs_px > 0 -%}
-                {%- assign _desc_fs = block.settings.block_desc_fs_px -%}
-              {%- endif -%}
-            {%- endif -%}
-            {
-              "title": {{ block.settings.title | json }},
-              "bullets": [{{ block.settings.bullet_1 | json }}, {{ block.settings.bullet_2 | json }}],
-              "alt": {{ block.settings.alt | json }},
-              "img": {%- if block.settings.image != blank -%}{{ block.settings.image | image_url: width: 800 | json }}{%- else -%}null{%- endif -%},
-              "title_fs": {{ _title_fs | json }},
-              "desc_fs": {{ _desc_fs | json }}
-            }{%- unless forloop.last -%},{%- endunless -%}
-          {%- endif -%}
-        {%- endfor -%}
-      ]
-      {%- endcapture %}
-      <script type="application/json" id="fdiff-stages-{{ section.id }}">{{ stages_json | strip }}</script>
-    </div>
-  </div>
-
+<section id="weekbyweek-{{ section.id }}" class="weekbyweek section-{{ section.id }}" aria-labelledby="w-title-{{ section.id }}">
   {%- style -%}
-    /* ====== Scope Root / Vars from settings ====== */
-    #fdiff-{{ section.id }}{
-      isolation:isolate;
-      background: var(--bg);
-      --gap: 24px;
-
-      /* Section-level font sizes */
-      --title-fs: {{ section.settings.title_fs_px }}px;
-      --tabs-fs: {{ section.settings.tabs_fs_px }}px;
-      --card-title-fs-section: {{ section.settings.card_title_fs_px }}px;
-      --card-desc-fs-section: {{ section.settings.card_desc_fs_px }}px;
-
-      --radius: {{ section.settings.radius }}px;
-      --border: {{ section.settings.border_color }};
-      --text: {{ section.settings.text_color }};
-      --muted: {{ section.settings.muted_color }};
-      --rule: {{ section.settings.rule_color }};
-      --shadow: {% if section.settings.enable_shadow %}0 6px 16px rgba(0,0,0,.06){% else %}none{% endif %};
-      --tab-h: {{ section.settings.tab_height }}px;
-      --focus-c: {{ section.settings.focus_color }};
-      --dash: {{ section.settings.dash_length }}px;
-      --gaplen: {{ section.settings.gap_length }}px;
+    /* ===== Variables / theming (scoped) ===== */
+    #weekbyweek-{{ section.id }}{
+      --brand: {{ section.settings.brand | default: '#1B8CFF' }};
+      --text: {{ section.settings.text | default: '#0B1F33' }};
+      --muted: {{ section.settings.muted | default: '#516170' }};
+      --rule: {{ section.settings.rule | default: '#E6E9EE' }};
+      --radius: {{ section.settings.radius | default: 16 }}px;
+      --shadow: 0 8px 28px rgba(0,0,0,.08);
+      --gap: {{ section.settings.gap | default: 24 }}px;
+      --gap-m: {{ section.settings.gap_m | default: 16 }}px;
+      color: var(--text);
+      padding-top: {{ section.settings.padding_top | default: 40 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | default: 56 }}px;
     }
-    #fdiff-{{ section.id }} *{ box-sizing: border-box; }
 
-    /* Spacing */
-    #fdiff-{{ section.id }} .fdiff__pad{
-      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
-      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    #weekbyweek-{{ section.id }} .wrap{
+      /* 继承主题 --page-width，提供兜底 */
+      width: min(var(--page-width, 1100px), 100%);
+      margin: 0 auto;
+      padding: 0 20px;
     }
+
+    #weekbyweek-{{ section.id }} h2{
+      line-height:1.2;
+      text-align:center;
+      font-weight:600;
+      margin:0 0 20px;
+      font-size: {{ section.settings.title_size | default: 28 }}px;
+    }
+
+    /* dashed divider under the heading */
+    #weekbyweek-{{ section.id }} .top-rule{
+      border:0; 
+      border-top:1px dashed var(--rule);
+      margin: 16px auto 0;
+      width:100%;
+      display: {{ section.settings.show_top_rule | default: true | if: 'block', else: 'none' }};
+    }
+
+    /* ===== Tabs (mobile only) ===== */
+    #weekbyweek-{{ section.id }} .tabs{
+      display:flex;
+      overflow:visible;
+      padding:10px 0 4px;
+      gap:8px;
+    }
+    #weekbyweek-{{ section.id }} .tabs button{
+      appearance:none; -webkit-appearance:none;
+      background:transparent; border:0; padding:10px; margin:0; border-radius:0;
+      color:inherit; line-height:inherit; text-align:center; cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      flex:1 1 0; min-width:0; white-space:nowrap;
+      border-top:1px solid var(--rule) !important;
+      box-shadow:none !important;
+    }
+    #weekbyweek-{{ section.id }} .tabs button::-moz-focus-inner{ border:0; padding:0; }
+    #weekbyweek-{{ section.id }} .tabs button:focus{ outline:none; }
+    #weekbyweek-{{ section.id }} .tabs button:focus-visible{
+      outline:2px solid var(--brand); outline-offset:2px; border-radius:6px;
+    }
+    /* active tab */
+    #weekbyweek-{{ section.id }} .tabs button[aria-selected="true"]{
+      color:var(--brand);
+      border-top-color:var(--brand) !important;
+      font-weight:700;
+    }
+
+    /* ===== Cards — MOBILE: horizontal scroll-snap ===== */
+    #weekbyweek-{{ section.id }} .cards{
+      position:relative; margin-top:14px;
+      display:flex; gap:var(--gap-m);
+      overflow-x:auto; -webkit-overflow-scrolling:touch;
+      scroll-snap-type:x mandatory; scroll-padding-left:2px;
+      padding:2px 2px 8px;
+    }
+    #weekbyweek-{{ section.id }} .cards::-webkit-scrollbar{ display:none; }
+
+    #weekbyweek-{{ section.id }} .card{
+      background:#fff; border-radius:var(--radius);
+      display:flex; flex-direction:column; overflow:hidden; position:relative;
+      border:2px solid transparent; transition:border-color .2s ease;
+      flex: 0 0 clamp(280px, 85vw, 520px);
+      scroll-snap-align:start;
+      box-shadow: {{ section.settings.card_shadow | default: false | if: 'var(--shadow)', else: 'none' }};
+    }
+
+    #weekbyweek-{{ section.id }} .media{
+      position:relative; border-radius:calc(var(--radius) - 2px);
+      overflow:hidden; margin:8px;
+    }
+    #weekbyweek-{{ section.id }} .media picture,
+    #weekbyweek-{{ section.id }} .media img{ display:block; width:100%; }
+    #weekbyweek-{{ section.id }} .media img{ aspect-ratio:1/1; object-fit:cover; height:auto; }
+
+    #weekbyweek-{{ section.id }} .badge{
+      position:absolute; right:14px; top:14px;
+      background:#18C08F; color:#fff; font-size:12px; padding:6px 10px;
+      border-radius:999px; line-height:1; box-shadow:0 4px 12px rgba(0,0,0,.12);
+      display: inline-block;
+    }
+
+    #weekbyweek-{{ section.id }} .content{ padding: 2px 16px 14px; }
+    #weekbyweek-{{ section.id }} .kicker{ font-weight:700; margin:4px 0 6px; font-size: {{ section.settings.kicker_size | default: 18 }}px; }
+    #weekbyweek-{{ section.id }} .desc{ color:var(--muted); margin:2px 0; font-size: {{ section.settings.desc_size | default: 16 }}px; }
+    #weekbyweek-{{ section.id }} .rule{ border:0; border-top:1px dashed var(--rule); margin:12px 0 10px; }
+
+    /* 手机端隐藏 kicker（可配置） */
+    @media (max-width: 749px){
+      #weekbyweek-{{ section.id }} .kicker{
+        display: {{ section.settings.show_kicker_mobile | default: false | if: 'block', else: 'none' }} !important;
+      }
+      /* 激活卡片里的虚线变蓝 */
+      #weekbyweek-{{ section.id }} .card .rule{ transition: border-color .2s ease; }
+      #weekbyweek-{{ section.id }} .card.is-active .rule{ border-top-color: var(--brand); }
+    }
+
+    /* ===== Desktop layout (show grid, no horizontal scroll) ===== */
     @media (min-width: 750px){
-      #fdiff-{{ section.id }} .fdiff__pad{
-        padding-top: {{ section.settings.padding_top }}px;
-        padding-bottom: {{ section.settings.padding_bottom }}px;
+      #weekbyweek-{{ section.id }} .tabs{ display:none; }
+      #weekbyweek-{{ section.id }} .cards{
+        margin-top:28px; display:grid;
+        grid-template-columns: repeat({{ section.settings.desktop_columns | default: 4 }}, minmax(0,1fr));
+        gap:var(--gap); overflow:visible; scroll-snap-type:none; padding:0;
       }
+      #weekbyweek-{{ section.id }} .card{ border-width:2px; flex:auto; scroll-snap-align:auto; }
+      #weekbyweek-{{ section.id }} .kicker{ display:block !important; }
     }
 
-    /* Title (clamp 或自定义像素) */
-    {% if section.settings.heading_custom_size %}
-    #fdiff-{{ section.id }} .fdiff__title{
-      margin:0 0 16px; text-align:center; font-family: ui-serif, Georgia, "Times New Roman", serif;
-      font-weight: 400; line-height: 1.2; letter-spacing:.2px;
-      font-size: var(--title-fs); color: var(--text);
-    }
-    {% else %}
-    #fdiff-{{ section.id }} .fdiff__title{
-      margin:0 0 16px; text-align:center; font-family: ui-serif, Georgia, "Times New Roman", serif;
-      font-weight: 400; line-height: 1.2; letter-spacing:.2px;
-      font-size: clamp(24px, 3.5vw, 36px); color: var(--text);
-    }
-    {% endif %}
-
-    /* Grid */
-    #fdiff-{{ section.id }} .fdiff__grid{
-      display:grid; gap:var(--gap); grid-template-columns: repeat(4, 1fr); margin-top: 12px;
-    }
-    @media (max-width: 1023.98px){
-      #fdiff-{{ section.id }} .fdiff__grid{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 767.98px){
-      #fdiff-{{ section.id }} .fdiff__grid{ display:none; }
-    }
-
-    /* Card */
-    #fdiff-{{ section.id }} .fdiff-card{
-      display:flex; flex-direction:column; gap:12px;
-      padding:16px; min-height:260px;
-      background:#fff; color:var(--text);
-      border-radius: var(--radius);
-      border:1px solid var(--border);
-      /* 默认使用 section 的卡片字号，若 block 设置了 --card-title-fs/--card-desc-fs 则覆盖 */
-      --card-title-fs: var(--card-title-fs);
-      --card-desc-fs: var(--card-desc-fs);
-    }
-    #fdiff-{{ section.id }} .fdiff-card__media{
-      border:1px solid var(--border);
-      border-radius: calc(var(--radius) - 4px);
-      background:#f6f6f6; overflow:hidden;
-      aspect-ratio: 4 / 3; display:flex; align-items:center; justify-content:center;
-    }
-    #fdiff-{{ section.id }} .fdiff-card__media img{ width:100%; height:100%; object-fit:cover; display:block; }
-
-    /* 使用变量控制字号（带后备到 section 级变量） */
-    #fdiff-{{ section.id }} .fdiff-card__h{
-      margin:4px 0 0;
-      font-size: var(--card-title-fs, var(--card-title-fs-section));
-      line-height:1.35;
-    }
-    #fdiff-{{ section.id }} .fdiff-card__hr{ border:0; border-top:1px dashed var(--rule); margin:2px 0 4px; }
-    #fdiff-{{ section.id }} .fdiff-card__desc{
-      margin:0;
-      font-size: var(--card-desc-fs, var(--card-desc-fs-section));
-      color:var(--muted);
-    }
-
-    /* Tabs (Mobile) */
-    #fdiff-{{ section.id }} .fdiff-tabs{ display:none; }
-    @media (max-width: 767.98px){
-      #fdiff-{{ section.id }} .fdiff-tabs{
-        display:flex; gap:12px; align-items:center;
-        overflow-x:auto; -webkit-overflow-scrolling:touch;
-        padding:6px 0 2px; margin-bottom:10px;
-        border-bottom:1px solid var(--rule);
-        scrollbar-width: thin;
-      }
-    }
-    #fdiff-{{ section.id }} .fdiff-tabs__btn{
-      flex:0 0 auto; height:var(--tab-h);
-      display:inline-flex; align-items:center;
-      border-radius:999px; border:0; background:transparent;
-      color:var(--text); font:inherit; cursor:pointer; position:relative; padding:0 12px;
-      font-size: var(--tabs-fs);
-    }
-    #fdiff-{{ section.id }} .fdiff-tabs__btn[aria-selected="true"]{ font-weight:600; }
-    #fdiff-{{ section.id }} .fdiff-tabs__btn[aria-selected="true"]::after{
-      content:""; position:absolute; left:10px; right:10px; bottom:-8px; height:2px; background:var(--text); border-radius:2px;
-    }
-    #fdiff-{{ section.id }} .fdiff-tabs__btn:focus-visible{ outline:2px solid var(--focus-c); outline-offset:2px; }
-
-    /* 独立虚线（每个按钮一段，可调长度/间隔） */
-    @media (max-width: 767.98px){
-      {% if section.settings.enable_top_dashed %}
-      #fdiff-{{ section.id }} .fdiff-tabs__btn::before{
-        content:""; position:absolute; left:0; right:0; top:0; height:1px;
-        background: repeating-linear-gradient(
-          to right,
-          var(--rule) 0 var(--dash),
-          transparent var(--dash) calc(var(--dash) + var(--gaplen))
-        );
-        pointer-events:none;
-      }
-      {% endif %}
-    }
-
-    /* Panel (Mobile) —— 也用同一套变量 */
-    #fdiff-{{ section.id }} .fdiff-panel{ display:none; }
-    @media (max-width: 767.98px){
-      #fdiff-{{ section.id }} .fdiff-panel{ display:block; }
-    }
-    #fdiff-{{ section.id }} .fdiff-panel__card{
-      display:flex; flex-direction:column; gap:12px;
-      border:1px solid var(--border); border-radius:var(--radius);
-      padding:16px; background:#fff; box-shadow:var(--shadow);
-      animation: fdiff-fadeIn-{{ section.id }} .2s ease;
-      /* 默认先用 section 值，renderPanel 时会写入对应 block 的 inline 变量覆盖 */
-      --card-title-fs: var(--card-title-fs-section);
-      --card-desc-fs: var(--card-desc-fs-section);
-    }
-    @keyframes fdiff-fadeIn-{{ section.id }}{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+    /* Motion respect */
     @media (prefers-reduced-motion: reduce){
-      #fdiff-{{ section.id }} .fdiff-panel__card{ animation:none; }
+      #weekbyweek-{{ section.id }} *{ scroll-behavior:auto }
+      #weekbyweek-{{ section.id }} .card{ transition:none }
     }
   {%- endstyle -%}
 
+  <div class="wrap">
+    <h2 id="w-title-{{ section.id }}">{{ section.settings.title | default: 'Feel the Difference—Week by Week' }}</h2>
+    {%- if section.settings.show_top_rule -%}<hr class="top-rule"/>{%- endif -%}
+
+    <!-- Mobile tabs -->
+    <div class="tabs" role="tablist" aria-label="{{ section.settings.aria_label | default: '进度阶段（滑动选择）' | escape }}">
+      {%- for block in section.blocks -%}
+        {%- assign i = forloop.index -%}
+        <button
+          id="tab-w{{ i }}-{{ section.id }}"
+          role="tab"
+          aria-selected="{{ forloop.first | default: false | json }}"
+          aria-controls="panel-w{{ i }}-{{ section.id }}"
+          {{ block.shopify_attributes }}
+        >{{ block.settings.tab_label | default: block.settings.kicker | escape }}</button>
+      {%- endfor -%}
+    </div>
+
+    <div class="cards" id="cards-{{ section.id }}">
+      {%- for block in section.blocks -%}
+        {%- assign i = forloop.index -%}
+        <article
+          class="card{% if forloop.first %} is-active{% endif %}"
+          id="panel-w{{ i }}-{{ section.id }}"
+          role="tabpanel"
+          tabindex="0"
+          aria-labelledby="tab-w{{ i }}-{{ section.id }}"
+          aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="media">
+            {%- if block.settings.image != blank or block.settings.image_mobile != blank -%}
+              <picture>
+                {%- if block.settings.image_mobile != blank -%}
+                  <source media="(max-width: 749px)"
+                          srcset="{{ block.settings.image_mobile | image_url: width: 800 }} 1x, {{ block.settings.image_mobile | image_url: width: 1600 }} 2x">
+                {%- endif -%}
+                {%- if block.settings.image != blank -%}
+                  <img
+                    loading="lazy"
+                    src="{{ block.settings.image | image_url: width: 1200 }}"
+                    srcset="{{ block.settings.image | image_url: width: 1200 }} 1x, {{ block.settings.image | image_url: width: 2400 }} 2x"
+                    alt="{{ block.settings.image_alt | default: block.settings.kicker | escape }}">
+                {%- elsif block.settings.image_mobile != blank -%}
+                  <img
+                    loading="lazy"
+                    src="{{ block.settings.image_mobile | image_url: width: 1200 }}"
+                    srcset="{{ block.settings.image_mobile | image_url: width: 1200 }} 1x, {{ block.settings.image_mobile | image_url: width: 2400 }} 2x"
+                    alt="{{ block.settings.image_alt | default: block.settings.kicker | escape }}">
+                {%- endif -%}
+              </picture>
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+
+            {%- if block.settings.show_badge and block.settings.badge_text != blank -%}
+              <span class="badge">{{ block.settings.badge_text | escape }}</span>
+            {%- endif -%}
+          </div>
+
+          <hr class="rule" />
+
+          <div class="content">
+            {%- if block.settings.kicker != blank -%}
+              <h3 class="kicker">{{ block.settings.kicker | escape }}</h3>
+            {%- endif -%}
+            {%- if block.settings.desc1 != blank -%}
+              <p class="desc">{{ block.settings.desc1 | escape }}</p>
+            {%- endif -%}
+            {%- if block.settings.desc2 != blank -%}
+              <p class="desc">{{ block.settings.desc2 | escape }}</p>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+
   <script>
-    (function(){
-      const root = document.getElementById('fdiff-{{ section.id }}');
-      if(!root) return;
+  (function(){
+    const root = document.getElementById('weekbyweek-{{ section.id }}');
+    if(!root) return;
 
-      const panel = root.querySelector('#fdiff-panel-{{ section.id }}');
-      const tabsWrap = root.querySelector('#fdiff-tabs-{{ section.id }}');
-      const tabs = Array.from(root.querySelectorAll('.fdiff-tabs__btn'));
+    const mqDesktop = window.matchMedia('(min-width: 750px)');
+    const tabs = Array.from(root.querySelectorAll('.tabs [role="tab"]'));
+    const cardsContainer = root.querySelector('#cards-{{ section.id }}');
+    const panels = Array.from(cardsContainer.querySelectorAll('[role="tabpanel"]'));
+    const isMobile = () => window.matchMedia('(max-width: 749px)').matches;
 
-      // 数据（包含每个 block 计算后的 title_fs/desc_fs）
-      const jsonEl = root.querySelector('#fdiff-stages-{{ section.id }}');
-      let STAGES = [];
-      try { STAGES = JSON.parse(jsonEl?.textContent || '[]'); } catch(e){ STAGES = []; }
+    function setActive(index, {scrollIntoView=false} = {}){
+      if(!tabs.length || !panels.length) return;
+      index = Math.max(0, Math.min(tabs.length-1, index));
 
-      const placeholderSVG = encodeURIComponent(`<?xml version='1.0' encoding='UTF-8'?>
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 120'>
-        <rect width='160' height='120' fill='#f1f1f1'/>
-        <rect x='44' y='34' width='72' height='52' rx='6' ry='6' fill='none' stroke='#999' stroke-width='3'/>
-        <circle cx='70' cy='54' r='6' fill='none' stroke='#999' stroke-width='3'/>
-        <polyline points='60,78 80,62 104,86' fill='none' stroke='#999' stroke-width='3'/>
-      </svg>`);
-
-      function renderPanel(index){
-        const d = STAGES[index] || {};
-        const imgSrc = d.img || `data:image/svg+xml;utf8,${placeholderSVG}`;
-        const tfs = (d.title_fs || 0);
-        const dfs = (d.desc_fs || 0);
-        panel.innerHTML = `
-          <article class="fdiff-panel__card" style="--card-title-fs:${tfs}px; --card-desc-fs:${dfs}px;" aria-label="${(d.title||'').replace(/"/g,'&quot;')}">
-            <div class="fdiff-card__media">
-              <img alt="${(d.alt||'Illustration').replace(/"/g,'&quot;')}" src="${imgSrc}" onerror="this.src='data:image/svg+xml;utf8,${placeholderSVG}'">
-            </div>
-            {% if section.settings.show_hr %}<hr class="fdiff-card__hr" />{% endif %}
-            <h3 class="fdiff-card__h">${d.title || ''}</h3>
-            <p class="fdiff-card__desc">
-              ${(d.bullets && d.bullets[0]) ? d.bullets[0] : ''}${(d.bullets && d.bullets[0] && d.bullets[1]) ? '<br>' : ''}${(d.bullets && d.bullets[1]) ? d.bullets[1] : ''}
-            </p>
-          </article>
-        `;
-      }
-
-      function setActive(nextIndex){
-        tabs.forEach((btn, i) => {
-          const on = i === nextIndex;
-          btn.setAttribute('aria-selected', on ? 'true' : 'false');
-          btn.tabIndex = on ? 0 : -1;
-          if(on){ panel.setAttribute('aria-labelledby', btn.id); }
-        });
-        renderPanel(nextIndex);
-      }
-
-      tabs.forEach((btn, i) => {
-        btn.addEventListener('click', () => { setActive(i); btn.focus({preventScroll:true}); });
+      tabs.forEach((b,i)=>{
+        const selected = i===index;
+        b.setAttribute('aria-selected', selected ? 'true' : 'false');
+        b.tabIndex = selected ? 0 : -1;
+      });
+      panels.forEach((p,i)=>{
+        const active = i===index;
+        p.classList.toggle('is-active', active);
+        p.setAttribute('aria-hidden', active ? 'false' : 'true');
       });
 
-      tabsWrap?.addEventListener('keydown', (e) => {
-        const current = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
-        let next = current;
-        if(e.key === 'ArrowRight'){ next = (current + 1) % tabs.length; }
-        else if(e.key === 'ArrowLeft'){ next = (current - 1 + tabs.length) % tabs.length; }
-        else if(e.key === 'Home'){ next = 0; }
-        else if(e.key === 'End'){ next = tabs.length - 1; }
-        else if(e.key === 'Enter' || e.key === ' '){
-          const focused = document.activeElement;
-          const idx = tabs.indexOf(focused);
-          if(idx > -1){ setActive(idx); }
-          e.preventDefault(); return;
-        } else { return; }
-        tabs[next].focus(); e.preventDefault();
-      });
+      if (scrollIntoView && isMobile()){
+        const target = panels[index];
+        const left = target.offsetLeft - cardsContainer.offsetLeft;
+        cardsContainer.scrollTo({ left, behavior:'smooth' });
+      }
 
-      setActive(0);
-    })();
+      {% if section.settings.update_hash %}
+      if (history.replaceState) {
+        history.replaceState(null, '', '#' + root.id + '-w' + (index+1));
+      }
+      {% endif %}
+    }
+
+    function getIndexFromHash(){
+      const re = new RegExp('^#' + root.id.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + '-w(\\d+)$', 'i');
+      const m = location.hash.match(re);
+      if(!m) return 0;
+      const n = parseInt(m[1], 10) - 1;
+      return isNaN(n) ? 0 : Math.max(0, Math.min(tabs.length-1, n));
+    }
+
+    // init
+    let active = getIndexFromHash();
+    setActive(active);
+
+    // tab click & keyboard
+    tabs.forEach((b,i)=>{
+      b.addEventListener('click', ()=> setActive(i, {scrollIntoView:true}));
+      b.addEventListener('keydown', (e)=>{
+        const key = e.key;
+        if(key==='ArrowRight' || key==='ArrowLeft' || key==='Home' || key==='End'){
+          e.preventDefault();
+          if(key==='Home') active = 0;
+          else if(key==='End') active = tabs.length-1;
+          else active = (i + (key==='ArrowRight'?1:-1) + tabs.length) % tabs.length;
+          setActive(active, {scrollIntoView:true});
+          tabs[active].focus();
+        }
+      });
+    });
+
+    // Hash change (deep link)
+    window.addEventListener('hashchange', ()=>{
+      active = getIndexFromHash();
+      setActive(active, {scrollIntoView:true});
+    });
+
+    // Desktop: show all (remove aria-hidden semantics)
+    function syncForViewport(){
+      if(mqDesktop.matches){
+        panels.forEach(p=>{ p.removeAttribute('aria-hidden'); p.classList.add('is-active'); });
+      }else{
+        setActive(active);
+      }
+    }
+    mqDesktop.addEventListener('change', syncForViewport);
+    syncForViewport();
+  })();
   </script>
 </section>
 
 {% schema %}
 {
-  "name": "Feel the Difference",
+  "name": "Week by Week（移动端选项卡）",
   "tag": "section",
   "class": "section",
   "settings": [
-    { "type": "text", "id": "heading", "label": "标题", "default": "Feel the Difference—Week by Week" },
-    { "type": "select", "id": "container", "label": "容器宽度", "default": "page",
-      "options": [
-        { "value": "page", "label": "跟随主题 page-width（居中定宽）" },
-        { "value": "full", "label": "全宽（满屏）" }
-      ]
-    },
+    { "type": "text", "id": "title", "label": "标题", "default": "Feel the Difference—Week by Week" },
+    { "type": "checkbox", "id": "show_top_rule", "label": "标题下方显示虚线分隔", "default": true },
+    { "type": "text", "id": "aria_label", "label": "无障碍：Tab 组说明", "default": "进度阶段（滑动选择）" },
 
-    { "type": "checkbox", "id": "heading_custom_size", "label": "自定义主标题字号（否则使用 clamp 响应式）", "default": false },
-    { "type": "range", "id": "title_fs_px", "min": 16, "max": 64, "step": 1, "unit": "px", "label": "主标题字号（px）", "default": 20 },
+    { "type": "color", "id": "brand", "label": "品牌主色（激活）", "default": "#1B8CFF" },
+    { "type": "color", "id": "text", "label": "正文颜色", "default": "#0B1F33" },
+    { "type": "color", "id": "muted", "label": "次要文字颜色", "default": "#516170" },
+    { "type": "color", "id": "rule", "label": "虚线颜色", "default": "#E6E9EE" },
 
-    { "type": "range", "id": "tabs_fs_px", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "手机 Tabs 字号（px）", "default": 16 },
+    { "type": "range", "id": "radius", "min": 0, "max": 32, "step": 1, "unit": "px", "label": "卡片圆角", "default": 16 },
+    { "type": "range", "id": "gap", "min": 8, "max": 48, "step": 1, "unit": "px", "label": "桌面卡片间距", "default": 24 },
+    { "type": "range", "id": "gap_m", "min": 8, "max": 40, "step": 1, "unit": "px", "label": "手机卡片间距", "default": 16 },
+    { "type": "range", "id": "desktop_columns", "min": 2, "max": 4, "step": 1, "label": "桌面列数", "default": 4 },
+    { "type": "checkbox", "id": "card_shadow", "label": "卡片阴影", "default": false },
 
-    { "type": "range", "id": "card_title_fs_px", "min": 12, "max": 28, "step": 1, "unit": "px", "label": "卡片标题字号（px，默认）", "default": 18 },
-    { "type": "range", "id": "card_desc_fs_px", "min": 12, "max": 22, "step": 1, "unit": "px", "label": "卡片正文字号（px，默认）", "default": 14 },
+    { "type": "range", "id": "title_size", "min": 18, "max": 48, "step": 1, "unit": "px", "label": "标题字号", "default": 28 },
+    { "type": "range", "id": "kicker_size", "min": 14, "max": 28, "step": 1, "unit": "px", "label": "卡片标题（kicker）字号", "default": 18 },
+    { "type": "range", "id": "desc_size", "min": 12, "max": 22, "step": 1, "unit": "px", "label": "描述文字字号", "default": 16 },
+    { "type": "checkbox", "id": "show_kicker_mobile", "label": "手机端显示 kicker", "default": false },
 
-    { "type": "color", "id": "bg_color", "label": "背景颜色", "default": "#FFFFFF" },
-    { "type": "color", "id": "text_color", "label": "正文颜色", "default": "#111111" },
-    { "type": "color", "id": "muted_color", "label": "次级文字颜色", "default": "#666666" },
-    { "type": "color", "id": "border_color", "label": "边框颜色", "default": "#e5e7eb" },
-    { "type": "color", "id": "rule_color", "label": "分隔线/虚线颜色", "default": "#d9d9d9" },
-    { "type": "color", "id": "focus_color", "label": "焦点高亮颜色", "default": "#111111" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "上内边距", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "下内边距", "default": 56 },
 
-    { "type": "range", "id": "radius", "min": 8, "max": 24, "step": 1, "unit": "px", "label": "卡片圆角", "default": 16 },
-    { "type": "checkbox", "id": "enable_shadow", "label": "移动端卡片阴影", "default": true },
-    { "type": "range", "id": "tab_height", "min": 36, "max": 56, "step": 1, "unit": "px", "label": "手机端 Tab 高度", "default": 44 },
-    { "type": "checkbox", "id": "enable_top_dashed", "label": "手机端 Tab 顶部虚线", "default": true },
-    { "type": "range", "id": "dash_length", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "虚线：实线长度", "default": 8 },
-    { "type": "range", "id": "gap_length", "min": 4, "max": 24, "step": 1, "unit": "px", "label": "虚线：间隔长度", "default": 8 },
-
-    { "type": "checkbox", "id": "show_hr", "label": "显示卡片分隔线（hr）", "default": true },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "上内边距（PC）", "default": 48 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "下内边距（PC）", "default": 36 }
+    { "type": "checkbox", "id": "update_hash", "label": "切换时更新 URL Hash（用于深链）", "default": false }
   ],
   "blocks": [
     {
-      "type": "stage",
-      "name": "阶段卡片",
+      "type": "card",
+      "name": "卡片",
       "settings": [
-        { "type": "text", "id": "title", "label": "标题", "default": "3–7 Days" },
-        { "type": "text", "id": "bullet_1", "label": "要点 1", "default": "Daily, regular poops" },
-        { "type": "text", "id": "bullet_2", "label": "要点 2", "default": "Less bloating" },
-        { "type": "image_picker", "id": "image", "label": "图片（可选）" },
-        { "type": "text", "id": "alt", "label": "图片替代文字", "default": "Illustration" },
+        { "type": "text", "id": "tab_label", "label": "Tab 文案（手机）", "default": "3–7 Days" },
+        { "type": "text", "id": "kicker", "label": "卡片标题（kicker）", "default": "3–7 Days" },
+        { "type": "text", "id": "desc1", "label": "描述 1", "default": "Daily, regular poops" },
+        { "type": "text", "id": "desc2", "label": "描述 2", "default": "Less bloating" },
 
-        { "type": "checkbox", "id": "override_fs", "label": "覆盖该卡片的字体大小", "default": false },
-        { "type": "range", "id": "block_title_fs_px", "min": 12, "max": 32, "step": 1, "unit": "px", "label": "（覆盖）卡片标题字号", "default": 22 },
-        { "type": "range", "id": "block_desc_fs_px", "min": 12, "max": 24, "step": 1, "unit": "px", "label": "（覆盖）卡片正文字号", "default": 16 }
+        { "type": "image_picker", "id": "image", "label": "桌面图片" },
+        { "type": "image_picker", "id": "image_mobile", "label": "手机图片（可选）" },
+        { "type": "text", "id": "image_alt", "label": "图片替代文本", "default": "Lifestyle image" },
+
+        { "type": "checkbox", "id": "show_badge", "label": "显示角标", "default": false },
+        { "type": "text", "id": "badge_text", "label": "角标文案", "default": "NEW" }
       ]
     }
   ],
-  "presets": [
-    {
-      "name": "Feel the Difference (Isolated + Font Size Controls)",
-      "blocks": [
-        { "type": "stage", "settings": { "title": "3–7 Days", "bullet_1": "Daily, regular poops", "bullet_2": "Less bloating" } },
-        { "type": "stage", "settings": { "title": "1–2 Weeks", "bullet_1": "Fewer cravings", "bullet_2": "Fuller for longer (3–4 hrs)" } },
-        { "type": "stage", "settings": { "title": "1 Month+", "bullet_1": "See slimmer waist/thighs", "bullet_2": "Keep losing (~1 lb/week)" } },
-        { "type": "stage", "settings": { "title": "3 Months+", "bullet_1": "Drop a pants size", "bullet_2": "Fit into tight jeans" } }
-      ]
-    }
-  ]
+  "max_blocks": 8,
+  "default": {
+    "blocks": [
+      { "type": "card", "settings": { "tab_label": "3–7 Days", "kicker": "3–7 Days", "desc1": "Daily, regular poops", "desc2": "Less bloating" } },
+      { "type": "card", "settings": { "tab_label": "1–2 Weeks", "kicker": "1–2 Weeks", "desc1": "Fewer cravings", "desc2": "Fuller for longer (3–4 hrs)" } },
+      { "type": "card", "settings": { "tab_label": "1 Month+", "kicker": "1 Month+", "desc1": "See slimmer waist/thighs", "desc2": "Keep losing (~1 lb/week)" } },
+      { "type": "card", "settings": { "tab_label": "3 Months+", "kicker": "3 Months+", "desc1": "Drop a pants size", "desc2": "Fit into tight jeans" } }
+    ],
+    "settings": {}
+  }
 }
 {% endschema %}
-
-{% stylesheet %}{% endstylesheet %}
-{% javascript %}{% endjavascript %}
