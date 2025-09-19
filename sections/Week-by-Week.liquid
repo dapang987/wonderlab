@@ -165,6 +165,10 @@
       #ww-wbw-{{ section.id }} .wbw-kicker{ display:block; }
     }
     {% endif %}
+    #ww-wbw-{{ section.id }} .wbw-kicker{
+  font-family: inherit !important;  /* 继承父元素字体，等于去掉专用 font-family */
+}
+
   </style>
 
   <div class="wbw-wrap">
