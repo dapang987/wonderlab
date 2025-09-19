@@ -41,7 +41,7 @@
 
     /* 布局宽度（兼容主题未定义 --page-width 的情况） */
     #ww-wbw-{{ section.id }} .wbw-wrap{
-      width:var(--page-width);
+      width:(var--page-width);
       margin:0 auto;
       padding:0 20px;
     }
@@ -84,6 +84,7 @@
       position:relative; 
       margin-top:14px; 
       display:flex; 
+      gap:var(--gap-m);
       overflow-x:auto; 
       -webkit-overflow-scrolling:touch;
       scroll-snap-type:x mandatory; scroll-padding-left:2px;
@@ -99,6 +100,7 @@
       overflow:hidden;
       position:relative;
       transition:border-color .2s ease;
+      box-shadow: var(--shadow);
       flex:0 0 clamp(280px, 85vw, 520px);
       scroll-snap-align:start;
     }
