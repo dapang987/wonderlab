@@ -209,6 +209,7 @@
       "name": "Hero — 响应式（不同图/字）",
       "settings": {
         "image": "shopify://shop_images/a8b5a94602ee97a36386ceed0e5796155a911b0d.jpg",
+        "image_mobile": "shopify://shop_images/Rectangle_44_1.png",
         "mt_d": 30,
         "mb_d": 30,
         "ml_d": 0,
