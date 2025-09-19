@@ -271,6 +271,7 @@
         column-count: 2;
         column-gap: var(--gap);
       }
+
       #philosophy-{{ section.id }} .ph-col{ display: contents; }
       #philosophy-{{ section.id }} .card{
         break-inside: avoid;
@@ -281,6 +282,15 @@
         margin-bottom: var(--gap);
       }
     }
+/* 手机端：展开的卡片占满两栏，避免其它卡片“跳栏” */
+@media (max-width: 768px){
+  #philosophy-{{ section.id }} .card.is-open{
+    -webkit-column-span: all;
+    column-span: all;
+    display: block;   /* 保守处理，确保占满 */
+    width: 100%;
+  }
+}
 
     @media (prefers-reduced-motion: reduce){
       #philosophy-{{ section.id }} .card,
