@@ -204,6 +204,44 @@
         "padding_bottom": 48
       }
     },
+    "why_easy_shape_probiotic_TNNmLk": {
+      "type": "Why-EasyShape-Probiotic",
+      "name": "Hero — 响应式（不同图/字）",
+      "settings": {
+        "image": "shopify://shop_images/Rectangle_45_1.png",
+        "image_mobile": "shopify://shop_images/Rectangle_44_1.png",
+        "mt_d": 0,
+        "mb_d": 0,
+        "ml_d": 0,
+        "mr_d": 0,
+        "mt_m": 0,
+        "mb_m": 0,
+        "ml_m": 0,
+        "mr_m": 0,
+        "title": "Why EasyShape Probiotic?",
+        "body": "2-in-1 daily dose of pre & probiotics for 360 microbiome support. Clinically proven strains help curb cravings, boost metabolism, and deliver real results.",
+        "h_size_d": 36,
+        "p_size_d": 16,
+        "h_color_d": "#ffffff",
+        "p_color_d": "#ffffff",
+        "h_size_m": 24,
+        "p_size_m": 14,
+        "h_color_m": "#ffffff",
+        "p_color_m": "#ffffff",
+        "align_x_d": "left",
+        "align_y_d": "center",
+        "align_x_m": "left",
+        "align_y_m": "bottom",
+        "height_d": 420,
+        "height_m": 620,
+        "radius": 14,
+        "pad": 28,
+        "scrim_d": 28,
+        "scrim_m": 65,
+        "focal_d": "right center",
+        "focal_m": "center 60%"
+      }
+    },
     "feature_split_card_LDP3bW": {
       "type": "feature-split-card",
       "blocks": {
@@ -629,6 +667,7 @@
     "related-products",
     "why_easy_shape_probiotic_JVnPMT",
     "how_it_works_Pbk9kr",
+    "why_easy_shape_probiotic_TNNmLk",
     "feature_split_card_LDP3bW",
     "comparison_matrix_cifVii",
     "week_by_week_y3xG99",
