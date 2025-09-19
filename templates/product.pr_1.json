@@ -339,6 +339,7 @@
             "desc1": "Daily, regular poops",
             "desc2": "Less bloating",
             "image": "shopify://shop_images/Rectangle_46.png",
+            "image_mobile": "shopify://shop_images/Rectangle_46.png",
             "image_alt": "Lifestyle image",
             "show_badge": false,
             "badge_text": "NEW"
