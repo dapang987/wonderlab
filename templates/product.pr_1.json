@@ -470,14 +470,67 @@
         "open_first": true
       }
     },
-    "custom_liquid_AyrXqb": {
-      "type": "custom-liquid",
-      "name": "t:sections.custom-liquid.presets.name",
+    "week_by_week_y3xG99": {
+      "type": "Week-by-Week",
+      "blocks": {
+        "card_qAhCYL": {
+          "type": "card",
+          "settings": {
+            "alt": "",
+            "kicker": "3–7 Days",
+            "desc1": "Daily, regular poops",
+            "desc2": "Less bloating"
+          }
+        },
+        "card_9FHdY3": {
+          "type": "card",
+          "settings": {
+            "alt": "",
+            "kicker": "1–2 Weeks",
+            "desc1": "Fewer cravings",
+            "desc2": "Fuller for longer (3–4 hrs)"
+          }
+        },
+        "card_g8Wkte": {
+          "type": "card",
+          "settings": {
+            "alt": "",
+            "kicker": "1 Month+",
+            "desc1": "See slimmer waist/thighs",
+            "desc2": "Keep losing (~1 lb/week)"
+          }
+        },
+        "card_KmWtri": {
+          "type": "card",
+          "settings": {
+            "alt": "",
+            "kicker": "3 Months+",
+            "desc1": "Drop a pants size",
+            "desc2": "Fit into tight jeans"
+          }
+        }
+      },
+      "block_order": [
+        "card_qAhCYL",
+        "card_9FHdY3",
+        "card_g8Wkte",
+        "card_KmWtri"
+      ],
+      "name": "Week by Week Cards",
       "settings": {
-        "custom_liquid": "<section id=\"ww-wbw\" class=\"wbw\" aria-labelledby=\"wbw-title\">\n  <style>\n    /* ===== Scope root (variables) ===== */\n    #ww-wbw{\n      --brand: #1B8CFF;\n      --text: #0B1F33;\n      --muted: #516170;\n      --rule: #E6E9EE;\n      --radius: 16px;\n      --shadow: 0 8px 28px rgba(0,0,0,.08);\n      --gap: 24px;\n      --gap-m: 16px;\n    }\n\n    /* ===== 强力重置，避免与主题冲突 ===== */\n    #ww-wbw img{ max-width:100%; height:auto; }\n    #ww-wbw .wbw-media{ position:relative !important; padding:0 !important; overflow:hidden; border-radius:calc(var(--radius) - 2px); margin:8px; }\n    #ww-wbw .wbw-media img{\n      position:static !important; /* 打掉主题把图片设为绝对定位的规则 */\n      inset:auto !important;\n      width:100% !important;\n      height:auto !important;\n      transform:none !important;\n      display:block;\n      object-fit:cover;\n      aspect-ratio: 1 / 1;\n    }\n\n    /* 布局宽度（兼容主题未定义 --page-width 的情况） */\n    #ww-wbw .wbw-wrap{\n      width:min(var(--page-width, 1100px), 100%);\n      margin:0 auto;\n      padding:0 20px;\n    }\n\n    /* ===== Section ===== */\n    #ww-wbw{ padding:40px 0 56px; color:var(--text); }\n    #ww-wbw h2{ line-height:1.2; text-align:center; font-weight:600; margin:0 0 16px; }\n    #ww-wbw .wbw-top-rule{ border:0; border-top:1px dashed var(--rule); margin:16px auto 0; width:100%; }\n\n    /* ===== Tabs（仅移动端可见） ===== */\n    #ww-wbw .wbw-tabs{ display:flex; gap:8px; padding:10px 0 4px; }\n    #ww-wbw .wbw-tabs [role=\"tab\"]{\n      appearance:none; -webkit-appearance:none;\n      background:transparent; border:0; margin:0; padding:10px 0;\n      color:inherit; text-align:center; line-height:inherit; cursor:pointer;\n      white-space:nowrap; flex:1 1 0; min-width:0; -webkit-tap-highlight-color:transparent;\n      border-top:1px solid var(--rule);\n    }\n    #ww-wbw .wbw-tabs [role=\"tab\"]:focus{ outline:none; }\n    #ww-wbw .wbw-tabs [role=\"tab\"]:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:6px; }\n    #ww-wbw .wbw-tabs [aria-selected=\"true\"]{ color:var(--brand); border-top-color:var(--brand); font-weight:700; }\n\n    /* ===== Cards — MOBILE: 横向滑动 ===== */\n    #ww-wbw .wbw-cards{\n      position:relative; margin-top:14px; display:flex; gap:var(--gap-m);\n      overflow-x:auto; -webkit-overflow-scrolling:touch;\n      scroll-snap-type:x mandatory; scroll-padding-left:2px;\n      padding:2px 2px 8px;\n    }\n    #ww-wbw .wbw-cards::-webkit-scrollbar{ display:none; }\n\n    #ww-wbw .wbw-card{\n      background:#fff; border-radius:var(--radius);\n      display:flex; flex-direction:column; overflow:hidden; position:relative;\n      border:2px solid transparent; transition:border-color .2s ease;\n      flex:0 0 clamp(280px, 85vw, 520px);\n      scroll-snap-align:start;\n      box-shadow: var(--shadow);\n    }\n\n    #ww-wbw .wbw-content{ padding: 2px 16px 14px; }\n    #ww-wbw .wbw-kicker{ font-weight:700; margin:4px 0 6px; }\n    #ww-wbw .wbw-desc{ color:var(--muted); margin:2px 0; }\n    #ww-wbw .wbw-rule{ border:0; border-top:1px dashed var(--rule); margin:12px 0 10px; }\n\n    /* ===== Desktop：四列网格，展示全部卡片 ===== */\n    @media (min-width: 750px){\n      #ww-wbw .wbw-tabs{ display:none; }\n      #ww-wbw .wbw-cards{\n        margin-top:28px; display:grid;\n        grid-template-columns:repeat(4, minmax(0,1fr));\n        gap:var(--gap); overflow:visible; scroll-snap-type:none; padding:0;\n      }\n      #ww-wbw .wbw-card{ flex:auto; scroll-snap-align:auto; }\n    }\n\n    /* Motion respect */\n    @media (prefers-reduced-motion: reduce){\n      #ww-wbw *{ scroll-behavior:auto }\n      #ww-wbw .wbw-card{ transition:none }\n    }\n\n    /* 可选：移动端隐藏 kicker，小标题只在桌面显示 */\n    @media (max-width: 749px){\n      #ww-wbw .wbw-kicker{ display:none; }\n    }\n    @media (min-width: 750px){\n      #ww-wbw .wbw-kicker{ display:block; }\n    }\n  </style>\n\n  <div class=\"wbw-wrap\">\n    <h2 id=\"wbw-title\">Feel the Difference — Week by Week</h2>\n\n    <!-- 移动端标签（桌面端自动隐藏） -->\n    <div class=\"wbw-tabs\" role=\"tablist\" aria-label=\"进度阶段（滑动选择）\">\n      <button id=\"wbw-tab-1\" role=\"tab\" aria-selected=\"true\" aria-controls=\"wbw-panel-1\">3–7 Days</button>\n      <button id=\"wbw-tab-2\" role=\"tab\" aria-selected=\"false\" aria-controls=\"wbw-panel-2\">1–2 Weeks</button>\n      <button id=\"wbw-tab-3\" role=\"tab\" aria-selected=\"false\" aria-controls=\"wbw-panel-3\">1 Month+</button>\n      <button id=\"wbw-tab-4\" role=\"tab\" aria-selected=\"false\" aria-controls=\"wbw-panel-4\">3 Months+</button>\n    </div>\n\n    <div class=\"wbw-cards\" id=\"wbw-cards\">\n      <!-- Card 1 -->\n      <article class=\"wbw-card is-active\" id=\"wbw-panel-1\" role=\"tabpanel\" tabindex=\"0\" aria-labelledby=\"wbw-tab-1\">\n        <div class=\"wbw-media\">\n          <img loading=\"lazy\" src=\"https://picsum.photos/id/1062/1200/900\" alt=\"\">\n        </div>\n        <hr class=\"wbw-rule\" />\n        <div class=\"wbw-content\">\n          <h3 class=\"wbw-kicker\">3–7 Days</h3>\n          <p class=\"wbw-desc\">Daily, regular poops</p>\n          <p class=\"wbw-desc\">Less bloating</p>\n        </div>\n      </article>\n\n      <!-- Card 2 -->\n      <article class=\"wbw-card\" id=\"wbw-panel-2\" role=\"tabpanel\" tabindex=\"0\" aria-labelledby=\"wbw-tab-2\" aria-hidden=\"true\">\n        <div class=\"wbw-media\">\n          <img loading=\"lazy\" src=\"https://picsum.photos/id/1005/1200/900\" alt=\"\">\n        </div>\n        <hr class=\"wbw-rule\" />\n        <div class=\"wbw-content\">\n          <h3 class=\"wbw-kicker\">1–2 Weeks</h3>\n          <p class=\"wbw-desc\">Fewer cravings</p>\n          <p class=\"wbw-desc\">Fuller for longer (3–4 hrs)</p>\n        </div>\n      </article>\n\n      <!-- Card 3 -->\n      <article class=\"wbw-card\" id=\"wbw-panel-3\" role=\"tabpanel\" tabindex=\"0\" aria-labelledby=\"wbw-tab-3\" aria-hidden=\"true\">\n        <div class=\"wbw-media\">\n          <img loading=\"lazy\" src=\"https://picsum.photos/id/1011/1200/900\" alt=\"\">\n        </div>\n        <hr class=\"wbw-rule\" />\n        <div class=\"wbw-content\">\n          <h3 class=\"wbw-kicker\">1 Month+</h3>\n          <p class=\"wbw-desc\">See slimmer waist/thighs</p>\n          <p class=\"wbw-desc\">Keep losing (~1 lb/week)</p>\n        </div>\n      </article>\n\n      <!-- Card 4 -->\n      <article class=\"wbw-card\" id=\"wbw-panel-4\" role=\"tabpanel\" tabindex=\"0\" aria-labelledby=\"wbw-tab-4\" aria-hidden=\"true\">\n        <div class=\"wbw-media\">\n          <img loading=\"lazy\" src=\"https://picsum.photos/id/1000/1200/900\" alt=\"\">\n        </div>\n        <hr class=\"wbw-rule\" />\n        <div class=\"wbw-content\">\n          <h3 class=\"wbw-kicker\">3 Months+</h3>\n          <p class=\"wbw-desc\">Drop a pants size</p>\n          <p class=\"wbw-desc\">Fit into tight jeans</p>\n        </div>\n      </article>\n    </div>\n  </div>\n\n  <script>\n    (function(){\n      const mqDesktop = window.matchMedia('(min-width: 750px)');\n      const tabs = Array.from(document.querySelectorAll('#ww-wbw .wbw-tabs [role=\"tab\"]'));\n      const cardsContainer = document.getElementById('wbw-cards');\n      const panels = Array.from(cardsContainer.querySelectorAll('[role=\"tabpanel\"]'));\n      const isMobile = () => window.matchMedia('(max-width: 749px)').matches;\n\n      function setActive(index, {scrollIntoView=false} = {}){\n        tabs.forEach((b,i)=>{\n          const selected = i===index;\n          b.setAttribute('aria-selected', selected ? 'true' : 'false');\n          b.tabIndex = selected ? 0 : -1;\n        });\n        panels.forEach((p,i)=>{\n          const active = i===index;\n          p.classList.toggle('is-active', active);\n          p.setAttribute('aria-hidden', active ? 'false' : 'true');\n        });\n\n        if (scrollIntoView && isMobile()){\n          const target = panels[index];\n          const left = target.offsetLeft - cardsContainer.offsetLeft;\n          cardsContainer.scrollTo({ left, behavior:'smooth' });\n        }\n        if (history.replaceState) history.replaceState(null, '', '#w' + (index+1));\n      }\n\n      function getIndexFromHash(){\n        const m = location.hash.match(/^#w([1-4])$/i);\n        return m ? Math.max(0, Math.min(3, parseInt(m[1],10)-1)) : 0;\n      }\n\n      let active = getIndexFromHash();\n      setActive(active);\n\n      tabs.forEach((b,i)=>{\n        b.addEventListener('click', ()=> setActive(i, {scrollIntoView:true}));\n        b.addEventListener('keydown', (e)=>{\n          const key = e.key;\n          if(key==='ArrowRight' || key==='ArrowLeft' || key==='Home' || key==='End'){\n            e.preventDefault();\n            if(key==='Home') active = 0;\n            else if(key==='End') active = tabs.length-1;\n            else active = (i + (key==='ArrowRight'?1:-1) + tabs.length) % tabs.length;\n            setActive(active, {scrollIntoView:true});\n            tabs[active].focus();\n          }\n        });\n      });\n\n      function syncForViewport(){\n        if(mqDesktop.matches){\n          panels.forEach(p=>{ p.removeAttribute('aria-hidden'); p.classList.add('is-active'); });\n        }else{\n          setActive(active);\n        }\n      }\n      mqDesktop.addEventListener('change', syncForViewport);\n      syncForViewport();\n    })();\n  </script>\n</section>",
-        "color_scheme": "",
-        "padding_top": 40,
-        "padding_bottom": 52
+        "title": "Feel the Difference — Week by Week",
+        "brand": "#1B8CFF",
+        "text": "#0B1F33",
+        "muted": "#516170",
+        "rule": "#E6E9EE",
+        "radius": 16,
+        "gap_mobile": 16,
+        "gap_desktop": 24,
+        "pad_top": 40,
+        "pad_bottom": 56,
+        "show_top_rule": false,
+        "hide_kicker_on_mobile": true,
+        "tabs_aria_label": "进度阶段（滑动选择）"
       }
     }
   },
@@ -489,6 +542,6 @@
     "comparison_matrix_cifVii",
     "science_backed_ingredients_La4x6X",
     "faq_hy8QM3",
-    "custom_liquid_AyrXqb"
+    "week_by_week_y3xG99"
   ]
 }
