@@ -173,13 +173,25 @@
         --rule: {{ section.settings.rule_dark }};
       }
     }
+
+    #hiw-{{ section.id }} #hiw-title-{{ section.id }}{
+  font-size: calc(var(--title-size-m) * 1px);
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--title-color);
+  margin: 0 0 16px 0;
+}
+@media (min-width: 1024px){
+  #hiw-{{ section.id }} #hiw-title-{{ section.id }}{
+    font-size: calc(var(--title-size-d) * 1px);
+  }
+}
   {%- endstyle -%}
 
   <div class="wrap">
      {%- if section.settings.title != blank -%}
           <h2 id="hiw-title-{{ section.id }}">{{ section.settings.title }}</h2>
         {%- endif -%}
-
     <div class="hiw-grid">
         
       <!-- 左列 -->
