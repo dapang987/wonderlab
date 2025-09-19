@@ -22,7 +22,6 @@
     }
 
     #weekbyweek-{{ section.id }} .wrap{
-      /* 继承主题 --page-width，提供兜底 */
       width: min(var(--page-width, 1100px), 100%);
       margin: 0 auto;
       padding: 0 20px;
@@ -42,7 +41,6 @@
       border-top:1px dashed var(--rule);
       margin: 16px auto 0;
       width:100%;
-      display: {{ section.settings.show_top_rule | default: true | if: 'block', else: 'none' }};
     }
 
     /* ===== Tabs (mobile only) ===== */
@@ -89,7 +87,7 @@
       border:2px solid transparent; transition:border-color .2s ease;
       flex: 0 0 clamp(280px, 85vw, 520px);
       scroll-snap-align:start;
-      box-shadow: {{ section.settings.card_shadow | default: false | if: 'var(--shadow)', else: 'none' }};
+      box-shadow: {% if section.settings.card_shadow %}var(--shadow){% else %}none{% endif %};
     }
 
     #weekbyweek-{{ section.id }} .media{
@@ -112,12 +110,11 @@
     #weekbyweek-{{ section.id }} .desc{ color:var(--muted); margin:2px 0; font-size: {{ section.settings.desc_size | default: 16 }}px; }
     #weekbyweek-{{ section.id }} .rule{ border:0; border-top:1px dashed var(--rule); margin:12px 0 10px; }
 
-    /* 手机端隐藏 kicker（可配置） */
+    /* 手机端：kicker 显示可配置 & 激活卡片下虚线变蓝 */
     @media (max-width: 749px){
       #weekbyweek-{{ section.id }} .kicker{
-        display: {{ section.settings.show_kicker_mobile | default: false | if: 'block', else: 'none' }} !important;
+        {% if section.settings.show_kicker_mobile %}display:block !important;{% else %}display:none !important;{% endif %}
       }
-      /* 激活卡片里的虚线变蓝 */
       #weekbyweek-{{ section.id }} .card .rule{ transition: border-color .2s ease; }
       #weekbyweek-{{ section.id }} .card.is-active .rule{ border-top-color: var(--brand); }
     }
@@ -152,7 +149,7 @@
         <button
           id="tab-w{{ i }}-{{ section.id }}"
           role="tab"
-          aria-selected="{{ forloop.first | default: false | json }}"
+          aria-selected="{{ forloop.first | json }}"
           aria-controls="panel-w{{ i }}-{{ section.id }}"
           {{ block.shopify_attributes }}
         >{{ block.settings.tab_label | default: block.settings.kicker | escape }}</button>
@@ -357,14 +354,17 @@
     }
   ],
   "max_blocks": 8,
-  "default": {
-    "blocks": [
-      { "type": "card", "settings": { "tab_label": "3–7 Days", "kicker": "3–7 Days", "desc1": "Daily, regular poops", "desc2": "Less bloating" } },
-      { "type": "card", "settings": { "tab_label": "1–2 Weeks", "kicker": "1–2 Weeks", "desc1": "Fewer cravings", "desc2": "Fuller for longer (3–4 hrs)" } },
-      { "type": "card", "settings": { "tab_label": "1 Month+", "kicker": "1 Month+", "desc1": "See slimmer waist/thighs", "desc2": "Keep losing (~1 lb/week)" } },
-      { "type": "card", "settings": { "tab_label": "3 Months+", "kicker": "3 Months+", "desc1": "Drop a pants size", "desc2": "Fit into tight jeans" } }
-    ],
-    "settings": {}
-  }
+  "presets": [
+    {
+      "name": "Week by Week（移动端选项卡）",
+      "category": "Custom",
+      "blocks": [
+        { "type": "card", "settings": { "tab_label": "3–7 Days", "kicker": "3–7 Days", "desc1": "Daily, regular poops", "desc2": "Less bloating" } },
+        { "type": "card", "settings": { "tab_label": "1–2 Weeks", "kicker": "1–2 Weeks", "desc1": "Fewer cravings", "desc2": "Fuller for longer (3–4 hrs)" } },
+        { "type": "card", "settings": { "tab_label": "1 Month+", "kicker": "1 Month+", "desc1": "See slimmer waist/thighs", "desc2": "Keep losing (~1 lb/week)" } },
+        { "type": "card", "settings": { "tab_label": "3 Months+", "kicker": "3 Months+", "desc1": "Drop a pants size", "desc2": "Fit into tight jeans" } }
+      ]
+    }
+  ]
 }
 {% endschema %}
