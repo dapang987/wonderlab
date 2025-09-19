@@ -1,0 +1,230 @@
+{% comment %}
+  Section: Here’s how it works (左右两列 + 右侧纵向时间线)
+  - 强作用域：#hiw-{{ section.id }}
+  - 左侧：标题、引言、按钮
+  - 右侧：时间线（可配置多个 Block）
+{% endcomment %}
+
+<section id="hiw-{{ section.id }}" class="section-{{ section.id }}" aria-labelledby="hiw-title-{{ section.id }}">
+  {%- style -%}
+    /* ===== 统一上下间距（Dawn风格：手机 0.75x） ===== */
+    .section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      color: var(--text);
+    }
+    @media (min-width: 750px){
+      .section-{{ section.id }}{
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+
+    /* ===== 强 scope 到本 section ===== */
+    #hiw-{{ section.id }}{
+      --brand: {{ section.settings.brand }};
+      --text: {{ section.settings.text }};
+      --muted: {{ section.settings.muted }};
+      --rule: {{ section.settings.rule }};
+      --radius: {{ section.settings.radius }}px;
+      --shadow: 0 6px 16px rgba(0,0,0,.06);
+      --gap: {{ section.settings.gap }}px;
+      --btn-w: {{ section.settings.btn_width }}px;
+      --bp-desktop: 1024px;
+    }
+    #hiw-{{ section.id }} .wrap{
+      width: min(var(--page-width, 1100px), 100%);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (max-width: 480px){
+      #hiw-{{ section.id }} .wrap{ padding: 0 16px; }
+    }
+
+    /* ===== Grid（桌面双列） ===== */
+    #hiw-{{ section.id }} .hiw-grid{
+      position: relative;
+      display: grid;
+      gap: var(--gap);
+    }
+    @media (min-width: 1024px){
+      #hiw-{{ section.id }} .hiw-grid{
+        grid-template-columns: 0.4fr 0.6fr;
+        align-items: start;
+      }
+    }
+
+    /* ===== 左列 ===== */
+    #hiw-{{ section.id }} .col--left h2{
+      font-size: clamp(24px, 3.3vw, 36px);
+      line-height: 1.2;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+    }
+    #hiw-{{ section.id }} .lead{
+      font-size: clamp(14px, 1.6vw, 16px);
+      line-height: 1.7;
+      color: var(--text);
+      margin: 0 0 18px 0;
+    }
+    #hiw-{{ section.id }} .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.5em;
+      height: 44px;
+      padding: 0 20px;
+      width: var(--btn-w);
+      max-width: 100%;
+      border-radius: 10px;
+      background: var(--brand);
+      color: #fff;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: transform .15s ease, filter .15s ease;
+    }
+    #hiw-{{ section.id }} .btn:hover{ filter: brightness(1.05); }
+    #hiw-{{ section.id }} .btn:active{ transform: translateY(1px); }
+    #hiw-{{ section.id }} .btn:focus-visible{
+      outline: 3px solid color-mix(in oklab, var(--brand), #fff 60%);
+      outline-offset: 2px;
+    }
+
+    /* ===== 右列：纵向时间线 ===== */
+    #hiw-{{ section.id }} .timeline{
+      position: relative;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    #hiw-{{ section.id }} .hiw-item{
+      position: relative;
+      padding-left: 30px;           /* 左侧短虚线/标记的空间 */
+      margin: 0 0 28px 0;
+      border-left: 1px dashed var(--rule);
+    }
+    #hiw-{{ section.id }} .hiw-item:last-child{ margin-bottom: 0; }
+
+    #hiw-{{ section.id }} .hiw-title{
+      line-height: 1.35;
+      font-weight: 600;
+      margin: 0 0 6px 0;
+    }
+    #hiw-{{ section.id }} .hiw-desc{
+      line-height: 1.7;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ===== 可选：系统深色模式下的颜色微调（只改变量） ===== */
+    @media (prefers-color-scheme: dark){
+      #hiw-{{ section.id }}{
+        --text: {{ section.settings.text_dark }};
+        --muted: {{ section.settings.muted_dark }};
+        --rule: {{ section.settings.rule_dark }};
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="wrap">
+    <div class="hiw-grid">
+      <!-- 左列 -->
+      <div class="col col--left">
+        {%- if section.settings.title != blank -%}
+          <h2 id="hiw-title-{{ section.id }}">{{ section.settings.title }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.lead != blank -%}
+          <div class="lead rte">{{ section.settings.lead }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank -%}
+          <a
+            class="btn"
+            href="{{ section.settings.button_link | default: '#' }}"
+            {% if section.settings.button_new_tab %} target="_blank" rel="noopener noreferrer" {% endif %}
+            aria-label="{{ section.settings.button_aria | default: section.settings.button_label | escape }}"
+          >{{ section.settings.button_label }}</a>
+        {%- endif -%}
+      </div>
+
+      <!-- 右列：时间线 -->
+      <div class="col col--right">
+        <ul class="timeline" aria-label="{{ 'Here’s how it works — key points' | escape }}">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'point' -%}
+              <li class="hiw-item" {{ block.shopify_attributes }}>
+                {%- if block.settings.point_title != blank -%}
+                  <h3 class="hiw-title">{{ block.settings.point_title }}</h3>
+                {%- endif -%}
+                {%- if block.settings.point_desc != blank -%}
+                  <div class="hiw-desc rte">{{ block.settings.point_desc }}</div>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Here’s how it works",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "inline_richtext", "id": "title", "label": "标题（左列）", "default": "Here’s how it works" },
+    { "type": "richtext", "id": "lead", "label": "引言（左列）", "default": "<p>Emerging science suggests that supplementing with <em>probiotics</em> may support weight management goals when combined with diet and exercise.</p>" },
+
+    { "type": "text", "id": "button_label", "label": "按钮文案", "default": "Learn More" },
+    { "type": "url", "id": "button_link", "label": "按钮链接" },
+    { "type": "checkbox", "id": "button_new_tab", "label": "新窗口打开", "default": false },
+    { "type": "text", "id": "button_aria", "label": "按钮无障碍说明（可选）", "info": "不填时会使用按钮文案。" },
+
+    { "type": "range", "id": "btn_width", "label": "按钮宽度（px）", "min": 180, "max": 360, "step": 10, "default": 300 },
+
+    { "type": "header", "content": "样式" },
+    { "type": "color", "id": "brand", "label": "品牌主色（按钮）", "default": "#1B8CFF" },
+    { "type": "color", "id": "text", "label": "正文颜色", "default": "#0B1F33" },
+    { "type": "color", "id": "muted", "label": "次要文字颜色", "default": "#516170" },
+    { "type": "color", "id": "rule", "label": "分隔线颜色", "default": "#E6E9EE" },
+    { "type": "range", "id": "radius", "label": "圆角（px）", "min": 0, "max": 24, "step": 1, "default": 14 },
+    { "type": "range", "id": "gap", "label": "左右列间距（px）", "min": 12, "max": 48, "step": 2, "default": 28 },
+
+    { "type": "header", "content": "深色模式（系统偏好）" },
+    { "type": "color", "id": "text_dark", "label": "深色模式·正文颜色", "default": "#EAF1F7" },
+    { "type": "color", "id": "muted_dark", "label": "深色模式·次要文字颜色", "default": "#A7B3BE" },
+    { "type": "color", "id": "rule_dark", "label": "深色模式·分隔线颜色", "default": "#365063" },
+
+    { "type": "header", "content": "上下间距" },
+    { "type": "range", "id": "padding_top", "label": "上间距（px）", "min": 0, "max": 120, "step": 4, "default": 36 },
+    { "type": "range", "id": "padding_bottom", "label": "下间距（px）", "min": 0, "max": 120, "step": 4, "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "时间线项",
+      "limit": 12,
+      "settings": [
+        { "type": "inline_richtext", "id": "point_title", "label": "标题", "default": "Live Probiotic" },
+        { "type": "richtext", "id": "point_desc", "label": "描述", "default": "<p>Live strains survive to reach the colon with <strong>1000x better survivability</strong> vs. Greek yogurt &amp; leading probiotics.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Here’s how it works",
+      "blocks": [
+        { "type": "point", "settings": { "point_title": "Live Probiotic", "point_desc": "<p>Live strains survive to reach the colon with <strong>1000x better survivability</strong> vs. Greek yogurt &amp; leading probiotics.</p>" } },
+        { "type": "point", "settings": { "point_title": "Made Traceable", "point_desc": "<p>Each strain is DNA-verified and traceable. We rigorously select our supply chain.</p>" } },
+        { "type": "point", "settings": { "point_title": "3-in-1 Active Layer Bottle", "point_desc": "<p>Protects cultures from moisture, light, and oxygen to extend shelf life and stability.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
