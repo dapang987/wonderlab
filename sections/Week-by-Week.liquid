@@ -93,7 +93,7 @@
     }
     #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]:focus{ outline:none; }
     #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:6px; }
-    #ww-wbw-{{ section.id }} .wbw-tabs [aria-selected="true"]{ color:var(--brand); border-top-color:var(--brand); }
+    #ww-wbw-{{ section.id }} .wbw-tabs [aria-selected="true"]{ color:var(--brand); border-top-color:var(--brand); font-weight:700; }
     @media (min-width: 750px){
       #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]{ font-size: var(--kicker-size-d); }
     }
@@ -165,11 +165,6 @@
       #ww-wbw-{{ section.id }} .wbw-kicker{ display:block; }
     }
     {% endif %}
-
-    #ww-wbw-{{ section.id }} .wbw-kicker{
-  font-family: var(--font-body-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif) !important;
-}
-
   </style>
 
   <div class="wbw-wrap">
@@ -207,7 +202,7 @@
               {{ 'lifestyle-1' | placeholder_svg_tag: 'wbw-ph' }}
             {% endif %}
           </div>
-        
+          <hr class="wbw-rule" />
           <div class="wbw-content">
             <h3 class="wbw-kicker">{{ block.settings.kicker | escape }}</h3>
             {% if block.settings.desc1 != blank %}<p class="wbw-desc">{{ block.settings.desc1 | escape }}</p>{% endif %}
