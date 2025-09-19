@@ -147,7 +147,7 @@
           "type": "point",
           "settings": {
             "point_title": "Live Probiotic",
-            "point_desc": "<p>Live strains survive to reach the colon with <strong>1000x better survivability</strong> vs. Greek yogurt &amp; leading probiotics.</p>"
+            "point_desc": "<p>Live strains survive to reach the colon with <strong>1000x better survivability</strong> vs. Greek yogurt & leading probiotics.</p>"
           }
         },
         "point_Bfg3Yh": {
@@ -192,9 +192,9 @@
         "title_size_m": 28,
         "title_size_d": 48,
         "lead_size_m": 15,
-        "lead_size_d": 16,
+        "lead_size_d": 24,
         "item_title_size_m": 18,
-        "item_title_size_d": 20,
+        "item_title_size_d": 30,
         "item_desc_size_m": 14,
         "item_desc_size_d": 16,
         "text_dark": "#eaf1f7",
