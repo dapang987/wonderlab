@@ -168,18 +168,40 @@
           aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
           {{ block.shopify_attributes }}
         >
-       <div class="media">
+<div class="media">
   {%- assign desk = block.settings.image -%}
-  {%- assign mob = block.settings.image_mobile | default: desk -%}
+  {%- assign mob  = block.settings.image_mobile | default: desk -%}
 
   {%- if desk != blank or mob != blank -%}
     <picture>
       {%- if mob != blank -%}
-        <!-- 手机优先：800/1600 宽度 -->
+        <!-- 手机优先：小屏使用手机图 -->
         <source
           media="(max-width: 749px)"
-          srcset="{{ mob | img_url: '800x' }} 1x, {{ mob | img_url: '1600x' }} 2x">
+          srcset="
+            {{ mob  | image_url: width: 600  }} 600w,
+            {{ mob  | image_url: width: 900  }} 900w,
+            {{ mob  | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 749px) 85vw, 600px">
       {%- endif -%}
+
+      {%- if desk != blank -%}
+        <img
+          src="{{ desk | image_url: width: 1200 }}"
+          srcset="
+            {{ desk | image_url: width: 600  }} 600w,
+            {{ desk | image_url: width: 900  }} 900w,
+            {{ desk | image_url: width: 1200 }} 1200w,
+            {{ desk | image_url: width: 1600 }} 1600w"
+          sizes="(max-width: 749px) 85vw,
+                 (min-width: 750px) calc((min(var(--page-width,1100px),100%) - (var(--gap) * ({{ section.settings.desktop_columns | default: 4 }} - 1))) / {{ section.settings.desktop_columns | default: 4 }})"
+          alt="{{ block.settings.kicker | default: block.settings.tab_label | escape }}"
+          loading="lazy"
+          width="{{ desk.width }}"
+          height="{{ desk.height }}"
+        >
+      {%- endif -%}
+    </picture>
   {%- else -%}
     {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
   {%- endif -%}
@@ -188,6 +210,7 @@
     <span class="badge">{{ block.settings.badge_text | escape }}</span>
   {%- endif -%}
 </div>
+
 
 
           <hr class="rule" />
