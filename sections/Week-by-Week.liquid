@@ -181,12 +181,6 @@
                     src="{{ block.settings.image | image_url: width: 1200 }}"
                     srcset="{{ block.settings.image | image_url: width: 1200 }} 1x, {{ block.settings.image | image_url: width: 2400 }} 2x"
                     alt="{{ block.settings.image_alt | default: block.settings.kicker | escape }}">
-                {%- elsif block.settings.image_mobile != blank -%}
-                  <img
-                    loading="lazy"
-                    src="{{ block.settings.image_mobile | image_url: width: 1200 }}"
-                    srcset="{{ block.settings.image_mobile | image_url: width: 1200 }} 1x, {{ block.settings.image_mobile | image_url: width: 2400 }} 2x"
-                    alt="{{ block.settings.image_alt | default: block.settings.kicker | escape }}">
                 {%- endif -%}
               </picture>
             {%- else -%}
