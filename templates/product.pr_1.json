@@ -472,8 +472,8 @@
           "settings": {
             "question": "Who can take Easy Shape Probiotic?",
             "answer": "<p>Easy Shape Probiotic is designed for ages 3 and above and is perfect for anyone targeting their waist and abdominal area—whether you're dealing with stubborn waist fat or trying to curb persistent cravings. Pregnant and breastfeeding women should consult their healthcare provider before starting any new supplement.</p>",
-            "question_size": 16,
-            "answer_size": 14,
+            "question_size": 24,
+            "answer_size": 16,
             "item_bg": "#ffffff"
           }
         },
