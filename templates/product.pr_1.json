@@ -145,8 +145,8 @@
       "name": "Hero — 响应式（不同图/字）",
       "settings": {
         "image": "shopify://shop_images/a8b5a94602ee97a36386ceed0e5796155a911b0d.jpg",
-        "mt_d": 0,
-        "mb_d": 0,
+        "mt_d": 30,
+        "mb_d": 30,
         "ml_d": 0,
         "mr_d": 0,
         "mt_m": 0,
