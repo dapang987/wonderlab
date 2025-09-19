@@ -266,12 +266,12 @@
     @media (max-width: 768px){
       .section-{{ section.id }}-padding{ padding-left: 14px; padding-right: 14px; }
 
-      #philosophy-{{ section.id }} .ph-grid{
+      {% comment %} #philosophy-{{ section.id }} .ph-grid{
         display: block;
         column-count: 2;
         column-gap: var(--gap);
       }
-
+      
       #philosophy-{{ section.id }} .ph-col{ display: contents; }
       #philosophy-{{ section.id }} .card{
         break-inside: avoid;
@@ -280,17 +280,34 @@
         width: 100%;
         display: block;
         margin-bottom: var(--gap);
-      }
-    }
-/* 手机端：展开的卡片占满两栏，避免其它卡片“跳栏” */
-@media (max-width: 768px){
-  #philosophy-{{ section.id }} .card.is-open{
-    -webkit-column-span: all;
-    column-span: all;
-    display: block;   /* 保守处理，确保占满 */
-    width: 100%;
+      } {% endcomment %}
+      @media (max-width: 768px){
+  /* 用 Grid 做两列，列内垂直堆叠 */
+  #philosophy-{{ section.id }} .ph-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+    align-items: start;
+  }
+  #philosophy-{{ section.id }} .ph-col{
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    min-width: 0;
+  }
+  /* 三个列容器固定到两列网格里（不再“跳列”） */
+  #philosophy-{{ section.id }} .ph-col:nth-child(1){ grid-column: 1; } /* left  列 */
+  #philosophy-{{ section.id }} .ph-col:nth-child(2){ grid-column: 2; } /* middle列 */
+  #philosophy-{{ section.id }} .ph-col:nth-child(3){ grid-column: 1; } /* right 列 → 跟左并在同一列下方 */
+
+  /* 移除多栏相关兼容样式，保留正常块级表现 */
+  #philosophy-{{ section.id }} .card{
+    width: auto;
+    margin: 0;
   }
 }
+
+    }
 
     @media (prefers-reduced-motion: reduce){
       #philosophy-{{ section.id }} .card,
