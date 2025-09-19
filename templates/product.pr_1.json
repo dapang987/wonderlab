@@ -410,6 +410,7 @@
         "ingredient_E8c3j7": {
           "type": "ingredient",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_50.png",
             "image_alt": "",
             "title": "Bifidobacterium animalis subsp. lactis B420",
             "desc": "<p>B420 is a <em>Bifidobacterium animalis</em> subsp. <em>lactis</em> strain that supports weight management. Studies have shown that B420 can reduce body fat, waist circumference, energy intake, and increase the abundance of <em>Akkermansia muciniphila</em>, supporting intestinal health.</p>"
@@ -418,6 +419,7 @@
         "ingredient_Vjk3AY": {
           "type": "ingredient",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_50.png",
             "image_alt": "",
             "title": "Bifidobacterium animalis subsp. lactis HN019",
             "desc": "<p>HN019 is a <em>Bifidobacterium animalis</em> subsp. <em>lactis</em> strain that supports digestive health. Studies have shown that HN019 can increase bowel movements, regulating intestinal health.</p>"
@@ -426,6 +428,7 @@
         "ingredient_pbgaBm": {
           "type": "ingredient",
           "settings": {
+            "image": "shopify://shop_images/Rectangle_50.png",
             "image_alt": "",
             "title": "Prebiotic Blend",
             "desc": "<p>Prebiotic blend contains isomaltooligosaccharides and polydextrose, which promote the proliferation of beneficial bacteria in the intestines and support digestive health.</p>"
