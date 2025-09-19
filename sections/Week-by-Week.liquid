@@ -1,8 +1,8 @@
 {% comment %}
   Section: Week by Week (mobile tabs + scroll-snap cards; desktop 4-col grid)
-  - Blocks = 卡片（2–8 个），每个 block：图片 + 标题(kicker) + 多行描述（换行分条）
-  - 手机：顶部 Tab + 横滑卡片；桌面：四列网格，展示全部卡片
-  - 图片：使用老滤镜 img_url（最兼容），输出 1:1 居中裁切
+  - Blocks = 卡片（2–8 个）：图片 + 标题(kicker) + 多行描述（换行分条）
+  - 手机：顶部 Tab + 横滑卡片；桌面：四列网格（展示全部）
+  - 图片：使用最兼容的 img_url；无图时用 placeholder_svg_tag（不放在 <picture> 里）
 {% endcomment %}
 
 <section id="weekbyweek-{{ section.id }}" class="weekbyweek section-{{ section.id }}" aria-labelledby="w-title-{{ section.id }}">
@@ -24,10 +24,7 @@
       --pad-bottom: {{ section.settings.pad_bottom }}px;
     }
 
-    .section-{{ section.id }}{
-      color: var(--text);
-      padding: var(--pad-top-m) 0 var(--pad-bottom-m);
-    }
+    .section-{{ section.id }}{ color: var(--text); padding: var(--pad-top-m) 0 var(--pad-bottom-m); }
     @media (min-width: 750px){
       .section-{{ section.id }}{ padding: var(--pad-top) 0 var(--pad-bottom); }
     }
@@ -42,10 +39,10 @@
 
     .section-{{ section.id }} .top-rule{
       display: {% if section.settings.show_top_rule %}block{% else %}none{% endif %};
-      border:0; border-top:1px dashed var(--rule); margin: 16px auto 0; width:100%;
+      border:0; border-top:1px dashed var(--rule); margin:16px auto 0; width:100%;
     }
 
-    /* Tabs reset (scoped) */
+    /* Tabs */
     #weekbyweek-{{ section.id }} .tabs{ display:flex; overflow:visible; padding:10px 0 4px; gap:8px; }
     #weekbyweek-{{ section.id }} .tabs button{
       appearance:none; -webkit-appearance:none; background:transparent; border:0;
@@ -60,7 +57,7 @@
     #weekbyweek-{{ section.id }} .tabs button[aria-selected="true"]{ background:transparent !important; box-shadow:none !important; border-bottom:0 !important; }
     #weekbyweek-{{ section.id }} .tabs button[aria-selected="true"]{ color:var(--brand); border-top-color:var(--brand) !important; font-weight:700; }
 
-    /* Cards */
+    /* Cards container */
     #weekbyweek-{{ section.id }} .cards{
       position:relative; margin-top:14px; display:flex; gap:var(--gap-m);
       overflow-x:auto; -webkit-overflow-scrolling:touch; scroll-snap-type:x mandatory;
@@ -68,25 +65,38 @@
     }
     #weekbyweek-{{ section.id }} .cards::-webkit-scrollbar{ display:none; }
 
+    /* Card */
     #weekbyweek-{{ section.id }} .card{
       background:#fff; border-radius:var(--radius); display:flex; flex-direction:column; overflow:hidden; position:relative;
       border:2px solid transparent; transition:border-color .2s ease;
       flex: 0 0 clamp(280px, 85vw, 520px); scroll-snap-align:start; box-shadow: var(--shadow);
     }
 
+    /* Media */
     #weekbyweek-{{ section.id }} .media{ position:relative; border-radius:calc(var(--radius) - 2px); overflow:hidden; margin:8px; background:#f6f6f6; }
     #weekbyweek-{{ section.id }} .media img{ display:block; width:100%; height:auto; aspect-ratio:1/1; object-fit:cover; }
+    /* Placeholder wrapper (only when no image) */
+    #weekbyweek-{{ section.id }} .media .ph{
+      width:100%; aspect-ratio:1/1; display:grid; place-items:center; background:#f0f2f5;
+    }
+    #weekbyweek-{{ section.id }} .media .ph svg{ width:56%; height:auto; opacity:.55; display:block; }
 
+    /* Badge */
     #weekbyweek-{{ section.id }} .badge{
       position:absolute; right:14px; top:14px; background:#18C08F; color:#fff; font-size:12px; padding:6px 10px;
       border-radius:999px; line-height:1; box-shadow:0 4px 12px rgba(0,0,0,.12);
     }
 
+    /* Text */
     #weekbyweek-{{ section.id }} .content{ padding: 2px 16px 14px; }
     #weekbyweek-{{ section.id }} .kicker{ font-weight:700; margin:4px 0 6px; }
     #weekbyweek-{{ section.id }} .desc{ color:var(--muted); margin:2px 0; }
     #weekbyweek-{{ section.id }} .rule{ border:0; border-top:1px dashed var(--rule); margin:12px 0 10px; }
 
+    /* Debug line (optional) */
+    #weekbyweek-{{ section.id }} .dbg{ font-size:12px; color:#a33; margin:6px 16px 12px; word-break:break-all; }
+
+    /* Responsive */
     @media (max-width: 749px){
       #weekbyweek-{{ section.id }} .kicker{ display: {% if section.settings.hide_kicker_mobile %}none{% else %}block{% endif %}; }
     }
@@ -134,11 +144,10 @@
             <div class="media">
               {%- if block.settings.image != blank -%}
                 {%- assign _img = block.settings.image -%}
-                {%- comment %} 使用 img_url 输出 1:1 居中裁切，多档位 srcset（最兼容） {% endcomment -%}
                 <img
                   src="{{ _img | img_url: '800x800', crop: 'center' }}"
                   srcset="
-                    {{ _img | img_url: '400x400', crop: 'center' }} 400w,
+                    {{ _img | img_url: '400x400',  crop: 'center' }} 400w,
                     {{ _img | img_url: '800x800',  crop: 'center' }} 800w,
                     {{ _img | img_url: '1200x1200', crop: 'center' }} 1200w,
                     {{ _img | img_url: '1600x1600', crop: 'center' }} 1600w
@@ -146,11 +155,11 @@
                   sizes="(min-width: 750px) 25vw, 85vw"
                   loading="lazy"
                   alt="{{ alt_text | escape }}"
-                  width="{{ _img.width | default: 800 }}"
-                  height="{{ _img.height | default: 800 }}"
                 >
               {%- else -%}
-                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                <div class="ph">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
               {%- endif -%}
               {%- if block.settings.badge != blank -%}
                 <span class="badge">{{ block.settings.badge | escape }}</span>
@@ -171,6 +180,16 @@
                 {%- endif -%}
               {%- endfor -%}
             </div>
+
+            {%- if section.settings.debug_urls -%}
+              <div class="dbg">
+                {% if block.settings.image != blank %}
+                  src={{ block.settings.image | img_url: '800x800', crop: 'center' }}
+                {% else %}
+                  (placeholder_svg_tag: "image")
+                {% endif %}
+              </div>
+            {%- endif -%}
           </article>
         {%- endfor -%}
       </div>
@@ -264,7 +283,9 @@
     { "type": "range", "id": "pad_bottom", "label": "下内边距(px)", "min": 0, "max": 120, "step": 4, "default": 56 },
 
     { "type": "checkbox", "id": "hide_kicker_mobile", "label": "手机端隐藏卡片标题(kicker)", "default": true },
-    { "type": "checkbox", "id": "enable_hash", "label": "启用深链接（#w{sectionId}-序号）", "default": false, "info": "例如：#w1234567890-2 将在加载时激活第 2 个卡片" }
+    { "type": "checkbox", "id": "enable_hash", "label": "启用深链接（#w{sectionId}-序号）", "default": false, "info": "例如：#w1234567890-2 将在加载时激活第 2 个卡片" },
+
+    { "type": "checkbox", "id": "debug_urls", "label": "显示图片调试信息（仅开发期）", "default": false }
   ],
   "blocks": [
     {
@@ -275,7 +296,7 @@
         { "type": "text", "id": "tab_label", "label": "Tab 标签", "default": "1–2 Weeks" },
         { "type": "text", "id": "kicker", "label": "卡片标题（kicker）", "default": "1–2 Weeks" },
         { "type": "textarea", "id": "desc", "label": "描述（多行，换行代表一条）", "default": "Fewer cravings\nFuller for longer (3–4 hrs)" },
-        { "type": "image_picker", "id": "image", "label": "图片（1:1 裁切，建议≥1200x1200）" }
+        { "type": "image_picker", "id": "image", "label": "图片（建议≥1200×1200，自动1:1裁切）" }
       ]
     }
   ],
