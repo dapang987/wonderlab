@@ -554,7 +554,7 @@
         "padding_top": 32,
         "padding_bottom": 32,
         "title_size_m": 36,
-        "title_size_d": 25,
+        "title_size_d": 45,
         "single_open": true,
         "open_first": true
       }
