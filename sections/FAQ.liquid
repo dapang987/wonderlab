@@ -2,6 +2,7 @@
   Section: FAQ — Questions? We’ve got answers
   - Each block = one FAQ item (question + answer)
   - New per-item controls: question font size, answer font size, card background color
+  - Added: per-item border toggle (show/hide)
 {% endcomment %}
 
 <section id="faq-{{ section.id }}" class="faq section-{{ section.id }}" aria-labelledby="faq-title-{{ section.id }}" data-single-open="{{ section.settings.single_open }}">
@@ -49,10 +50,12 @@
 
     /* Item container: reads per-item CSS variables set inline */
     .section-{{ section.id }} .faq__item{
-      --item-bg: #fff;            /* fallback if block didn't set */
-      --item-q-size: 16px;        /* question font-size fallback */
-      --item-a-size: 14px;        /* answer font-size fallback */
-      border:1px solid var(--border);
+      --item-bg: #fff;             /* fallback if block didn't set */
+      --item-q-size: 16px;         /* question font-size fallback */
+      --item-a-size: 14px;         /* answer font-size fallback */
+      --item-border-width: 1px;    /* per-item border width (0px hides border) */
+
+      border: var(--item-border-width) solid var(--border);
       border-radius:var(--radius);
       background: var(--item-bg);
       box-shadow:var(--shadow);
@@ -97,7 +100,7 @@
       height:0; overflow:hidden;
       transition:height .24s ease;
       will-change:height;
-      border-top:1px solid var(--border);
+      border-top: var(--item-border-width) solid var(--border); /* match item border toggle */
       background: var(--item-bg);
     }
     .section-{{ section.id }} .faq__inner{
@@ -137,11 +140,16 @@
             assign item_bg = block.settings.item_bg | default: '#ffffff'
             assign q_size = block.settings.question_size | default: 16
             assign a_size = block.settings.answer_size | default: 14
+
+            assign bw = 1
+            if block.settings.show_border == false
+              assign bw = 0
+            endif
           %}
           <div class="faq__item"
                data-item
                aria-expanded="{{ expanded }}"
-               style="--item-bg: {{ item_bg }}; --item-q-size: {{ q_size }}px; --item-a-size: {{ a_size }}px;"
+               style="--item-bg: {{ item_bg }}; --item-q-size: {{ q_size }}px; --item-a-size: {{ a_size }}px; --item-border-width: {{ bw }}px;"
                {{ block.shopify_attributes }}>
             <button class="faq__btn" id="{{ q_id }}" aria-controls="{{ a_id }}" aria-expanded="{{ expanded }}">
               <span>{{ block.settings.question | escape }}</span>
@@ -157,7 +165,7 @@
           </div>
         {% endfor %}
       {% else %}
-        <div class="faq__item" aria-expanded="true" style="--item-bg:#ffffff; --item-q-size:16px; --item-a-size:14px;">
+        <div class="faq__item" aria-expanded="true" style="--item-bg:#ffffff; --item-q-size:16px; --item-a-size:14px; --item-border-width: 1px;">
           <button class="faq__btn" id="placeholder-q-{{ section.id }}" aria-controls="placeholder-a-{{ section.id }}" aria-expanded="true">
             <span>How does this FAQ work?</span>
             <svg class="faq__chev" viewBox="0 0 24 24" aria-hidden="true">
@@ -288,7 +296,8 @@
         { "type": "header", "content": "Item appearance" },
         { "type": "range", "id": "question_size", "label": "Question font size (px)", "min": 12, "max": 28, "step": 1, "default": 16 },
         { "type": "range", "id": "answer_size", "label": "Answer font size (px)", "min": 12, "max": 22, "step": 1, "default": 14 },
-        { "type": "color", "id": "item_bg", "label": "Card background color", "default": "#ffffff" }
+        { "type": "color", "id": "item_bg", "label": "Card background color", "default": "#ffffff" },
+        { "type": "checkbox", "id": "show_border", "label": "Show border", "default": true }
       ]
     }
   ],
@@ -303,7 +312,8 @@
             "answer": "<p>Easy Shape Probiotic is designed for ages 3 and above and is perfect for anyone targeting their waist and abdominal area—whether you're dealing with stubborn waist fat or trying to curb persistent cravings. Pregnant and breastfeeding women should consult their healthcare provider before starting any new supplement.</p>",
             "question_size": 16,
             "answer_size": 14,
-            "item_bg": "#ffffff"
+            "item_bg": "#ffffff",
+            "show_border": true
           }
         },
         {
@@ -313,7 +323,8 @@
             "answer": "<p>It supports waist and abdominal goals, helps curb cravings, and promotes digestive balance by nurturing beneficial gut bacteria.</p>",
             "question_size": 16,
             "answer_size": 14,
-            "item_bg": "#ffffff"
+            "item_bg": "#ffffff",
+            "show_border": true
           }
         }
       ]
