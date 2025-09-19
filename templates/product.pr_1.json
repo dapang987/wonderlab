@@ -328,6 +328,73 @@
         "padding_bottom": 56
       }
     },
+    "week_by_week_y3xG99": {
+      "type": "Week-by-Week",
+      "blocks": {
+        "card_qAhCYL": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Rectangle_46.png",
+            "alt": "",
+            "kicker": "3–7 Days",
+            "desc1": "Daily, regular poops",
+            "desc2": "Less bloating"
+          }
+        },
+        "card_9FHdY3": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Rectangle_46.png",
+            "alt": "",
+            "kicker": "1–2 Weeks",
+            "desc1": "Fewer cravings",
+            "desc2": "Fuller for longer (3–4 hrs)"
+          }
+        },
+        "card_g8Wkte": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Rectangle_46.png",
+            "alt": "",
+            "kicker": "1 Month+",
+            "desc1": "See slimmer waist/thighs",
+            "desc2": "Keep losing (~1 lb/week)"
+          }
+        },
+        "card_KmWtri": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Rectangle_46.png",
+            "alt": "",
+            "kicker": "3 Months+",
+            "desc1": "Drop a pants size",
+            "desc2": "Fit into tight jeans"
+          }
+        }
+      },
+      "block_order": [
+        "card_qAhCYL",
+        "card_9FHdY3",
+        "card_g8Wkte",
+        "card_KmWtri"
+      ],
+      "name": "Week by Week Cards",
+      "settings": {
+        "title": "Feel the Difference — Week by Week",
+        "brand": "#1B8CFF",
+        "text": "#0B1F33",
+        "muted": "#516170",
+        "rule": "#E6E9EE",
+        "radius": 16,
+        "gap_mobile": 16,
+        "gap_desktop": 24,
+        "pad_top": 40,
+        "pad_bottom": 56,
+        "show_top_rule": false,
+        "hide_kicker_on_mobile": true,
+        "tabs_aria_label": "进度阶段（滑动选择）"
+      }
+    },
     "science_backed_ingredients_La4x6X": {
       "type": "Science-backed-ingredients",
       "blocks": {
@@ -469,69 +536,6 @@
         "single_open": true,
         "open_first": true
       }
-    },
-    "week_by_week_y3xG99": {
-      "type": "Week-by-Week",
-      "blocks": {
-        "card_qAhCYL": {
-          "type": "card",
-          "settings": {
-            "alt": "",
-            "kicker": "3–7 Days",
-            "desc1": "Daily, regular poops",
-            "desc2": "Less bloating"
-          }
-        },
-        "card_9FHdY3": {
-          "type": "card",
-          "settings": {
-            "alt": "",
-            "kicker": "1–2 Weeks",
-            "desc1": "Fewer cravings",
-            "desc2": "Fuller for longer (3–4 hrs)"
-          }
-        },
-        "card_g8Wkte": {
-          "type": "card",
-          "settings": {
-            "alt": "",
-            "kicker": "1 Month+",
-            "desc1": "See slimmer waist/thighs",
-            "desc2": "Keep losing (~1 lb/week)"
-          }
-        },
-        "card_KmWtri": {
-          "type": "card",
-          "settings": {
-            "alt": "",
-            "kicker": "3 Months+",
-            "desc1": "Drop a pants size",
-            "desc2": "Fit into tight jeans"
-          }
-        }
-      },
-      "block_order": [
-        "card_qAhCYL",
-        "card_9FHdY3",
-        "card_g8Wkte",
-        "card_KmWtri"
-      ],
-      "name": "Week by Week Cards",
-      "settings": {
-        "title": "Feel the Difference — Week by Week",
-        "brand": "#1B8CFF",
-        "text": "#0B1F33",
-        "muted": "#516170",
-        "rule": "#E6E9EE",
-        "radius": 16,
-        "gap_mobile": 16,
-        "gap_desktop": 24,
-        "pad_top": 40,
-        "pad_bottom": 56,
-        "show_top_rule": false,
-        "hide_kicker_on_mobile": true,
-        "tabs_aria_label": "进度阶段（滑动选择）"
-      }
     }
   },
   "order": [
@@ -540,8 +544,8 @@
     "why_easy_shape_probiotic_JVnPMT",
     "feature_split_card_LDP3bW",
     "comparison_matrix_cifVii",
+    "week_by_week_y3xG99",
     "science_backed_ingredients_La4x6X",
-    "faq_hy8QM3",
-    "week_by_week_y3xG99"
+    "faq_hy8QM3"
   ]
 }
