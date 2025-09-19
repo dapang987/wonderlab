@@ -49,7 +49,7 @@
       margin:0;
     }
 
-    /* heading 下方可选虚线 */
+    /* heading 下方可选虚线（if/else） */
     .section-{{ section.id }} .top-rule{
       display: {% if section.settings.show_top_rule %}block{% else %}none{% endif %};
       border:0; 
@@ -57,7 +57,7 @@
       margin: 16px auto 0; width:100%;
     }
 
-    /* ===== Tabs 按钮基础 reset（限定作用域） ===== */
+    /* ===== Tabs 按钮 reset（限定作用域） ===== */
     #weekbyweek-{{ section.id }} .tabs button{
       appearance: none;
       -webkit-appearance: none;
@@ -201,7 +201,7 @@
       <div class="cards" id="cards-{{ section.id }}">
         {%- for block in section.blocks -%}
           {%- assign idx = forloop.index0 -%}
-          {%- assign alt_text = block.settings.alt | default: block.settings.kicker | escape -%}
+          {%- assign alt_text = block.settings.alt | default: block.settings.kicker -%}
           <article class="card{% if forloop.first %} is-active{% endif %}"
                    id="panel-{{ section.id }}-{{ idx }}"
                    role="tabpanel"
@@ -211,12 +211,17 @@
             <div class="media">
               <picture>
                 {%- if block.settings.image != blank -%}
-                  {{ block.settings.image
-                    | image_url: width: 1600
-                    | image_tag: loading: 'lazy',
-                                  sizes: '(min-width: 750px) 25vw, 85vw',
-                                  widths: '400, 800, 1200, 1600',
-                                  alt: alt_text }}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 800 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 400 }} 400w,
+                      {{ block.settings.image | image_url: width: 800 }} 800w,
+                      {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                      {{ block.settings.image | image_url: width: 1600 }} 1600w
+                    "
+                    sizes="(min-width: 750px) 25vw, 85vw"
+                    loading="lazy"
+                    alt="{{ alt_text | escape }}">
                 {%- else -%}
                   {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                 {%- endif -%}
