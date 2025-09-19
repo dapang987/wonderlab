@@ -168,29 +168,27 @@
           aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
           {{ block.shopify_attributes }}
         >
-          <div class="media">
-            {%- if block.settings.image != blank or block.settings.image_mobile != blank -%}
-              <picture>
-                {%- if block.settings.image_mobile != blank -%}
-                  <source media="(max-width: 749px)"
-                          srcset="{{ block.settings.image_mobile | image_url: width: 800 }} 1x, {{ block.settings.image_mobile | image_url: width: 1600 }} 2x">
-                {%- endif -%}
-                {%- if block.settings.image != blank -%}
-                  <img
-                    loading="lazy"
-                    src="{{ block.settings.image | image_url: width: 1200 }}"
-                    srcset="{{ block.settings.image | image_url: width: 1200 }} 1x, {{ block.settings.image | image_url: width: 2400 }} 2x"
-                    alt="{{ block.settings.image_alt | default: block.settings.kicker | escape }}">
-                {%- endif -%}
-              </picture>
-            {%- else -%}
-              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-            {%- endif -%}
+       <div class="media">
+  {%- assign desk = block.settings.image -%}
+  {%- assign mob = block.settings.image_mobile | default: desk -%}
 
-            {%- if block.settings.show_badge and block.settings.badge_text != blank -%}
-              <span class="badge">{{ block.settings.badge_text | escape }}</span>
-            {%- endif -%}
-          </div>
+  {%- if desk != blank or mob != blank -%}
+    <picture>
+      {%- if mob != blank -%}
+        <!-- 手机优先：800/1600 宽度 -->
+        <source
+          media="(max-width: 749px)"
+          srcset="{{ mob | img_url: '800x' }} 1x, {{ mob | img_url: '1600x' }} 2x">
+      {%- endif -%}
+  {%- else -%}
+    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+  {%- endif -%}
+
+  {%- if block.settings.show_badge and block.settings.badge_text != blank -%}
+    <span class="badge">{{ block.settings.badge_text | escape }}</span>
+  {%- endif -%}
+</div>
+
 
           <hr class="rule" />
 
