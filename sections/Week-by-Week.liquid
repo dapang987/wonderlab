@@ -169,13 +169,16 @@
           {{ block.shopify_attributes }}
         >
 <div class="media">
-  {%- assign desk = block.settings.image -%}
-  {%- assign mob  = block.settings.image_mobile | default: desk -%}
+  {%- liquid
+    assign desk = block.settings.image
+    assign mob  = block.settings.image_mobile
+    assign primary = desk | default: mob
+  -%}
 
-  {%- if desk != blank or mob != blank -%}
+  {%- if primary != blank -%}
     <picture>
       {%- if mob != blank -%}
-        <!-- 手机优先：小屏使用手机图 -->
+        <!-- 小屏优先：有手机图就用它 -->
         <source
           media="(max-width: 749px)"
           srcset="
@@ -186,21 +189,29 @@
       {%- endif -%}
 
       {%- if desk != blank -%}
-        <img
-          src="{{ desk | image_url: width: 1200 }}"
+        <!-- 桌面：有桌面图就单独给一组 source -->
+        <source
+          media="(min-width: 750px)"
           srcset="
             {{ desk | image_url: width: 600  }} 600w,
             {{ desk | image_url: width: 900  }} 900w,
             {{ desk | image_url: width: 1200 }} 1200w,
             {{ desk | image_url: width: 1600 }} 1600w"
-          sizes="(max-width: 749px) 85vw,
-                 (min-width: 750px) calc((min(var(--page-width,1100px),100%) - (var(--gap) * ({{ section.settings.desktop_columns | default: 4 }} - 1))) / {{ section.settings.desktop_columns | default: 4 }})"
-          alt="{{ block.settings.kicker | default: block.settings.tab_label | escape }}"
-          loading="lazy"
-          width="{{ desk.width }}"
-          height="{{ desk.height }}"
-        >
+          sizes="(min-width: 1200px) calc((1100px - ({{ section.settings.gap | default: 24 }}px * ({{ section.settings.desktop_columns | default: 4 }} - 1))) / {{ section.settings.desktop_columns | default: 4 }}),
+                 calc((100vw - 40px - ({{ section.settings.gap | default: 24 }}px * ({{ section.settings.desktop_columns | default: 4 }} - 1))) / {{ section.settings.desktop_columns | default: 4 }})">
       {%- endif -%}
+
+      {%- comment -%}
+        兜底 img：无论是否只有手机图/只有桌面图/都有图，始终保证可渲染
+      {%- endcomment -%}
+      <img
+        src="{{ primary | image_url: width: 1200 }}"
+        alt="{{ block.settings.kicker | default: block.settings.tab_label | escape }}"
+        loading="lazy"
+        {%- if primary.width and primary.height -%}
+          width="{{ primary.width }}" height="{{ primary.height }}"
+        {%- endif -%}
+      >
     </picture>
   {%- else -%}
     {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -210,6 +221,7 @@
     <span class="badge">{{ block.settings.badge_text | escape }}</span>
   {%- endif -%}
 </div>
+
 
 
 
