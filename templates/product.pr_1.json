@@ -234,7 +234,7 @@
         "height_d": 420,
         "height_m": 620,
         "radius": 14,
-        "pad": 0,
+        "pad": 20,
         "scrim_d": 0,
         "scrim_m": 0,
         "focal_d": "center center",
