@@ -127,13 +127,12 @@
   {%- endstyle -%}
 
   <div class="wrap">
+           {%- if section.settings.title != blank -%}
+          <h2 id="hiw-title-{{ section.id }}">{{ section.settings.title }}</h2>
+        {%- endif -%}
     <div class="hiw-grid">
       <!-- 左列 -->
       <div class="col col--left">
-        {%- if section.settings.title != blank -%}
-          <h2 id="hiw-title-{{ section.id }}">{{ section.settings.title }}</h2>
-        {%- endif -%}
-
         {%- if section.settings.lead != blank -%}
           <div class="lead rte">{{ section.settings.lead }}</div>
         {%- endif -%}
@@ -150,13 +149,12 @@
 
       <!-- 右列：时间线 -->
       <div class="col col--right">
-        <h3 class="hiw-title">{{ block.settings.point_title }}</h3>
         <ul class="timeline" aria-label="{{ 'Here’s how it works — key points' | escape }}">
           {%- for block in section.blocks -%}
             {%- if block.type == 'point' -%}
               <li class="hiw-item" {{ block.shopify_attributes }}>
                 {%- if block.settings.point_title != blank -%}
-                  
+                  <h3 class="hiw-title">{{ block.settings.point_title }}</h3>
                 {%- endif -%}
                 {%- if block.settings.point_desc != blank -%}
                   <div class="hiw-desc rte">{{ block.settings.point_desc }}</div>
