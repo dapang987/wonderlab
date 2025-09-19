@@ -1,363 +1,301 @@
 {% comment %}
-  Section: Feel the Difference — Week by Week
-  - Desktop: 4-column grid
-  - Mobile: tabs + single active card
-  - Single image source (desktop & mobile 共用)
-  - Strongly scoped by section.id
+  Section: Week by Week — Cards (mobile tabs + desktop 4-col grid)
+  - Strongly scoped by unique #ww-wbw-{{ section.id }}
+  - Blocks = cards (2–8). Each block controls the tab label, image, and lines of text.
 {% endcomment %}
 
-<section id="weekbyweek-{{ section.id }}" class="weekbyweek section-{{ section.id }}" aria-labelledby="w-title-{{ section.id }}">
-  {%- liquid
-    assign ar = '4 / 3'
-    case section.settings.image_ratio
-      when '1-1'  then assign ar = '1 / 1'
-      when '3-4'  then assign ar = '3 / 4'
-      when '4-3'  then assign ar = '4 / 3'
-    endcase
-  -%}
-
-  {%- style -%}
-    /* ===== Scope variables ===== */
-    #weekbyweek-{{ section.id }}{
-      --brand: {{ section.settings.brand }};
-      --text: {{ section.settings.text }};
-      --muted: {{ section.settings.muted }};
-      --rule: {{ section.settings.rule }};
-      --radius: {{ section.settings.radius }}px;
+<section id="ww-wbw-{{ section.id }}" class="wbw section-{{ section.id }}" data-count="{{ section.blocks.size }}" aria-labelledby="wbw-title-{{ section.id }}">
+  <style>
+    /* ===== Scope root (variables) ===== */
+    #ww-wbw-{{ section.id }}{
+      --brand: {{ section.settings.brand | default: '#1B8CFF' }};
+      --text: {{ section.settings.text | default: '#0B1F33' }};
+      --muted: {{ section.settings.muted | default: '#516170' }};
+      --rule: {{ section.settings.rule | default: '#E6E9EE' }};
+      --radius: {{ section.settings.radius | default: 16 }}px;
       --shadow: 0 8px 28px rgba(0,0,0,.08);
-      --gap: {{ section.settings.gap_d }}px;
-      --gap-m: {{ section.settings.gap_m }}px;
-      --image-ar: {{ ar }};
+      --gap: {{ section.settings.gap_desktop | default: 24 }}px;
+      --gap-m: {{ section.settings.gap_mobile | default: 16 }}px;
     }
 
-    #weekbyweek-{{ section.id }}{
-      color: var(--text);
-      padding-top: {{ section.settings.pad_top | times: 0.75 | round: 0 }}px;
-      padding-bottom: {{ section.settings.pad_bottom | times: 0.75 | round: 0 }}px;
+    /* ===== 强力重置，避免与主题冲突 ===== */
+    #ww-wbw-{{ section.id }} img{ max-width:100%; height:auto; }
+    #ww-wbw-{{ section.id }} .wbw-media{ position:relative !important; padding:0 !important; overflow:hidden; border-radius:calc(var(--radius) - 2px); margin:8px; }
+    #ww-wbw-{{ section.id }} .wbw-media img{
+      position:static !important;
+      inset:auto !important;
+      width:100% !important;
+      height:auto !important;
+      transform:none !important;
+      display:block;
+      object-fit:cover;
+      aspect-ratio: 1 / 1;
+      background:#f6f7f9;
+    }
+    #ww-wbw-{{ section.id }} .wbw-media svg{ /* placeholder */
+      display:block;
+      width:100%;
+      height:auto;
+      aspect-ratio: 1 / 1;
+      background:#f6f7f9;
+    }
+
+    /* 布局宽度（兼容主题未定义 --page-width 的情况） */
+    #ww-wbw-{{ section.id }} .wbw-wrap{
+      width:min(var(--page-width, 1100px), 100%);
+      margin:0 auto;
+      padding:0 20px;
+    }
+
+    /* ===== Section paddings ===== */
+    #ww-wbw-{{ section.id }}{ 
+      padding: {{ section.settings.pad_top | default: 40 }}px 0 {{ section.settings.pad_bottom | default: 56 }}px; 
+      color:var(--text);
+    }
+    #ww-wbw-{{ section.id }} h2{ line-height:1.2; text-align:center; font-weight:600; margin:0 0 16px; }
+    #ww-wbw-{{ section.id }} .wbw-top-rule{ border:0; border-top:1px dashed var(--rule); margin:16px auto 0; width:100%; }
+
+    /* ===== Tabs（仅移动端可见） ===== */
+    #ww-wbw-{{ section.id }} .wbw-tabs{ display:flex; gap:8px; padding:10px 0 4px; }
+    #ww-wbw-{{ section.id }}[data-count="0"] .wbw-tabs,
+    #ww-wbw-{{ section.id }}[data-count="1"] .wbw-tabs{ display:none; }
+    #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]{
+      appearance:none; -webkit-appearance:none;
+      background:transparent; border:0; margin:0; padding:10px 0;
+      color:inherit; text-align:center; line-height:inherit; cursor:pointer;
+      white-space:nowrap; flex:1 1 0; min-width:0; -webkit-tap-highlight-color:transparent;
+      border-top:1px solid var(--rule);
+    }
+    #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]:focus{ outline:none; }
+    #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:6px; }
+    #ww-wbw-{{ section.id }} .wbw-tabs [aria-selected="true"]{ color:var(--brand); border-top-color:var(--brand); font-weight:700; }
+
+    /* ===== Cards — MOBILE: 横向滑动 ===== */
+    #ww-wbw-{{ section.id }} .wbw-cards{
+      position:relative; margin-top:14px; display:flex; gap:var(--gap-m);
+      overflow-x:auto; -webkit-overflow-scrolling:touch;
+      scroll-snap-type:x mandatory; scroll-padding-left:2px;
+      padding:2px 2px 8px;
+    }
+    #ww-wbw-{{ section.id }} .wbw-cards::-webkit-scrollbar{ display:none; }
+
+    #ww-wbw-{{ section.id }} .wbw-card{
+      background:#fff;
+      border-radius:var(--radius);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      position:relative;
+      transition:border-color .2s ease;
+      box-shadow: var(--shadow);
+      flex:0 0 clamp(280px, 85vw, 520px);
+      scroll-snap-align:start;
+    }
+
+    #ww-wbw-{{ section.id }} .wbw-content{ padding: 2px 16px 14px; }
+    #ww-wbw-{{ section.id }} .wbw-kicker{ font-weight:700; margin:4px 0 6px; }
+    #ww-wbw-{{ section.id }} .wbw-desc{ color:var(--muted); margin:2px 0; }
+    #ww-wbw-{{ section.id }} .wbw-rule{ border:0; border-top:1px dashed var(--rule); margin:12px 0 10px; }
+
+    /* ===== Desktop：四列网格，展示全部卡片 ===== */
+    @media (min-width: 750px){
+      #ww-wbw-{{ section.id }} .wbw-tabs{ display:none; }
+      #ww-wbw-{{ section.id }} .wbw-cards{
+        margin-top:28px; display:grid;
+        grid-template-columns:repeat(4, minmax(0,1fr));
+        gap:var(--gap); overflow:visible; scroll-snap-type:none; padding:0;
+      }
+      #ww-wbw-{{ section.id }} .wbw-card{ flex:auto; scroll-snap-align:auto; }
+    }
+
+    /* Motion respect */
+    @media (prefers-reduced-motion: reduce){
+      #ww-wbw-{{ section.id }} *{ scroll-behavior:auto }
+      #ww-wbw-{{ section.id }} .wbw-card{ transition:none }
+    }
+
+    /* 可选：移动端隐藏 kicker，小标题只在桌面显示 */
+    {% if section.settings.hide_kicker_on_mobile %}
+    @media (max-width: 749px){
+      #ww-wbw-{{ section.id }} .wbw-kicker{ display:none; }
     }
     @media (min-width: 750px){
-      #weekbyweek-{{ section.id }}{
-        padding-top: {{ section.settings.pad_top }}px;
-        padding-bottom: {{ section.settings.pad_bottom }}px;
-      }
+      #ww-wbw-{{ section.id }} .wbw-kicker{ display:block; }
     }
+    {% endif %}
+  </style>
 
-    /* page width wrapper */
-    #weekbyweek-{{ section.id }} .wrap{
-      width:min(var(--page-width, 1100px), 100%);
-      margin-inline:auto;
-      padding-inline: clamp(12px, 4vw, 24px);
-    }
+  <div class="wbw-wrap">
+    <h2 id="wbw-title-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+    {% if section.settings.show_top_rule %}<hr class="wbw-top-rule" />{% endif %}
 
-    /* ===== Heading ===== */
-    #weekbyweek-{{ section.id }} .title{
-      margin: 0 0 14px;
-      font-size: clamp(22px, 3.2vw, 32px);
-      line-height: 1.25;
-      letter-spacing: .2px;
-      text-align: left;
-    }
-
-    /* ===== Tabs (mobile only) ===== */
-    #weekbyweek-{{ section.id }} .tabs{
-      display:flex;
-      gap:16px;
-      align-items:center;
-      overflow-x:auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin;
-      padding: 10px 0;
-      position: relative;
-      margin-bottom: 12px;
-    }
-    /* top dashed rule above tabs (mobile only) */
-    #weekbyweek-{{ section.id }} .tabs::before{
-      content:"";
-      position: absolute;
-      left: 0; right: 0; top: 0;
-      height: 0;
-      border-top: 1px dashed var(--rule);
-    }
-
-    #weekbyweek-{{ section.id }} .tabs [role="tab"]{
-      appearance:none;
-      background:transparent;
-      border:0;
-      color: var(--muted);
-      font: inherit;
-      padding: 8px 2px;
-      cursor:pointer;
-      white-space:nowrap;
-      border-bottom: 2px solid transparent;
-    }
-    #weekbyweek-{{ section.id }} .tabs [role="tab"].is-active{
-      color: var(--text);
-      border-color: var(--brand);
-      font-weight: 600;
-    }
-    #weekbyweek-{{ section.id }} .tabs [role="tab"]:focus-visible{
-      outline: 2px solid var(--brand);
-      outline-offset: 2px;
-      border-radius: 6px;
-    }
-
-    /* ===== Cards ===== */
-    #weekbyweek-{{ section.id }} .cards{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: var(--gap-m);
-    }
-    @media (min-width: 990px){
-      #weekbyweek-{{ section.id }} .cards{
-        grid-template-columns: repeat(4, minmax(0,1fr));
-        gap: var(--gap);
-      }
-    }
-
-    #weekbyweek-{{ section.id }} .card{
-      display:grid;
-      grid-template-rows: auto auto 1fr;
-      gap: 10px;
-    }
-
-    #weekbyweek-{{ section.id }} .media{
-      position: relative;
-      aspect-ratio: var(--image-ar);
-      border-radius: var(--radius);
-      overflow:hidden;
-      box-shadow: var(--shadow);
-      background: #f3f5f7;
-    }
-    #weekbyweek-{{ section.id }} .media img, 
-    #weekbyweek-{{ section.id }} .media svg{
-      width:100%; height:100%;
-      display:block;
-      object-fit: cover;
-    }
-    #weekbyweek-{{ section.id }} .placeholder{
-      background:#f3f5f7;
-      color:#bcc3cc;
-    }
-
-    #weekbyweek-{{ section.id }} .card__title{
-      margin: 4px 0 0;
-      font-weight: 700;
-      font-size: clamp(16px, 2.2vw, 18px);
-      line-height: 1.3;
-    }
-    #weekbyweek-{{ section.id }} .card__rule{
-      border: 0;
-      border-top: 1px dashed var(--rule);
-      margin: 8px 0 6px;
-    }
-    #weekbyweek-{{ section.id }} .card__desc{
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    /* Mobile: only active card is visible */
-    @media (max-width: 749px){
-      #weekbyweek-{{ section.id }} .card{ display:none; }
-      #weekbyweek-{{ section.id }} .card.is-active{ display:grid; }
-    }
-
-    /* Respect reduced motion */
-    @media (prefers-reduced-motion:no-preference){
-      #weekbyweek-{{ section.id }} .tabs [role="tab"]{ transition: border-color .2s ease, color .2s ease; }
-    }
-  {%- endstyle -%}
-
-  <div class="wrap">
-    <h2 id="w-title-{{ section.id }}" class="title">
-      {{ section.settings.heading | escape }}
-    </h2>
-
-    <!-- Tabs: mobile only (仍对可访问性保留结构) -->
-    <div class="tabs" role="tablist" aria-label="Week by week tabs">
-      {%- for block in section.blocks -%}
-        {%- assign idx = forloop.index0 -%}
-        <button
-          type="button"
-          id="tab-{{ section.id }}-{{ idx }}"
-          class="{% if forloop.first %}is-active{% endif %}"
-          role="tab"
-          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-          aria-controls="panel-{{ section.id }}-{{ idx }}"
-          tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
-        >
-          {{ block.settings.label | escape }}
+    <!-- 移动端标签（桌面端自动隐藏） -->
+    <div class="wbw-tabs" role="tablist" aria-label="{{ section.settings.tabs_aria_label | default: '进度阶段（滑动选择）' | escape }}">
+      {% for block in section.blocks %}
+        <button 
+          id="ww-{{ section.id }}-tab-{{ forloop.index }}" 
+          role="tab" 
+          aria-selected="{{ forloop.first }}" 
+          aria-controls="ww-{{ section.id }}-panel-{{ forloop.index }}">
+          {{ block.settings.kicker | default: 'Stage ' | append: forloop.index | escape }}
         </button>
-      {%- endfor -%}
+      {% endfor %}
     </div>
 
-    <!-- Cards -->
-    <ul class="cards" role="presentation">
-      {%- for block in section.blocks -%}
-        {%- assign idx = forloop.index0 -%}
-        {%- assign alt_text = block.settings.alt | default: block.settings.label -%}
-        <li
-          id="panel-{{ section.id }}-{{ idx }}"
-          class="card {% if forloop.first %}is-active{% endif %}"
-          role="tabpanel"
-          aria-labelledby="tab-{{ section.id }}-{{ idx }}"
-          {{ block.shopify_attributes }}
-        >
-          <figure class="media" aria-hidden="true">
-            {%- if block.settings.image != blank -%}
-              <img
-                src="{{ block.settings.image | image_url: width: 800 }}"
-                srcset="
-                  {{ block.settings.image | image_url: width: 400 }} 400w,
-                  {{ block.settings.image | image_url: width: 800 }} 800w,
-                  {{ block.settings.image | image_url: width: 1200 }} 1200w
-                "
-                sizes="(min-width: 990px) 25vw, 88vw"
-                loading="lazy"
-                decoding="async"
-                alt="{{ alt_text | escape }}"
-                width="{{ block.settings.image.width }}"
-                height="{{ block.settings.image.height }}"
-              >
-            {%- else -%}
-              {{ 'image' | placeholder_svg_tag: 'placeholder' }}
-            {%- endif -%}
-          </figure>
-
-          <h3 class="card__title">{{ block.settings.label | escape }}</h3>
-          <hr class="card__rule">
-          {%- if block.settings.desc_1 != blank -%}
-            <p class="card__desc">{{ block.settings.desc_1 | escape }}</p>
-          {%- endif -%}
-          {%- if block.settings.desc_2 != blank -%}
-            <p class="card__desc">{{ block.settings.desc_2 | escape }}</p>
-          {%- endif -%}
-        </li>
-      {%- endfor -%}
-    </ul>
+    <div class="wbw-cards" id="wbw-cards-{{ section.id }}">
+      {% for block in section.blocks %}
+        {%- assign is_first = forloop.first -%}
+        <article class="wbw-card{% if is_first %} is-active{% endif %}" 
+                 id="ww-{{ section.id }}-panel-{{ forloop.index }}" 
+                 role="tabpanel" 
+                 tabindex="0" 
+                 aria-labelledby="ww-{{ section.id }}-tab-{{ forloop.index }}" 
+                 aria-hidden="{% if is_first %}false{% else %}true{% endif %}"
+                 {{ block.shopify_attributes }}>
+          <div class="wbw-media">
+            {% if block.settings.image != blank %}
+              {%- assign alt_txt = block.settings.alt | default: block.settings.kicker -%}
+              <img loading="lazy" src="{{ block.settings.image | image_url: width: 1600 }}" alt="{{ alt_txt | escape }}">
+            {% else %}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'wbw-ph' }}
+            {% endif %}
+          </div>
+          <hr class="wbw-rule" />
+          <div class="wbw-content">
+            <h3 class="wbw-kicker">{{ block.settings.kicker | escape }}</h3>
+            {% if block.settings.desc1 != blank %}<p class="wbw-desc">{{ block.settings.desc1 | escape }}</p>{% endif %}
+            {% if block.settings.desc2 != blank %}<p class="wbw-desc">{{ block.settings.desc2 | escape }}</p>{% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
   </div>
 
   <script>
     (function(){
-      const root = document.getElementById('weekbyweek-{{ section.id }}');
+      const root = document.getElementById('ww-wbw-{{ section.id }}');
       if(!root) return;
 
-      const tabs = Array.from(root.querySelectorAll('.tabs [role="tab"]'));
-      const panels = Array.from(root.querySelectorAll('.cards .card'));
+      const mqDesktop = window.matchMedia('(min-width: 750px)');
+      const tabs = Array.from(root.querySelectorAll('.wbw-tabs [role="tab"]'));
+      const cardsContainer = root.querySelector('.wbw-cards');
+      const panels = Array.from(cardsContainer ? cardsContainer.querySelectorAll('[role="tabpanel"]') : []);
+      const isMobile = () => window.matchMedia('(max-width: 749px)').matches;
 
-      function setActive(index){
-        tabs.forEach((t,i)=>{
-          const active = i === index;
-          t.classList.toggle('is-active', active);
-          t.setAttribute('aria-selected', active ? 'true' : 'false');
-          t.setAttribute('tabindex', active ? '0' : '-1');
-        });
-        panels.forEach((p,i)=>{
-          p.classList.toggle('is-active', i === index);
-        });
+      // If no tabs (0 or 1 card), show all and bail.
+      if (!tabs.length || tabs.length !== panels.length) {
+        panels.forEach(p=>{ p.removeAttribute('aria-hidden'); p.classList.add('is-active'); });
+        return;
       }
 
-      tabs.forEach((tab, i)=>{
-        tab.addEventListener('click', ()=> setActive(i));
-        tab.addEventListener('keydown', (e)=>{
-          if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+      function setActive(index, {scrollIntoView=false} = {}){
+        tabs.forEach((b,i)=>{
+          const selected = i===index;
+          b.setAttribute('aria-selected', selected ? 'true' : 'false');
+          b.tabIndex = selected ? 0 : -1;
+        });
+        panels.forEach((p,i)=>{
+          const active = i===index;
+          p.classList.toggle('is-active', active);
+          p.setAttribute('aria-hidden', active ? 'false' : 'true');
+        });
+
+        if (scrollIntoView && isMobile()){
+          const target = panels[index];
+          const left = target.offsetLeft - cardsContainer.offsetLeft;
+          cardsContainer.scrollTo({ left, behavior:'smooth' });
+        }
+        if (history.replaceState) history.replaceState(null, '', '#ww-{{ section.id }}-w' + (index+1));
+      }
+
+      function getIndexFromHash(){
+        const m = location.hash.match(/^#ww-{{ section.id }}-w(\d+)$/i);
+        if(!m) return 0;
+        const n = parseInt(m[1], 10) - 1;
+        return Math.max(0, Math.min(tabs.length - 1, n));
+      }
+
+      let active = getIndexFromHash();
+      setActive(active);
+
+      tabs.forEach((b,i)=>{
+        b.addEventListener('click', ()=> setActive(i, {scrollIntoView:true}));
+        b.addEventListener('keydown', (e)=>{
+          const key = e.key;
+          if(key==='ArrowRight' || key==='ArrowLeft' || key==='Home' || key==='End'){
             e.preventDefault();
-            const dir = e.key === 'ArrowRight' ? 1 : -1;
-            const next = (i + dir + tabs.length) % tabs.length;
-            tabs[next].focus();
-            setActive(next);
+            if(key==='Home') active = 0;
+            else if(key==='End') active = tabs.length-1;
+            else active = (i + (key==='ArrowRight'?1:-1) + tabs.length) % tabs.length;
+            setActive(active, {scrollIntoView:true});
+            tabs[active].focus();
           }
         });
       });
+
+      function syncForViewport(){
+        if(mqDesktop.matches){
+          panels.forEach(p=>{ p.removeAttribute('aria-hidden'); p.classList.add('is-active'); });
+        }else{
+          setActive(active);
+        }
+      }
+      mqDesktop.addEventListener('change', syncForViewport);
+      syncForViewport();
     })();
   </script>
-
-  {% schema %}
-  {
-    "name": "Week by Week",
-    "tag": "section",
-    "class": "section",
-    "settings": [
-      { "type": "text", "id": "heading", "label": "标题", "default": "Feel the Difference—Week by Week" },
-
-      { "type": "color", "id": "brand", "label": "品牌色（Tab下划线）", "default": "#1B8CFF" },
-      { "type": "color", "id": "text", "label": "正文颜色", "default": "#0B1F33" },
-      { "type": "color", "id": "muted", "label": "辅助文字颜色", "default": "#516170" },
-      { "type": "color", "id": "rule", "label": "虚线颜色", "default": "#E6E9EE" },
-
-      { "type": "range", "id": "radius", "label": "卡片圆角", "min": 0, "max": 28, "step": 1, "default": 16 },
-      { "type": "range", "id": "gap_d", "label": "列间距（桌面）", "min": 8, "max": 40, "step": 1, "default": 24 },
-      { "type": "range", "id": "gap_m", "label": "列间距（手机）", "min": 8, "max": 32, "step": 1, "default": 16 },
-
-      { "type": "range", "id": "pad_top", "label": "上内边距（桌面）", "min": 0, "max": 120, "step": 4, "default": 56 },
-      { "type": "range", "id": "pad_bottom", "label": "下内边距（桌面）", "min": 0, "max": 120, "step": 4, "default": 56 },
-
-      {
-        "type": "select",
-        "id": "image_ratio",
-        "label": "图片比例",
-        "options": [
-          { "value": "4-3", "label": "4:3" },
-          { "value": "3-4", "label": "3:4" },
-          { "value": "1-1", "label": "1:1" }
-        ],
-        "default": "4-3"
-      }
-    ],
-    "blocks": [
-      {
-        "type": "card",
-        "name": "卡片",
-        "limit": 8,
-        "settings": [
-          { "type": "text", "id": "label", "label": "标题（如 3–7 Days）", "default": "3–7 Days" },
-          { "type": "image_picker", "id": "image", "label": "图片（桌面/手机共用）" },
-          { "type": "text", "id": "alt", "label": "图片替代文本（可选）" },
-          { "type": "text", "id": "desc_1", "label": "描述 1", "default": "Daily, regular poops" },
-          { "type": "text", "id": "desc_2", "label": "描述 2", "default": "Less bloating" }
-        ]
-      }
-    ],
-    "presets": [
-      {
-        "name": "Week by Week",
-        "blocks": [
-          {
-            "type": "card",
-            "settings": {
-              "label": "3–7 Days",
-              "desc_1": "Daily, regular poops",
-              "desc_2": "Less bloating"
-            }
-          },
-          {
-            "type": "card",
-            "settings": {
-              "label": "1–2 Weeks",
-              "desc_1": "Fewer cravings",
-              "desc_2": "Fuller for longer (3–4 hrs)"
-            }
-          },
-          {
-            "type": "card",
-            "settings": {
-              "label": "1 Month+",
-              "desc_1": "See slimmer waist/thighs",
-              "desc_2": "Keep losing (~1 lb/week)"
-            }
-          },
-          {
-            "type": "card",
-            "settings": {
-              "label": "3 Months+",
-              "desc_1": "Drop a pants size",
-              "desc_2": "Fit into tight jeans"
-            }
-          }
-        ]
-      }
-    ]
-  }
-  {% endschema %}
 </section>
+
+{% schema %}
+{
+  "name": "Week by Week Cards",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Feel the Difference — Week by Week" },
+
+    { "type": "color", "id": "brand", "label": "Brand (active color)", "default": "#1B8CFF" },
+    { "type": "color", "id": "text", "label": "Text color", "default": "#0B1F33" },
+    { "type": "color", "id": "muted", "label": "Muted color", "default": "#516170" },
+    { "type": "color", "id": "rule", "label": "Dashed rule color", "default": "#E6E9EE" },
+
+    { "type": "range", "id": "radius", "label": "Card corner radius", "min": 0, "max": 32, "step": 1, "default": 16 },
+    { "type": "range", "id": "gap_mobile", "label": "Mobile gap between cards (px)", "min": 8, "max": 32, "step": 1, "default": 16 },
+    { "type": "range", "id": "gap_desktop", "label": "Desktop gap between cards (px)", "min": 8, "max": 48, "step": 1, "default": 24 },
+
+    { "type": "range", "id": "pad_top", "label": "Top padding (px)", "min": 0, "max": 160, "step": 4, "default": 40 },
+    { "type": "range", "id": "pad_bottom", "label": "Bottom padding (px)", "min": 0, "max": 160, "step": 4, "default": 56 },
+
+    { "type": "checkbox", "id": "show_top_rule", "label": "Show top dashed rule under title", "default": false },
+    { "type": "checkbox", "id": "hide_kicker_on_mobile", "label": "Hide card kicker (label) on mobile", "default": true },
+
+    { "type": "text", "id": "tabs_aria_label", "label": "Tabs aria-label (accessibility)", "default": "进度阶段（滑动选择）" }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "alt", "label": "Image alt text" },
+        { "type": "text", "id": "kicker", "label": "Label / Stage", "default": "Stage" },
+        { "type": "text", "id": "desc1", "label": "Line 1", "default": "First benefit or result" },
+        { "type": "text", "id": "desc2", "label": "Line 2", "default": "Second benefit or result" }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Week by Week Cards",
+      "blocks": [
+        { "type": "card", "settings": { "kicker": "3–7 Days", "desc1": "Daily, regular poops", "desc2": "Less bloating" } },
+        { "type": "card", "settings": { "kicker": "1–2 Weeks", "desc1": "Fewer cravings", "desc2": "Fuller for longer (3–4 hrs)" } },
+        { "type": "card", "settings": { "kicker": "1 Month+", "desc1": "See slimmer waist/thighs", "desc2": "Keep losing (~1 lb/week)" } },
+        { "type": "card", "settings": { "kicker": "3 Months+", "desc1": "Drop a pants size", "desc2": "Fit into tight jeans" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
