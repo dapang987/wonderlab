@@ -12,6 +12,7 @@
       padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
       padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
       color: var(--text);
+      background: var(--bg);
     }
     @media (min-width: 750px){
       .section-{{ section.id }}{
@@ -22,10 +23,31 @@
 
     /* ===== 强 scope 到本 section ===== */
     #hiw-{{ section.id }}{
+      /* 颜色 */
       --brand: {{ section.settings.brand }};
       --text: {{ section.settings.text }};
       --muted: {{ section.settings.muted }};
       --rule: {{ section.settings.rule }};
+      --bg: {{ section.settings.bg }};
+
+      /* 字体颜色（可独立覆盖） */
+      --title-color: {{ section.settings.title_color }};
+      --lead-color: {{ section.settings.lead_color }};
+      --item-title-color: {{ section.settings.item_title_color }};
+      --item-desc-color: {{ section.settings.item_desc_color }};
+      --btn-text: {{ section.settings.btn_text }};
+
+      /* 字号（移动 / 桌面）— 以数字存储，使用时 * 1px */
+      --title-size-m: {{ section.settings.title_size_m }};
+      --title-size-d: {{ section.settings.title_size_d }};
+      --lead-size-m: {{ section.settings.lead_size_m }};
+      --lead-size-d: {{ section.settings.lead_size_d }};
+      --item-title-size-m: {{ section.settings.item_title_size_m }};
+      --item-title-size-d: {{ section.settings.item_title_size_d }};
+      --item-desc-size-m: {{ section.settings.item_desc_size_m }};
+      --item-desc-size-d: {{ section.settings.item_desc_size_d }};
+
+      /* 其它 */
       --radius: {{ section.settings.radius }}px;
       --shadow: 0 6px 16px rgba(0,0,0,.06);
       --gap: {{ section.settings.gap }}px;
@@ -56,16 +78,30 @@
 
     /* ===== 左列 ===== */
     #hiw-{{ section.id }} .col--left h2{
-      font-size: clamp(24px, 3.3vw, 36px);
+      font-size: calc(var(--title-size-m) * 1px);
       line-height: 1.2;
+      font-weight: 600;
+      color: var(--title-color);
       margin: 0 0 16px 0;
     }
+    @media (min-width: 1024px){
+      #hiw-{{ section.id }} .col--left h2{
+        font-size: calc(var(--title-size-d) * 1px);
+      }
+    }
+
     #hiw-{{ section.id }} .lead{
-      font-size: clamp(14px, 1.6vw, 16px);
+      font-size: calc(var(--lead-size-m) * 1px);
       line-height: 1.7;
-      color: var(--text);
+      color: var(--lead-color);
       margin: 0 0 18px 0;
     }
+    @media (min-width: 1024px){
+      #hiw-{{ section.id }} .lead{
+        font-size: calc(var(--lead-size-d) * 1px);
+      }
+    }
+
     #hiw-{{ section.id }} .btn{
       display:inline-flex;
       align-items:center;
@@ -77,7 +113,7 @@
       max-width: 100%;
       border-radius: 10px;
       background: var(--brand);
-      color: #fff;
+      color: var(--btn-text);
       text-decoration: none;
       box-shadow: var(--shadow);
       transition: transform .15s ease, filter .15s ease;
@@ -105,13 +141,28 @@
     #hiw-{{ section.id }} .hiw-item:last-child{ margin-bottom: 0; }
 
     #hiw-{{ section.id }} .hiw-title{
+      font-size: calc(var(--item-title-size-m) * 1px);
       line-height: 1.35;
+      font-weight: 600;
+      color: var(--item-title-color);
       margin: 0 0 6px 0;
     }
+    @media (min-width: 1024px){
+      #hiw-{{ section.id }} .hiw-title{
+        font-size: calc(var(--item-title-size-d) * 1px);
+      }
+    }
+
     #hiw-{{ section.id }} .hiw-desc{
+      font-size: calc(var(--item-desc-size-m) * 1px);
       line-height: 1.7;
-      color: var(--muted);
+      color: var(--item-desc-color);
       margin: 0;
+    }
+    @media (min-width: 1024px){
+      #hiw-{{ section.id }} .hiw-desc{
+        font-size: calc(var(--item-desc-size-d) * 1px);
+      }
     }
 
     /* ===== 可选：系统深色模式下的颜色微调（只改变量） ===== */
@@ -125,12 +176,13 @@
   {%- endstyle -%}
 
   <div class="wrap">
-           {%- if section.settings.title != blank -%}
-          <h2 id="hiw-title-{{ section.id }}">{{ section.settings.title }}</h2>
-        {%- endif -%}
     <div class="hiw-grid">
       <!-- 左列 -->
       <div class="col col--left">
+        {%- if section.settings.title != blank -%}
+          <h2 id="hiw-title-{{ section.id }}">{{ section.settings.title }}</h2>
+        {%- endif -%}
+
         {%- if section.settings.lead != blank -%}
           <div class="lead rte">{{ section.settings.lead }}</div>
         {%- endif -%}
@@ -171,9 +223,7 @@
   "name": "Here’s how it works",
   "tag": "section",
   "class": "section",
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  },
+  "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
     { "type": "inline_richtext", "id": "title", "label": "标题（左列）", "default": "Here’s how it works" },
     { "type": "richtext", "id": "lead", "label": "引言（左列）", "default": "<p>Emerging science suggests that supplementing with <em>probiotics</em> may support weight management goals when combined with diet and exercise.</p>" },
@@ -182,16 +232,31 @@
     { "type": "url", "id": "button_link", "label": "按钮链接" },
     { "type": "checkbox", "id": "button_new_tab", "label": "新窗口打开", "default": false },
     { "type": "text", "id": "button_aria", "label": "按钮无障碍说明（可选）", "info": "不填时会使用按钮文案。" },
-
+    { "type": "color", "id": "btn_text", "label": "按钮文字颜色", "default": "#FFFFFF" },
     { "type": "range", "id": "btn_width", "label": "按钮宽度（px）", "min": 180, "max": 360, "step": 10, "default": 300 },
 
-    { "type": "header", "content": "样式" },
-    { "type": "color", "id": "brand", "label": "品牌主色（按钮）", "default": "#1B8CFF" },
-    { "type": "color", "id": "text", "label": "正文颜色", "default": "#0B1F33" },
-    { "type": "color", "id": "muted", "label": "次要文字颜色", "default": "#516170" },
+    { "type": "header", "content": "颜色与背景" },
+    { "type": "color", "id": "brand", "label": "品牌主色（按钮背景）", "default": "#1B8CFF" },
+    { "type": "color", "id": "text", "label": "正文基色", "default": "#0B1F33" },
+    { "type": "color", "id": "muted", "label": "次要文字基色", "default": "#516170" },
     { "type": "color", "id": "rule", "label": "分隔线颜色", "default": "#E6E9EE" },
-    { "type": "range", "id": "radius", "label": "圆角（px）", "min": 0, "max": 24, "step": 1, "default": 14 },
-    { "type": "range", "id": "gap", "label": "左右列间距（px）", "min": 12, "max": 48, "step": 2, "default": 28 },
+    { "type": "color", "id": "bg", "label": "Section 背景颜色", "default": "#FFFFFF" },
+
+    { "type": "header", "content": "字体颜色（精细控制）" },
+    { "type": "color", "id": "title_color", "label": "标题颜色", "default": "#0B1F33" },
+    { "type": "color", "id": "lead_color", "label": "引言颜色", "default": "#0B1F33" },
+    { "type": "color", "id": "item_title_color", "label": "条目标题颜色", "default": "#0B1F33" },
+    { "type": "color", "id": "item_desc_color", "label": "条目描述颜色", "default": "#516170" },
+
+    { "type": "header", "content": "字体大小（移动 / 桌面）" },
+    { "type": "range", "id": "title_size_m", "label": "标题大小·移动（px）", "min": 18, "max": 44, "step": 1, "default": 28 },
+    { "type": "range", "id": "title_size_d", "label": "标题大小·桌面（px）", "min": 22, "max": 56, "step": 1, "default": 36 },
+    { "type": "range", "id": "lead_size_m", "label": "引言大小·移动（px）", "min": 12, "max": 22, "step": 1, "default": 15 },
+    { "type": "range", "id": "lead_size_d", "label": "引言大小·桌面（px）", "min": 12, "max": 24, "step": 1, "default": 16 },
+    { "type": "range", "id": "item_title_size_m", "label": "条目标题大小·移动（px）", "min": 14, "max": 28, "step": 1, "default": 18 },
+    { "type": "range", "id": "item_title_size_d", "label": "条目标题大小·桌面（px）", "min": 14, "max": 32, "step": 1, "default": 20 },
+    { "type": "range", "id": "item_desc_size_m", "label": "条目描述大小·移动（px）", "min": 12, "max": 22, "step": 1, "default": 14 },
+    { "type": "range", "id": "item_desc_size_d", "label": "条目描述大小·桌面（px）", "min": 12, "max": 24, "step": 1, "default": 16 },
 
     { "type": "header", "content": "深色模式（系统偏好）" },
     { "type": "color", "id": "text_dark", "label": "深色模式·正文颜色", "default": "#EAF1F7" },
