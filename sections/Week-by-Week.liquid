@@ -14,7 +14,22 @@
       --rule: {{ section.settings.rule | default: '#E6E9EE' }};
       --radius: {{ section.settings.radius | default: 16 }}px;
       --shadow: 0 8px 28px rgba(0,0,0,.08);
+      --gap: {{ section.settings.gap_desktop | default: 24 }}px;
       --gap-m: {{ section.settings.gap_mobile | default: 16 }}px;
+
+      /* === New: typography controls === */
+      --title-color: {{ section.settings.title_color | default: section.settings.text }};
+      --kicker-color: {{ section.settings.kicker_color | default: section.settings.text }};
+      --desc-color: {{ section.settings.desc_color | default: section.settings.muted }};
+
+      --title-size-m: {{ section.settings.title_size_mobile | default: 24 }}px;
+      --title-size-d: {{ section.settings.title_size_desktop | default: 32 }}px;
+
+      --kicker-size-m: {{ section.settings.kicker_size_mobile | default: 16 }}px;
+      --kicker-size-d: {{ section.settings.kicker_size_desktop | default: 18 }}px;
+
+      --desc-size-m: {{ section.settings.desc_size_mobile | default: 14 }}px;
+      --desc-size-d: {{ section.settings.desc_size_desktop | default: 16 }}px;
     }
 
     /* ===== 强力重置，避免与主题冲突 ===== */
@@ -41,7 +56,7 @@
 
     /* 布局宽度（兼容主题未定义 --page-width 的情况） */
     #ww-wbw-{{ section.id }} .wbw-wrap{
-      width:(var--page-width);
+      width:min(var(--page-width, 1100px), 100%);
       margin:0 auto;
       padding:0 20px;
     }
@@ -51,7 +66,16 @@
       padding: {{ section.settings.pad_top | default: 40 }}px 0 {{ section.settings.pad_bottom | default: 56 }}px; 
       color:var(--text);
     }
-    #ww-wbw-{{ section.id }} h2{ line-height:1.2; text-align:center;  margin:0 0 16px; }
+
+    #ww-wbw-{{ section.id }} h2{
+      line-height:1.2; text-align:center; font-weight:600; margin:0 0 16px;
+      color: var(--title-color);
+      font-size: var(--title-size-m);
+    }
+    @media (min-width: 750px){
+      #ww-wbw-{{ section.id }} h2{ font-size: var(--title-size-d); }
+    }
+
     #ww-wbw-{{ section.id }} .wbw-top-rule{ border:0; border-top:1px dashed var(--rule); margin:16px auto 0; width:100%; }
 
     /* ===== Tabs（仅移动端可见） ===== */
@@ -59,33 +83,25 @@
     #ww-wbw-{{ section.id }}[data-count="0"] .wbw-tabs,
     #ww-wbw-{{ section.id }}[data-count="1"] .wbw-tabs{ display:none; }
     #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]{
-      appearance:none; 
-      -webkit-appearance:none;
-      background:transparent; 
-      border:0; 
-      margin:0; 
-      padding:10px 0;
-      color:inherit; 
-      text-align:center; 
-      line-height:inherit; 
-      cursor:pointer;
-      white-space:nowrap; 
-      flex:1 1 0; 
-      min-width:0; 
-      -webkit-tap-highlight-color:transparent;
+      appearance:none; -webkit-appearance:none;
+      background:transparent; border:0; margin:0; padding:10px 0;
+      color:inherit; text-align:center; line-height:inherit; cursor:pointer;
+      white-space:nowrap; flex:1 1 0; min-width:0; -webkit-tap-highlight-color:transparent;
       border-top:1px solid var(--rule);
+      font-size: var(--kicker-size-m);
+      color: var(--kicker-color);
     }
     #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]:focus{ outline:none; }
     #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]:focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:6px; }
     #ww-wbw-{{ section.id }} .wbw-tabs [aria-selected="true"]{ color:var(--brand); border-top-color:var(--brand); font-weight:700; }
+    @media (min-width: 750px){
+      #ww-wbw-{{ section.id }} .wbw-tabs [role="tab"]{ font-size: var(--kicker-size-d); }
+    }
 
     /* ===== Cards — MOBILE: 横向滑动 ===== */
     #ww-wbw-{{ section.id }} .wbw-cards{
-      position:relative; 
-      margin-top:14px; 
-      display:flex; 
-      overflow-x:auto; 
-      -webkit-overflow-scrolling:touch;
+      position:relative; margin-top:14px; display:flex; gap:var(--gap-m);
+      overflow-x:auto; -webkit-overflow-scrolling:touch;
       scroll-snap-type:x mandatory; scroll-padding-left:2px;
       padding:2px 2px 8px;
     }
@@ -99,13 +115,28 @@
       overflow:hidden;
       position:relative;
       transition:border-color .2s ease;
+      box-shadow: var(--shadow);
       flex:0 0 clamp(280px, 85vw, 520px);
       scroll-snap-align:start;
     }
 
     #ww-wbw-{{ section.id }} .wbw-content{ padding: 2px 16px 14px; }
-    #ww-wbw-{{ section.id }} .wbw-kicker{ font-weight:700; margin:4px 0 6px; }
-    #ww-wbw-{{ section.id }} .wbw-desc{ color:var(--muted); margin:2px 0; }
+
+    #ww-wbw-{{ section.id }} .wbw-kicker{
+      font-weight:700; margin:4px 0 6px;
+      color: var(--kicker-color);
+      font-size: var(--kicker-size-m);
+    }
+    #ww-wbw-{{ section.id }} .wbw-desc{
+      color: var(--desc-color);
+      margin:2px 0;
+      font-size: var(--desc-size-m);
+    }
+    @media (min-width: 750px){
+      #ww-wbw-{{ section.id }} .wbw-kicker{ font-size: var(--kicker-size-d); }
+      #ww-wbw-{{ section.id }} .wbw-desc{ font-size: var(--desc-size-d); }
+    }
+
     #ww-wbw-{{ section.id }} .wbw-rule{ border:0; border-top:1px dashed var(--rule); margin:12px 0 10px; }
 
     /* ===== Desktop：四列网格，展示全部卡片 ===== */
@@ -267,8 +298,8 @@
     { "type": "text", "id": "title", "label": "Title", "default": "Feel the Difference — Week by Week" },
 
     { "type": "color", "id": "brand", "label": "Brand (active color)", "default": "#1B8CFF" },
-    { "type": "color", "id": "text", "label": "Text color", "default": "#0B1F33" },
-    { "type": "color", "id": "muted", "label": "Muted color", "default": "#516170" },
+    { "type": "color", "id": "text", "label": "Base text color", "default": "#0B1F33" },
+    { "type": "color", "id": "muted", "label": "Muted color (fallback)", "default": "#516170" },
     { "type": "color", "id": "rule", "label": "Dashed rule color", "default": "#E6E9EE" },
 
     { "type": "range", "id": "radius", "label": "Card corner radius", "min": 0, "max": 32, "step": 1, "default": 16 },
@@ -281,7 +312,22 @@
     { "type": "checkbox", "id": "show_top_rule", "label": "Show top dashed rule under title", "default": false },
     { "type": "checkbox", "id": "hide_kicker_on_mobile", "label": "Hide card kicker (label) on mobile", "default": true },
 
-    { "type": "text", "id": "tabs_aria_label", "label": "Tabs aria-label (accessibility)", "default": "进度阶段（滑动选择）" }
+    { "type": "text", "id": "tabs_aria_label", "label": "Tabs aria-label (accessibility)", "default": "进度阶段（滑动选择）" },
+
+    /* === New: Typography controls (colors) === */
+    { "type": "color", "id": "title_color", "label": "Title color (H2)", "default": "#0B1F33" },
+    { "type": "color", "id": "kicker_color", "label": "Card label color", "default": "#0B1F33" },
+    { "type": "color", "id": "desc_color", "label": "Description color", "default": "#516170" },
+
+    /* === New: Typography controls (sizes) === */
+    { "type": "range", "id": "title_size_mobile", "label": "Title size — mobile (px)", "min": 14, "max": 48, "step": 1, "default": 24 },
+    { "type": "range", "id": "title_size_desktop", "label": "Title size — desktop (px)", "min": 16, "max": 64, "step": 1, "default": 32 },
+
+    { "type": "range", "id": "kicker_size_mobile", "label": "Card label size — mobile (px)", "min": 10, "max": 28, "step": 1, "default": 16 },
+    { "type": "range", "id": "kicker_size_desktop", "label": "Card label size — desktop (px)", "min": 10, "max": 32, "step": 1, "default": 18 },
+
+    { "type": "range", "id": "desc_size_mobile", "label": "Description size — mobile (px)", "min": 10, "max": 28, "step": 1, "default": 14 },
+    { "type": "range", "id": "desc_size_desktop", "label": "Description size — desktop (px)", "min": 10, "max": 32, "step": 1, "default": 16 }
   ],
   "blocks": [
     {
