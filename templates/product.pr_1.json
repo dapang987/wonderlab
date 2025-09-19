@@ -399,8 +399,8 @@
         "title_size_mobile": 36,
         "title_size_desktop": 44,
         "kicker_size_mobile": 16,
-        "kicker_size_desktop": 31,
-        "desc_size_mobile": 14,
+        "kicker_size_desktop": 30,
+        "desc_size_mobile": 16,
         "desc_size_desktop": 16
       }
     },
