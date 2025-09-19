@@ -454,10 +454,14 @@
         "padding_bottom": 32,
         "title_size_mobile": 36,
         "title_size_desktop": 44,
+        "title_weight": "400",
         "card_heading_mobile": 24,
         "card_heading_desktop": 30,
+        "card_heading_weight": "600",
         "card_desc_mobile": 16,
-        "card_desc_desktop": 16
+        "card_desc_desktop": 16,
+        "card_desc_weight": "400",
+        "mobile_shape": "circle"
       }
     },
     "faq_hy8QM3": {
