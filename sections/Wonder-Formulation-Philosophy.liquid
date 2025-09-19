@@ -443,52 +443,88 @@
     </div>
   </div>
 
-  <script>
-    (() => {
-      const root = document.getElementById('philosophy-{{ section.id }}');
-      if (!root) return;
-      const cards = root.querySelectorAll('.card[data-collapsible]');
+<script>
+  (() => {
+    const root = document.getElementById('philosophy-{{ section.id }}');
+    if (!root) return;
 
-      function openDetails(details){
-        details.style.maxHeight = 'none';
-        const target = details.scrollHeight;
-        details.style.maxHeight = '0px';
-        requestAnimationFrame(() => { details.style.maxHeight = target + 'px'; });
-        const onEnd = (e) => {
-          if (e.propertyName === 'max-height') {
-            details.style.maxHeight = 'none';
-            details.removeEventListener('transitionend', onEnd);
-          }
-        };
-        details.addEventListener('transitionend', onEnd);
+    const cards = root.querySelectorAll('.card[data-collapsible]');
+
+    function openDetails(details){
+      // 先把高度设为 0，随后动画到内容高度
+      details.style.maxHeight = 'none';
+      const target = details.scrollHeight;
+      details.style.maxHeight = '0px';
+      requestAnimationFrame(() => { details.style.maxHeight = target + 'px'; });
+
+      const onEnd = (e) => {
+        if (e.propertyName === 'max-height') {
+          details.style.maxHeight = 'none'; // 动画结束后解除高度限制，支持自适应
+          details.removeEventListener('transitionend', onEnd);
+        }
+      };
+      details.addEventListener('transitionend', onEnd);
+    }
+
+    function closeDetails(details){
+      const current = details.scrollHeight;      // 读取当前实际高度
+      details.style.maxHeight = current + 'px';  // 设定起点
+      requestAnimationFrame(() => { details.style.maxHeight = '0px'; }); // 动画到 0
+    }
+
+    function setOpen(card, open){
+      const details = card.querySelector('.card__details');
+      if (!details) return;
+
+      if (open){
+        card.classList.add('is-open');
+        card.setAttribute('aria-expanded', 'true');
+        openDetails(details);
+      } else {
+        card.classList.remove('is-open');
+        card.setAttribute('aria-expanded', 'false');
+        closeDetails(details);
       }
+    }
 
-      function closeDetails(details){
-        const current = details.scrollHeight;
-        details.style.maxHeight = current + 'px';
-        requestAnimationFrame(() => { details.style.maxHeight = '0px'; });
-      }
+    cards.forEach(card => {
+      const details = card.querySelector('.card__details');
+      if (!details) return;
 
-      cards.forEach(card => {
-        const details = card.querySelector('.card__details');
-        if (!details) return;
+      const toggle = (evt) => {
+        // 避免点击内部真正的按钮/链接时触发展开
+        const controlEl = evt.target.closest('a, button, [role="button"]:not(.card)');
+        if (controlEl) return;
 
-        const toggle = (evt) => {
-          const controlEl = evt.target.closest('a, button, [role="button"]:not(.card)');
-          if (controlEl) return;
+        const isOpen = card.classList.contains('is-open');
 
-          const isOpen = card.classList.toggle('is-open');
-          card.setAttribute('aria-expanded', String(isOpen));
-          isOpen ? openDetails(details) : closeDetails(details);
-        };
+        if (isOpen){
+          // 允许全部收起（零开也可）
+          setOpen(card, false);
+        } else {
+          // === 单开模式：先关闭其它任何已打开的卡片 ===
+          cards.forEach(c => {
+            if (c !== card && c.classList.contains('is-open')){
+              setOpen(c, false);
+            }
+          });
+          // 再打开当前卡片
+          setOpen(card, true);
+        }
+      };
 
-        card.addEventListener('click', toggle);
-        card.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); }
-        });
+      // 点击与键盘可达性
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); }
       });
-    })();
-  </script>
+    });
+
+    // 如果你想默认就展开第一个卡片，请取消下一行注释：
+    // if (cards[0]) setOpen(cards[0], true);
+  })();
+</script>
+
 </section>
 
 {% schema %}
