@@ -454,10 +454,10 @@
         "padding_bottom": 32,
         "title_size_mobile": 36,
         "title_size_desktop": 44,
-        "card_heading_mobile": 16,
-        "card_heading_desktop": 18,
-        "card_desc_mobile": 14,
-        "card_desc_desktop": 14
+        "card_heading_mobile": 24,
+        "card_heading_desktop": 30,
+        "card_desc_mobile": 16,
+        "card_desc_desktop": 16
       }
     },
     "faq_hy8QM3": {
