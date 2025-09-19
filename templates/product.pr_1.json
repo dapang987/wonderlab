@@ -237,7 +237,7 @@
         "pad": 0,
         "scrim_d": 0,
         "scrim_m": 0,
-        "focal_d": "center bottom",
+        "focal_d": "center center",
         "focal_m": "center 60%"
       }
     },
