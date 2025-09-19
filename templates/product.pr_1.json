@@ -544,7 +544,7 @@
         "cl_bg": "#ffffff",
         "cl_text": "#111111",
         "cl_muted": "#121212",
-        "cl_border": "#e5e7eb",
+        "cl_border": "#ffffff",
         "padding_top": 32,
         "padding_bottom": 32,
         "title_size_m": 36,
