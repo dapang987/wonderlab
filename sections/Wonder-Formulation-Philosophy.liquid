@@ -378,6 +378,31 @@
 #philosophy-{{ section.id }} .card.is-open .card__title{ font-family: var(--ff-title); }  /* 改成你想要的字体 */
 #philosophy-{{ section.id }} .card.is-open .card__desc{  font-family: var(--ff-body);  }
 
+/* ===== Mobile: 两列平均（3+3），不跳列 ===== */
+@media (max-width: 768px){
+  /* 隐藏原 3 列容器 */
+  #philosophy-{{ section.id }} .ph-grid{ display: none !important; }
+
+  /* 新建的移动端两列容器 */
+  #philosophy-{{ section.id }} .ph-grid-mobile{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+    align-items: start;
+  }
+  #philosophy-{{ section.id }} .ph-grid-mobile .mcol{
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    min-width: 0;
+  }
+
+  /* 移动到新容器后的 card，保持正常块级表现 */
+  #philosophy-{{ section.id }} .ph-grid-mobile .card{
+    width: auto;
+    margin: 0;
+  }
+}
 
   </style>
 
@@ -550,6 +575,59 @@
     // 如果你想默认就展开第一个卡片，请取消下一行注释：
     // if (cards[0]) setOpen(cards[0], true);
   })();
+</script>
+<script>
+(() => {
+  const root = document.getElementById('philosophy-{{ section.id }}');
+  if (!root) return;
+
+  const grid = root.querySelector('.ph-grid');
+  const cols = Array.from(root.querySelectorAll('.ph-col')); // 原来的3列容器
+  const mq = window.matchMedia('(max-width: 768px)');
+  let mobileWrap = null; // 移动端两列的外壳
+
+  // 把所有 card（按文档顺序）取出来
+  const collectCards = () => Array.from(root.querySelectorAll('.ph-col .card'));
+
+  function toMobile(){
+    if (mobileWrap || !grid) return;
+
+    // 创建移动端两列容器
+    mobileWrap = document.createElement('div');
+    mobileWrap.className = 'ph-grid-mobile';
+    const m1 = document.createElement('div'); m1.className = 'mcol mcol-1';
+    const m2 = document.createElement('div'); m2.className = 'mcol mcol-2';
+    mobileWrap.append(m1, m2);
+
+    // 记录每张卡片原始所在列（0/1/2），以便恢复桌面
+    cols.forEach((c, i) => c.querySelectorAll('.card').forEach(card => card.dataset.originCol = i));
+
+    // 交替分配：偶数索引→左列，奇数索引→右列（实现 3+3 平均）
+    collectCards().forEach((card, idx) => (idx % 2 ? m2 : m1).appendChild(card));
+
+    // 插到原 grid 后面并隐藏原 grid
+    grid.after(mobileWrap);
+    grid.style.display = 'none';
+  }
+
+  function toDesktop(){
+    if (!mobileWrap || !grid) return;
+
+    // 把卡片按记录的 originCol 放回原来的三列容器
+    mobileWrap.querySelectorAll('.card').forEach(card => {
+      const i = parseInt(card.dataset.originCol || '0', 10);
+      (cols[i] || cols[0]).appendChild(card);
+    });
+
+    mobileWrap.remove();
+    mobileWrap = null;
+    grid.style.display = '';
+  }
+
+  // 初始 & 响应式切换
+  mq.addEventListener('change', e => e.matches ? toMobile() : toDesktop());
+  if (mq.matches) toMobile();
+})();
 </script>
 
 </section>
