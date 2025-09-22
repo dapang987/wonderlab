@@ -318,11 +318,10 @@
         "image_desktop": "shopify://shop_images/a8b5a94602ee97a36386ceed0e5796155a911b0d_3.jpg",
         "image_mobile": "shopify://shop_images/Rectangle_44_4_1.png",
         "cl_bg": "#ffffff",
-        "cl_border": "#E6E9EE",
-        "cl_text": "#0B1F33",
+        "cl_border": "#e6e9ee",
+        "cl_text": "#0b1f33",
         "cl_muted": "#516170",
-        "leader_color": "#C8CDD4",
-        "page_width": 1200,
+        "leader_color": "#c8cdd4",
         "radius": 14,
         "gap": 48,
         "pad_x": 48,
@@ -336,6 +335,48 @@
         "labels_right_d": 30,
         "labels_right_m": 20,
         "labels_gap": 8
+      }
+    },
+    "clinical_results_REAt8N": {
+      "type": "clinical-results",
+      "blocks": {
+        "stat_n3dTag": {
+          "type": "stat",
+          "settings": {
+            "value": "0.94 inches",
+            "desc": "How much waist circumference reduced"
+          }
+        },
+        "stat_nrVjJP": {
+          "type": "stat",
+          "settings": {
+            "value": "320 kcal",
+            "desc": "How much energy intake per day is reduced"
+          }
+        }
+      },
+      "block_order": [
+        "stat_n3dTag",
+        "stat_nrVjJP"
+      ],
+      "name": "Clinically Studied Results (Image)",
+      "settings": {
+        "title": "Explore Our Clinically-Studied Results",
+        "lead": "Real Results You Can See",
+        "image_desktop": "shopify://shop_images/Screenshot_2025-09-18_at_14.12.36_2.png",
+        "image_mobile": "shopify://shop_images/Screenshot_2025-09-18_at_14.12.36_2.png",
+        "alt": "Clinically studied results comparison",
+        "m_fig_h": 360,
+        "footnote": "*Based on a 6-month, placebo-controlled clinical trial including n=134 overweight and obese adults.",
+        "cta_enable": true,
+        "cta_label": "Learn more",
+        "cta_link": "",
+        "brand": "#1B8CFF",
+        "brand_ink": "#ffffff",
+        "text_color": "#0B1F33",
+        "muted_color": "#516170",
+        "rule_color": "#E6E9EE",
+        "radius": 12
       }
     },
     "comparison_matrix_cifVii": {
@@ -703,6 +744,7 @@
     "how_it_works_Pbk9kr",
     "feature_split_card_LDP3bW",
     "active_delivery_ACNhXn",
+    "clinical_results_REAt8N",
     "comparison_matrix_cifVii",
     "week_by_week_y3xG99",
     "science_backed_ingredients_La4x6X",
