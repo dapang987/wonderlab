@@ -1,8 +1,8 @@
 {% comment %}
   Section: Science — split layout (copy + KPIs / image)
   - 与主题 --page-width 同宽
-  - 已含：字体 weight/style、最小高度、圆角控制
-  - 新增：外层 margin（上/下），文字卡片内边距（移动/桌面）
+  - 手机端：图片在上，文字在下
+  - 外边距：上下左右可独立配置（含移动端缩放）
 {% endcomment %}
 
 <section id="science-{{ section.id }}" aria-labelledby="science-title-{{ section.id }}">
@@ -23,12 +23,12 @@
       --h-d: {{ section.settings.height_d }}px;
 
       /* Radius */
-      --radius-m: {{ section.settings.radius }}px;             /* 手机端文字卡片圆角（兼容旧字段） */
-      --radius-text-d: {{ section.settings.radius_text_d }}px; /* 桌面端左侧文字面板圆角 */
-      --radius-img-m: {{ section.settings.radius_img_m }}px;   /* 手机端图片圆角 */
-      --radius-img-d: {{ section.settings.radius_img_d }}px;   /* 桌面端图片圆角 */
+      --radius-m: {{ section.settings.radius }}px;
+      --radius-text-d: {{ section.settings.radius_text_d }}px;
+      --radius-img-m: {{ section.settings.radius_img_m }}px;
+      --radius-img-d: {{ section.settings.radius_img_d }}px;
 
-      /* Card paddings (NEW) */
+      /* Card paddings */
       --pad-text-m: {{ section.settings.pad_text_m }}px;
       --pad-text-d: {{ section.settings.pad_text_d }}px;
 
@@ -57,19 +57,23 @@
       --kpi-label-style: {{ section.settings.kpi_label_style }};
     }
 
-    /* ===== Outer margins (NEW) ===== */
+    /* ===== Outer margins (四向) ===== */
     #science-{{ section.id }}{
       margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
       margin-bottom: {{ section.settings.margin_bottom | times: 0.75 | round: 0 }}px;
+      margin-left: {{ section.settings.margin_left | times: 0.75 | round: 0 }}px;
+      margin-right: {{ section.settings.margin_right | times: 0.75 | round: 0 }}px;
     }
     @media (min-width: 750px){
       #science-{{ section.id }}{
         margin-top: {{ section.settings.margin_top }}px;
         margin-bottom: {{ section.settings.margin_bottom }}px;
+        margin-left: {{ section.settings.margin_left }}px;
+        margin-right: {{ section.settings.margin_right }}px;
       }
     }
 
-    /* ===== Section padding (existing) ===== */
+    /* ===== Section padding（上下） ===== */
     #science-{{ section.id }} .section-pad{
       padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
       padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -106,16 +110,15 @@
     #science-{{ section.id }} .text{
       color:var(--text);
       background: var(--bg-card);
-      border-radius: var(--radius-m); /* mobile card radius */
-      padding: var(--pad-text-m);     /* NEW: mobile card padding */
-      align-content:center;
+      border-radius: var(--radius-m);
+      padding: var(--pad-text-m);
       {% if section.settings.show_shadow and section.settings.radius > 0 %}box-shadow: var(--shadow);{% endif %}
     }
     #science-{{ section.id }} .media{
       position:relative;
       overflow:hidden;
       min-height: 280px;
-      border-radius: var(--radius-img_m, var(--radius-img-m)); /* mobile image radius */
+      border-radius: var(--radius-img-m);
     }
     #science-{{ section.id }} .media img{
       width:100%;
@@ -131,7 +134,7 @@
       #science-{{ section.id }} .text{
         background: var(--bg-left);
         border-radius: var(--radius-text-d);
-        padding: var(--pad-text-d); /* NEW: desktop card padding */
+        padding: var(--pad-text-d);
         box-shadow: none;
       }
       #science-{{ section.id }} .media{
@@ -140,6 +143,12 @@
       #science-{{ section.id }} .media img{
         aspect-ratio: auto;
       }
+    }
+
+    /* ===== Mobile order: 图片在上，文字在下 ===== */
+    @media (max-width:1023.98px){
+      #science-{{ section.id }} .media{order:1}
+      #science-{{ section.id }} .text{order:2}
     }
 
     /* ===== Typography apply ===== */
@@ -189,33 +198,6 @@
     @media (prefers-reduced-motion:reduce){
       #science-{{ section.id }} *{scroll-behavior:auto}
     }
-
-    /* ===== Mobile order + KPI inline (num/label 同行) ===== */
-@media (max-width:1023.98px){
-  #science-{{ section.id }} .media{ order:1; }
-  #science-{{ section.id }} .text{ order:2; }
-
-  /* 让每个 KPI 一行显示：数字 + 文本 */
-  #science-{{ section.id }} .kpis{ gap: 16px; }
-  #science-{{ section.id }} .kpi{
-    display: flex;                 /* 关键：横向 */
-    align-items: baseline;         /* 数字与文字基线对齐更自然 */
-    gap: 8px;                      /* 数字与文字的间距 */
-    flex-wrap: nowrap;
-  }
-  #science-{{ section.id }} .kpi .num{
-    margin: 0;
-    white-space: nowrap;           /* 避免数字换行 */
-    flex: 0 0 auto;
-  }
-  #science-{{ section.id }} .kpi .label{
-    margin: 0;                     /* 覆盖之前 label 的上外边距 */
-    white-space: normal;           /* 文本可换行 */
-    word-break: break-word;        /* 长词在窄屏也能断行 */
-    flex: 1 1 auto;
-  }
-}
-
   </style>
 
   <div class="section-pad">
@@ -280,11 +262,13 @@
 
     { "type": "header", "content": "Section height" },
     { "type": "range", "id": "height_m", "label": "Min height — mobile (px)", "min": 0, "max": 1200, "step": 100, "default": 700 },
-    { "type": "range", "id": "height_d", "label": "Min height — desktop (px)", "min": 0, "max": 1200, "step": 100, "default": 600 },
+    { "type": "range", "id": "height_d", "label": "Min height — desktop (px)", "min": 0, "max": 1200, "step": 100, "default": 700 },
 
-    { "type": "header", "content": "Outer margin (section)" },
+    { "type": "header", "content": "Outer margin (section, 四向)" },
     { "type": "range", "id": "margin_top", "label": "Margin top (px)", "min": 0, "max": 160, "step": 4, "default": 0 },
     { "type": "range", "id": "margin_bottom", "label": "Margin bottom (px)", "min": 0, "max": 160, "step": 4, "default": 0 },
+    { "type": "range", "id": "margin_left", "label": "Margin left (px)", "min": 0, "max": 160, "step": 4, "default": 0 },
+    { "type": "range", "id": "margin_right", "label": "Margin right (px)", "min": 0, "max": 160, "step": 4, "default": 0 },
 
     { "type": "header", "content": "Layout & corners" },
     { "type": "range", "id": "gap", "label": "Column gap (px)", "min": 12, "max": 64, "step": 1, "default": 32 },
@@ -326,11 +310,7 @@
     { "type": "color", "id": "cl_rule", "label": "Rule", "default": "#D7E3EE" },
     { "type": "color", "id": "cl_brand", "label": "Brand", "default": "#1B8CFF" },
     { "type": "color", "id": "cl_bg_left", "label": "Left background (desktop)", "default": "#E6F3FF" },
-    { "type": "color", "id": "cl_bg_card", "label": "Card background (mobile)", "default": "#E6F3FF" },
-
-    { "type": "header", "content": "Section spacing (inner padding)" },
-    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 0 },
-    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 0 }
+    { "type": "color", "id": "cl_bg_card", "label": "Card background (mobile)", "default": "#E6F3FF" }
   ],
   "blocks": [
     {
