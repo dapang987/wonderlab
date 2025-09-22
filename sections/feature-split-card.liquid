@@ -200,53 +200,6 @@
       #science-{{ section.id }} *{scroll-behavior:auto}
     }
 
-/* ===== Mobile order + center text + KPI inline & safe wrapping ===== */
-@media (max-width:1023.98px){
-  /* 图片在上，文字在下 */
-  #science-{{ section.id }} .media{ order:1; }
-  #science-{{ section.id }} .text{ 
-    order:2; 
-    text-align: center;              /* 手机端文字居中 */
-  }
-
-  /* 标题安全换行：不会溢出屏幕，必要时自动断行 */
-  #science-{{ section.id }} h2{
-    max-width: 100%;
-    overflow-wrap: break-word;       /* 优先在单词边界换行 */
-    word-break: break-word;          /* 兼容性兜底 */
-    hyphens: auto;                   /* 支持时在英文单词处断字 */
-  }
-
-  /* 引导文也居中 */
-  #science-{{ section.id }} .lead{
-    text-align: center;
-  }
-
-  /* KPI：num 和 label 同行显示，并整体居中 */
-  #science-{{ section.id }} .kpis{ 
-    gap: 16px; 
-    align-items: center;             /* 将每个 .kpi 行居中对齐 */
-  }
-  #science-{{ section.id }} .kpi{
-    display: flex;
-    align-items: baseline;           /* 数字与文本基线对齐更顺眼 */
-    justify-content: center;         /* 水平居中这一行 */
-    gap: 8px;
-    flex-wrap: nowrap;               /* 初始保持同一行 */
-  }
-  #science-{{ section.id }} .kpi .num{
-    margin: 0;
-    white-space: nowrap;             /* 数字不换行 */
-    flex: 0 0 auto;
-  }
-  #science-{{ section.id }} .kpi .label{
-    margin: 0;                       /* 覆盖旧的上外边距 */
-    white-space: normal;             /* 标签可换行（屏幕更窄时） */
-    word-break: break-word;          /* 极端长词也能断开 */
-    text-align: center;
-    flex: 1 1 auto;
-  }
-}
 
   </style>
 
