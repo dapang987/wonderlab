@@ -1,8 +1,8 @@
 {% comment %}
   Section: Science — split layout (copy + KPIs / image)
-  - 与主题 --page-width 同宽（继承全局）
-  - 已含：字体 weight/style 控制
-  - 新增：Section 最小高度（移动/桌面）
+  - 与主题 --page-width 同宽
+  - 已含：字体 weight/style、最小高度、圆角控制
+  - 新增：外层 margin（上/下），文字卡片内边距（移动/桌面）
 {% endcomment %}
 
 <section id="science-{{ section.id }}" aria-labelledby="science-title-{{ section.id }}">
@@ -15,7 +15,6 @@
       --brand: {{ section.settings.cl_brand }};
       --bg-left: {{ section.settings.cl_bg_left }};
       --bg-card: {{ section.settings.cl_bg_card }};
-      --radius: {{ section.settings.radius }}px;
       --shadow: 0 8px 28px rgba(0,0,0,.08);
       --gap: {{ section.settings.gap }}px;
 
@@ -23,19 +22,26 @@
       --h-m: {{ section.settings.height_m }}px;
       --h-d: {{ section.settings.height_d }}px;
 
+      /* Radius */
+      --radius-m: {{ section.settings.radius }}px;             /* 手机端文字卡片圆角（兼容旧字段） */
+      --radius-text-d: {{ section.settings.radius_text_d }}px; /* 桌面端左侧文字面板圆角 */
+      --radius-img-m: {{ section.settings.radius_img_m }}px;   /* 手机端图片圆角 */
+      --radius-img-d: {{ section.settings.radius_img_d }}px;   /* 桌面端图片圆角 */
+
+      /* Card paddings (NEW) */
+      --pad-text-m: {{ section.settings.pad_text_m }}px;
+      --pad-text-d: {{ section.settings.pad_text_d }}px;
+
       /* Typography sizes */
       --h1-m: {{ section.settings.h1_size_m }}px;
       --h1-d: {{ section.settings.h1_size_d }}px;
       --h1: clamp(var(--h1-m), 4vw, var(--h1-d));
-
       --lead-m: {{ section.settings.lead_size_m }}px;
       --lead-d: {{ section.settings.lead_size_d }}px;
       --lead: clamp(var(--lead-m), 2.1vw, var(--lead-d));
-
       --kpi-num-m: {{ section.settings.kpi_num_m }}px;
       --kpi-num-d: {{ section.settings.kpi_num_d }}px;
       --kpi-num: clamp(var(--kpi-num-m), 5vw, var(--kpi-num-d));
-
       --kpi-label-m: {{ section.settings.kpi_label_m }}px;
       --kpi-label-d: {{ section.settings.kpi_label_d }}px;
       --kpi-label: clamp(var(--kpi-label-m), 1.8vw, var(--kpi-label-d));
@@ -51,7 +57,19 @@
       --kpi-label-style: {{ section.settings.kpi_label_style }};
     }
 
-    /* ===== Section spacing (Dawn style: mobile ~0.75x) ===== */
+    /* ===== Outer margins (NEW) ===== */
+    #science-{{ section.id }}{
+      margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}px;
+      margin-bottom: {{ section.settings.margin_bottom | times: 0.75 | round: 0 }}px;
+    }
+    @media (min-width: 750px){
+      #science-{{ section.id }}{
+        margin-top: {{ section.settings.margin_top }}px;
+        margin-bottom: {{ section.settings.margin_bottom }}px;
+      }
+    }
+
+    /* ===== Section padding (existing) ===== */
     #science-{{ section.id }} .section-pad{
       padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
       padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -74,13 +92,13 @@
       align-items: stretch;
       gap: var(--gap);
       position: relative;
-      min-height: var(--h-m); /* mobile section height */
+      min-height: var(--h-m);
     }
     @media (min-width:1024px){
       #science-{{ section.id }} .grid{
         grid-template-columns: 1fr 1fr;
         gap:var(--gap);
-        min-height: var(--h-d); /* desktop section height */
+        min-height: var(--h-d);
       }
     }
 
@@ -88,17 +106,15 @@
     #science-{{ section.id }} .text{
       color:var(--text);
       background: var(--bg-card);
-      border-radius: var(--radius);
-      padding: clamp(20px, 5vw, 56px);
-      {% if section.settings.show_shadow and section.settings.radius > 0 %}
-      box-shadow: var(--shadow);
-      {% endif %}
+      border-radius: var(--radius-m); /* mobile card radius */
+      padding: var(--pad-text-m);     /* NEW: mobile card padding */
+      {% if section.settings.show_shadow and section.settings.radius > 0 %}box-shadow: var(--shadow);{% endif %}
     }
     #science-{{ section.id }} .media{
       position:relative;
       overflow:hidden;
       min-height: 280px;
-      border-radius: 0;
+      border-radius: var(--radius-img_m, var(--radius-img-m)); /* mobile image radius */
     }
     #science-{{ section.id }} .media img{
       width:100%;
@@ -108,20 +124,21 @@
       aspect-ratio: 4/5;
       display:block;
     }
+
+    /* Desktop overrides */
     @media (min-width:1024px){
       #science-{{ section.id }} .text{
         background: var(--bg-left);
-        border-radius: 0;
-        padding: clamp(28px, 4vw, 64px);
+        border-radius: var(--radius-text-d);
+        padding: var(--pad-text-d); /* NEW: desktop card padding */
         box-shadow: none;
+      }
+      #science-{{ section.id }} .media{
+        border-radius: var(--radius-img-d);
       }
       #science-{{ section.id }} .media img{
         aspect-ratio: auto;
       }
-    }
-    @media (max-width:1023.98px){
-      #science-{{ section.id }} .media{order:1}
-      #science-{{ section.id }} .text{order:2}
     }
 
     /* ===== Typography apply ===== */
@@ -234,13 +251,26 @@
     { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Hand holding a small blue bottle with a “W” mark" },
 
     { "type": "header", "content": "Section height" },
-    { "type": "range", "id": "height_m", "label": "Min height — mobile (px)", "min": 0, "max": 1200, "step": 100, "default": 600 },
+    { "type": "range", "id": "height_m", "label": "Min height — mobile (px)", "min": 0, "max": 1200, "step": 100, "default": 700 },
     { "type": "range", "id": "height_d", "label": "Min height — desktop (px)", "min": 0, "max": 1200, "step": 100, "default": 600 },
 
-    { "type": "header", "content": "Layout" },
+    { "type": "header", "content": "Outer margin (section)" },
+    { "type": "range", "id": "margin_top", "label": "Margin top (px)", "min": 0, "max": 160, "step": 4, "default": 0 },
+    { "type": "range", "id": "margin_bottom", "label": "Margin bottom (px)", "min": 0, "max": 160, "step": 4, "default": 0 },
+
+    { "type": "header", "content": "Layout & corners" },
     { "type": "range", "id": "gap", "label": "Column gap (px)", "min": 12, "max": 64, "step": 1, "default": 32 },
-    { "type": "range", "id": "radius", "label": "Mobile card radius (px)", "min": 0, "max": 32, "step": 1, "default": 16 },
+
+    { "type": "range", "id": "radius", "label": "Mobile text card radius (px)", "min": 0, "max": 40, "step": 1, "default": 16 },
+    { "type": "range", "id": "radius_img_m", "label": "Mobile image radius (px)", "min": 0, "max": 40, "step": 1, "default": 0 },
+    { "type": "range", "id": "radius_text_d", "label": "Desktop text panel radius (px)", "min": 0, "max": 40, "step": 1, "default": 0 },
+    { "type": "range", "id": "radius_img_d", "label": "Desktop image radius (px)", "min": 0, "max": 40, "step": 1, "default": 0 },
+
     { "type": "checkbox", "id": "show_shadow", "label": "Mobile card shadow", "default": true },
+
+    { "type": "header", "content": "Inner padding (card)" },
+    { "type": "range", "id": "pad_text_m", "label": "Card padding — mobile (px)", "min": 8, "max": 72, "step": 2, "default": 24 },
+    { "type": "range", "id": "pad_text_d", "label": "Card padding — desktop (px)", "min": 12, "max": 96, "step": 2, "default": 56 },
 
     { "type": "header", "content": "Typography — sizes (px)" },
     { "type": "range", "id": "h1_size_m", "label": "Heading — mobile", "min": 20, "max": 40, "step": 1, "default": 28 },
@@ -270,7 +300,7 @@
     { "type": "color", "id": "cl_bg_left", "label": "Left background (desktop)", "default": "#E6F3FF" },
     { "type": "color", "id": "cl_bg_card", "label": "Card background (mobile)", "default": "#E6F3FF" },
 
-    { "type": "header", "content": "Section spacing" },
+    { "type": "header", "content": "Section spacing (inner padding)" },
     { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 0 },
     { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 0 }
   ],
