@@ -15,10 +15,8 @@
       --card-border: {{ section.settings.cl_border | default: '#E6E9EE' }};
       --text: {{ section.settings.cl_text | default: '#0B1F33' }};
       --muted: {{ section.settings.cl_muted | default: '#516170' }};
-
       --radius: {{ section.settings.radius | default: 14 }}px;
       --shadow: 0 6px 16px rgba(0,0,0,.06);
-
       --gap: {{ section.settings.gap | default: 48 }}px;
       --pad-x: {{ section.settings.pad_x | default: 48 }}px;
       --pad-y: {{ section.settings.pad_y | default: 56 }}px;
@@ -90,7 +88,6 @@
     }
     #ad-{{ section.id }} .copy h2{
       margin: 0 0 16px;
-      font-family: "Georgia", "Times New Roman", serif;
       font-weight: 600;
       font-size: clamp(var(--h2-size-m), 3vw, var(--h2-size-d));
       line-height: 1.25;
@@ -107,7 +104,6 @@
       position: relative;
       list-style: none; margin: 0; padding: 0;
       height: 100%;
-      font-size: 14px; color: #222;
     }
     #ad-{{ section.id }} .labels li{
       position: absolute;
@@ -155,7 +151,6 @@
       #ad-{{ section.id }} .labels-mobile{
         position: absolute; inset: 0;
         list-style: none; margin: 0; padding: 0;
-        font-size: 13px; color: #222;
       }
       #ad-{{ section.id }} .labels-mobile li{
         position: absolute;
