@@ -1,24 +1,25 @@
 {% comment %}
   Section: Science — split layout (copy + KPIs / image)
-  - 现在宽度与主题默认的 --page-width 同宽（不再在本节里覆盖）
+  - 与主题 --page-width 同宽（继承全局，不覆盖）
+  - 新增：字体 weight / style 选项（标题、Lead、KPI 数字、KPI 标签）
 {% endcomment %}
 
 <section id="science-{{ section.id }}" aria-labelledby="science-title-{{ section.id }}">
   <style>
     /* ===== Scoped tokens ===== */
     #science-{{ section.id }}{
-      /* 不再设置 --page-width，继承主题全局的 --page-width */
+      /* 继承主题的 --page-width */
       --text: {{ section.settings.cl_text }};
       --muted: {{ section.settings.cl_muted }};
       --rule: {{ section.settings.cl_rule }};
       --brand: {{ section.settings.cl_brand }};
-      --bg-left: {{ section.settings.cl_bg_left }};   /* desktop 左半区 */
-      --bg-card: {{ section.settings.cl_bg_card }};   /* mobile 文案卡片 */
+      --bg-left: {{ section.settings.cl_bg_left }};
+      --bg-card: {{ section.settings.cl_bg_card }};
       --radius: {{ section.settings.radius }}px;
       --shadow: 0 8px 28px rgba(0,0,0,.08);
       --gap: {{ section.settings.gap }}px;
 
-      /* Typography clamps */
+      /* Typography sizes */
       --h1-m: {{ section.settings.h1_size_m }}px;
       --h1-d: {{ section.settings.h1_size_d }}px;
       --h1: clamp(var(--h1-m), 4vw, var(--h1-d));
@@ -34,6 +35,16 @@
       --kpi-label-m: {{ section.settings.kpi_label_m }}px;
       --kpi-label-d: {{ section.settings.kpi_label_d }}px;
       --kpi-label: clamp(var(--kpi-label-m), 1.8vw, var(--kpi-label-d));
+
+      /* Typography weights & styles */
+      --h1-weight: {{ section.settings.h1_weight }};
+      --h1-style: {{ section.settings.h1_style }};
+      --lead-weight: {{ section.settings.lead_weight }};
+      --lead-style: {{ section.settings.lead_style }};
+      --kpi-num-weight: {{ section.settings.kpi_num_weight }};
+      --kpi-num-style: {{ section.settings.kpi_num_style }};
+      --kpi-label-weight: {{ section.settings.kpi_label_weight }};
+      --kpi-label-style: {{ section.settings.kpi_label_style }};
     }
 
     /* ===== Section spacing (Dawn style: mobile ~0.75x) ===== */
@@ -50,10 +61,8 @@
 
     /* ===== Layout ===== */
     #science-{{ section.id }} .wrap{
-      /* 继承主题的 --page-width；若主题未定义则回退到 1100px */
       width: min(var(--page-width, 1100px), 100%);
       margin-inline:auto;
-      padding-inline: 0; /* 保持与主题容器一致，如需边距可在此调整 */
     }
     #science-{{ section.id }} .grid{
       display:grid;
@@ -83,7 +92,7 @@
       position:relative;
       overflow:hidden;
       min-height: 280px;
-      border-radius: 0; /* mobile 图片不需要圆角 */
+      border-radius: 0;
     }
     #science-{{ section.id }} .media img{
       width:100%;
@@ -109,18 +118,22 @@
       #science-{{ section.id }} .text{order:2}
     }
 
-    /* ===== Typography ===== */
+    /* ===== Typography apply ===== */
     #science-{{ section.id }} h2{
       margin:0 0 14px;
       font-size: var(--h1);
       line-height:1.15;
       letter-spacing:.2px;
+      font-weight: var(--h1-weight);
+      font-style: var(--h1-style);
     }
     #science-{{ section.id }} .lead{
       margin:0 0 28px;
       color: var(--muted);
       font-size: var(--lead);
       line-height:1.6;
+      font-weight: var(--lead-weight);
+      font-style: var(--lead-style);
     }
 
     /* ===== KPIs ===== */
@@ -137,12 +150,16 @@
       font-size: var(--kpi-num);
       line-height:1.1;
       color: var(--text);
+      font-weight: var(--kpi-num-weight);
+      font-style: var(--kpi-num-style);
     }
     #science-{{ section.id }} .kpi .label{
       margin:6px 0 0;
       color: var(--muted);
       font-size: var(--kpi-label);
       line-height:1.5;
+      font-weight: var(--kpi-label-weight);
+      font-style: var(--kpi-label-style);
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -223,6 +240,52 @@
     { "type": "range", "id": "kpi_num_d", "label": "KPI number — desktop", "min": 36, "max": 64, "step": 1, "default": 48 },
     { "type": "range", "id": "kpi_label_m", "label": "KPI label — mobile", "min": 10, "max": 16, "step": 1, "default": 12 },
     { "type": "range", "id": "kpi_label_d", "label": "KPI label — desktop", "min": 12, "max": 18, "step": 1, "default": 14 },
+
+    { "type": "header", "content": "Typography — weight & style" },
+    { "type": "range", "id": "h1_weight", "label": "Heading weight", "min": 100, "max": 900, "step": 100, "default": 700 },
+    {
+      "type": "select",
+      "id": "h1_style",
+      "label": "Heading style",
+      "default": "normal",
+      "options": [
+        { "label": "Normal", "value": "normal" },
+        { "label": "Italic", "value": "italic" }
+      ]
+    },
+    { "type": "range", "id": "lead_weight", "label": "Lead weight", "min": 100, "max": 900, "step": 100, "default": 400 },
+    {
+      "type": "select",
+      "id": "lead_style",
+      "label": "Lead style",
+      "default": "normal",
+      "options": [
+        { "label": "Normal", "value": "normal" },
+        { "label": "Italic", "value": "italic" }
+      ]
+    },
+    { "type": "range", "id": "kpi_num_weight", "label": "KPI number weight", "min": 100, "max": 900, "step": 100, "default": 700 },
+    {
+      "type": "select",
+      "id": "kpi_num_style",
+      "label": "KPI number style",
+      "default": "normal",
+      "options": [
+        { "label": "Normal", "value": "normal" },
+        { "label": "Italic", "value": "italic" }
+      ]
+    },
+    { "type": "range", "id": "kpi_label_weight", "label": "KPI label weight", "min": 100, "max": 900, "step": 100, "default": 400 },
+    {
+      "type": "select",
+      "id": "kpi_label_style",
+      "label": "KPI label style",
+      "default": "normal",
+      "options": [
+        { "label": "Normal", "value": "normal" },
+        { "label": "Italic", "value": "italic" }
+      ]
+    },
 
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "cl_text", "label": "Text", "default": "#0B1F33" },
