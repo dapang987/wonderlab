@@ -654,6 +654,71 @@
         "text": "#111111",
         "muted": "#666666"
       }
+    },
+    "fruity_slider_M698Bc": {
+      "type": "fruity-slider",
+      "blocks": {
+        "slide_rrLwBL": {
+          "type": "slide",
+          "settings": {
+            "title": "Pear",
+            "logo_color": "#03403f",
+            "bg_color": "#c9e78a",
+            "img1": "shopify://shop_images/Rectangle_50.png",
+            "alt1": "",
+            "alt2": "",
+            "alt3": "",
+            "alt4": ""
+          }
+        },
+        "slide_ncUeer": {
+          "type": "slide",
+          "settings": {
+            "title": "Apple",
+            "logo_color": "#ec4458",
+            "bg_color": "#ffb2b2",
+            "img1": "shopify://shop_images/Rectangle_46.png",
+            "alt1": "",
+            "alt2": "",
+            "alt3": "",
+            "alt4": ""
+          }
+        },
+        "slide_QPCy36": {
+          "type": "slide",
+          "settings": {
+            "title": "Exotic",
+            "logo_color": "#6464ff",
+            "bg_color": "#c1bff2",
+            "img1": "shopify://shop_images/Rectangle_44.png",
+            "alt1": "",
+            "alt2": "",
+            "alt3": "",
+            "alt4": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_rrLwBL",
+        "slide_ncUeer",
+        "slide_QPCy36"
+      ],
+      "name": "Fruity Slider (GSAP)",
+      "settings": {
+        "aria_label": "Fruity slider",
+        "logo_text": "Fruity",
+        "logo_size": 40,
+        "logo_color_default": "#03403f",
+        "font_family": "system-ui",
+        "label_steps": 3,
+        "h1_size_d": 250,
+        "h1_size_m": 200,
+        "btn_size": 80,
+        "can_width_d": 140,
+        "can_width_m": 180,
+        "load_google_font": false,
+        "google_font_url": "https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap"
+      }
     }
   },
   "order": [
@@ -665,6 +730,7 @@
     "wonder_formulation_philosophy_Ln8QHC",
     "kpi_metrics_3aW3cC",
     "logo_marquee_ra9MhX",
-    "five_star_reviews_gQCNgB"
+    "five_star_reviews_gQCNgB",
+    "fruity_slider_M698Bc"
   ]
 }
