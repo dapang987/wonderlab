@@ -149,6 +149,15 @@
     @media (max-width:1023.98px){
       #science-{{ section.id }} .media{order:1}
       #science-{{ section.id }} .text{order:2}
+          #science-{{ section.id }} .kpi .label{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: var(--kpi-label);
+      line-height:1.5;
+      font-weight: var(--kpi-label-weight);
+      font-style: var(--kpi-label-style);
+      display:inline-block;
+    }
     }
 
     /* ===== Typography apply ===== */
@@ -194,7 +203,6 @@
       line-height:1.5;
       font-weight: var(--kpi-label-weight);
       font-style: var(--kpi-label-style);
-      display:inline-block;
     }
 
     @media (prefers-reduced-motion:reduce){
