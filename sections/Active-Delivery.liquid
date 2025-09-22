@@ -1,0 +1,276 @@
+{%- comment -%}
+  Section: Active Delivery (Background image + overlay labels)
+  - PC：容器右侧为背景图（不占 DOM），左列文字浮于其上，右列为“分层示意”标签（含虚线）
+  - Mobile：上方为图片容器，标签覆盖在图片上（绝对定位），其下为标题与正文
+  - 全部样式强作用域到 #ad-{{ section.id }}，避免污染整站
+{%- endcomment -%}
+
+<section id="ad-{{ section.id }}" class="ad-card" aria-labelledby="ad-title-{{ section.id }}">
+  <style>
+    /* ==================== 强作用域（仅此 Section 生效） ==================== */
+    #ad-{{ section.id }}{
+      /* 组件变量（从 settings 注入） */
+      --page-width: {{ section.settings.page_width | default: 1357 }}px;
+
+      --section-bg: {{ section.settings.cl_bg | default: '#ffffff' }};
+      --card-border: {{ section.settings.cl_border | default: '#E6E9EE' }};
+      --text: {{ section.settings.cl_text | default: '#0B1F33' }};
+      --muted: {{ section.settings.cl_muted | default: '#516170' }};
+
+      --radius: {{ section.settings.radius | default: 14 }}px;
+      --shadow: 0 6px 16px rgba(0,0,0,.06);
+
+      --gap: {{ section.settings.gap | default: 48 }}px;
+      --pad-x: {{ section.settings.pad_x | default: 48 }}px;
+      --pad-y: {{ section.settings.pad_y | default: 56 }}px;
+
+      --h2-size-d: {{ section.settings.h2_size_d | default: 36 }}px;
+      --p-size-d: {{ section.settings.p_size_d | default: 15 }}px;
+      --h2-size-m: {{ section.settings.h2_size_m | default: 24 }}px;
+      --p-size-m: {{ section.settings.p_size_m | default: 14 }}px;
+
+      --leader-color: {{ section.settings.leader_color | default: '#C8CDD4' }};
+      --leader-thickness: 1px;
+
+      --leader-len-d: {{ section.settings.leader_len_d | default: 120 }}px;
+      --leader-len-m: {{ section.settings.leader_len_m | default: 80 }}px;
+
+      --labels-right-d: {{ section.settings.labels_right_d | default: 24 }}px;
+      --labels-right-m: {{ section.settings.labels_right_m | default: 20 }}px;
+      --labels-gap: {{ section.settings.labels_gap | default: 8 }}px;
+
+      /* 背景图片变量（可为空） */
+      --img-desktop:
+        {% if section.settings.image_desktop != blank %}
+          url('{{ section.settings.image_desktop | image_url: width: 1600 }}')
+        {% else %}
+          none
+        {% endif %}
+      ;
+      --img-mobile:
+        {% if section.settings.image_mobile != blank %}
+          url('{{ section.settings.image_mobile | image_url: width: 1200 }}')
+        {% else %}
+          none
+        {% endif %}
+      ;
+    }
+
+    /* 局部基础样式（只限该 Section） */
+    #ad-{{ section.id }} *{ box-sizing: border-box; }
+    #ad-{{ section.id }}{ color: var(--text); }
+    #ad-{{ section.id }} img{ max-width: 100%; height: auto; display: block; }
+
+    /* ===== 外层卡片容器 ===== */
+    #ad-{{ section.id }}.ad-card{
+      width: min(var(--page-width), 100% - 32px);
+      margin: 24px auto;
+      background: var(--section-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    #ad-{{ section.id }} .wrap{
+      /* PC：背景图挂在容器自身的背景层 */
+      background:
+        var(--img-desktop) right center / contain no-repeat,
+        var(--section-bg);
+      padding: var(--pad-y) var(--pad-x);
+      min-height: 460px;
+      display: grid;
+      grid-template-columns: 0.42fr 0.58fr; /* 左文案、右示意 */
+      gap: var(--gap);
+      position: relative;
+    }
+
+    /* ===== 左列：文字浮在背景上 ===== */
+    #ad-{{ section.id }} .copy{
+      position: relative; z-index: 1;
+      align-self: center; max-width: 46ch;
+    }
+    #ad-{{ section.id }} .copy h2{
+      margin: 0 0 16px;
+      font-family: "Georgia", "Times New Roman", serif;
+      font-weight: 600;
+      font-size: clamp(var(--h2-size-m), 3vw, var(--h2-size-d));
+      line-height: 1.25;
+      letter-spacing: .2px;
+    }
+    #ad-{{ section.id }} .copy p{
+      margin: 0; color: var(--muted);
+      font-size: clamp(var(--p-size-m), 1.7vw, var(--p-size-d));
+    }
+
+    /* ===== 右列：分层示意（PC） ===== */
+    #ad-{{ section.id }} .diagram-area{ position: relative; min-height: 360px; }
+    #ad-{{ section.id }} .labels{
+      position: relative;
+      list-style: none; margin: 0; padding: 0;
+      height: 100%;
+      font-size: 14px; color: #222;
+    }
+    #ad-{{ section.id }} .labels li{
+      position: absolute;
+      right: var(--labels-right-d);
+      transform: translateY(-50%);
+      display: flex; align-items: center;
+      gap: var(--labels-gap);
+      white-space: nowrap;
+    }
+    #ad-{{ section.id }} .labels li::before{
+      content:""; display:inline-block;
+      width: var(--leader-len-d);
+      border-top: var(--leader-thickness) dashed var(--leader-color);
+    }
+
+    /* ===== 默认：PC 显示右列、隐藏移动版 ===== */
+    #ad-{{ section.id }} .diagram-area{ display:block; }
+    #ad-{{ section.id }} .diagram-mobile{ display:none; }
+
+    /* ==================== Mobile：图片 + 覆盖其上的 labels ==================== */
+    @media (max-width: 750px){
+      #ad-{{ section.id }} .wrap{
+        background: var(--section-bg);     /* 取消容器背景图 */
+        padding: 28px 16px;
+        display: block;
+        min-height: unset;
+      }
+
+      #ad-{{ section.id }} .diagram-area{ display:none !important; }
+      #ad-{{ section.id }} .diagram-mobile{
+        display:block !important;
+        position: relative;
+        margin-bottom: 18px;
+        border-radius: 12px;
+      }
+
+      #ad-{{ section.id }} .art-mobile{
+        position: relative;                 /* 作为覆盖定位参照 */
+        background: var(--img-mobile) center / contain no-repeat;
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        min-height: 320px;
+      }
+
+      #ad-{{ section.id }} .labels-mobile{
+        position: absolute; inset: 0;
+        list-style: none; margin: 0; padding: 0;
+        font-size: 13px; color: #222;
+      }
+      #ad-{{ section.id }} .labels-mobile li{
+        position: absolute;
+        right: var(--labels-right-m);
+        transform: translateY(-50%);
+        display: flex; align-items: center;
+        gap: var(--labels-gap);
+        white-space: nowrap;
+      }
+      #ad-{{ section.id }} .labels-mobile li::before{
+        content:""; display:inline-block;
+        width: var(--leader-len-m);
+        border-top: var(--leader-thickness) dashed var(--leader-color);
+      }
+
+      #ad-{{ section.id }} .copy{ max-width: 42ch; margin: 18px auto 0; text-align: center; }
+      #ad-{{ section.id }} .copy h2{ font-size: var(--h2-size-m); }
+      #ad-{{ section.id }} .copy p { font-size: var(--p-size-m); }
+    }
+  </style>
+
+  <div class="wrap">
+    {%- comment -%} Mobile：图片容器，labels 覆盖其上 {%- endcomment -%}
+    <div class="diagram-mobile">
+      <div class="art-mobile">
+        <ul class="labels-mobile">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'label' -%}
+              {%- assign top_m = block.settings.top_m | default: block.settings.top_d -%}
+              <li style="top: {{ top_m }}%;" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+
+    {%- comment -%} 左列：文字（PC 浮在背景上；Mobile 显示在下方） {%- endcomment -%}
+    <div class="copy">
+      <h2 id="ad-title-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+      {%- if section.settings.body != blank -%}
+        <p>{{ section.settings.body | escape | newline_to_br }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} 右列（PC）：分层示意标签 + 虚线 {%- endcomment -%}
+    <div class="diagram-area">
+      <ul class="labels" aria-label="Layered parts">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'label' -%}
+            <li style="top: {{ block.settings.top_d }}%;" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Active Delivery",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "标题", "default": "Innovatively Designed for Active Delivery" },
+    { "type": "textarea", "id": "body", "label": "正文", "default": "Our innovative active chamber bottle blocks light, water, and oxygen. Paired with a premium aluminum seal, it protects the probiotic cultures from moisture, light, and oxygen, extending shelf life and ensuring the stability of the product." },
+
+    { "type": "image_picker", "id": "image_desktop", "label": "PC 背景图（挂在容器右侧）" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile 图片（上方覆盖标签）" },
+
+    { "type": "color", "id": "cl_bg", "label": "Section 背景色", "default": "#ffffff" },
+    { "type": "color", "id": "cl_border", "label": "描边颜色", "default": "#E6E9EE" },
+    { "type": "color", "id": "cl_text", "label": "文字颜色", "default": "#0B1F33" },
+    { "type": "color", "id": "cl_muted", "label": "正文次要文字颜色", "default": "#516170" },
+    { "type": "color", "id": "leader_color", "label": "虚线颜色", "default": "#C8CDD4" },
+
+    { "type": "range", "id": "page_width", "label": "最大内容宽度(px)", "min": 800, "max": 1600, "step": 100, "default": 1200 },
+    { "type": "range", "id": "radius", "label": "圆角(px)", "min": 0, "max": 32, "step": 1, "default": 14 },
+    { "type": "range", "id": "gap", "label": "左右列间距(px)", "min": 0, "max": 96, "step": 1, "default": 48 },
+    { "type": "range", "id": "pad_x", "label": "左右内边距(px)", "min": 0, "max": 96, "step": 1, "default": 48 },
+    { "type": "range", "id": "pad_y", "label": "上下内边距(px)", "min": 0, "max": 120, "step": 10, "default": 60 },
+
+    { "type": "range", "id": "h2_size_d", "label": "标题字号（PC，px）", "min": 20, "max": 60, "step": 1, "default": 36 },
+    { "type": "range", "id": "p_size_d", "label": "正文字号（PC，px）", "min": 12, "max": 20, "step": 1, "default": 15 },
+    { "type": "range", "id": "h2_size_m", "label": "标题字号（Mobile，px）", "min": 16, "max": 36, "step": 1, "default": 24 },
+    { "type": "range", "id": "p_size_m", "label": "正文字号（Mobile，px）", "min": 12, "max": 18, "step": 1, "default": 14 },
+
+    { "type": "range", "id": "leader_len_d", "label": "虚线长度（PC，px）", "min": 40, "max": 240, "step": 10, "default": 120 },
+    { "type": "range", "id": "leader_len_m", "label": "虚线长度（Mobile，px）", "min": 30, "max": 200, "step": 10, "default": 80 },
+
+    { "type": "range", "id": "labels_right_d", "label": "PC 标签整体左移(px，越大越靠瓶子)", "min": 0, "max": 120, "step": 10, "default": 30 },
+    { "type": "range", "id": "labels_right_m", "label": "Mobile 标签整体左移(px)", "min": 0, "max": 120, "step": 10, "default": 20 },
+    { "type": "range", "id": "labels_gap", "label": "虚线与文字间距(px)", "min": 0, "max": 24, "step": 1, "default": 8 }
+  ],
+  "blocks": [
+    {
+      "type": "label",
+      "name": "标签",
+      "limit": 5,
+      "settings": [
+        { "type": "text", "id": "text", "label": "标签文本", "default": "bottle cap" },
+        { "type": "range", "id": "top_d", "label": "PC 顶部位置（%）", "min": 0, "max": 100, "step": 1, "default": 18 },
+        { "type": "range", "id": "top_m", "label": "Mobile 顶部位置（%）", "min": 0, "max": 100, "step": 1, "default": 18 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Active Delivery（背景 + 分层标签）",
+      "blocks": [
+        { "type": "label", "settings": { "text": "bottle cap", "top_d": 18, "top_m": 18 } },
+        { "type": "label", "settings": { "text": "aluminum seal", "top_d": 45, "top_m": 45 } },
+        { "type": "label", "settings": { "text": "probiotic cultures", "top_d": 78, "top_m": 78 } }
+      ]
+    }
+  ]
+}
+{% endschema %}
