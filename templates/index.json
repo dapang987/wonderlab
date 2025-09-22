@@ -655,69 +655,50 @@
         "muted": "#666666"
       }
     },
-    "fruity_slider_M698Bc": {
+    "fruity_slider_cbCKEe": {
       "type": "fruity-slider",
       "blocks": {
-        "slide_rrLwBL": {
-          "type": "slide",
+        "flavor_Tpz3Gx": {
+          "type": "flavor",
           "settings": {
-            "title": "Pear",
+            "flavor_name": "Pear",
+            "background_color": "#c9e78a",
             "logo_color": "#03403f",
-            "bg_color": "#c9e78a",
-            "img1": "shopify://shop_images/Rectangle_50.png",
-            "alt1": "",
-            "alt2": "",
-            "alt3": "",
-            "alt4": ""
+            "can_color": "#e6ffde",
+            "image_one": "shopify://shop_images/Rectangle_50.png"
           }
         },
-        "slide_ncUeer": {
-          "type": "slide",
+        "flavor_aqzfwn": {
+          "type": "flavor",
           "settings": {
-            "title": "Apple",
+            "flavor_name": "Apple",
+            "background_color": "#ffb2b2",
             "logo_color": "#ec4458",
-            "bg_color": "#ffb2b2",
-            "img1": "shopify://shop_images/Rectangle_46.png",
-            "alt1": "",
-            "alt2": "",
-            "alt3": "",
-            "alt4": ""
+            "can_color": "#f2675a",
+            "image_one": "shopify://shop_images/Heart.svg"
           }
         },
-        "slide_QPCy36": {
-          "type": "slide",
+        "flavor_HyhgdM": {
+          "type": "flavor",
           "settings": {
-            "title": "Exotic",
+            "flavor_name": "Exotic",
+            "background_color": "#c1bff2",
             "logo_color": "#6464ff",
-            "bg_color": "#c1bff2",
-            "img1": "shopify://shop_images/Rectangle_44.png",
-            "alt1": "",
-            "alt2": "",
-            "alt3": "",
-            "alt4": ""
+            "can_color": "#9590f1",
+            "image_one": "shopify://shop_images/Rectangle_45_1.png"
           }
         }
       },
       "block_order": [
-        "slide_rrLwBL",
-        "slide_ncUeer",
-        "slide_QPCy36"
+        "flavor_Tpz3Gx",
+        "flavor_aqzfwn",
+        "flavor_HyhgdM"
       ],
-      "name": "Fruity Slider (GSAP)",
+      "name": "水果滑动展示",
       "settings": {
-        "aria_label": "Fruity slider",
-        "logo_text": "Fruity",
-        "logo_size": 40,
-        "logo_color_default": "#03403f",
-        "font_family": "system-ui",
-        "label_steps": 3,
-        "h1_size_d": 250,
-        "h1_size_m": 200,
-        "btn_size": 80,
-        "can_width_d": 140,
-        "can_width_m": 180,
-        "load_google_font": false,
-        "google_font_url": "https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap"
+        "brand_name": "Fruity",
+        "can_silhouette": "shopify://shop_images/Rectangle_45_1.png",
+        "can_labels": "shopify://shop_images/Rectangle_45_1.png"
       }
     }
   },
@@ -731,6 +712,6 @@
     "kpi_metrics_3aW3cC",
     "logo_marquee_ra9MhX",
     "five_star_reviews_gQCNgB",
-    "fruity_slider_M698Bc"
+    "fruity_slider_cbCKEe"
   ]
 }
