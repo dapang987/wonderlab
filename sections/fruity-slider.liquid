@@ -1,0 +1,405 @@
+{% comment %}
+  Section: Fruity Slider (GSAP) — Shopify Port
+  - Blocks = slides；每个 slide 4 张水果图 + 标题 + 品牌色 + 背景色
+  - 罐身贴纸 Labels.jpg 在 section 级设置里配置（包含多帧），并设置帧数 label_steps（默认 3）
+  - 采用“方案 A”按 1/label_steps 步进平移贴纸
+  - 动画、键盘、触摸均已支持；全部作用域隔离到 #fruity-{{ section.id }}
+{% endcomment %}
+
+<section id="fruity-{{ section.id }}" class="fruity" aria-label="{{ section.settings.aria_label | default: 'Fruity slider' }}">
+  {%- style -%}
+    #fruity-{{ section.id }}{
+      --pear-background:#c9e78a;
+      --apple-background:#ffb2b2;
+      --exotic-background:#c1bff2;
+
+      --headline-d: {{ section.settings.h1_size_d }}px;
+      --headline-m: {{ section.settings.h1_size_m }}px;
+
+      --btn-size: {{ section.settings.btn_size }}px;
+      --label-steps: {{ section.settings.label_steps | default: 3 }};
+      --mask-size: 100% auto;
+    }
+
+    #fruity-{{ section.id }} *{ box-sizing:border-box; }
+    #fruity-{{ section.id }} img{ max-width:100%; height:auto; display:block; }
+    #fruity-{{ section.id }} .wrap{ position:relative; width:100%; height:100%; }
+
+    /* Header / Logo */
+    #fruity-{{ section.id }} header{
+      position:fixed; top:0; left:0; width:100vw; padding:22px 28px 0;
+      text-align:center; z-index:50; pointer-events:none;
+    }
+    #fruity-{{ section.id }} .logo{
+      margin:0; font-weight:900; line-height:1;
+      font-size: {{ section.settings.logo_size }}px;
+      color: {{ section.settings.logo_color_default }};
+      font-family: {{ section.settings.font_family | default: 'system-ui' }};
+    }
+
+    /* Headline */
+    #fruity-{{ section.id }} .text{ position:fixed; inset:0; z-index:30; pointer-events:none; }
+    #fruity-{{ section.id }} .text .h1{
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      margin:0; font-weight:900; line-height:1; letter-spacing:-0.03em;
+      color:#fff; text-shadow:0 10px 40px rgba(0,0,0,.08);
+      font-size:var(--headline-d);
+    }
+    @media (max-width: 575px){
+      #fruity-{{ section.id }} .text .h1{ font-size:var(--headline-m); }
+    }
+
+    /* Can (masked) */
+    #fruity-{{ section.id }} .cane-image{
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      max-width: {{ section.settings.can_width_d }}px;
+      -webkit-mask-image: url('{{ section.settings.cane_mask | image_url: width: 800 }}');
+      mask-image: url('{{ section.settings.cane_mask | image_url: width: 800 }}');
+      -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+      -webkit-mask-position:center center; mask-position:center center;
+      -webkit-mask-size: var(--mask-size); mask-size: var(--mask-size);
+      overflow:hidden; pointer-events:none;
+    }
+    @media (max-width: 767px){
+      #fruity-{{ section.id }} .cane-image{ max-width: {{ section.settings.can_width_m }}px; }
+    }
+    #fruity-{{ section.id }} .cane-labels{
+      position:absolute; top:0; left:0; width: calc(var(--label-steps) * 100%) !important;
+      mix-blend-mode:multiply; transition: transform .5s ease-in-out; will-change: transform;
+    }
+
+    /* Stage */
+    #fruity-{{ section.id }} .stage{ width:100vw; height:100vh; overflow:hidden; position:relative; z-index:10; }
+    #fruity-{{ section.id }} .container{
+      height:100vh; display:flex; align-items:center;
+      transition: transform .5s ease-in-out; will-change: transform; transform: translateX(0);
+    }
+    #fruity-{{ section.id }} .slide{
+      min-width:100vw; height:100vh; position:relative; overflow:hidden;
+      background: var(--pear-background);
+    }
+
+    /* Fruit images */
+    #fruity-{{ section.id }} .fruit-image{ position:absolute; z-index:1; }
+    #fruity-{{ section.id }} .image-one{ max-width:282px; bottom:100px; left:0; }
+    #fruity-{{ section.id }} .image-two{ max-width:247px; top:23%; left:25%; }
+    #fruity-{{ section.id }} .image-three{ max-width:211px; top:23%; right:25%; }
+    #fruity-{{ section.id }} .image-four{ max-width:294px; bottom:100px; right:0; }
+
+    /* Simple shadow under fruits */
+    #fruity-{{ section.id }} .fruit-image::after{
+      content:""; position:absolute; right:0; width:173px; height:30px;
+      background:linear-gradient(90deg,#000 3.66%,rgba(0,0,0,0) 92.35%);
+      opacity:.43; filter:blur(7.5px); transform:rotate(-6.941deg);
+    }
+    #fruity-{{ section.id }} .image-one::after{ bottom:-50px; }
+    #fruity-{{ section.id }} .image-two::after{ bottom:-200px; height:22px; }
+    #fruity-{{ section.id }} .image-three::after{ bottom:-280px; width:103px; }
+    #fruity-{{ section.id }} .image-four::after{ bottom:-50px; }
+
+    /* Controls */
+    #fruity-{{ section.id }} .controls{ position:fixed; inset:0; pointer-events:none; }
+    #fruity-{{ section.id }} .btn{
+      position:absolute; top:50%; transform:translateY(-50%);
+      z-index:60; width:var(--btn-size); height:var(--btn-size); border-radius:50%;
+      background:#fff; border:none; cursor:pointer; display:grid; place-items:center;
+      transition: box-shadow .3s ease, transform .15s ease;
+      pointer-events:auto;
+    }
+    #fruity-{{ section.id }} .btn:active{ transform:translateY(-50%) scale(.98); }
+    #fruity-{{ section.id }} .btn--prev{ left:30px; display:none; }
+    #fruity-{{ section.id }} .btn--next{ right:30px; }
+
+    #fruity-{{ section.id }} .btn svg{ width:48%; height:48%; display:block; }
+
+    @media (max-width: 991px){
+      #fruity-{{ section.id }} .btn{ top:90%; }
+    }
+  {%- endstyle -%}
+
+  <div class="wrap" data-slides="{{ section.blocks.size }}" data-label-steps="{{ section.settings.label_steps | default: 3 }}">
+    <header>
+      <h2 class="logo">{{ section.settings.logo_text }}</h2>
+    </header>
+
+    <!-- overlay: title + can -->
+    <div class="text" aria-hidden="true">
+      <h1 class="h1">
+        {%- assign first_title = section.blocks.first.settings.title | default: 'Pear' -%}
+        {{ first_title }}
+      </h1>
+      <div class="cane-image">
+        {%- comment -%}
+          罐身贴纸（多帧横图），若未配图则使用示例
+        {%- endcomment -%}
+        <img
+          class="cane-labels"
+          src="{% if section.settings.labels_sheet != blank %}{{ section.settings.labels_sheet | image_url: width: 1600 }}{% else %}https://www.yudiz.com/codepen/fruity/Labels.jpg{% endif %}"
+          alt=""
+          width="1600"
+          height="auto"
+          loading="eager"
+        >
+      </div>
+    </div>
+
+    <!-- stage -->
+    <div class="stage">
+      <div class="container" role="list">
+        {%- for block in section.blocks -%}
+          <section
+            id="fruity-{{ section.id }}-slide-{{ forloop.index }}"
+            class="slide"
+            role="listitem"
+            aria-label="{{ block.settings.title | default: 'Slide ' | append: forloop.index }}"
+            data-title="{{ block.settings.title | escape }}"
+            data-logo-color="{{ block.settings.logo_color }}"
+            style="background: {{ block.settings.bg_color }};"
+            {{ block.shopify_attributes }}
+          >
+            <div class="fruit-images">
+              <div class="image-one fruit-image">
+                {% if block.settings.img1 != blank %}
+                  <img src="{{ block.settings.img1 | image_url: width: 1200 }}" alt="{{ block.settings.alt1 | escape }}">
+                {% else %}
+                  <img src="https://www.yudiz.com/codepen/fruity/pear-one.png" alt="">
+                {% endif %}
+              </div>
+              <div class="image-two fruit-image">
+                {% if block.settings.img2 != blank %}
+                  <img src="{{ block.settings.img2 | image_url: width: 1200 }}" alt="{{ block.settings.alt2 | escape }}">
+                {% else %}
+                  <img src="https://www.yudiz.com/codepen/fruity/pear-two.png" alt="">
+                {% endif %}
+              </div>
+              <div class="image-three fruit-image">
+                {% if block.settings.img3 != blank %}
+                  <img src="{{ block.settings.img3 | image_url: width: 1200 }}" alt="{{ block.settings.alt3 | escape }}">
+                {% else %}
+                  <img src="https://www.yudiz.com/codepen/fruity/pear-three.png" alt="">
+                {% endif %}
+              </div>
+              <div class="image-four fruit-image">
+                {% if block.settings.img4 != blank %}
+                  <img src="{{ block.settings.img4 | image_url: width: 1200 }}" alt="{{ block.settings.alt4 | escape }}">
+                {% else %}
+                  <img src="https://www.yudiz.com/codepen/fruity/pear-four.png" alt="">
+                {% endif %}
+              </div>
+            </div>
+          </section>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <!-- controls -->
+    <div class="controls" aria-hidden="true">
+      <button class="btn btn--prev" id="prev-{{ section.id }}" aria-label="Previous">
+        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M15.5 19l-7-7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn btn--next" id="next-{{ section.id }}" aria-label="Next">
+        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M8.5 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  {%- javascript -%}
+    (function(){
+      const root = document.getElementById('fruity-{{ section.id }}');
+      if(!root) return;
+
+      // Elements
+      const container   = root.querySelector('.container');
+      const slides      = Array.from(root.querySelectorAll('.slide'));
+      const h1El        = root.querySelector('.h1');
+      const logoEl      = root.querySelector('.logo');
+      const caneLabels  = root.querySelector('.cane-labels');
+      const prevBtn     = root.querySelector('#prev-{{ section.id }}');
+      const nextBtn     = root.querySelector('#next-{{ section.id }}');
+
+      // Data from DOM
+      const titles      = slides.map(s => s.dataset.title || 'Slide');
+      const logoColors  = slides.map(s => s.dataset.logoColor || '{{ section.settings.logo_color_default }}');
+      const max         = slides.length - 1;
+      const labelSteps  = parseInt(root.dataset.labelSteps || '3', 10);
+
+      let index = 0;
+      let isAnimating = false;
+
+      function ensureGSAP(cb){
+        if(window.gsap){ cb(); return; }
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js';
+        s.onload = cb;
+        document.head.appendChild(s);
+      }
+
+      function idleFloat(imgs){
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        window.gsap.to(imgs, {
+          x: 'random(-20, 20)',
+          y: 'random(-20, 20)',
+          zIndex: 22,
+          duration: 2,
+          ease: 'none',
+          yoyo: true,
+          repeat: -1
+        });
+      }
+
+      function animateSlide(i, dir){
+        window.gsap.killTweensOf(root.querySelectorAll('.fruit-image img'));
+        const images = slides[i].querySelectorAll('.fruit-image');
+        window.gsap.from(images, {
+          y: (dir > 0 ? '-100vh' : '100vh'),
+          duration: 0.5,
+          stagger: 0.05,
+          ease: 'power2.out'
+        });
+        idleFloat(slides[i].querySelectorAll('.fruit-image img'));
+      }
+
+      function updateButtons(){
+        prevBtn.style.display = index === 0   ? 'none' : 'block';
+        nextBtn.style.display = index === max ? 'none' : 'block';
+        // neighbor color hints
+        prevBtn.style.color = logoColors[Math.max(0, index-1)];
+        nextBtn.style.color = logoColors[Math.min(max, index+1)];
+      }
+
+      function updateUI(dir){
+        if(isAnimating) return;
+        isAnimating = true;
+
+        // Headline + brand color
+        h1El.textContent = titles[index];
+        logoEl.style.color = logoColors[index];
+
+        // Container step (100vw per slide)
+        container.style.transform = `translateX(-${index * 100}vw)`;
+
+        // Labels sheet step (1/labelSteps per slide)
+        const stepPct = (index * 100) / labelSteps; // 0, 33.33..., 66.66...
+        caneLabels.style.transform = `translateX(-${stepPct}%)`;
+
+        // Animate fruits
+        ensureGSAP(function(){
+          window.gsap.from(h1El, { y:'20%', opacity:0, duration:0.5, ease:'power2.out' });
+          animateSlide(index, dir);
+        });
+
+        updateButtons();
+        setTimeout(() => { isAnimating = false; }, 520);
+      }
+
+      // Init
+      updateUI(1);
+
+      // Events
+      nextBtn.addEventListener('click', () => {
+        if(index >= max || isAnimating) return;
+        index += 1; updateUI(+1);
+      });
+      prevBtn.addEventListener('click', () => {
+        if(index <= 0 || isAnimating) return;
+        index -= 1; updateUI(-1);
+      });
+
+      // Keyboard
+      window.addEventListener('keydown', (e) => {
+        if (document.activeElement && ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+        if(e.key === 'ArrowRight') nextBtn.click();
+        if(e.key === 'ArrowLeft')  prevBtn.click();
+      });
+
+      // Touch swipe
+      let startX = null;
+      window.addEventListener('touchstart', (e) => { startX = e.touches[0]?.clientX ?? null; }, {passive:true});
+      window.addEventListener('touchend', (e) => {
+        if(startX == null) return;
+        const dx = (e.changedTouches[0]?.clientX ?? startX) - startX;
+        const threshold = 40;
+        if(dx < -threshold) nextBtn.click();
+        if(dx >  threshold) prevBtn.click();
+        startX = null;
+      }, {passive:true});
+
+      // Keep transforms in sync on resize
+      window.addEventListener('resize', () => {
+        container.style.transform   = `translateX(-${index * 100}vw)`;
+        caneLabels.style.transform  = `translateX(-${(index * 100) / labelSteps}%)`;
+      });
+    })();
+  {%- endjavascript -%}
+
+  {% if section.settings.load_google_font %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <style>@import url('{{ section.settings.google_font_url | escape }}');</style>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Fruity Slider (GSAP)",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Fruity slider" },
+
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "Fruity" },
+    { "type": "range", "id": "logo_size", "label": "Logo font size", "min": 16, "max": 64, "step": 1, "default": 40 },
+    { "type": "color", "id": "logo_color_default", "label": "Default logo color", "default": "#03403f" },
+    { "type": "text", "id": "font_family", "label": "Font family (fallback)", "default": "system-ui" },
+
+    { "type": "image_picker", "id": "cane_mask", "label": "Can mask image (SVG/PNG)", "info": "建议透明背景、罐身轮廓形状" },
+    { "type": "image_picker", "id": "labels_sheet", "label": "Labels sheet image (wide sprite)", "info": "包含多帧横向贴纸（默认 3 帧）" },
+    { "type": "range", "id": "label_steps", "label": "Labels sheet frames", "min": 1, "max": 8, "step": 1, "default": 3 },
+
+    { "type": "range", "id": "h1_size_d", "label": "Headline size (desktop)", "min": 50, "max": 500, "step": 50, "default": 250 },
+    { "type": "range", "id": "h1_size_m", "label": "Headline size (mobile)",  "min": 50, "max": 250, "step": 50, "default": 200 },
+
+    { "type": "range", "id": "btn_size", "label": "Button size", "min": 40, "max": 120, "step": 2, "default": 80 },
+
+    { "type": "range", "id": "can_width_d", "label": "Can width (desktop, px)", "min": 120, "max": 420, "step": 20, "default": 140 },
+    { "type": "range", "id": "can_width_m", "label": "Can width (mobile, px)",  "min": 100, "max": 320, "step": 20, "default": 180 },
+
+    { "type": "checkbox", "id": "load_google_font", "label": "Load Google Font (optional)", "default": false },
+    { "type": "text", "id": "google_font_url", "label": "Google Font @import URL", "default": "https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 12,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Headline text", "default": "Pear" },
+        { "type": "color", "id": "logo_color", "label": "Logo color for this slide", "default": "#03403f" },
+        { "type": "color", "id": "bg_color", "label": "Slide background", "default": "#c9e78a" },
+
+        { "type": "image_picker", "id": "img1", "label": "Fruit image 1" },
+        { "type": "text", "id": "alt1", "label": "Alt text 1" },
+
+        { "type": "image_picker", "id": "img2", "label": "Fruit image 2" },
+        { "type": "text", "id": "alt2", "label": "Alt text 2" },
+
+        { "type": "image_picker", "id": "img3", "label": "Fruit image 3" },
+        { "type": "text", "id": "alt3", "label": "Alt text 3" },
+
+        { "type": "image_picker", "id": "img4", "label": "Fruit image 4" },
+        { "type": "text", "id": "alt4", "label": "Alt text 4" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fruity Slider (GSAP)",
+      "category": "Image",
+      "blocks": [
+        { "type": "slide", "settings": { "title": "Pear",   "logo_color": "#03403f", "bg_color": "#c9e78a" } },
+        { "type": "slide", "settings": { "title": "Apple",  "logo_color": "#ec4458", "bg_color": "#ffb2b2" } },
+        { "type": "slide", "settings": { "title": "Exotic", "logo_color": "#6464ff", "bg_color": "#c1bff2" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
