@@ -10,7 +10,6 @@
     /* ==================== 强作用域（仅此 Section 生效） ==================== */
     #ad-{{ section.id }}{
       /* 组件变量（从 settings 注入） */
-      --page-width: {{ section.settings.page_width | default: 1357 }}px;
 
       --section-bg: {{ section.settings.cl_bg | default: '#ffffff' }};
       --card-border: {{ section.settings.cl_border | default: '#E6E9EE' }};
