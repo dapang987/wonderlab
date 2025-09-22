@@ -207,63 +207,42 @@
     "feature_split_card_LDP3bW": {
       "type": "feature-split-card",
       "blocks": {
-        "stat_XegPbD": {
-          "type": "stat",
+        "kpi_NxBRm3": {
+          "type": "kpi",
           "settings": {
-            "number": "28+",
+            "num": "28+",
             "label": "Years of Probiotic Expertise"
-          }
-        },
-        "stat_HFyzmD": {
-          "type": "stat",
-          "settings": {
-            "number": "273+",
-            "label": "Research Papers"
-          }
-        },
-        "stat_JR4yzC": {
-          "type": "stat",
-          "settings": {
-            "number": "100,000+",
-            "label": "Strains in our Library"
           }
         }
       },
       "block_order": [
-        "stat_XegPbD",
-        "stat_HFyzmD",
-        "stat_JR4yzC"
+        "kpi_NxBRm3"
       ],
       "name": "Feature split card",
       "settings": {
         "title": "Tired of diets? Let science do the work.",
         "lead": "<p>Science-backed ingredients deliver real results on efficacy of weight management.</p>",
         "image": "shopify://shop_images/Rectangle_44.png",
-        "image_mobile": "shopify://shop_images/Rectangle_43.png",
         "image_alt": "Lifestyle product photo",
-        "fetch_high": false,
-        "reverse_on_desktop": false,
-        "equal_height": true,
-        "card_h_m": 380,
-        "card_h_d": 560,
-        "pad_card_m": 22,
-        "pad_card_d": 28,
         "gap": 28,
-        "stat_gap": 22,
         "radius": 16,
-        "card_bg": "#efefef",
-        "text_color": "#0b1f33",
-        "muted_color": "#516170",
-        "number_color": "#0b1f33",
-        "rule_color": "#d9e1ec",
-        "h1_m": 24,
-        "h1_d": 36,
-        "lead_m": 13,
-        "lead_d": 16,
+        "show_shadow": true,
+        "h1_size_m": 28,
+        "h1_size_d": 44,
+        "lead_size_m": 14,
+        "lead_size_d": 18,
         "kpi_num_m": 28,
         "kpi_num_d": 40,
         "kpi_label_m": 11,
-        "kpi_label_d": 13
+        "kpi_label_d": 13,
+        "cl_text": "#0b1f33",
+        "cl_muted": "#516170",
+        "cl_rule": "#d7e3ee",
+        "cl_brand": "#1b8cff",
+        "cl_bg_left": "#e6f3ff",
+        "cl_bg_card": "#e6f3ff",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
     "comparison_matrix_cifVii": {
