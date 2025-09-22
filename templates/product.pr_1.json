@@ -240,10 +240,12 @@
         "lead": "Science-backed ingredients deliver real results on efficacy of weight management.",
         "image": "shopify://shop_images/Rectangle_44.png",
         "image_alt": "Lifestyle product photo",
-        "height_m": 600,
+        "height_m": 700,
         "height_d": 700,
         "margin_top": 0,
         "margin_bottom": 0,
+        "margin_left": 0,
+        "margin_right": 0,
         "gap": 28,
         "radius": 16,
         "radius_img_m": 10,
@@ -273,9 +275,7 @@
         "cl_rule": "#d7e3ee",
         "cl_brand": "#1b8cff",
         "cl_bg_left": "#e6f3ff",
-        "cl_bg_card": "#e6f3ff",
-        "padding_top": 0,
-        "padding_bottom": 0
+        "cl_bg_card": "#e6f3ff"
       }
     },
     "comparison_matrix_cifVii": {
