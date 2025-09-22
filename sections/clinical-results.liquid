@@ -1,0 +1,355 @@
+{% comment %}
+  Section: Clinically-Studied Results — Image Version
+  Features:
+  - Title + lead
+  - Repeater stats (value + description)
+  - Bottom figure (desktop/mobile image with mobile horizontal pan)
+  - Always-visible custom scrollbar on mobile
+  - Mobile-only CTA button (configurable)
+{% endcomment %}
+
+<section id="clinically-results-{{ section.id }}" aria-label="{{ section.settings.title | default: 'Clinically studied results' }}">
+  {%- style -%}
+  /* ============== Design tokens (scoped) ============== */
+  #clinically-results-{{ section.id }}{
+    --text: {{ section.settings.text_color | default: '#0B1F33' }};
+    --muted: {{ section.settings.muted_color | default: '#516170' }};
+    --rule: {{ section.settings.rule_color  | default: '#E6E9EE' }};
+
+    --brand: {{ section.settings.brand | default: '#1B8CFF' }};
+    --brand-ink: {{ section.settings.brand_ink | default: '#ffffff' }};
+
+    --radius: {{ section.settings.radius | default: 12 }}px;
+    --shadow: 0 6px 16px rgba(0,0,0,.06);
+
+    --gap-xl: 56px;
+    --gap: 28px;
+    --gap-sm: 16px;
+
+    --h2-d: 36px;
+    --h2-m: 24px;
+    --lead: 18px;
+    --body: 15px;
+    --foot: 12px;
+
+    /* mobile figure height token */
+    --m-fig-h: {{ section.settings.m_fig_h | default: 360 }}px;
+  }
+
+  /* ============== Base ============== */
+  #clinically-results-{{ section.id }} .wrap{
+    width:min(var(--page-width, 1200px),100%);
+    margin-inline:auto;
+    padding:36px 24px 64px;
+    color:var(--text);
+  }
+
+  /* ============== Section header ============== */
+  #clinically-results-{{ section.id }} h2{
+    font-size: clamp(var(--h2-m), 3.2vw, var(--h2-d));
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: .02em;
+    margin: 0;
+  }
+  #clinically-results-{{ section.id }} .lead{
+    margin-top:18px;
+    font-style: italic;
+    font-size: var(--lead);
+    text-align:center;
+    color:var(--text);
+  }
+
+  /* ============== Stats ============== */
+  #clinically-results-{{ section.id }} .stats{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:var(--gap);
+    margin-top:20px;
+    margin-bottom:var(--gap);
+  }
+  #clinically-results-{{ section.id }} .stat{ display:flex; align-items:flex-start; gap:14px; }
+  #clinically-results-{{ section.id }} .stat .icon{ width:40px; height:40px; margin-top:2px; flex:0 0 auto; color:var(--brand); }
+  #clinically-results-{{ section.id }} .stat .value{ font-size:clamp(22px,3.2vw,28px); letter-spacing:.2px; display:block; }
+  #clinically-results-{{ section.id }} .stat .desc{ margin-left:10px; color:var(--muted); font-size:var(--body); line-height:1.45; white-space:nowrap; }
+
+  /* ============== Image block (bottom) ============== */
+  #clinically-results-{{ section.id }} .result-figure{ margin: 10px 0 0; }
+  #clinically-results-{{ section.id }} .result-img-wrap{
+    position: relative; /* for custom scrollbar positioning */
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: #fff;
+    aspect-ratio: 1600 / 560; /* desktop ratio to avoid CLS; tweak to your asset */
+  }
+  #clinically-results-{{ section.id }} .result-img{
+    width:100%;
+    height:100%;
+    object-fit: contain;
+    display:block;
+    background: #fff;
+  }
+  #clinically-results-{{ section.id }} .foot{
+    margin-top:12px;
+    font-size:var(--foot);
+    color:#788697;
+  }
+
+  /* ============== CTA button (bottom of section) ============== */
+  #clinically-results-{{ section.id }} .cta{
+    display:none;                /* hidden on desktop */
+    margin-top: var(--gap-xl);
+    justify-content:left;
+  }
+  #clinically-results-{{ section.id }} .btn{
+    appearance:none;
+    -webkit-appearance:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:14px 22px;
+    min-width: 220px;
+    border-radius: calc(var(--radius) + 4px);
+    background: var(--brand);
+    color: var(--brand-ink);
+    border: 1px solid var(--brand);
+    text-decoration:none;
+    letter-spacing:.2px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.08);
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  #clinically-results-{{ section.id }} .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,0,0,.12); }
+  #clinically-results-{{ section.id }} .btn:active{ transform: translateY(0); box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+  #clinically-results-{{ section.id }} .btn:focus-visible{ outline:2px solid rgba(255,255,255,.35); outline-offset:2px; }
+
+  /* ============== Responsive (Mobile) ============== */
+  @media (max-width: 750px){
+    #clinically-results-{{ section.id }} .wrap{ padding-inline:16px; }
+    #clinically-results-{{ section.id }} .stats{ grid-template-columns: 1fr; gap:var(--gap-sm); }
+    #clinically-results-{{ section.id }} .stat{ align-items:center; }
+    #clinically-results-{{ section.id }} .stat .desc{ white-space:normal; }
+
+    /* —— Mobile: horizontal pan —— */
+    #clinically-results-{{ section.id }} .result-img-wrap{
+      aspect-ratio: auto;
+      height: var(--m-fig-h);
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+      scrollbar-gutter: stable both-edges;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(11,31,51,.45) rgba(11,31,51,.12);
+    }
+    #clinically-results-{{ section.id }} .result-img-wrap::-webkit-scrollbar{ height:8px; }
+    #clinically-results-{{ section.id }} .result-img-wrap::-webkit-scrollbar-track{
+      background: rgba(11,31,51,.08);
+      border-radius: 999px;
+    }
+    #clinically-results-{{ section.id }} .result-img-wrap::-webkit-scrollbar-thumb{
+      background: rgba(11,31,51,.35);
+      border-radius: 999px;
+    }
+    #clinically-results-{{ section.id }} .result-img-wrap:hover::-webkit-scrollbar-thumb{
+      background: rgba(11,31,51,.55);
+    }
+
+    /* IMPORTANT for real horizontal overflow:
+       Make the image taller-fixed and width auto so it can be WIDER than the viewport */
+    #clinically-results-{{ section.id }} .result-img{
+      height:100%;
+      width:auto;
+    }
+
+    /* —— Custom progress bar (always visible) —— */
+    #clinically-results-{{ section.id }} .result-scrollbar{
+      position: absolute;
+      left: 12px; right: 12px; bottom: 10px;
+      height: 3px;
+      background: rgba(11,31,51,.12);
+      border-radius: 999px;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity .2s ease;
+    }
+    #clinically-results-{{ section.id }} .result-scrollbar .thumb{
+      display: block;
+      height: 100%;
+      width: 20%;
+      background: rgba(11,31,51,.45);
+      border-radius: inherit;
+      transform: translateX(0%);
+    }
+
+    /* Mobile-only CTA */
+    #clinically-results-{{ section.id }} .cta{ display: {% if section.settings.cta_enable %}flex{% else %}none{% endif %}; margin-top: var(--gap); }
+    #clinically-results-{{ section.id }} .btn{ width:100%; max-width:300px; }
+  }
+  {%- endstyle -%}
+
+  <div class="wrap">
+    {% if section.settings.title != blank %}
+      <h2>{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.lead != blank %}
+      <p class="lead">{{ section.settings.lead }}</p>
+    {% endif %}
+
+    <!-- Stats -->
+    {% if section.blocks.size > 0 %}
+      <div class="stats" role="list">
+        {% for block in section.blocks %}
+          {% if block.type == 'stat' %}
+            <div class="stat" role="listitem" {{ block.shopify_attributes }}>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 20l-5.5-6h4V4h3v10h4L12 20z" fill="currentColor"></path>
+              </svg>
+              <div>
+                {% if block.settings.value != blank %}
+                  <span class="value">{{ block.settings.value }}</span>
+                {% endif %}
+                {% if block.settings.desc != blank %}
+                  <span class="desc">{{ block.settings.desc }}</span>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Bottom image (replace with your exported artwork) -->
+    <figure class="result-figure">
+      <div class="result-img-wrap" role="region" aria-label="{{ section.settings.alt | default: 'Clinically studied results image' }}" tabindex="0">
+        <picture>
+          {% if section.settings.image_mobile != blank %}
+            <source media="(max-width: 750px)" srcset="{{ section.settings.image_mobile | image_url: width: 2400 }}">
+          {% endif %}
+          {% if section.settings.image_desktop != blank %}
+            <img
+              class="result-img"
+              src="{{ section.settings.image_desktop | image_url: width: 2400 }}"
+              alt="{{ section.settings.alt | default: section.settings.title }}"
+              loading="lazy"
+              decoding="async">
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'result-img' }}
+          {% endif %}
+        </picture>
+        <!-- Custom progress bar (mobile) -->
+        <div class="result-scrollbar" aria-hidden="true"><span class="thumb"></span></div>
+      </div>
+      {% if section.settings.footnote != blank %}
+        <figcaption class="foot">{{ section.settings.footnote }}</figcaption>
+      {% endif %}
+    </figure>
+
+    <!-- CTA button (mobile only) -->
+    {% if section.settings.cta_enable and section.settings.cta_label != blank %}
+      <div class="cta">
+        <a class="btn" href="{{ section.settings.cta_link }}" aria-label="{{ section.settings.cta_label | escape }}">
+          {{ section.settings.cta_label }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+  (function(){
+    function initClinicallyResults_{{ section.id }}(){
+      var root = document.getElementById('clinically-results-{{ section.id }}');
+      if(!root) return;
+      var wrap = root.querySelector('.result-img-wrap');
+      if(!wrap) return;
+      var bar = wrap.querySelector('.result-scrollbar');
+      var thumb = bar && bar.querySelector('.thumb');
+      if(!bar || !thumb) return;
+
+      function update(){
+        var sw = wrap.scrollWidth;
+        var cw = wrap.clientWidth;
+        var maxScroll = Math.max(sw - cw, 1);
+        var ratio = cw / Math.max(sw, 1);
+        var widthPct = Math.max(ratio * 100, 8); // min 8%
+        thumb.style.width = widthPct + '%';
+
+        var prog = wrap.scrollLeft / maxScroll;
+        var travel = 100 - widthPct;
+        thumb.style.transform = 'translateX(' + (prog * travel) + '%)';
+
+        // hide when no overflow
+        bar.style.opacity = sw > cw ? '1' : '0';
+      }
+
+      update();
+      wrap.addEventListener('scroll', update, {passive:true});
+      window.addEventListener('resize', update);
+    }
+
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', initClinicallyResults_{{ section.id }});
+    } else {
+      initClinicallyResults_{{ section.id }}();
+    }
+  })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Clinically Results",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Explore Our Clinically-Studied Results" },
+    { "type": "text", "id": "lead", "label": "Lead", "default": "Real Results You Can See" },
+
+    { "type": "image_picker", "id": "image_desktop", "label": "Desktop image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image" },
+    { "type": "text", "id": "alt", "label": "Image alt text", "default": "Clinically studied results comparison" },
+
+    { "type": "range", "id": "m_fig_h", "label": "Mobile image height (px)", "min": 240, "max": 560, "step": 4, "default": 360 },
+
+    { "type": "textarea", "id": "footnote", "label": "Footnote", "default": "*Based on a 6-month, placebo-controlled clinical trial including n=134 overweight and obese adults." },
+
+    { "type": "header", "content": "CTA (mobile only)" },
+    { "type": "checkbox", "id": "cta_enable", "label": "Show CTA on mobile", "default": true },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Learn more" },
+    { "type": "url", "id": "cta_link", "label": "CTA link" },
+
+    { "type": "header", "content": "Colors & Radius" },
+    { "type": "color", "id": "brand", "label": "Brand color", "default": "#1B8CFF" },
+    { "type": "color", "id": "brand_ink", "label": "Brand text on button", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#0B1F33" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#516170" },
+    { "type": "color", "id": "rule_color", "label": "Rule/lines", "default": "#E6E9EE" },
+    { "type": "range", "id": "radius", "label": "Corner radius (px)", "min": 0, "max": 30, "step": 1, "default": 12 }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat item",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "0.94 inches" },
+        { "type": "text", "id": "desc", "label": "Description", "default": "How much waist circumference reduced" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Clinically Studied Results (Image)",
+      "blocks": [
+        { "type": "stat", "settings": { "value": "0.94 inches", "desc": "How much waist circumference reduced" } },
+        { "type": "stat", "settings": { "value": "320 kcal", "desc": "How much energy intake per day is reduced" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% javascript %}
+  /* kept empty: inline script lives inside the section for per-instance scoping */
+{% endjavascript %}
