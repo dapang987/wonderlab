@@ -260,7 +260,7 @@
         "lead_size_d": 20,
         "kpi_num_m": 40,
         "kpi_num_d": 56,
-        "kpi_label_m": 11,
+        "kpi_label_m": 16,
         "kpi_label_d": 16,
         "h1_weight": 500,
         "h1_style": "normal",
