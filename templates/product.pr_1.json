@@ -213,10 +213,26 @@
             "num": "28+",
             "label": "Years of Probiotic Expertise"
           }
+        },
+        "kpi_8ML9Bt": {
+          "type": "kpi",
+          "settings": {
+            "num": "28+",
+            "label": "Years of Probiotic Expertise"
+          }
+        },
+        "kpi_hKchcH": {
+          "type": "kpi",
+          "settings": {
+            "num": "28+",
+            "label": "Years of Probiotic Expertise"
+          }
         }
       },
       "block_order": [
-        "kpi_NxBRm3"
+        "kpi_NxBRm3",
+        "kpi_8ML9Bt",
+        "kpi_hKchcH"
       ],
       "name": "Feature split card",
       "settings": {
