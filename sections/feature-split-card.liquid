@@ -1,236 +1,261 @@
 {% comment %}
-  Section: Feature — Science Split (卡片 + 图片等高双列)
-  - 移动端单列；桌面端左右两列
-  - 可配置：文案、图片（桌面/手机）、是否桌面反转、等高开关、卡片高度（m/d）、圆角、间距、内边距、颜色、字号（m/d）
-  - KPI 支持可重复的区块（数字 + 标签）
+  Section: Science — split layout (copy + KPIs / image)
+  - Desktop: 2 columns; left = copy with KPIs (solid bg), right = image
+  - Mobile: image first, then a card-style copy block
+  - Strong CSS scoping via #science-{{ section.id }}
 {% endcomment %}
 
-<section id="feature-{{ section.id }}"
-         class="feature section-{{ section.id }} {% if section.settings.reverse_on_desktop %}is-reversed{% endif %} {% if section.settings.equal_height %}is-equal{% endif %}"
-         aria-labelledby="feature-title-{{ section.id }}">
+<section id="science-{{ section.id }}" aria-labelledby="science-title-{{ section.id }}">
   <style>
-    /* ===== Scope to this section only ===== */
-    #feature-{{ section.id }}{
-      /* tokens */
-      --gap: {{ section.settings.gap }}px;
+    /* ===== Scoped tokens ===== */
+    #science-{{ section.id }}{
+      --page-width: {{ section.settings.page_width }}px;
+      --text: {{ section.settings.cl_text }};
+      --muted: {{ section.settings.cl_muted }};
+      --rule: {{ section.settings.cl_rule }};
+      --brand: {{ section.settings.cl_brand }};
+      --bg-left: {{ section.settings.cl_bg_left }};   /* desktop 左半区 */
+      --bg-card: {{ section.settings.cl_bg_card }};   /* mobile 文案卡片 */
       --radius: {{ section.settings.radius }}px;
       --shadow: 0 8px 28px rgba(0,0,0,.08);
 
-      --card-bg: {{ section.settings.card_bg }};
-      --text: {{ section.settings.text_color }};
-      --muted: {{ section.settings.muted_color }};
-      --number: {{ section.settings.number_color }};
-      --rule: {{ section.settings.rule_color }};
+      --gap: {{ section.settings.gap }}px;
 
-      --stat-gap: {{ section.settings.stat_gap }}px;
-      --pad-card: {{ section.settings.pad_card_d }}px;   /* desktop card padding */
-      --pad-card-m: {{ section.settings.pad_card_m }}px; /* mobile card padding  */
+      /* Typography (mobile/desktop clamp via variables) */
+      --h1-m: {{ section.settings.h1_size_m }}px;
+      --h1-d: {{ section.settings.h1_size_d }}px;
+      --h1: clamp(var(--h1-m), 4vw, var(--h1-d));
 
-      /* card heights */
-      --card-h-m: {{ section.settings.card_h_m }}px;
-      --card-h-d: {{ section.settings.card_h_d }}px;
+      --lead-m: {{ section.settings.lead_size_m }}px;
+      --lead-d: {{ section.settings.lead_size_d }}px;
+      --lead: clamp(var(--lead-m), 2.1vw, var(--lead-d));
 
-      /* Responsive type scales (clamp from mobile->desktop) */
-      --h1: clamp({{ section.settings.h1_m }}px, 3.2vw, {{ section.settings.h1_d }}px);
-      --lead: clamp({{ section.settings.lead_m }}px, 1.7vw, {{ section.settings.lead_d }}px);
-      --kpi-number: clamp({{ section.settings.kpi_num_m }}px, 4vw, {{ section.settings.kpi_num_d }}px);
-      --kpi-label: clamp({{ section.settings.kpi_label_m }}px, 1.6vw, {{ section.settings.kpi_label_d }}px);
+      --kpi-num-m: {{ section.settings.kpi_num_m }}px;
+      --kpi-num-d: {{ section.settings.kpi_num_d }}px;
+      --kpi-num: clamp(var(--kpi-num-m), 5vw, var(--kpi-num-d));
+
+      --kpi-label-m: {{ section.settings.kpi_label_m }}px;
+      --kpi-label-d: {{ section.settings.kpi_label_d }}px;
+      --kpi-label: clamp(var(--kpi-label-m), 1.8vw, var(--kpi-label-d));
     }
 
-    #feature-{{ section.id }} .wrap{ max-width: var(--page-width, 1200px); margin: 0 auto; padding: 0 16px; }
-    #feature-{{ section.id }} .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    /* ===== Section spacing (Dawn style: mobile ~0.75x) ===== */
+    #science-{{ section.id }} .section-pad{
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+    @media (min-width: 750px){
+      #science-{{ section.id }} .section-pad{
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
 
     /* ===== Layout ===== */
-    #feature-{{ section.id }}{ padding: 28px 0; color: var(--text); }
-    #feature-{{ section.id }} .grid{
-      position: relative;
-      display: grid;
-      grid-template-columns: 1fr; /* mobile: single column */
+    #science-{{ section.id }} .wrap{
+      width:min(var(--page-width), 100%);
+      margin-inline:auto;
+    }
+    #science-{{ section.id }} .grid{
+      display:grid;
+      grid-template-columns: 1fr;
       align-items: stretch;
       gap: var(--gap);
+      position: relative;
+    }
+    @media (min-width:1024px){
+      #science-{{ section.id }} .grid{
+        grid-template-columns: 1fr 1fr;
+        gap:var(--gap);
+      }
     }
 
-    @media (min-width: 750px){
-      #feature-{{ section.id }} .grid{ grid-template-columns: 1fr 1fr; }
-      #feature-{{ section.id }}.is-reversed .card{ order:2; }
-      #feature-{{ section.id }}.is-reversed .media{ order:1; }
+    /* ===== Columns ===== */
+    #science-{{ section.id }} .text{
+      color:var(--text);
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: clamp(20px, 5vw, 56px);
+      {% if section.settings.show_shadow and section.settings.radius > 0 %}
+      box-shadow: var(--shadow);
+      {% endif %}
+    }
+    #science-{{ section.id }} .media{
+      position:relative;
+      overflow:hidden;
+      min-height: 280px;
+      border-radius: 0; /* mobile 图片不需要圆角 */
+    }
+    #science-{{ section.id }} .media img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      object-position: center center;
+      aspect-ratio: 4/5; /* mobile 比例；desktop 将被 height:100% 覆盖 */
+      display:block;
+    }
+    @media (min-width:1024px){
+      #science-{{ section.id }} .text{
+        background: var(--bg-left);
+        border-radius: 0;
+        padding: clamp(28px, 4vw, 64px);
+        box-shadow: none;
+      }
+      #science-{{ section.id }} .media img{
+        aspect-ratio: auto;
+      }
+    }
+    @media (max-width:1023.98px){
+      #science-{{ section.id }} .media{order:1}
+      #science-{{ section.id }} .text{order:2}
     }
 
-    /* ===== Card (left) ===== */
-    #feature-{{ section.id }} .card{
-      background: var(--card-bg);
+    /* ===== Typography ===== */
+    #science-{{ section.id }} h2{
+      margin:0 0 14px;
+      font-size: var(--h1);
+      line-height:1.15;
+      letter-spacing:.2px;
+    }
+    #science-{{ section.id }} .lead{
+      margin:0 0 28px;
+      color: var(--muted);
+      font-size: var(--lead);
+      line-height:1.6;
+    }
+
+    /* ===== KPIs ===== */
+    #science-{{ section.id }} .kpis{
+      margin: 8px 0 0;
+      padding:0;
+      display:flex;
+      flex-direction:column;
+      gap: 24px;
+    }
+    #science-{{ section.id }} .kpi{display:block}
+    #science-{{ section.id }} .kpi .num{
+      margin:0;
+      font-size: var(--kpi-num);
+      line-height:1.1;
       color: var(--text);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: var(--pad-card-m);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 0; /* avoid overflow when auto height */
+    }
+    #science-{{ section.id }} .kpi .label{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: var(--kpi-label);
+      line-height:1.5;
     }
 
-    /* Fixed height only when equal mode is on */
-    #feature-{{ section.id }}.is-equal .card{ height: var(--card-h-m); overflow: hidden; }
-    #feature-{{ section.id }}.is-equal .media{ height: var(--card-h-m); }
-
-    /* Typography inside card */
-    #feature-{{ section.id }} .title{ font-size: var(--h1); line-height: 1.25; margin: 0 0 14px; letter-spacing: .2px; }
-    #feature-{{ section.id }} .lead{ font-size: var(--lead); color: var(--muted); margin: 0 0 24px; line-height: 1.6; }
-
-    #feature-{{ section.id }} .stats{ display: grid; gap: var(--stat-gap); }
-    #feature-{{ section.id }} .stat{ display: grid; gap: 6px; }
-    #feature-{{ section.id }} .stat .num{ font-size: var(--kpi-number); font-weight: 700; color: var(--number); letter-spacing: .2px; }
-    #feature-{{ section.id }} .stat .label{ font-size: var(--kpi-label); color: var(--muted); }
-
-    /* ===== Media (right) ===== */
-    #feature-{{ section.id }} .media{
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      display: grid;
-      place-items: stretch;
-      background: #e8ecef;
-      min-height: 0;
-    }
-
-    #feature-{{ section.id }} .media img{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;  /* fill and crop */
-      display: block;
-    }
-
-    /* ===== Desktop overrides ===== */
-    @media (min-width: 750px){
-      #feature-{{ section.id }} .card{ padding: var(--pad-card); }
-      #feature-{{ section.id }}.is-equal .card{ height: var(--card-h-d); }
-      #feature-{{ section.id }}.is-equal .media{ height: var(--card-h-d); }
+    /* a11y / motion */
+    @media (prefers-reduced-motion:reduce){
+      #science-{{ section.id }} *{scroll-behavior:auto}
     }
   </style>
 
-  <div class="wrap">
-    <div class="grid">
+  <div class="section-pad">
+    <div class="wrap">
+      <div class="grid">
+        <!-- Left: copy + KPIs (desktop) / Card (mobile) -->
+        <div class="text">
+          <h2 id="science-title-{{ section.id }}">
+            {{ section.settings.title | escape | newline_to_br }}
+          </h2>
 
-      <!-- Left: Card Content -->
-      <article class="card">
-        <h2 id="feature-title-{{ section.id }}" class="title">
-          {%- if section.settings.title != blank -%}
-            {{ section.settings.title }}
-          {%- else -%}
-            Tired of diets?<br />Let science do the work.
-          {%- endif -%}
-        </h2>
+          {% if section.settings.lead != blank %}
+            <p class="lead">{{ section.settings.lead }}</p>
+          {% endif %}
 
-        {%- if section.settings.lead != blank -%}
-          <div class="lead">{{ section.settings.lead }}</div>
-        {%- endif -%}
-
-        <div class="stats" role="list">
-          {%- for block in section.blocks -%}
-            {%- if block.type == 'stat' -%}
-              <div class="stat" role="listitem" {{ block.shopify_attributes }}>
-                <div class="num">{{ block.settings.number }}</div>
-                <div class="label">{{ block.settings.label }}</div>
+          {% if section.blocks.size > 0 %}
+          <dl class="kpis">
+            {% for block in section.blocks %}
+              {% if block.type == 'kpi' %}
+              <div class="kpi" {{ block.shopify_attributes }}>
+                <dt class="num">{{ block.settings.num }}</dt>
+                <dd class="label">{{ block.settings.label }}</dd>
               </div>
-            {%- endif -%}
-          {%- endfor -%}
+              {% endif %}
+            {% endfor %}
+          </dl>
+          {% endif %}
         </div>
-      </article>
 
-      <!-- Right: Feature Image -->
-      <figure class="media">
-        <picture>
-          {%- if section.settings.image_mobile != blank -%}
-            <source media="(max-width: 749px)"
-                    srcset="{{ section.settings.image_mobile | image_url: width: 1200 }} 1x, {{ section.settings.image_mobile | image_url: width: 2400 }} 2x"
-                    sizes="(max-width: 749px) 100vw, 50vw">
-          {%- endif -%}
-          {%- if section.settings.image != blank -%}
-            <source media="(min-width: 750px)"
-                    srcset="{{ section.settings.image | image_url: width: 1600 }} 1x, {{ section.settings.image | image_url: width: 3200 }} 2x"
-                    sizes="(min-width: 750px) 50vw, 100vw">
-          {%- endif -%}
-          {%- liquid
-            assign _img = section.settings.image | default: section.settings.image_mobile
-          -%}
-          {%- if _img != blank -%}
-            <img
-              src="{{ _img | image_url: width: 1200 }}"
-              alt="{{ section.settings.image_alt | default: 'Feature image' | escape }}"
-              loading="{% if section.settings.fetch_high %}eager{% else %}lazy{% endif %}"
-              decoding="async"
-              fetchpriority="{% if section.settings.fetch_high %}high{% else %}auto{% endif %}" />
-          {%- endif -%}
-        </picture>
-        <figcaption class="sr-only">{{ section.settings.image_alt | default: 'Feature image' }}</figcaption>
-      </figure>
-
+        <!-- Right: image (desktop) / Top image (mobile) -->
+        <div class="media">
+          {% if section.settings.image != blank %}
+            {%- liquid
+              assign img_alt = section.settings.image_alt
+              if img_alt == blank
+                assign img_alt = section.settings.title | strip_html
+              endif
+            -%}
+            {{ section.settings.image
+              | image_url: width: 1900
+              | image_tag: alt: img_alt, loading: 'lazy', decoding: 'async', sizes: '(min-width: 1024px) 50vw, 100vw' }}
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Feature — Science Split",
+  "name": "Science — split hero",
   "tag": "section",
   "class": "section",
-  "max_blocks": 12,
-  "disabled_on": { "groups": ["header", "footer"] },
   "settings": [
-    { "type": "inline_richtext", "id": "title", "label": "标题", "default": "Tired of diets? Let science do the work." },
-    { "type": "richtext", "id": "lead", "label": "副标题/引导文", "default": "<p>Science-backed ingredients deliver real results on efficacy of weight management.</p>" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "Tired of diets?<br>Let science do the work." },
+    { "type": "textarea", "id": "lead", "label": "Lead text", "default": "Science-backed ingredients deliver real results on efficacy of weight management." },
 
-    { "type": "image_picker", "id": "image", "label": "桌面端图片" },
-    { "type": "image_picker", "id": "image_mobile", "label": "手机端图片（<750px）" },
-    { "type": "text", "id": "image_alt", "label": "图片替代文字（ALT）", "default": "Lifestyle product photo" },
-    { "type": "checkbox", "id": "fetch_high", "label": "提升图片抓取优先级（首屏）", "default": false },
+    { "type": "image_picker", "id": "image", "label": "Right image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Hand holding a small blue bottle with a “W” mark" },
+    { "type": "range", "id": "gap", "label": "Column gap (px)", "min": 12, "max": 64, "step": 1, "default": 32 },
+    { "type": "range", "id": "radius", "label": "Mobile card radius (px)", "min": 0, "max": 32, "step": 1, "default": 16 },
+    { "type": "checkbox", "id": "show_shadow", "label": "Mobile card shadow", "default": true },
 
-    { "type": "checkbox", "id": "reverse_on_desktop", "label": "桌面端左右反转", "default": false },
-    { "type": "checkbox", "id": "equal_height", "label": "启用等高卡片（左卡与右图同高）", "default": true },
+    { "type": "header", "content": "Typography — sizes (px)" },
+    { "type": "range", "id": "h1_size_m", "label": "Heading — mobile", "min": 20, "max": 40, "step": 1, "default": 28 },
+    { "type": "range", "id": "h1_size_d", "label": "Heading — desktop", "min": 32, "max": 64, "step": 1, "default": 44 },
+    { "type": "range", "id": "lead_size_m", "label": "Lead — mobile", "min": 12, "max": 18, "step": 1, "default": 14 },
+    { "type": "range", "id": "lead_size_d", "label": "Lead — desktop", "min": 14, "max": 22, "step": 1, "default": 18 },
+    { "type": "range", "id": "kpi_num_m", "label": "KPI number — mobile", "min": 20, "max": 40, "step": 1, "default": 28 },
+    { "type": "range", "id": "kpi_num_d", "label": "KPI number — desktop", "min": 36, "max": 64, "step": 1, "default": 48 },
+    { "type": "range", "id": "kpi_label_m", "label": "KPI label — mobile", "min": 10, "max": 16, "step": 1, "default": 12 },
+    { "type": "range", "id": "kpi_label_d", "label": "KPI label — desktop", "min": 12, "max": 18, "step": 1, "default": 14 },
 
-    { "type": "range", "id": "card_h_m", "label": "手机端卡片高度（等高开启时）", "min": 240, "max": 800, "step": 10, "unit": "px", "default": 380 },
-    { "type": "range", "id": "card_h_d", "label": "桌面端卡片高度（等高开启时）", "min": 320, "max": 900, "step": 10, "unit": "px", "default": 560 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "cl_text", "label": "Text", "default": "#0B1F33" },
+    { "type": "color", "id": "cl_muted", "label": "Muted", "default": "#516170" },
+    { "type": "color", "id": "cl_rule", "label": "Rule", "default": "#D7E3EE" },
+    { "type": "color", "id": "cl_brand", "label": "Brand", "default": "#1B8CFF" },
+    { "type": "color", "id": "cl_bg_left", "label": "Left background (desktop)", "default": "#E6F3FF" },
+    { "type": "color", "id": "cl_bg_card", "label": "Card background (mobile)", "default": "#E6F3FF" },
 
-    { "type": "range", "id": "pad_card_m", "label": "手机端卡片内边距", "min": 8, "max": 48, "step": 2, "unit": "px", "default": 22 },
-    { "type": "range", "id": "pad_card_d", "label": "桌面端卡片内边距", "min": 8, "max": 64, "step": 2, "unit": "px", "default": 28 },
-
-    { "type": "range", "id": "gap", "label": "卡片与图片间距", "min": 4, "max": 64, "step": 2, "unit": "px", "default": 10 },
-    { "type": "range", "id": "stat_gap", "label": "KPI 组内行距", "min": 8, "max": 40, "step": 2, "unit": "px", "default": 22 },
-    { "type": "range", "id": "radius", "label": "圆角", "min": 0, "max": 36, "step": 2, "unit": "px", "default": 16 },
-
-    { "type": "color", "id": "card_bg", "label": "卡片背景色", "default": "#EAF4FF" },
-    { "type": "color", "id": "text_color", "label": "正文文字颜色", "default": "#0B1F33" },
-    { "type": "color", "id": "muted_color", "label": "次要文字颜色", "default": "#516170" },
-    { "type": "color", "id": "number_color", "label": "KPI 数字颜色", "default": "#0B1F33" },
-    { "type": "color", "id": "rule_color", "label": "装饰用线条颜色", "default": "#1B1B1B" },
-
-    { "type": "header", "content": "字体大小（移动 / 桌面）" },
-    { "type": "range", "id": "h1_m", "label": "标题（移动）", "min": 16, "max": 40, "step": 1, "unit": "px", "default": 24 },
-    { "type": "range", "id": "h1_d", "label": "标题（桌面）", "min": 24, "max": 56, "step": 1, "unit": "px", "default": 36 },
-    { "type": "range", "id": "lead_m", "label": "引导文（移动）", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 13 },
-    { "type": "range", "id": "lead_d", "label": "引导文（桌面）", "min": 14, "max": 24, "step": 1, "unit": "px", "default": 16 },
-    { "type": "range", "id": "kpi_num_m", "label": "KPI 数字（移动）", "min": 18, "max": 48, "step": 1, "unit": "px", "default": 28 },
-    { "type": "range", "id": "kpi_num_d", "label": "KPI 数字（桌面）", "min": 24, "max": 64, "step": 1, "unit": "px", "default": 40 },
-    { "type": "range", "id": "kpi_label_m", "label": "KPI 标签（移动）", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 11 },
-    { "type": "range", "id": "kpi_label_d", "label": "KPI 标签（桌面）", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 13 }
+    { "type": "header", "content": "Section spacing" },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 120, "step": 4, "default": 0 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 120, "step": 4, "default": 0 }
   ],
   "blocks": [
     {
-      "type": "stat",
-      "name": "KPI 统计",
+      "type": "kpi",
+      "name": "KPI item",
+      "limit": 6,
       "settings": [
-        { "type": "text", "id": "number", "label": "数字", "default": "28+" },
-        { "type": "text", "id": "label", "label": "标签", "default": "Years of Probiotic Expertise" }
+        { "type": "text", "id": "num", "label": "Number", "default": "28+" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Years of Probiotic Expertise" }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Feature — Science Split",
+      "name": "Science — split hero",
+      "category": "Image",
       "blocks": [
-        { "type": "stat", "settings": { "number": "28+", "label": "Years of Probiotic Expertise" } },
-        { "type": "stat", "settings": { "number": "273+", "label": "Research Papers" } },
-        { "type": "stat", "settings": { "number": "100,000+", "label": "Strains in our Library" } }
+        { "type": "kpi", "settings": { "num": "28+", "label": "Years of Probiotic Expertise" } },
+        { "type": "kpi", "settings": { "num": "273+", "label": "Research Papers" } },
+        { "type": "kpi", "settings": { "num": "100,000+", "label": "Strains in our Library" } }
       ]
     }
   ]
