@@ -198,6 +198,33 @@
     @media (prefers-reduced-motion:reduce){
       #science-{{ section.id }} *{scroll-behavior:auto}
     }
+
+    /* ===== Mobile order + KPI inline (num/label 同行) ===== */
+@media (max-width:1023.98px){
+  #science-{{ section.id }} .media{ order:1; }
+  #science-{{ section.id }} .text{ order:2; }
+
+  /* 让每个 KPI 一行显示：数字 + 文本 */
+  #science-{{ section.id }} .kpis{ gap: 16px; }
+  #science-{{ section.id }} .kpi{
+    display: flex;                 /* 关键：横向 */
+    align-items: baseline;         /* 数字与文字基线对齐更自然 */
+    gap: 8px;                      /* 数字与文字的间距 */
+    flex-wrap: nowrap;
+  }
+  #science-{{ section.id }} .kpi .num{
+    margin: 0;
+    white-space: nowrap;           /* 避免数字换行 */
+    flex: 0 0 auto;
+  }
+  #science-{{ section.id }} .kpi .label{
+    margin: 0;                     /* 覆盖之前 label 的上外边距 */
+    white-space: normal;           /* 文本可换行 */
+    word-break: break-word;        /* 长词在窄屏也能断行 */
+    flex: 1 1 auto;
+  }
+}
+
   </style>
 
   <div class="section-pad">
