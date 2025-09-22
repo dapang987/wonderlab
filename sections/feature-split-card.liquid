@@ -200,6 +200,28 @@
       #science-{{ section.id }} *{scroll-behavior:auto}
     }
 
+/* ===== Mobile image fix: container owns the aspect ratio ===== */
+@media (max-width:1023.98px){
+  /* 1) 让容器定比例，避免 img 自己又高又宽冲突 */
+  #science-{{ section.id }} .media{
+    aspect-ratio: 4 / 5;   /* 需要别的比例可改成 1/1、3/4、16/9 等 */
+    min-height: auto;      /* 覆盖之前的 280px，防止高度过高/过低 */
+  }
+  /* 2) 图片铺满容器，由 object-fit 控制裁切 */
+  #science-{{ section.id }} .media img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+/* ===== Desktop 保持自适应高度，不强制比例 ===== */
+@media (min-width:1024px){
+  #science-{{ section.id }} .media{
+    aspect-ratio: auto;    /* 明确声明：桌面端不锁定比例 */
+  }
+}
 
   </style>
 
