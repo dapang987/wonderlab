@@ -654,52 +654,6 @@
         "text": "#111111",
         "muted": "#666666"
       }
-    },
-    "fruity_slider_cbCKEe": {
-      "type": "fruity-slider",
-      "blocks": {
-        "flavor_Tpz3Gx": {
-          "type": "flavor",
-          "settings": {
-            "flavor_name": "Pear",
-            "background_color": "#c9e78a",
-            "logo_color": "#03403f",
-            "can_color": "#e6ffde",
-            "image_one": "shopify://shop_images/Rectangle_50.png"
-          }
-        },
-        "flavor_aqzfwn": {
-          "type": "flavor",
-          "settings": {
-            "flavor_name": "Apple",
-            "background_color": "#ffb2b2",
-            "logo_color": "#ec4458",
-            "can_color": "#f2675a",
-            "image_one": "shopify://shop_images/Heart.svg"
-          }
-        },
-        "flavor_HyhgdM": {
-          "type": "flavor",
-          "settings": {
-            "flavor_name": "Exotic",
-            "background_color": "#c1bff2",
-            "logo_color": "#6464ff",
-            "can_color": "#9590f1",
-            "image_one": "shopify://shop_images/Rectangle_45_1.png"
-          }
-        }
-      },
-      "block_order": [
-        "flavor_Tpz3Gx",
-        "flavor_aqzfwn",
-        "flavor_HyhgdM"
-      ],
-      "name": "水果滑动展示",
-      "settings": {
-        "brand_name": "Fruity",
-        "can_silhouette": "shopify://shop_images/Rectangle_45_1.png",
-        "can_labels": "shopify://shop_images/Rectangle_45_1.png"
-      }
     }
   },
   "order": [
@@ -711,7 +665,6 @@
     "wonder_formulation_philosophy_Ln8QHC",
     "kpi_metrics_3aW3cC",
     "logo_marquee_ra9MhX",
-    "five_star_reviews_gQCNgB",
-    "fruity_slider_cbCKEe"
+    "five_star_reviews_gQCNgB"
   ]
 }
