@@ -1,0 +1,566 @@
+{% comment %}
+  Fruity Slider Section
+  水果滑动展示区块
+{% endcomment %}
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
+
+  .fruity-slider * { margin: 0; padding: 0; box-sizing: border-box; }
+  .fruity-slider img { width: 100%; height: auto; }
+  .fruity-slider {
+    overflow: hidden !important;
+    font-family: "Lexend", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    position: relative;
+    height: 100vh;
+  }
+  .fruity-slider a:focus,
+  .fruity-slider input:focus,
+  .fruity-slider input:focus-visible,
+  .fruity-slider button:focus,
+  .fruity-slider :focus-visible { outline: none; border: none; box-shadow: none; }
+
+  .fruity-slider {
+    {% for block in section.blocks %}
+      {% assign index = forloop.index0 %}
+      --{{ block.settings.flavor_name | downcase }}-can: {{ block.settings.can_color }};
+      --{{ block.settings.flavor_name | downcase }}-logo: {{ block.settings.logo_color }};
+      --{{ block.settings.flavor_name | downcase }}-background: {{ block.settings.background_color }};
+    {% endfor %}
+    --black-color: #000000;
+    --white-color: #ffffff;
+  }
+
+  .fruity-slider h1 {
+    font-size: 449px !important;
+    line-height: 1 !important;
+    color: var(--white-color) !important;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin: 0 !important;
+    text-shadow: 0 10px 40px rgba(0,0,0,.08);
+  }
+  .fruity-slider h2 { font-size: 40px; line-height: 1; font-weight: 900; margin: 0; }
+
+  .fruity-slider .header {
+    padding: 22px 28px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 50;
+    text-align: center;
+    pointer-events: none;
+  }
+  .fruity-slider .logo { color: var(--{{ section.blocks.first.settings.flavor_name | downcase }}-logo); }
+
+  .fruity-slider .text {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+    display: block;
+  }
+  .fruity-slider .text h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .fruity-slider .cane-image {
+    max-width: 265px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    {% if section.settings.can_mask_image != blank %}
+    -webkit-mask-image: url({{ section.settings.can_mask_image | img_url: 'master' }});
+    mask-image: url({{ section.settings.can_mask_image | img_url: 'master' }});
+    {% endif %}
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    mask-position: center center;
+    -webkit-mask-size: 100% auto;
+    mask-size: 100% auto;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .fruity-slider .cane-image img { width: 100%; }
+  .fruity-slider .cane-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300% !important;
+    mix-blend-mode: multiply;
+    transition: transform .5s ease-in-out;
+    will-change: transform;
+  }
+
+  .fruity-slider .fruit-image { opacity: 1; position: absolute; z-index: 1; }
+  .fruity-slider .image-one { max-width: 282px; bottom: 100px; }
+  .fruity-slider .image-two { max-width: 247px; top: 23%; left: 25%; }
+  .fruity-slider .image-three { max-width: 211px; top: 23%; right: 25%; }
+  .fruity-slider .image-four { max-width: 294px; bottom: 100px; right: 0; }
+  
+  .fruity-slider .fruit-image::after {
+    content: "";
+    position: absolute;
+    background: linear-gradient(90deg, #000 3.66%, rgba(0,0,0,0) 92.35%);
+    opacity: .43;
+    filter: blur(7.5px);
+    transform: rotate(-6.941deg);
+    right: 0;
+    width: 173px;
+    height: 30px;
+  }
+  .fruity-slider .image-one::after { bottom: -50px; }
+  .fruity-slider .image-two::after { bottom: -200px; height: 22px; }
+  .fruity-slider .image-three::after { bottom: -280px; width: 103px; }
+  .fruity-slider .image-four::after { bottom: -50px; }
+
+  .fruity-slider .section-container-main {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+    background: var(--{{ section.blocks.first.settings.flavor_name | downcase }}-background);
+  }
+  .fruity-slider .section-container {
+    width: {{ section.blocks.size | times: 100 }}vw;
+    height: 100vh;
+    display: flex;
+    position: relative;
+    align-items: center;
+    transition: transform .5s ease-in-out;
+    will-change: transform;
+    transform: translateX(0);
+  }
+  .fruity-slider .section {
+    min-width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+  {% for block in section.blocks %}
+    .fruity-slider .section:nth-child({{ forloop.index }}) {
+      background: var(--{{ block.settings.flavor_name | downcase }}-background);
+    }
+  {% endfor %}
+
+  .fruity-slider button {
+    position: fixed;
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%);
+    z-index: 60;
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    background: var(--white-color);
+    border: none;
+    font-size: 40px;
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+  }
+  .fruity-slider #prevButton { left: 30px; right: auto; display: none; }
+
+  .fruity-slider .wave { animation: wave-effect 4s linear infinite; }
+  
+  {% for block in section.blocks %}
+    @keyframes wave-{{ block.settings.flavor_name | downcase }}-effect {
+      0% { box-shadow: 0 0 0 0px var(--{{ block.settings.flavor_name | downcase }}-background), 0 0 0 0px var(--{{ block.settings.flavor_name | downcase }}-background); }
+      40% { box-shadow: 0 0 0 50px rgba(60,41,188,0), 0 0 0 0px var(--{{ block.settings.flavor_name | downcase }}-background); }
+      80% { box-shadow: 0 0 0 50px rgba(60,41,188,0), 0 0 0 30px rgba(0,0,0,0); }
+      100% { box-shadow: 0 0 0 0px rgba(60,41,188,0), 0 0 0 30px rgba(0,230,118,0); }
+    }
+  {% endfor %}
+
+  /* 响应式设计 */
+  @media (max-width: 1550px) {
+    .fruity-slider h1 { font-size: 350px !important; }
+    .fruity-slider .cane-image { max-width: 280px; }
+    .fruity-slider .image-one { max-width: 250px; }
+    .fruity-slider .image-two { max-width: 215px; left: 22%; top: 10%; }
+    .fruity-slider .image-three { max-width: 180px; }
+    .fruity-slider .image-four { max-width: 260px; right: 40px; }
+  }
+  @media (max-width: 1199px) {
+    .fruity-slider h1 { font-size: 300px !important; }
+    .fruity-slider .image-one { max-width: 220px; }
+    .fruity-slider .image-two { max-width: 185px; left: 18%; top: 10%; }
+    .fruity-slider .image-three { max-width: 180px; right: 18%; }
+    .fruity-slider .image-four { max-width: 230px; }
+  }
+  @media (max-width: 991px) {
+    .fruity-slider h1 { font-size: 240px !important; }
+    .fruity-slider .cane-image { max-width: 250px; }
+    .fruity-slider button { height: 80px; width: 80px; top: 90%; }
+    .fruity-slider .image-one { max-width: 180px; }
+    .fruity-slider .image-two { max-width: 165px; left: 12%; top: 12%; }
+    .fruity-slider .image-three { max-width: 150px; right: 12%; }
+    .fruity-slider .image-four { max-width: 200px; }
+  }
+  @media (max-width: 767px) {
+    .fruity-slider h1 { font-size: 180px !important; }
+    .fruity-slider h2 { font-size: 30px; }
+    .fruity-slider .cane-image { max-width: 180px; }
+    .fruity-slider button { height: 60px; width: 60px; font-size: 20px; }
+    .fruity-slider .image-one { max-width: 180px; bottom: 150px; }
+    .fruity-slider .image-two { max-width: 145px; left: 12%; top: 15%; }
+    .fruity-slider .image-three { max-width: 130px; right: 10%; }
+    .fruity-slider .image-four { max-width: 180px; bottom: 150px; }
+  }
+  @media (max-width: 575px) {
+    .fruity-slider h1 { font-size: 100px !important; }
+    .fruity-slider .image-one { max-width: 150px; }
+    .fruity-slider .image-two { max-width: 115px; left: 4%; top: 18%; }
+    .fruity-slider .image-three { max-width: 100px; right: 4%; }
+    .fruity-slider .image-four { max-width: 150px; right: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .fruity-slider .wave { animation: none; } }
+</style>
+
+<div class="fruity-slider">
+  <header class="header">
+    <h2 class="logo">{{ section.settings.brand_name | default: "Fruity" }}</h2>
+  </header>
+
+  <div aria-hidden="true">
+    <button id="prevButton-{{ section.id }}" class="wave" aria-label="Previous">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    <button id="nextButton-{{ section.id }}" class="wave" aria-label="Next">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="text">
+    <h1 class="h1">{{ section.blocks.first.settings.flavor_name | default: "Pear" }}</h1>
+    <div class="cane-image">
+      {% if section.settings.can_silhouette != blank %}
+        <img src="{{ section.settings.can_silhouette | img_url: 'master' }}" alt="Can silhouette"/>
+      {% endif %}
+      {% if section.settings.can_labels != blank %}
+        <img src="{{ section.settings.can_labels | img_url: 'master' }}" alt="" class="cane-labels"/>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="section-container-main">
+    <div class="section-container">
+      {% for block in section.blocks %}
+        <section class="section" id="section{{ forloop.index }}-{{ section.id }}" aria-label="{{ block.settings.flavor_name }}">
+          <div class="fruit-images">
+            {% if block.settings.image_one != blank %}
+              <div class="image-one fruit-image">
+                <img src="{{ block.settings.image_one | img_url: '300x' }}" alt="{{ block.settings.flavor_name }}-image">
+              </div>
+            {% endif %}
+            {% if block.settings.image_two != blank %}
+              <div class="image-two fruit-image">
+                <img src="{{ block.settings.image_two | img_url: '250x' }}" alt="{{ block.settings.flavor_name }}-image">
+              </div>
+            {% endif %}
+            {% if block.settings.image_three != blank %}
+              <div class="image-three fruit-image">
+                <img src="{{ block.settings.image_three | img_url: '220x' }}" alt="{{ block.settings.flavor_name }}-image">
+              </div>
+            {% endif %}
+            {% if block.settings.image_four != blank %}
+              <div class="image-four fruit-image">
+                <img src="{{ block.settings.image_four | img_url: '300x' }}" alt="{{ block.settings.flavor_name }}-image">
+              </div>
+            {% endif %}
+          </div>
+        </section>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sectionId = '{{ section.id }}';
+    const container = document.querySelector(`#shopify-section-${sectionId}`);
+    if (!container) return;
+
+    /* -------------------- Data -------------------- */
+    const titles = [
+      {% for block in section.blocks %}
+        "{{ block.settings.flavor_name }}"{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+    const logoColors = [
+      {% for block in section.blocks %}
+        "{{ block.settings.logo_color }}"{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+    const waveNames = [
+      {% for block in section.blocks %}
+        "wave-{{ block.settings.flavor_name | downcase }}-effect"{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+    const LABEL_STEPS = {{ section.blocks.size }};
+
+    /* -------------------- Elements -------------------- */
+    const h1El = container.querySelector(".h1");
+    const logoEl = container.querySelector(".logo");
+    const caneLabels = container.querySelector(".cane-labels");
+    const sectionContainer = container.querySelector(".section-container");
+    const sections = [...container.querySelectorAll(".section")];
+
+    const prevBtn = container.querySelector(`#prevButton-${sectionId}`);
+    const nextBtn = container.querySelector(`#nextButton-${sectionId}`);
+
+    let index = 0;
+    const max = titles.length - 1;
+    let isAnimating = false;
+
+    function animateCurrentSection(i, dir = 1) {
+      if (typeof gsap !== 'undefined') {
+        gsap.killTweensOf(".fruit-image img");
+        const imgs = sections[i].querySelectorAll(".fruit-image img");
+
+        gsap.from(sections[i].querySelectorAll(".fruit-image"), {
+          y: (dir > 0 ? "-100vh" : "100vh"),
+          duration: 0.5,
+          stagger: 0.05,
+          ease: "power2.out"
+        });
+
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          gsap.to(imgs, {
+            x: "random(-20, 20)",
+            y: "random(-20, 20)",
+            zIndex: 22,
+            duration: 2,
+            ease: "none",
+            yoyo: true,
+            repeat: -1
+          });
+        }
+      }
+    }
+
+    function updateButtons() {
+      prevBtn.style.display = index === 0 ? "none" : "block";
+      nextBtn.style.display = index === max ? "none" : "block";
+
+      const prevColor = index > 0 ? logoColors[index-1] : logoColors[0];
+      const nextColor = index < max ? logoColors[index+1] : logoColors[max];
+
+      prevBtn.style.color = prevColor;
+      nextBtn.style.color = nextColor;
+
+      prevBtn.style.animationName = index > 0 ? waveNames[index-1] : "none";
+      nextBtn.style.animationName = index < max ? waveNames[index+1] : "none";
+    }
+
+    function updateUI(dir = 1) {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      h1El.textContent = titles[index];
+      
+      if (typeof gsap !== 'undefined') {
+        gsap.to(logoEl, {color: logoColors[index], duration: 0.4});
+      } else {
+        logoEl.style.color = logoColors[index];
+      }
+
+      sectionContainer.style.transform = `translateX(-${index * 100}vw)`;
+
+      const stepPct = (index * 100) / LABEL_STEPS;
+      if (caneLabels) {
+        caneLabels.style.transform = `translateX(-${stepPct}%)`;
+      }
+
+      animateCurrentSection(index, dir);
+      updateButtons();
+
+      setTimeout(() => { isAnimating = false; }, 520);
+    }
+
+    // 初始化
+    updateUI(1);
+
+    nextBtn.addEventListener("click", () => {
+      if (index >= max || isAnimating) return;
+      index += 1;
+      if (typeof gsap !== 'undefined') {
+        gsap.from(h1El, {y:"20%", opacity:0, duration:0.5, ease:"power2.out"});
+      }
+      updateUI(+1);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (index <= 0 || isAnimating) return;
+      index -= 1;
+      if (typeof gsap !== 'undefined') {
+        gsap.from(h1El, {y:"20%", opacity:0, duration:0.5, ease:"power2.out"});
+      }
+      updateUI(-1);
+    });
+
+    // 键盘控制
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") nextBtn.click();
+      if (e.key === "ArrowLeft") prevBtn.click();
+    });
+
+    // 触摸滑动
+    let startX = null;
+    container.addEventListener("touchstart", (e) => { 
+      startX = e.touches[0].clientX; 
+    }, {passive:true});
+    
+    container.addEventListener("touchend", (e) => {
+      if (startX == null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      const threshold = 40;
+      if (dx < -threshold) nextBtn.click();
+      if (dx > threshold) prevBtn.click();
+      startX = null;
+    }, {passive:true});
+
+    // 保持尺寸同步
+    window.addEventListener("resize", () => {
+      sectionContainer.style.transform = `translateX(-${index * 100}vw)`;
+      if (caneLabels) {
+        caneLabels.style.transform = `translateX(-${(index * 100) / LABEL_STEPS}%)`;
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "水果滑动展示",
+  "tag": "section",
+  "class": "fruity-slider-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "品牌名称",
+      "default": "Fruity",
+      "info": "显示在页面顶部的品牌logo文字"
+    },
+    {
+      "type": "image_picker",
+      "id": "can_silhouette",
+      "label": "罐子轮廓图片",
+      "info": "用作遮罩的罐子轮廓SVG或PNG图片"
+    },
+    {
+      "type": "image_picker",
+      "id": "can_labels",
+      "label": "罐子标签图片",
+      "info": "包含所有口味标签的横向拼接图片"
+    },
+    {
+      "type": "image_picker",
+      "id": "can_mask_image",
+      "label": "遮罩图片",
+      "info": "可选：自定义遮罩形状图片"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "flavor",
+      "name": "口味",
+      "settings": [
+        {
+          "type": "text",
+          "id": "flavor_name",
+          "label": "口味名称",
+          "default": "Pear",
+          "info": "显示的大标题文字"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "背景颜色",
+          "default": "#c9e78a",
+          "info": "此口味的背景色"
+        },
+        {
+          "type": "color",
+          "id": "logo_color",
+          "label": "Logo颜色",
+          "default": "#03403f",
+          "info": "品牌logo在此口味下的颜色"
+        },
+        {
+          "type": "color",
+          "id": "can_color",
+          "label": "罐子颜色",
+          "default": "#e6ffde",
+          "info": "罐子的主色调"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_one",
+          "label": "图片 1 (左下)",
+          "info": "左下角的产品图片"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_two",
+          "label": "图片 2 (左上)",
+          "info": "左上角的产品图片"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_three",
+          "label": "图片 3 (右上)",
+          "info": "右上角的产品图片"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_four",
+          "label": "图片 4 (右下)",
+          "info": "右下角的产品图片"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "水果滑动展示",
+      "blocks": [
+        {
+          "type": "flavor",
+          "settings": {
+            "flavor_name": "Pear",
+            "background_color": "#c9e78a",
+            "logo_color": "#03403f",
+            "can_color": "#e6ffde"
+          }
+        },
+        {
+          "type": "flavor",
+          "settings": {
+            "flavor_name": "Apple",
+            "background_color": "#ffb2b2",
+            "logo_color": "#ec4458",
+            "can_color": "#f2675a"
+          }
+        },
+        {
+          "type": "flavor",
+          "settings": {
+            "flavor_name": "Exotic",
+            "background_color": "#c1bff2",
+            "logo_color": "#6464ff",
+            "can_color": "#9590f1"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
