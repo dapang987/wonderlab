@@ -240,6 +240,8 @@
         "lead": "Science-backed ingredients deliver real results on efficacy of weight management.",
         "image": "shopify://shop_images/Rectangle_44.png",
         "image_alt": "Lifestyle product photo",
+        "height_m": 600,
+        "height_d": 700,
         "gap": 28,
         "radius": 16,
         "show_shadow": true,
