@@ -371,11 +371,11 @@
         "cta_enable": true,
         "cta_label": "Learn more",
         "cta_link": "",
-        "brand": "#1B8CFF",
+        "brand": "#1b8cff",
         "brand_ink": "#ffffff",
-        "text_color": "#0B1F33",
+        "text_color": "#0b1f33",
         "muted_color": "#516170",
-        "rule_color": "#E6E9EE",
+        "rule_color": "#e6e9ee",
         "radius": 12
       }
     },
