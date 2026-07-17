@@ -1,0 +1,1007 @@
+{% comment %}
+  CellLight Hero Banner
+  - Pure Shopify section
+  - No external images required
+  - Abstract biotech visual built with CSS only
+  - Responsive
+  - Requires GSAP loaded globally in theme.liquid
+{% endcomment %}
+
+<section id="celllight-hero-{{ section.id }}" class="clh-hero-section">
+  <style>
+    #celllight-hero-{{ section.id }}{
+      --clh-page-bg: {{ section.settings.page_bg }};
+      --clh-card-radius: {{ section.settings.card_radius }}px;
+      --clh-text: {{ section.settings.text_color }};
+      --clh-text-soft: {{ section.settings.text_soft_color }};
+      --clh-button-bg: {{ section.settings.button_bg }};
+      --clh-button-text: {{ section.settings.button_text }};
+      --clh-shadow: 0 18px 60px rgba(255,95,85,.16);
+      --clh-hero-w: min({{ section.settings.max_width }}px, calc(100vw - 64px));
+      --clh-hero-h: {{ section.settings.hero_height }}px;
+      --clh-gradient-1: {{ section.settings.gradient_1 }};
+      --clh-gradient-2: {{ section.settings.gradient_2 }};
+      --clh-gradient-3: {{ section.settings.gradient_3 }};
+      --clh-gradient-4: {{ section.settings.gradient_4 }};
+      --clh-title-size: clamp({{ section.settings.title_size_mobile }}px, 5vw, {{ section.settings.title_size_desktop }}px);
+      --clh-body-size: {{ section.settings.body_size }}px;
+      --clh-button-size: {{ section.settings.button_size }}px;
+      --clh-section-py: {{ section.settings.section_padding_y }}px;
+    }
+
+    #celllight-hero-{{ section.id }},
+    #celllight-hero-{{ section.id }} *{
+      box-sizing:border-box;
+    }
+
+    #celllight-hero-{{ section.id }}{
+      margin:0;
+      padding:var(--clh-section-py) 0;
+      background:var(--clh-page-bg);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-shell{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 32px;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-hero{
+      position:relative;
+      width:var(--clh-hero-w);
+      min-height:var(--clh-hero-h);
+      border-radius:var(--clh-card-radius);
+      overflow:hidden;
+      isolation:isolate;
+      box-shadow:var(--clh-shadow);
+      background:
+        radial-gradient(900px 540px at 82% 78%, rgba(255,168,82,.34), transparent 58%),
+        radial-gradient(740px 480px at 80% 44%, rgba(238,149,255,.22), transparent 52%),
+        radial-gradient(580px 360px at 26% 42%, rgba(255,86,80,.22), transparent 55%),
+        linear-gradient(135deg, var(--clh-gradient-1) 0%, var(--clh-gradient-2) 32%, var(--clh-gradient-3) 64%, var(--clh-gradient-4) 100%);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(420px 260px at 72% 18%, rgba(255,255,255,.08), transparent 72%),
+        radial-gradient(560px 320px at 60% 66%, rgba(243,142,255,.12), transparent 68%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+      pointer-events:none;
+      z-index:0;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-hero::after{
+      content:"";
+      position:absolute;
+      inset:-10%;
+      background:
+        radial-gradient(300px 160px at 18% 56%, rgba(255,85,73,.16), transparent 75%),
+        radial-gradient(700px 360px at 76% 64%, rgba(255,198,162,.10), transparent 70%);
+      filter:blur(24px);
+      opacity:.85;
+      pointer-events:none;
+      z-index:0;
+      animation: clhBgDrift-{{ section.id }} 12s ease-in-out infinite alternate;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-grid{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:1.04fr .96fr;
+      min-height:var(--clh-hero-h);
+      align-items:center;
+      gap:24px;
+      padding:74px 74px 74px 74px;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-content{
+      max-width:620px;
+      padding-left:2px;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin:0 0 24px;
+      font-size:14px;
+      line-height:1;
+      font-weight:600;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:rgba(255,245,242,.76);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-eyebrow::before{
+      content:"";
+      width:30px;
+      height:1px;
+      background:rgba(255,245,242,.62);
+      display:block;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-title{
+      margin:0;
+      font-size:var(--clh-title-size);
+      line-height:.98;
+      font-weight:700;
+      letter-spacing:-0.055em;
+      max-width:760px;
+      text-wrap:balance;
+      color:var(--clh-text);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-title-strong{
+      display:block;
+      color:var(--clh-text);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-title-soft{
+      display:block;
+      margin-top:6px;
+      color:var(--clh-text-soft);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-desc{
+      margin:30px 0 0;
+      max-width:520px;
+      font-size:var(--clh-body-size);
+      line-height:1.68;
+      color:rgba(255,241,237,.78);
+      letter-spacing:-0.015em;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-actions{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-top:56px;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-btn{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      min-width:196px;
+      height:76px;
+      padding:0 34px;
+      border:none;
+      border-radius:999px;
+      background:var(--clh-button-bg);
+      color:var(--clh-button-text);
+      font-size:var(--clh-button-size);
+      font-weight:600;
+      letter-spacing:-0.02em;
+      text-decoration:none;
+      box-shadow:0 10px 28px rgba(255,255,255,.10);
+      transition:
+        transform .35s cubic-bezier(.22,.61,.36,1),
+        box-shadow .35s cubic-bezier(.22,.61,.36,1),
+        background .35s ease;
+      overflow:hidden;
+      cursor:pointer;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-btn::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg, rgba(255,255,255,.28), rgba(255,255,255,0) 42%);
+      transform:translateX(-100%);
+      transition:transform .7s cubic-bezier(.22,.61,.36,1);
+      pointer-events:none;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 18px 34px rgba(38,16,10,.14);
+      background:#fff7ef;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-btn:hover::before{
+      transform:translateX(110%);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-btn svg{
+      width:20px;
+      height:20px;
+      stroke-width:2.1;
+      flex:0 0 auto;
+      transition:transform .35s cubic-bezier(.22,.61,.36,1);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-btn:hover svg{
+      transform:translateX(4px);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-visual{
+      position:relative;
+      width:100%;
+      height:100%;
+      min-height:560px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-glow-field{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      transform:translateX(12px);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-mist{
+      position:absolute;
+      inset:auto 0 4% 6%;
+      width:88%;
+      height:28%;
+      background:
+        radial-gradient(closest-side, rgba(255,187,210,.34), transparent 72%),
+        radial-gradient(closest-side, rgba(255,171,131,.18), transparent 76%);
+      filter:blur(34px);
+      opacity:.92;
+      transform:translateY(8px);
+      animation: clhMistFloat-{{ section.id }} 10s ease-in-out infinite alternate;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-cell{
+      position:absolute;
+      width:190px;
+      height:104px;
+      border-radius:999px;
+      filter:blur(3px);
+      opacity:.96;
+      transform:rotate(-26deg);
+      mix-blend-mode:screen;
+      animation: clhFloatCell-{{ section.id }} var(--dur, 10s) ease-in-out infinite;
+      animation-delay:var(--delay, 0s);
+      box-shadow:
+        0 0 30px rgba(255,194,201,.22),
+        0 0 80px rgba(244,127,255,.12);
+      background:
+        radial-gradient(ellipse at center,
+          rgba(255,255,255,.95) 0%,
+          rgba(255,248,247,.92) 17%,
+          rgba(255,208,232,.78) 32%,
+          rgba(238,120,255,.82) 48%,
+          rgba(255,204,197,.58) 64%,
+          rgba(255,174,170,.30) 80%,
+          rgba(255,174,170,0) 100%);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-cell::before{
+      content:"";
+      position:absolute;
+      inset:-12% -14%;
+      border-radius:inherit;
+      background:
+        radial-gradient(ellipse at center,
+          rgba(255,244,246,.46) 0%,
+          rgba(255,193,215,.26) 32%,
+          rgba(255,159,151,.14) 55%,
+          rgba(255,159,151,0) 100%);
+      filter:blur(10px);
+      z-index:-1;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-cell::after{
+      content:"";
+      position:absolute;
+      inset:16% 20%;
+      border-radius:inherit;
+      background:
+        radial-gradient(ellipse at center,
+          rgba(255,255,255,.68) 0%,
+          rgba(255,255,255,.18) 55%,
+          rgba(255,255,255,0) 100%);
+      filter:blur(7px);
+      opacity:.65;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-cell--1 { top:14%; left:40%; width:185px; height:102px; --dur:11s; --delay:-1s; }
+    #celllight-hero-{{ section.id }} .clh-cell--2 { top:4%; left:66%; width:160px; height:88px; --dur:10.5s; --delay:-2.5s; opacity:.78; }
+    #celllight-hero-{{ section.id }} .clh-cell--3 { top:21%; left:74%; width:192px; height:108px; --dur:12.6s; --delay:-4.2s; }
+    #celllight-hero-{{ section.id }} .clh-cell--4 { top:37%; left:28%; width:190px; height:108px; --dur:9.8s; --delay:-2s; }
+    #celllight-hero-{{ section.id }} .clh-cell--5 { top:30%; left:54%; width:186px; height:104px; --dur:12s; --delay:-3.2s; }
+    #celllight-hero-{{ section.id }} .clh-cell--6 { top:47%; left:63%; width:182px; height:102px; --dur:11.2s; --delay:-1.8s; opacity:.9; }
+    #celllight-hero-{{ section.id }} .clh-cell--7 { top:57%; left:43%; width:180px; height:102px; --dur:10.8s; --delay:-5.2s; }
+    #celllight-hero-{{ section.id }} .clh-cell--8 { top:64%; left:77%; width:184px; height:106px; --dur:12.4s; --delay:-2.8s; }
+    #celllight-hero-{{ section.id }} .clh-cell--9 { top:69%; left:17%; width:178px; height:100px; --dur:11.8s; --delay:-4.8s; opacity:.82; }
+    #celllight-hero-{{ section.id }} .clh-cell--10{ top:74%; left:56%; width:146px; height:82px; --dur:13.4s; --delay:-3.4s; opacity:.56; }
+    #celllight-hero-{{ section.id }} .clh-cell--11{ top:1%; left:84%; width:142px; height:78px; --dur:13s; --delay:-6s; opacity:.52; }
+    #celllight-hero-{{ section.id }} .clh-cell--12{ top:44%; left:90%; width:162px; height:92px; --dur:10.4s; --delay:-1.2s; opacity:.82; }
+
+    #celllight-hero-{{ section.id }} .clh-soft-orb{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(38px);
+      opacity:.55;
+      mix-blend-mode:screen;
+      animation: clhOrbDrift-{{ section.id }} var(--dur, 10s) ease-in-out infinite alternate;
+      animation-delay:var(--delay, 0s);
+    }
+
+    #celllight-hero-{{ section.id }} .clh-soft-orb--1{
+      width:250px;
+      height:250px;
+      right:8%;
+      top:18%;
+      background:radial-gradient(circle, rgba(242,178,255,.38), rgba(242,178,255,0) 72%);
+      --dur:11s;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-soft-orb--2{
+      width:290px;
+      height:290px;
+      right:14%;
+      bottom:4%;
+      background:radial-gradient(circle, rgba(255,175,123,.28), rgba(255,175,123,0) 72%);
+      --dur:13s;
+      --delay:-3s;
+    }
+
+    #celllight-hero-{{ section.id }} .clh-soft-orb--3{
+      width:210px;
+      height:210px;
+      left:34%;
+      bottom:10%;
+      background:radial-gradient(circle, rgba(255,210,222,.18), rgba(255,210,222,0) 74%);
+      --dur:12.5s;
+      --delay:-2s;
+    }
+
+    @keyframes clhFloatCell-{{ section.id }}{
+      0%   { transform:translate3d(0,0,0) rotate(-26deg) scale(1); }
+      25%  { transform:translate3d(8px,-8px,0) rotate(-24deg) scale(1.02); }
+      50%  { transform:translate3d(-4px,6px,0) rotate(-27deg) scale(.992); }
+      75%  { transform:translate3d(10px,2px,0) rotate(-25deg) scale(1.018); }
+      100% { transform:translate3d(-6px,-10px,0) rotate(-26deg) scale(1); }
+    }
+
+    @keyframes clhOrbDrift-{{ section.id }}{
+      0%   { transform:translate3d(0,0,0) scale(1); }
+      100% { transform:translate3d(18px,-16px,0) scale(1.08); }
+    }
+
+    @keyframes clhBgDrift-{{ section.id }}{
+      0%   { transform:translate3d(0,0,0) scale(1); }
+      100% { transform:translate3d(18px,-12px,0) scale(1.03); }
+    }
+
+    @keyframes clhMistFloat-{{ section.id }}{
+      0%   { transform:translateY(8px) scale(1); opacity:.84; }
+      100% { transform:translateY(-4px) scale(1.04); opacity:1; }
+    }
+
+    @media (max-width: 1200px){
+      #celllight-hero-{{ section.id }} .clh-grid{
+        grid-template-columns:1fr .92fr;
+        padding:58px 52px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-content{
+        max-width:560px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-actions{
+        margin-top:42px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-btn{
+        min-width:182px;
+        height:72px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-visual{
+        min-height:500px;
+      }
+    }
+
+    @media (max-width: 980px){
+      #celllight-hero-{{ section.id }} .clh-shell{
+        padding:0 18px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-hero{
+        width:min(100vw - 24px, 980px);
+        min-height:auto;
+        border-radius:34px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-grid{
+        grid-template-columns:1fr;
+        gap:14px;
+        padding:42px 28px 24px;
+        min-height:auto;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-content{
+        max-width:100%;
+        text-align:left;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-title{
+        font-size:clamp(34px, 7vw, 52px);
+        max-width:680px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-desc{
+        max-width:600px;
+        margin-top:22px;
+        font-size:16px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-actions{
+        margin-top:32px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-visual{
+        min-height:430px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-glow-field{
+        transform:none;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-cell{
+        width:156px;
+        height:90px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-cell--1 { top:10%; left:44%; }
+      #celllight-hero-{{ section.id }} .clh-cell--2 { top:2%; left:70%; width:132px; height:74px; }
+      #celllight-hero-{{ section.id }} .clh-cell--3 { top:18%; left:76%; }
+      #celllight-hero-{{ section.id }} .clh-cell--4 { top:35%; left:28%; }
+      #celllight-hero-{{ section.id }} .clh-cell--5 { top:28%; left:55%; }
+      #celllight-hero-{{ section.id }} .clh-cell--6 { top:46%; left:64%; }
+      #celllight-hero-{{ section.id }} .clh-cell--7 { top:58%; left:42%; }
+      #celllight-hero-{{ section.id }} .clh-cell--8 { top:68%; left:78%; }
+      #celllight-hero-{{ section.id }} .clh-cell--9 { top:72%; left:16%; }
+      #celllight-hero-{{ section.id }} .clh-cell--10{ top:76%; left:56%; width:124px; height:70px; }
+      #celllight-hero-{{ section.id }} .clh-cell--11{ top:0%; left:86%; width:118px; height:66px; }
+      #celllight-hero-{{ section.id }} .clh-cell--12{ top:48%; left:90%; width:128px; height:72px; }
+    }
+
+    @media (max-width: 640px){
+      #celllight-hero-{{ section.id }} .clh-shell{
+        padding:0 12px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-hero{
+        border-radius:28px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-grid{
+        padding:28px 20px 20px;
+        gap:4px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-eyebrow{
+        margin-bottom:16px;
+        font-size:12px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-title{
+        font-size:clamp(28px, 10vw, 40px);
+        line-height:1.02;
+        letter-spacing:-0.06em;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-title-soft{
+        margin-top:4px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-desc{
+        font-size:15px;
+        line-height:1.62;
+        margin-top:18px;
+        max-width:100%;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-actions{
+        margin-top:24px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-btn{
+        min-width:164px;
+        height:62px;
+        padding:0 24px;
+        font-size:16px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-visual{
+        min-height:300px;
+        margin-top:8px;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-mist{
+        width:96%;
+        left:2%;
+        bottom:8%;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-cell{
+        filter:blur(2px);
+        opacity:.92;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-cell--1 { top:10%; left:36%; width:122px; height:70px; }
+      #celllight-hero-{{ section.id }} .clh-cell--2 { top:0%; left:68%; width:96px; height:54px; opacity:.6; }
+      #celllight-hero-{{ section.id }} .clh-cell--3 { top:16%; left:74%; width:126px; height:72px; }
+      #celllight-hero-{{ section.id }} .clh-cell--4 { top:34%; left:18%; width:126px; height:72px; }
+      #celllight-hero-{{ section.id }} .clh-cell--5 { top:30%; left:48%; width:128px; height:72px; }
+      #celllight-hero-{{ section.id }} .clh-cell--6 { top:48%; left:58%; width:122px; height:68px; }
+      #celllight-hero-{{ section.id }} .clh-cell--7 { top:58%; left:36%; width:126px; height:72px; }
+      #celllight-hero-{{ section.id }} .clh-cell--8 { top:70%; left:70%; width:128px; height:72px; }
+      #celllight-hero-{{ section.id }} .clh-cell--9 { top:74%; left:8%; width:120px; height:68px; }
+      #celllight-hero-{{ section.id }} .clh-cell--10{ top:80%; left:52%; width:88px; height:50px; opacity:.5; }
+      #celllight-hero-{{ section.id }} .clh-cell--11{ display:none; }
+      #celllight-hero-{{ section.id }} .clh-cell--12{ top:46%; left:86%; width:100px; height:56px; }
+
+      #celllight-hero-{{ section.id }} .clh-soft-orb--1{
+        width:170px;
+        height:170px;
+        right:4%;
+        top:20%;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-soft-orb--2{
+        width:180px;
+        height:180px;
+        right:8%;
+        bottom:6%;
+      }
+
+      #celllight-hero-{{ section.id }} .clh-soft-orb--3{
+        width:120px;
+        height:120px;
+        left:22%;
+        bottom:10%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #celllight-hero-{{ section.id }} *,
+      #celllight-hero-{{ section.id }} *::before,
+      #celllight-hero-{{ section.id }} *::after{
+        animation:none !important;
+        transition:none !important;
+        scroll-behavior:auto !important;
+      }
+    }
+  </style>
+
+  <div class="clh-shell">
+    <div class="clh-hero">
+      <div class="clh-grid">
+        <div class="clh-content">
+          {% if section.settings.eyebrow != blank %}
+            <div class="clh-eyebrow">{{ section.settings.eyebrow }}</div>
+          {% endif %}
+
+          <h2 class="clh-title">
+            {% if section.settings.title_strong != blank %}
+              <span class="clh-title-strong">{{ section.settings.title_strong }}</span>
+            {% endif %}
+            {% if section.settings.title_soft != blank %}
+              <span class="clh-title-soft">{{ section.settings.title_soft }}</span>
+            {% endif %}
+          </h2>
+
+          {% if section.settings.description != blank %}
+            <div class="clh-desc">{{ section.settings.description }}</div>
+          {% endif %}
+
+          {% if section.settings.button_label != blank %}
+            <div class="clh-actions">
+              <a
+                class="clh-btn"
+                {% if section.settings.button_link != blank %}
+                  href="{{ section.settings.button_link }}"
+                {% else %}
+                  href="#"
+                {% endif %}
+              >
+                <span>{{ section.settings.button_label }}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                  <path d="M5 12h13" stroke-linecap="round"></path>
+                  <path d="M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </a>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="clh-visual" aria-hidden="true">
+          <div class="clh-glow-field">
+            <div class="clh-soft-orb clh-soft-orb--1"></div>
+            <div class="clh-soft-orb clh-soft-orb--2"></div>
+            <div class="clh-soft-orb clh-soft-orb--3"></div>
+
+            <span class="clh-cell clh-cell--1"></span>
+            <span class="clh-cell clh-cell--2"></span>
+            <span class="clh-cell clh-cell--3"></span>
+            <span class="clh-cell clh-cell--4"></span>
+            <span class="clh-cell clh-cell--5"></span>
+            <span class="clh-cell clh-cell--6"></span>
+            <span class="clh-cell clh-cell--7"></span>
+            <span class="clh-cell clh-cell--8"></span>
+            <span class="clh-cell clh-cell--9"></span>
+            <span class="clh-cell clh-cell--10"></span>
+            <span class="clh-cell clh-cell--12"></span>
+
+            <div class="clh-mist"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const sectionId = 'celllight-hero-{{ section.id }}';
+
+      function getSection() {
+        return document.getElementById(sectionId);
+      }
+
+      function waitForGsap(callback, maxTries = 120) {
+        let tries = 0;
+
+        const timer = setInterval(() => {
+          tries += 1;
+
+          if (typeof window.gsap !== 'undefined') {
+            clearInterval(timer);
+            callback();
+          } else if (tries >= maxTries) {
+            clearInterval(timer);
+            console.warn('CellLight Hero: GSAP not available globally.');
+          }
+        }, 100);
+      }
+
+      function initCelllightHero() {
+        const section = getSection();
+        if (!section) return;
+        if (section.dataset.inited === 'true') return;
+
+        section.dataset.inited = 'true';
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) return;
+
+        const gsap = window.gsap;
+        if (!gsap) return;
+
+        const root = section.querySelector('.clh-hero');
+        const eyebrow = section.querySelector('.clh-eyebrow');
+        const strong = section.querySelector('.clh-title-strong');
+        const soft = section.querySelector('.clh-title-soft');
+        const desc = section.querySelector('.clh-desc');
+        const btn = section.querySelector('.clh-btn');
+        const cells = section.querySelectorAll('.clh-cell');
+        const orbs = section.querySelectorAll('.clh-soft-orb');
+        const visual = section.querySelector('.clh-visual');
+        const mist = section.querySelector('.clh-mist');
+
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        tl.from(root, {
+          opacity: 0,
+          y: 26,
+          duration: 1.1
+        });
+
+        if (eyebrow) {
+          tl.from(eyebrow, {
+            opacity: 0,
+            y: 16,
+            duration: 0.7
+          }, '-=0.72');
+        }
+
+        if (strong) {
+          tl.from(strong, {
+            opacity: 0,
+            y: 24,
+            duration: 0.9
+          }, '-=0.42');
+        }
+
+        if (soft) {
+          tl.from(soft, {
+            opacity: 0,
+            y: 20,
+            duration: 0.9
+          }, '-=0.64');
+        }
+
+        if (desc) {
+          tl.from(desc, {
+            opacity: 0,
+            y: 18,
+            duration: 0.8
+          }, '-=0.62');
+        }
+
+        if (btn) {
+          tl.from(btn, {
+            opacity: 0,
+            y: 16,
+            scale: 0.96,
+            duration: 0.7
+          }, '-=0.55');
+        }
+
+        if (cells.length) {
+          tl.from(cells, {
+            opacity: 0,
+            scale: 0.85,
+            stagger: 0.05,
+            duration: 0.9
+          }, '-=0.9');
+        }
+
+        if (orbs.length) {
+          tl.from(orbs, {
+            opacity: 0,
+            scale: 0.8,
+            stagger: 0.08,
+            duration: 1
+          }, '-=1');
+        }
+
+        if (visual) {
+          gsap.to(visual, {
+            y: -6,
+            duration: 4.8,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        }
+
+        if (mist) {
+          gsap.to(mist, {
+            opacity: 1,
+            scale: 1.05,
+            duration: 4.2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        }
+
+        orbs.forEach((orb, i) => {
+          gsap.to(orb, {
+            x: i % 2 === 0 ? 14 : -12,
+            y: i % 2 === 0 ? -10 : 8,
+            duration: 7 + i * 1.3,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        });
+      }
+
+      function boot() {
+        waitForGsap(initCelllightHero);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        boot();
+      }
+
+      document.addEventListener('shopify:section:load', function(e) {
+        if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+          const section = getSection();
+          if (!section) return;
+          section.dataset.inited = '';
+          waitForGsap(initCelllightHero);
+        }
+      });
+
+      document.addEventListener('shopify:section:unload', function(e) {
+        if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+          const section = getSection();
+          if (!section) return;
+          section.dataset.inited = '';
+        }
+      });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "CellLight hero banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "CellLight Technology"
+    },
+    {
+      "type": "text",
+      "id": "title_strong",
+      "label": "Title strong line",
+      "default": "Learn how CellLight powers your health."
+    },
+    {
+      "type": "text",
+      "id": "title_soft",
+      "label": "Title soft line",
+      "default": "Innovative, science-backed technology created to fuel cellular energy and longevity."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "A premium cellular wellness platform designed to support recovery, vitality, and long-term performance through elegant science-led light technology."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1560
+    },
+    {
+      "type": "range",
+      "id": "hero_height",
+      "label": "Hero height",
+      "min": 520,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 730
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card radius",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "section_padding_y",
+      "label": "Section vertical padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Title size desktop",
+      "min": 36,
+      "max": 90,
+      "step": 1,
+      "unit": "px",
+      "default": 62
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size mobile",
+      "min": 24,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body text size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "page_bg",
+      "label": "Page background",
+      "default": "#dfdbd4"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Main text color",
+      "default": "#fff8f5"
+    },
+    {
+      "type": "color",
+      "id": "text_soft_color",
+      "label": "Soft text color",
+      "default": "#ffc0ba"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#f5f0e8"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "#191919"
+    },
+    {
+      "type": "color",
+      "id": "gradient_1",
+      "label": "Gradient color 1",
+      "default": "#f04445"
+    },
+    {
+      "type": "color",
+      "id": "gradient_2",
+      "label": "Gradient color 2",
+      "default": "#ff413b"
+    },
+    {
+      "type": "color",
+      "id": "gradient_3",
+      "label": "Gradient color 3",
+      "default": "#ff5665"
+    },
+    {
+      "type": "color",
+      "id": "gradient_4",
+      "label": "Gradient color 4",
+      "default": "#ff8c4f"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CellLight hero banner"
+    }
+  ]
+}
+{% endschema %}

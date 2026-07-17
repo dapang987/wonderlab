@@ -1,0 +1,363 @@
+{% liquid
+  assign extra_point_count = 0
+  for point_index in (3..5)
+    assign point_key = 'point_' | append: point_index
+    if block.settings[point_key] != blank
+      assign extra_point_count = extra_point_count | plus: 1
+    endif
+  endfor
+%}
+
+<div
+  class="product-selling-points spacing-style"
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    --selling-points-text: {{ block.settings.text_color }};
+    --selling-points-toggle: {{ block.settings.toggle_color }};
+    --selling-points-font-size: {{ block.settings.font_size }}px;
+    --selling-points-font-size-mobile: {{ block.settings.font_size_mobile }}px;
+    --selling-points-item-gap: {{ block.settings.item_gap }}px;
+    --selling-points-toggle-size: {{ block.settings.toggle_font_size }}px;
+    --selling-points-toggle-size-mobile: {{ block.settings.toggle_font_size_mobile }}px;
+    --selling-points-toggle-margin: {{ block.settings.toggle_margin_top }}px;
+  "
+  {{ block.shopify_attributes }}
+>
+  {% if extra_point_count > 0 %}
+    <input
+      class="product-selling-points__toggle-input"
+      type="checkbox"
+      id="SellingPointsToggle-{{ block.id }}"
+      {% if block.settings.open_by_default %}
+        checked
+      {% endif %}
+    >
+  {% endif %}
+
+  <ul class="product-selling-points__list" role="list">
+    {% for point_index in (1..5) %}
+      {% liquid
+        assign point_key = 'point_' | append: point_index
+        assign point_content = block.settings[point_key]
+      %}
+
+      {% if point_content != blank %}
+        <li class="product-selling-points__item{% if point_index > 2 %} product-selling-points__item--extra{% endif %}">
+          {{- point_content -}}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+  {% if extra_point_count > 0 %}
+    <label
+      class="product-selling-points__toggle"
+      for="SellingPointsToggle-{{ block.id }}"
+    >
+      <span class="product-selling-points__show-more">{{ block.settings.show_more_text | escape }}</span>
+      <span class="product-selling-points__show-less">{{ block.settings.show_less_text | escape }}</span>
+      <span class="product-selling-points__chevron" aria-hidden="true"></span>
+    </label>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .product-selling-points {
+    width: 100%;
+    color: var(--selling-points-text);
+    font-family: var(--font-body--family);
+  }
+
+  .product-selling-points__toggle-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .product-selling-points__list {
+    margin: 0;
+    padding-inline-start: 22px;
+    color: var(--selling-points-text);
+    font-size: var(--selling-points-font-size);
+    line-height: 1.52;
+  }
+
+  .product-selling-points__item {
+    margin: 0;
+    padding-inline-start: 1px;
+    color: var(--selling-points-text);
+  }
+
+  .product-selling-points__item + .product-selling-points__item {
+    margin-block-start: var(--selling-points-item-gap);
+  }
+
+  .product-selling-points__item strong {
+    color: inherit;
+    font-weight: 700;
+  }
+
+  .product-selling-points__item--extra {
+    display: none;
+  }
+
+  .product-selling-points__toggle-input:checked ~ .product-selling-points__list .product-selling-points__item--extra {
+    display: list-item;
+  }
+
+  .product-selling-points__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    width: fit-content;
+    margin-block-start: var(--selling-points-toggle-margin);
+    color: var(--selling-points-toggle);
+    font-size: var(--selling-points-toggle-size);
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .product-selling-points__toggle:hover {
+    color: var(--selling-points-text);
+  }
+
+  .product-selling-points__toggle-input:focus-visible ~ .product-selling-points__toggle {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .product-selling-points__show-less {
+    display: none;
+  }
+
+  .product-selling-points__toggle-input:checked ~ .product-selling-points__toggle .product-selling-points__show-more {
+    display: none;
+  }
+
+  .product-selling-points__toggle-input:checked ~ .product-selling-points__toggle .product-selling-points__show-less {
+    display: inline;
+  }
+
+  .product-selling-points__chevron {
+    width: 11px;
+    height: 11px;
+    border-inline-end: 2px solid currentcolor;
+    border-block-end: 2px solid currentcolor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  .product-selling-points__toggle-input:checked ~ .product-selling-points__toggle .product-selling-points__chevron {
+    transform: translateY(3px) rotate(225deg);
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-selling-points__list {
+      padding-inline-start: 20px;
+      font-size: var(--selling-points-font-size-mobile);
+      line-height: 1.48;
+    }
+
+    .product-selling-points__toggle {
+      font-size: var(--selling-points-toggle-size-mobile);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Five selling points",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Selling points"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "point_1",
+      "label": "Point 1",
+      "default": "<strong>Aging Defense:</strong> Supports cellular resilience and helps protect against everyday oxidative stress for healthy aging."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "point_2",
+      "label": "Point 2",
+      "default": "<strong>Joint Mobility:</strong> Supports joint flexibility, comfortable movement, and an active lifestyle."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "point_3",
+      "label": "Point 3",
+      "default": "<strong>Pain Relief:</strong> Helps ease occasional joint and muscle discomfort after everyday activity."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "point_4",
+      "label": "Point 4",
+      "default": "<strong>Better Sleep &amp; Energy Boost:</strong> Promotes restful sleep at night and refreshed, steady energy throughout the day."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "point_5",
+      "label": "Point 5",
+      "default": "<strong>Longevity Support:</strong> Provides whole-body support for lasting vitality, resilience, and long-term wellness."
+    },
+    {
+      "type": "header",
+      "content": "Toggle"
+    },
+    {
+      "type": "text",
+      "id": "show_more_text",
+      "label": "Show more text",
+      "default": "Show more"
+    },
+    {
+      "type": "text",
+      "id": "show_less_text",
+      "label": "Show less text",
+      "default": "Show less"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_by_default",
+      "label": "Show all points by default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Text size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Text size on mobile",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "toggle_font_size",
+      "label": "Toggle text size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "toggle_font_size_mobile",
+      "label": "Toggle text size on mobile",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Space between points",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "toggle_margin_top",
+      "label": "Space above toggle",
+      "min": 4,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#171717"
+    },
+    {
+      "type": "color",
+      "id": "toggle_color",
+      "label": "Toggle color",
+      "default": "#8a8a8a"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Five selling points",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

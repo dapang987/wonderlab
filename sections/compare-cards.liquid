@@ -1,0 +1,1116 @@
+{% comment %}
+  Section: Compare Cards - Swiper + GSAP (Fixed Overflow & Alignment)
+  - Desktop: KPI + 3 product cards (4-col grid)
+  - Mobile/Tablet: Left KPI + Right Swiper (cards swipe)
+  - Rows are driven by "Comparison Row" blocks
+{% endcomment %}
+
+<section id="cmp-{{ section.id }}" class="cmp-root" data-section-id="{{ section.id }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <style>
+    /* ===== Scoped reset ===== */
+    #cmp-{{ section.id }} *{ box-sizing:border-box; }
+
+    #cmp-{{ section.id }}{
+      --page-bg: {{ section.settings.page_bg }};
+      --ink: {{ section.settings.ink }};
+      --muted: {{ section.settings.muted }};
+      --muted-2: {{ section.settings.muted_2 }};
+
+      --panel: {{ section.settings.panel }};
+      --card: {{ section.settings.card }};
+
+      --accent: {{ section.settings.accent }};
+      --accent-2: {{ section.settings.accent_2 }};
+
+      --radius: {{ section.settings.radius }}px;
+      --shadow: 0 12px 30px rgba(0,0,0,.08);
+      --shadow-strong: 0 16px 40px rgba(0,0,0,.14);
+
+      --maxw: {{ section.settings.maxw }}px;
+      --pad-y: {{ section.settings.pad_y }}px;
+      --pad-x: {{ section.settings.pad_x }}px;
+
+      --gap: {{ section.settings.gap }}px;
+      --card-pad: {{ section.settings.card_pad }}px;
+
+      --rule: rgba(17,17,17,.16);
+
+      --media-h: {{ section.settings.media_h }}px;
+      --media-float: {{ section.settings.media_float }}px;
+      --media-gap: {{ section.settings.media_gap }}px;
+
+      /* Desktop row alignment */
+      --d-title-h: {{ section.settings.d_title_h }}px;
+      --d-title-gap: {{ section.settings.d_title_gap }}px;
+      --d-row-h: {{ section.settings.d_row_h }}px;
+    }
+
+    #cmp-{{ section.id }}{
+      background: var(--page-bg);
+      color: var(--ink);
+      position: relative;
+      overflow-x: clip;
+      overflow-y: visible;
+    }
+
+    #cmp-{{ section.id }} .cmp-section{
+      padding: var(--pad-y) var(--pad-x);
+      padding-top: calc(var(--pad-y) + (var(--media-float) * 0.4));
+    }
+
+    #cmp-{{ section.id }} .cmp-wrap{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      text-align:center;
+    }
+
+    #cmp-{{ section.id }} .cmp-title{
+      font-size: clamp(34px, 4vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 0 0 12px;
+      font-weight: 750;
+    }
+
+    #cmp-{{ section.id }} .cmp-subtitle{
+      margin: 0 0 52px;
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1.55;
+    }
+
+    /* ===== Desktop grid ===== */
+    #cmp-{{ section.id }} .cmp-grid{
+      display:grid;
+      grid-template-columns: {{ section.settings.kpi_col_w }}px 1fr 1fr 1fr;
+      gap: var(--gap);
+      align-items: stretch;
+      text-align:left;
+      position:relative;
+      max-width: 100%;
+    }
+
+    #cmp-{{ section.id }} .cmp-grid > *{
+      min-width: 0;
+    }
+
+    #cmp-{{ section.id }} .card{
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: visible;
+      background: var(--card);
+
+      /* 修复抽搐：不要让 CSS transition 和 GSAP 同时控制 transform */
+      transition: box-shadow .22s ease;
+      will-change: auto;
+    }
+
+    @media (min-width: 1024px){
+      #cmp-{{ section.id }} .card:hover{
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-strong);
+      }
+    }
+
+    /* KPI card */
+    #cmp-{{ section.id }} .kpi-card{
+      background: var(--panel);
+      padding: 0;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      text-align:center;
+    }
+
+    #cmp-{{ section.id }} .kpi-list{
+      list-style:none;
+      margin:0;
+      padding: 20px 14px;
+    }
+
+    #cmp-{{ section.id }} .kpi-item{
+      color: var(--muted-2);
+      font-size: 18px;
+      font-weight: 520;
+      padding: 12px 8px;
+      position:relative;
+      line-height: 1.25;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #cmp-{{ section.id }} .kpi-item + .kpi-item::before{
+      content:"";
+      position:absolute;
+      left: 24px;
+      right: 24px;
+      top: 0;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* Product cards */
+    #cmp-{{ section.id }} .p-card{
+      padding: var(--card-pad);
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      position: relative;
+      padding-top: calc(var(--card-pad) + (var(--media-h) - var(--media-float)) + var(--media-gap));
+      --img-x: 0px;
+      --img-scale: 1;
+    }
+
+    #cmp-{{ section.id }} .p-media{
+      position:absolute;
+      top: calc(-1 * var(--media-float));
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      height: var(--media-h);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin: 0;
+      z-index: 2;
+      pointer-events:none;
+    }
+
+    #cmp-{{ section.id }} .p-media img{
+      width: 100%;
+      height: var(--media-h);
+      object-fit: contain;
+      display:block;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
+      transform: translateX(var(--img-x, 0px)) scale(var(--img-scale, 1));
+      transform-origin: center;
+    }
+
+    #cmp-{{ section.id }} .p-title{
+      margin: 0;
+      font-size: 28px;
+      font-weight: 720;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    #cmp-{{ section.id }} .p-lines{
+      margin: 0;
+      padding: 0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap: 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    #cmp-{{ section.id }} .p-lines li{
+      position:relative;
+      padding: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+    }
+
+    #cmp-{{ section.id }} .p-lines li::before{
+      content:"";
+      position:absolute;
+      left: 20%;
+      right: 20%;
+      top: 0;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    #cmp-{{ section.id }} .p-lines li:first-child{
+      padding-top: 0;
+    }
+
+    #cmp-{{ section.id }} .p-lines li:first-child::before{
+      display:none;
+    }
+
+    /* Featured */
+    #cmp-{{ section.id }} .p-card.featured{
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      color: var(--ink);
+      border-radius: var(--radius);
+    }
+
+    #cmp-{{ section.id }} .p-card.featured .p-title{
+      color: var(--ink);
+    }
+
+    #cmp-{{ section.id }} .p-card.featured .p-lines{
+      color: rgba(17,17,17,.9);
+    }
+
+    #cmp-{{ section.id }} .p-card.featured .p-lines li::before{
+      background: rgba(17,17,17,.22);
+    }
+
+    #cmp-{{ section.id }} .featured-wrap{
+      transform: translateZ(0);
+      box-shadow: 0 18px 52px rgba(0,0,0,.18);
+    }
+
+    /* Desktop: row-to-row + bottom align */
+    @media (min-width: 1024px){
+      #cmp-{{ section.id }} .p-title{
+        min-height: var(--d-title-h);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+
+      #cmp-{{ section.id }} .p-card{
+        gap: var(--d-title-gap);
+      }
+
+      #cmp-{{ section.id }} .p-lines{
+        font-size:17px;
+        line-height:1.25;
+      }
+
+      #cmp-{{ section.id }} .p-lines li{
+        padding:0;
+        min-height: var(--d-row-h);
+        text-align:center;
+      }
+
+      #cmp-{{ section.id }} .p-lines li + li{
+        border-top:1px solid var(--rule);
+      }
+
+      #cmp-{{ section.id }} .p-lines li::before{
+        display:none;
+      }
+
+      #cmp-{{ section.id }} .p-card.featured .p-lines li + li{
+        border-top-color: rgba(17,17,17,.22);
+      }
+
+      #cmp-{{ section.id }} .kpi-card{
+        display:flex;
+        flex-direction:column;
+      }
+
+      #cmp-{{ section.id }} .kpi-card .kpi-list{
+        margin-top: auto;
+      }
+
+      #cmp-{{ section.id }} .kpi-list{
+        padding: 0 14px var(--card-pad);
+      }
+
+      #cmp-{{ section.id }} .kpi-item{
+        padding:0 8px;
+        min-height: var(--d-row-h);
+        font-size:16.5px;
+        line-height:1.2;
+      }
+
+      #cmp-{{ section.id }} .kpi-item + .kpi-item{
+        border-top:1px solid var(--rule);
+      }
+
+      #cmp-{{ section.id }} .kpi-item + .kpi-item::before{
+        display:none;
+      }
+    }
+
+    /* ===== Mobile ===== */
+    #cmp-{{ section.id }} .cmp-mobile{
+      display:none;
+      text-align:left;
+      position:relative;
+    }
+
+    #cmp-{{ section.id }} .cmp-swiper-wrap{
+      position:relative;
+      min-width: 0;
+    }
+
+    #cmp-{{ section.id }} .swiper{
+      padding: 6px 2px 14px;
+    }
+
+    #cmp-{{ section.id }} .swiper-slide{
+      height:auto;
+    }
+
+    #cmp-{{ section.id }} .fade-right{
+      pointer-events:none;
+      position:absolute;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,1));
+      z-index: 5;
+      display:none;
+    }
+
+    @media (max-width: 1023px){
+      #cmp-{{ section.id }}{
+        --gap: 18px;
+        --maxw: 980px;
+
+        --media-h: {{ section.settings.m_media_h }}px;
+        --media-float: {{ section.settings.m_media_float }}px;
+        --media-gap: {{ section.settings.m_media_gap }}px;
+
+        --card-pad: {{ section.settings.m_card_pad }}px;
+        --m-title-h: {{ section.settings.m_title_h }}px;
+        --m-title-gap: {{ section.settings.m_title_gap }}px;
+        --m-row-h: {{ section.settings.m_row_h }}px;
+      }
+
+      #cmp-{{ section.id }} .cmp-subtitle{
+        margin-bottom: 34px;
+      }
+
+      #cmp-{{ section.id }} .cmp-grid{
+        display:none;
+      }
+
+      #cmp-{{ section.id }} .cmp-mobile{
+        display:grid;
+        grid-template-columns: clamp({{ section.settings.m_kpi_min }}px, {{ section.settings.m_kpi_vw }}vw, {{ section.settings.m_kpi_max }}px) 1fr;
+        gap: 16px;
+        align-items: end;
+        padding-bottom: 18px;
+        isolation: isolate;
+        max-width: 100%;
+      }
+
+      #cmp-{{ section.id }} .mobile-kpi{
+        margin:0;
+        justify-content:flex-end;
+        overflow:hidden;
+        position: relative;
+        z-index: 30;
+        max-height: {{ section.settings.mobile_kpi_max_h }}px;
+      }
+
+      #cmp-{{ section.id }} .cmp-swiper-wrap{
+        min-width: 0;
+        position: relative;
+        z-index: 10;
+      }
+
+      #cmp-{{ section.id }} .mobile-kpi .kpi-item{
+        font-size: 14px;
+        font-weight: 520;
+        padding: 0 6px;
+        min-height: var(--m-row-h);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        line-height: 1.2;
+      }
+
+      #cmp-{{ section.id }} .mobile-kpi .kpi-item + .kpi-item{
+        border-top: 1px solid var(--rule);
+      }
+
+      #cmp-{{ section.id }} .mobile-kpi .kpi-item + .kpi-item::before{
+        display:none;
+      }
+
+      #cmp-{{ section.id }} .cmp-mobile .swiper{
+        overflow: visible;
+      }
+
+      #cmp-{{ section.id }} .swiper{
+        padding: 10px 2px 0;
+      }
+
+      #cmp-{{ section.id }} .fade-right{
+        display:block;
+        width: 40px;
+      }
+
+      #cmp-{{ section.id }} .p-title{
+        font-size: 22px;
+        min-height: var(--m-title-h);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+
+      #cmp-{{ section.id }} .p-card{
+        gap: var(--m-title-gap);
+      }
+
+      #cmp-{{ section.id }} .p-lines{
+        font-size: 15.5px;
+        line-height: 1.25;
+        gap: 0;
+      }
+
+      #cmp-{{ section.id }} .p-lines li{
+        padding: 0;
+        min-height: var(--m-row-h);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+      }
+
+      #cmp-{{ section.id }} .p-lines li + li{
+        border-top: 1px solid var(--rule);
+      }
+
+      #cmp-{{ section.id }} .p-lines li::before{
+        display:none;
+      }
+
+      #cmp-{{ section.id }} .p-card.featured .p-lines li + li{
+        border-top-color: rgba(17,17,17,.22);
+      }
+
+      #cmp-{{ section.id }} .card:hover{
+        transform:none;
+        box-shadow: var(--shadow);
+      }
+    }
+
+    @media (max-width: 420px){
+      #cmp-{{ section.id }} .cmp-mobile{
+        grid-template-columns: clamp(118px, 34vw, 150px) 1fr;
+        gap: 12px;
+      }
+
+      #cmp-{{ section.id }} .fade-right{
+        width: 30px;
+      }
+    }
+  </style>
+
+  <div class="cmp-section" aria-label="Comparison cards">
+    <div class="cmp-wrap">
+      <h2 class="cmp-title">{{ section.settings.heading | escape }}</h2>
+
+      {% if section.settings.subheading != blank %}
+        <p class="cmp-subtitle">{{ section.settings.subheading | escape }}</p>
+      {% endif %}
+
+      <div class="cmp-grid">
+        <aside class="card kpi-card" aria-label="Comparison metrics">
+          <ul class="kpi-list">
+            {% for block in section.blocks %}
+              {% if block.type == 'row' %}
+                <li class="kpi-item" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </aside>
+
+        <article class="card {% if section.settings.p1_featured %}featured-wrap{% endif %}">
+          <div
+            class="p-card {% if section.settings.p1_featured %}featured{% endif %}"
+            style="--img-x: {{ section.settings.p1_img_x }}px; --img-scale: {{ section.settings.p1_img_scale }};"
+          >
+            <div class="p-media">
+              {% if section.settings.p1_image %}
+                <img
+                  src="{{ section.settings.p1_image | image_url: width: 1200 }}"
+                  alt="{{ section.settings.p1_image_alt | escape }}"
+                  width="{{ section.settings.p1_image.width }}"
+                  height="{{ section.settings.p1_image.height }}"
+                  loading="lazy"
+                >
+              {% endif %}
+            </div>
+
+            <h3 class="p-title">{{ section.settings.p1_title | escape }}</h3>
+
+            <ul class="p-lines" aria-label="Product 1 values">
+              {% for block in section.blocks %}
+                {% if block.type == 'row' %}
+                  <li>
+                    {% if block.settings.bold_1 %}
+                      <strong>{{ block.settings.value_1 | escape }}</strong>
+                    {% else %}
+                      {{ block.settings.value_1 | escape }}
+                    {% endif %}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <div
+            class="p-card"
+            style="--img-x: {{ section.settings.p2_img_x }}px; --img-scale: {{ section.settings.p2_img_scale }};"
+          >
+            <div class="p-media">
+              {% if section.settings.p2_image %}
+                <img
+                  src="{{ section.settings.p2_image | image_url: width: 1200 }}"
+                  alt="{{ section.settings.p2_image_alt | escape }}"
+                  width="{{ section.settings.p2_image.width }}"
+                  height="{{ section.settings.p2_image.height }}"
+                  loading="lazy"
+                >
+              {% endif %}
+            </div>
+
+            <h3 class="p-title">{{ section.settings.p2_title | escape }}</h3>
+
+            <ul class="p-lines" aria-label="Product 2 values">
+              {% for block in section.blocks %}
+                {% if block.type == 'row' %}
+                  <li>
+                    {% if block.settings.bold_2 %}
+                      <strong>{{ block.settings.value_2 | escape }}</strong>
+                    {% else %}
+                      {{ block.settings.value_2 | escape }}
+                    {% endif %}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <div
+            class="p-card"
+            style="--img-x: {{ section.settings.p3_img_x }}px; --img-scale: {{ section.settings.p3_img_scale }};"
+          >
+            <div class="p-media">
+              {% if section.settings.p3_image %}
+                <img
+                  src="{{ section.settings.p3_image | image_url: width: 1200 }}"
+                  alt="{{ section.settings.p3_image_alt | escape }}"
+                  width="{{ section.settings.p3_image.width }}"
+                  height="{{ section.settings.p3_image.height }}"
+                  loading="lazy"
+                >
+              {% endif %}
+            </div>
+
+            <h3 class="p-title">{{ section.settings.p3_title | escape }}</h3>
+
+            <ul class="p-lines" aria-label="Product 3 values">
+              {% for block in section.blocks %}
+                {% if block.type == 'row' %}
+                  <li>
+                    {% if block.settings.bold_3 %}
+                      <strong>{{ block.settings.value_3 | escape }}</strong>
+                    {% else %}
+                      {{ block.settings.value_3 | escape }}
+                    {% endif %}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </article>
+      </div>
+
+      <div class="cmp-mobile">
+        <div class="card kpi-card mobile-kpi" aria-label="Comparison metrics (mobile)">
+          <ul class="kpi-list">
+            {% for block in section.blocks %}
+              {% if block.type == 'row' %}
+                <li class="kpi-item" {{ block.shopify_attributes }}>{{ block.settings.label | escape }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="cmp-swiper-wrap">
+          <div class="swiper" id="cmpSwiper-{{ section.id }}" aria-label="Product comparison carousel">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <article class="card {% if section.settings.p1_featured %}featured-wrap{% endif %}">
+                  <div
+                    class="p-card {% if section.settings.p1_featured %}featured{% endif %}"
+                    style="--img-x: {{ section.settings.p1_img_x }}px; --img-scale: {{ section.settings.p1_img_scale }};"
+                  >
+                    <div class="p-media">
+                      {% if section.settings.p1_image %}
+                        <img
+                          src="{{ section.settings.p1_image | image_url: width: 1200 }}"
+                          alt="{{ section.settings.p1_image_alt | escape }}"
+                          width="{{ section.settings.p1_image.width }}"
+                          height="{{ section.settings.p1_image.height }}"
+                          loading="lazy"
+                        >
+                      {% endif %}
+                    </div>
+
+                    <h3 class="p-title">{{ section.settings.p1_title | escape }}</h3>
+
+                    <ul class="p-lines">
+                      {% for block in section.blocks %}
+                        {% if block.type == 'row' %}
+                          <li>
+                            {% if block.settings.bold_1 %}
+                              <strong>{{ block.settings.value_1 | escape }}</strong>
+                            {% else %}
+                              {{ block.settings.value_1 | escape }}
+                            {% endif %}
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </article>
+              </div>
+
+              <div class="swiper-slide">
+                <article class="card">
+                  <div
+                    class="p-card"
+                    style="--img-x: {{ section.settings.p2_img_x }}px; --img-scale: {{ section.settings.p2_img_scale }};"
+                  >
+                    <div class="p-media">
+                      {% if section.settings.p2_image %}
+                        <img
+                          src="{{ section.settings.p2_image | image_url: width: 1200 }}"
+                          alt="{{ section.settings.p2_image_alt | escape }}"
+                          width="{{ section.settings.p2_image.width }}"
+                          height="{{ section.settings.p2_image.height }}"
+                          loading="lazy"
+                        >
+                      {% endif %}
+                    </div>
+
+                    <h3 class="p-title">{{ section.settings.p2_title | escape }}</h3>
+
+                    <ul class="p-lines">
+                      {% for block in section.blocks %}
+                        {% if block.type == 'row' %}
+                          <li>
+                            {% if block.settings.bold_2 %}
+                              <strong>{{ block.settings.value_2 | escape }}</strong>
+                            {% else %}
+                              {{ block.settings.value_2 | escape }}
+                            {% endif %}
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </article>
+              </div>
+
+              <div class="swiper-slide">
+                <article class="card">
+                  <div
+                    class="p-card"
+                    style="--img-x: {{ section.settings.p3_img_x }}px; --img-scale: {{ section.settings.p3_img_scale }};"
+                  >
+                    <div class="p-media">
+                      {% if section.settings.p3_image %}
+                        <img
+                          src="{{ section.settings.p3_image | image_url: width: 1200 }}"
+                          alt="{{ section.settings.p3_image_alt | escape }}"
+                          width="{{ section.settings.p3_image.width }}"
+                          height="{{ section.settings.p3_image.height }}"
+                          loading="lazy"
+                        >
+                      {% endif %}
+                    </div>
+
+                    <h3 class="p-title">{{ section.settings.p3_title | escape }}</h3>
+
+                    <ul class="p-lines">
+                      {% for block in section.blocks %}
+                        {% if block.type == 'row' %}
+                          <li>
+                            {% if block.settings.bold_3 %}
+                              <strong>{{ block.settings.value_3 | escape }}</strong>
+                            {% else %}
+                              {{ block.settings.value_3 | escape }}
+                            {% endif %}
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="fade-right" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const root = document.getElementById("cmp-{{ section.id }}");
+      if (!root) return;
+
+      if (root.dataset.cmpInited === "1") return;
+      root.dataset.cmpInited = "1";
+
+      const mq = window.matchMedia("(max-width: 1023px)");
+      let cmpSwiper = null;
+      let hasAnimated = false;
+      let resizeTimer = null;
+
+      function alignRows() {
+        const allItems = root.querySelectorAll('.kpi-item, .p-lines li');
+
+        allItems.forEach(el => {
+          el.style.height = 'auto';
+        });
+
+        const kpiList = root.querySelector(
+          mq.matches ? '.mobile-kpi .kpi-list' : '.cmp-grid .kpi-list'
+        );
+
+        if (!kpiList) return;
+
+        const rowCount = kpiList.children.length;
+        const lists = [];
+
+        if (mq.matches) {
+          const mobileKpi = root.querySelector('.mobile-kpi .kpi-list');
+          if (mobileKpi) lists.push(mobileKpi);
+
+          root.querySelectorAll('.swiper-slide .p-lines').forEach(ul => {
+            lists.push(ul);
+          });
+        } else {
+          const desktopKpi = root.querySelector('.cmp-grid .kpi-list');
+          if (desktopKpi) lists.push(desktopKpi);
+
+          root.querySelectorAll('.cmp-grid .p-lines').forEach(ul => {
+            lists.push(ul);
+          });
+        }
+
+        for (let i = 0; i < rowCount; i++) {
+          let maxH = 0;
+
+          lists.forEach(ul => {
+            if (ul && ul.children[i]) {
+              const h = ul.children[i].scrollHeight;
+              if (h > maxH) maxH = h;
+            }
+          });
+
+          lists.forEach(ul => {
+            if (ul && ul.children[i]) {
+              ul.children[i].style.height = `${maxH}px`;
+            }
+          });
+        }
+
+        if (cmpSwiper && typeof cmpSwiper.update === 'function') {
+          cmpSwiper.update();
+        }
+      }
+
+      function initSwiper(){
+        if (cmpSwiper) return;
+
+        if (!window.Swiper) {
+          console.warn("cmp: Swiper not found. Ensure it is loaded in theme.liquid.");
+          return;
+        }
+
+        const el = root.querySelector("#cmpSwiper-{{ section.id }}");
+        if (!el) return;
+
+        cmpSwiper = new Swiper(el, {
+          slidesPerView: 1.02,
+          spaceBetween: 20,
+          grabCursor: true,
+          speed: 520,
+          watchOverflow: true,
+          autoHeight: false,
+          observer: true,
+          observeParents: true,
+          breakpoints: {
+            420: { slidesPerView: 1.04, spaceBetween: 20 },
+            560: { slidesPerView: 1.08, spaceBetween: 22 }
+          },
+          on: {
+            init: function(){
+              requestAnimationFrame(alignRows);
+            },
+            afterInit: function(){
+              requestAnimationFrame(alignRows);
+            },
+            slideChangeTransitionEnd: function(){
+              requestAnimationFrame(alignRows);
+            }
+          }
+        });
+      }
+
+      function destroySwiper(){
+        if (!cmpSwiper) return;
+        cmpSwiper.destroy(true, true);
+        cmpSwiper = null;
+      }
+
+      function syncSwiper(){
+        if (mq.matches) {
+          initSwiper();
+        } else {
+          destroySwiper();
+        }
+
+        requestAnimationFrame(alignRows);
+      }
+
+      function animateIn(){
+        if (hasAnimated) return;
+        hasAnimated = true;
+
+        if (!window.gsap) {
+          console.warn("cmp: GSAP not found. Ensure it is loaded in theme.liquid.");
+          return;
+        }
+
+        const title = root.querySelector(".cmp-title");
+        const sub = root.querySelector(".cmp-subtitle");
+        const visibleWrap = mq.matches
+          ? root.querySelector(".cmp-mobile")
+          : root.querySelector(".cmp-grid");
+
+        const cards = visibleWrap ? Array.from(visibleWrap.querySelectorAll(".card")) : [];
+        const targets = [title, sub, visibleWrap].filter(Boolean).concat(cards);
+
+        gsap.killTweensOf(targets);
+
+        const tl = gsap.timeline({
+          defaults: {
+            ease: "power2.out",
+            overwrite: "auto"
+          },
+          onComplete: function(){
+            gsap.set(targets, {
+              clearProps: "transform,opacity,visibility"
+            });
+
+            requestAnimationFrame(alignRows);
+          }
+        });
+
+        if (title) {
+          tl.from(title, {
+            y: 14,
+            autoAlpha: 0,
+            duration: 0.75
+          });
+        }
+
+        if (sub) {
+          tl.from(sub, {
+            y: 10,
+            autoAlpha: 0,
+            duration: 0.65
+          }, "-=0.48");
+        }
+
+        if (visibleWrap) {
+          tl.from(visibleWrap, {
+            autoAlpha: 0,
+            duration: 0.35
+          }, "-=0.25");
+
+          if (cards.length) {
+            tl.from(cards, {
+              y: 18,
+              autoAlpha: 0,
+              duration: 0.6,
+              stagger: 0.07
+            }, "-=0.15");
+          }
+        }
+      }
+
+      function handleResize(){
+        clearTimeout(resizeTimer);
+
+        resizeTimer = setTimeout(function(){
+          syncSwiper();
+          alignRows();
+        }, 180);
+      }
+
+      function boot(){
+        const start = Date.now();
+
+        function waitForLibs(){
+          const swiperReady = !!window.Swiper;
+          const gsapReady = !!window.gsap;
+
+          if ((swiperReady && gsapReady) || Date.now() - start > 2000) {
+            syncSwiper();
+
+            if (mq.addEventListener) {
+              mq.addEventListener("change", syncSwiper);
+            } else if (mq.addListener) {
+              mq.addListener(syncSwiper);
+            }
+
+            window.addEventListener("resize", handleResize, { passive: true });
+
+            if (document.readyState === "complete") {
+              requestAnimationFrame(function(){
+                alignRows();
+                animateIn();
+              });
+            } else {
+              window.addEventListener("load", function(){
+                requestAnimationFrame(function(){
+                  alignRows();
+                  animateIn();
+                });
+              }, { once: true });
+            }
+
+            return;
+          }
+
+          requestAnimationFrame(waitForLibs);
+        }
+
+        waitForLibs();
+      }
+
+      boot();
+
+      document.addEventListener("shopify:section:unload", function(e){
+        if (!e || !e.detail || !e.detail.sectionId) return;
+        if (String(e.detail.sectionId) !== String("{{ section.id }}")) return;
+
+        root.dataset.cmpInited = "0";
+        destroySwiper();
+        clearTimeout(resizeTimer);
+      });
+
+      document.addEventListener("shopify:section:select", alignRows);
+      document.addEventListener("shopify:block:select", alignRows);
+    })();
+  </script>
+
+  {% schema %}
+  {
+    "name": "Compare Cards",
+    "settings": [
+      { "type": "text", "id": "heading", "label": "Heading", "default": "More Than a Mat, Easier Than a Routine" },
+      { "type": "text", "id": "subheading", "label": "Subheading", "default": "Compare coverage, flexibility, and value — in seconds" },
+
+      { "type": "header", "content": "Layout" },
+      { "type": "range", "id": "maxw", "min": 960, "max": 2200, "step": 20, "unit": "px", "label": "Max width", "default": 1740 },
+      { "type": "range", "id": "pad_y", "min": 0, "max": 140, "step": 2, "unit": "px", "label": "Section padding Y", "default": 86 },
+      { "type": "range", "id": "pad_x", "min": 0, "max": 60, "step": 1, "unit": "px", "label": "Section padding X", "default": 22 },
+      { "type": "range", "id": "gap", "min": 8, "max": 48, "step": 1, "unit": "px", "label": "Card gap", "default": 26 },
+      { "type": "range", "id": "card_pad", "min": 16, "max": 48, "step": 1, "unit": "px", "label": "Card padding", "default": 28 },
+      { "type": "range", "id": "kpi_col_w", "min": 140, "max": 320, "step": 5, "unit": "px", "label": "Desktop KPI column width", "default": 200 },
+
+      { "type": "header", "content": "Colors" },
+      { "type": "color", "id": "page_bg", "label": "Background", "default": "#ffffff" },
+      { "type": "color", "id": "ink", "label": "Text", "default": "#111111" },
+      { "type": "color", "id": "muted", "label": "Muted text", "default": "#6b7280" },
+      { "type": "color", "id": "muted_2", "label": "KPI text", "default": "#9ca3af" },
+      { "type": "color", "id": "panel", "label": "KPI panel", "default": "#f5f6f8" },
+      { "type": "color", "id": "card", "label": "Card background", "default": "#ffffff" },
+      { "type": "color", "id": "accent", "label": "Featured gradient (bottom)", "default": "#ff6a3d" },
+      { "type": "color", "id": "accent_2", "label": "Featured gradient (top)", "default": "#ff7b57" },
+
+      { "type": "header", "content": "Media (image float)" },
+      { "type": "range", "id": "radius", "min": 10, "max": 40, "step": 1, "unit": "px", "label": "Card radius", "default": 28 },
+      { "type": "range", "id": "media_h", "min": 90, "max": 240, "step": 2, "unit": "px", "label": "Image box height (desktop)", "default": 160 },
+      { "type": "range", "id": "media_float", "min": 10, "max": 100, "step": 10, "unit": "px", "label": "Image float amount", "default": 50 },
+      { "type": "range", "id": "media_gap", "min": 0, "max": 24, "step": 1, "unit": "px", "label": "Gap under image", "default": 10 },
+
+      { "type": "header", "content": "Row alignment (desktop)" },
+      { "type": "range", "id": "d_title_h", "min": 40, "max": 120, "step": 1, "unit": "px", "label": "Title row height", "default": 74 },
+      { "type": "range", "id": "d_title_gap", "min": 0, "max": 40, "step": 1, "unit": "px", "label": "Title-to-rows gap", "default": 18 },
+      { "type": "range", "id": "d_row_h", "min": 36, "max": 86, "step": 1, "unit": "px", "label": "Each comparison row height", "default": 58 },
+
+      { "type": "header", "content": "Mobile tuning" },
+      { "type": "range", "id": "mobile_kpi_max_h", "min": 360, "max": 760, "step": 10, "unit": "px", "label": "Mobile KPI max height", "default": 520 },
+      { "type": "range", "id": "m_media_h", "min": 80, "max": 200, "step": 2, "unit": "px", "label": "Image box height (mobile)", "default": 124 },
+      { "type": "range", "id": "m_media_float", "min": 10, "max": 120, "step": 10, "unit": "px", "label": "Image float (mobile)", "default": 50 },
+      { "type": "range", "id": "m_media_gap", "min": 0, "max": 20, "step": 1, "unit": "px", "label": "Gap under image (mobile)", "default": 8 },
+      { "type": "range", "id": "m_card_pad", "min": 16, "max": 40, "step": 1, "unit": "px", "label": "Card padding (mobile)", "default": 26 },
+      { "type": "range", "id": "m_title_h", "min": 40, "max": 100, "step": 1, "unit": "px", "label": "Title height (mobile)", "default": 60 },
+      { "type": "range", "id": "m_title_gap", "min": 0, "max": 40, "step": 1, "unit": "px", "label": "Title-to-rows gap (mobile)", "default": 18 },
+      { "type": "range", "id": "m_row_h", "min": 36, "max": 86, "step": 1, "unit": "px", "label": "Row height (mobile)", "default": 52 },
+      { "type": "range", "id": "m_kpi_min", "min": 90, "max": 220, "step": 10, "unit": "px", "label": "Mobile KPI min width", "default": 130 },
+      { "type": "range", "id": "m_kpi_vw", "min": 20, "max": 50, "step": 1, "unit": "vw", "label": "Mobile KPI vw", "default": 30 },
+      { "type": "range", "id": "m_kpi_max", "min": 120, "max": 260, "step": 10, "unit": "px", "label": "Mobile KPI max width", "default": 170 },
+
+      { "type": "header", "content": "Product 1" },
+      { "type": "checkbox", "id": "p1_featured", "label": "Featured style", "default": true },
+      { "type": "text", "id": "p1_title", "label": "Title", "default": "QuasarMD 3D Light Therapy Mask" },
+      { "type": "image_picker", "id": "p1_image", "label": "Image" },
+      { "type": "text", "id": "p1_image_alt", "label": "Image alt", "default": "Product image" },
+      { "type": "range", "id": "p1_img_x", "min": -80, "max": 80, "step": 10, "unit": "px", "label": "Image X offset", "default": 0 },
+      { "type": "range", "id": "p1_img_scale", "min": 0.7, "max": 1.3, "step": 0.1, "label": "Image scale", "default": 1.0 },
+
+      { "type": "header", "content": "Product 2" },
+      { "type": "text", "id": "p2_title", "label": "Title", "default": "LED Bed" },
+      { "type": "image_picker", "id": "p2_image", "label": "Image" },
+      { "type": "text", "id": "p2_image_alt", "label": "Image alt", "default": "Product image" },
+      { "type": "range", "id": "p2_img_x", "min": -80, "max": 80, "step": 10, "unit": "px", "label": "Image X offset", "default": 0 },
+      { "type": "range", "id": "p2_img_scale", "min": 0.7, "max": 1.3, "step": 0.1, "label": "Image scale", "default": 1.0 },
+
+      { "type": "header", "content": "Product 3" },
+      { "type": "text", "id": "p3_title", "label": "Title", "default": "LED Panel" },
+      { "type": "image_picker", "id": "p3_image", "label": "Image" },
+      { "type": "text", "id": "p3_image_alt", "label": "Image alt", "default": "Product image" },
+      { "type": "range", "id": "p3_img_x", "min": -80, "max": 80, "step": 10, "unit": "px", "label": "Image X offset", "default": 0 },
+      { "type": "range", "id": "p3_img_scale", "min": 0.7, "max": 1.3, "step": 0.1, "label": "Image scale", "default": 1.0 }
+    ],
+    "blocks": [
+      {
+        "type": "row",
+        "name": "Comparison Row",
+        "settings": [
+          { "type": "text", "id": "label", "label": "KPI label", "default": "LED Count" },
+
+          { "type": "text", "id": "value_1", "label": "Product 1 value", "default": "Mat - 2052 LEDs" },
+          { "type": "checkbox", "id": "bold_1", "label": "Bold (Product 1)", "default": true },
+
+          { "type": "text", "id": "value_2", "label": "Product 2 value", "default": "Mat - 1920 LEDs" },
+          { "type": "checkbox", "id": "bold_2", "label": "Bold (Product 2)", "default": true },
+
+          { "type": "text", "id": "value_3", "label": "Product 3 value", "default": "Mat - 300 LEDs" },
+          { "type": "checkbox", "id": "bold_3", "label": "Bold (Product 3)", "default": true }
+        ]
+      }
+    ],
+    "max_blocks": 12,
+    "presets": [
+      {
+        "name": "Compare Cards (Swiper + GSAP)",
+        "blocks": [
+          { "type": "row", "settings": { "label": "LED Count", "value_1": "Mat - 2052 LEDs", "bold_1": true, "value_2": "Mat - 1920 LEDs", "bold_2": true, "value_3": "Mat - 300 LEDs", "bold_3": true } },
+          { "type": "row", "settings": { "label": "Coverage", "value_1": "Full-body, wraparound", "bold_1": true, "value_2": "Full-body, flat surface", "bold_2": false, "value_3": "Targeted area coverage", "bold_3": false } },
+          { "type": "row", "settings": { "label": "Flexibility", "value_1": "Flexible + Portable / Use on sofa, bed, or while traveling", "bold_1": false, "value_2": "Location-bound / Requires spa/clinic visit & appointment", "bold_2": false, "value_3": "Stationary / Needs a setup spot; angle & distance vary each time", "bold_3": false } },
+          { "type": "row", "settings": { "label": "Cost", "value_1": "$899", "bold_1": false, "value_2": "Per-visit pricing + time + travel adds up", "bold_2": false, "value_3": "Lower entry price but may require upgrades/add-ons", "bold_3": false } },
+          { "type": "row", "settings": { "label": "Wavelengths", "value_1": "660nm + 850nm", "bold_1": false, "value_2": "630nm + 830nm", "bold_2": false, "value_3": "660nm + 850nm", "bold_3": false } },
+          { "type": "row", "settings": { "label": "Best For", "value_1": "People who want a simple, repeatable routine", "bold_1": false, "value_2": "Users who prefer guided, professional setting", "bold_2": false, "value_3": "Users optimizing a few areas with flexible positioning", "bold_3": false } }
+        ]
+      }
+    ]
+  }
+  {% endschema %}
+</section>

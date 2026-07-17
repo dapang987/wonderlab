@@ -1,0 +1,1275 @@
+{% liquid
+  assign section_anchor_id = 'wondear-eb-grid-' | append: section.id
+%}
+
+<style>
+  #{{ section_anchor_id }} {
+    --wondear-eb-bg: {{ section.settings.background_color }};
+    --wondear-eb-card-bg: {{ section.settings.card_background_color }};
+    --wondear-eb-image-bg: {{ section.settings.image_background_color }};
+    --wondear-eb-text: {{ section.settings.text_color }};
+    --wondear-eb-card-title-color: {{ section.settings.card_title_color }};
+    --wondear-eb-early-price-color: {{ section.settings.early_price_color }};
+    --wondear-eb-muted: {{ section.settings.muted_text_color }};
+    --wondear-eb-border: {{ section.settings.border_color | color_modify: 'alpha', 0.08 }};
+    --wondear-eb-button-bg: {{ section.settings.button_background_color }};
+    --wondear-eb-button-text: {{ section.settings.button_text_color }};
+    --wondear-eb-button-hover: {{ section.settings.button_hover_color }};
+    --wondear-eb-accent: {{ section.settings.accent_color }};
+    --wondear-eb-coupon-price-color: {{ section.settings.coupon_price_color }};
+    --wondear-eb-coupon-label-color: {{ section.settings.coupon_label_color }};
+    --wondear-eb-coupon-bg: {{ section.settings.coupon_background_color }};
+    --wondear-eb-coupon-border: {{ section.settings.coupon_border_color }};
+    --wondear-eb-radius: {{ section.settings.card_radius }}px;
+    --wondear-eb-container: {{ section.settings.container_width }}px;
+    --wondear-eb-gap: {{ section.settings.grid_gap }}px;
+
+    width: 100%;
+    padding: {{ section.settings.padding_top }}px {{ section.settings.padding_x }}px {{ section.settings.padding_bottom }}px;
+    background: var(--wondear-eb-bg);
+    color: var(--wondear-eb-text);
+  }
+
+  #{{ section_anchor_id }} *,
+  #{{ section_anchor_id }} *::before,
+  #{{ section_anchor_id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #{{ section_anchor_id }} a {
+    color: inherit;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-container {
+    max-width: var(--wondear-eb-container);
+    margin: 0 auto;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-header {
+    max-width: {{ section.settings.header_width }}px;
+    margin: 0 auto {{ section.settings.header_bottom_gap }}px;
+    text-align: center;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-heading {
+    margin: 0;
+    color: var(--wondear-eb-text);
+    font-size: clamp({{ section.settings.heading_min_size }}px, 4.2vw, {{ section.settings.heading_max_size }}px);
+    font-weight: {{ section.settings.heading_weight }};
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-subheading {
+    max-width: 720px;
+    margin: 16px auto 0;
+    color: var(--wondear-eb-muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-list {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.desktop_columns }}, minmax(0, 1fr));
+    gap: var(--wondear-eb-gap);
+    align-items: stretch;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: 1px solid var(--wondear-eb-border);
+    border-radius: var(--wondear-eb-radius);
+    background: var(--wondear-eb-card-bg);
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-card:hover {
+    transform: translateY(-6px);
+    border-color: {{ section.settings.border_color | color_modify: 'alpha', 0.12 }};
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(17, 17, 17, 0.92);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    backdrop-filter: blur(8px);
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-image-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+    padding: 0;
+    background: var(--wondear-eb-image-bg);
+    overflow: hidden;
+    text-decoration: none;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-image-link {
+    cursor: pointer;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-image {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    mix-blend-mode: normal;
+    transition: filter 0.45s ease;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-card:hover .wondear-eb-grid-image {
+    transform: none;
+    filter: brightness(1.02) contrast(1.02);
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-placeholder {
+    display: grid;
+    place-items: center;
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    margin: 20px;
+    border: 1px dashed rgba(17, 17, 17, 0.18);
+    border-radius: 14px;
+    color: var(--wondear-eb-muted);
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: {{ section.settings.card_padding }}px;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-title {
+    margin: 0;
+    color: var(--wondear-eb-card-title-color);
+    font-size: {{ section.settings.card_title_size }}px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-title a {
+    text-decoration: none;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-desc {
+    margin: 12px 0 0;
+    color: var(--wondear-eb-muted);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-price-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 9px;
+    margin-top: 20px;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-regular-price {
+    color: #8a8a8a;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-early-price {
+    color: var(--wondear-eb-early-price-color);
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-save {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: {{ section.settings.accent_color | color_modify: 'alpha', 0.12 }};
+    color: var(--wondear-eb-accent);
+    font-size: 12px;
+    font-weight: 850;
+    line-height: 1;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-coupon-price-box {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 13px 14px;
+    border: 1px solid var(--wondear-eb-coupon-border);
+    border-radius: 14px;
+    background: var(--wondear-eb-coupon-bg);
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-coupon-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-coupon-label {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    color: var(--wondear-eb-coupon-label-color);
+    font-size: 13px;
+    font-weight: 850;
+    line-height: 1.15;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-coupon-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
+    padding: 5px 8px;
+    border: 1px dashed currentColor;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-coupon-price {
+    color: var(--wondear-eb-coupon-price-color);
+    font-size: 26px;
+    font-weight: 950;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-coupon-note {
+    margin: 0;
+    color: var(--wondear-eb-muted);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 24px;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-checkout-form {
+    width: 100%;
+    margin: 0;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 50px;
+    padding: 14px 20px;
+    border: 1px solid var(--wondear-eb-button-bg);
+    border-radius: 999px;
+    background: var(--wondear-eb-button-bg);
+    color: var(--wondear-eb-button-text);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    appearance: none;
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-button:hover {
+    background: var(--wondear-eb-button-hover);
+    border-color: var(--wondear-eb-button-hover);
+    transform: translateY(-1px);
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-button[disabled]:hover {
+    background: var(--wondear-eb-button-bg);
+    border-color: var(--wondear-eb-button-bg);
+    transform: none;
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-button-secondary {
+    background: transparent;
+    color: var(--wondear-eb-text);
+    border-color: rgba(17, 17, 17, 0.18);
+  }
+
+  #{{ section_anchor_id }} .wondear-eb-grid-button-secondary:hover {
+    background: rgba(17, 17, 17, 0.04);
+    color: var(--wondear-eb-text);
+    border-color: rgba(17, 17, 17, 0.28);
+  }
+
+  @media (max-width: 1100px) {
+    #{{ section_anchor_id }} .wondear-eb-grid-list {
+      grid-template-columns: repeat({{ section.settings.tablet_columns }}, minmax(0, 1fr));
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-image-wrap {
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    #{{ section_anchor_id }} {
+      padding: {{ section.settings.mobile_padding_top }}px {{ section.settings.mobile_padding_x }}px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-header {
+      margin-bottom: {{ section.settings.mobile_header_bottom_gap }}px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-heading {
+      font-size: {{ section.settings.mobile_heading_size }}px;
+      line-height: 1.08;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-subheading {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    {% if section.settings.mobile_layout == 'carousel' %}
+      #{{ section_anchor_id }} .wondear-eb-grid-list {
+        display: flex;
+        gap: 14px;
+        margin-right: -{{ section.settings.mobile_padding_x }}px;
+        padding-right: {{ section.settings.mobile_padding_x }}px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+
+      #{{ section_anchor_id }} .wondear-eb-grid-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      #{{ section_anchor_id }} .wondear-eb-grid-card {
+        flex: 0 0 {{ section.settings.mobile_card_width }}vw;
+        scroll-snap-align: start;
+      }
+    {% else %}
+      #{{ section_anchor_id }} .wondear-eb-grid-list {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    {% endif %}
+
+    #{{ section_anchor_id }} .wondear-eb-grid-card:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-image-wrap {
+      aspect-ratio: 1 / 1;
+      padding: 0;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-image {
+      height: 100%;
+      object-fit: contain;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-placeholder {
+      height: calc(100% - 32px);
+      margin: 16px;
+      width: calc(100% - 32px);
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-info {
+      padding: {{ section.settings.mobile_card_padding }}px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-title {
+      font-size: {{ section.settings.mobile_card_title_size }}px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-desc {
+      font-size: 14px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-early-price {
+      font-size: 22px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-coupon-price-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-coupon-top {
+      align-items: flex-start;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-coupon-label {
+      font-size: 12px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-coupon-code {
+      min-height: 22px;
+      padding: 4px 7px;
+      font-size: 11px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-coupon-price {
+      font-size: 23px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-coupon-note {
+      font-size: 11px;
+    }
+
+    #{{ section_anchor_id }} .wondear-eb-grid-button {
+      width: 100%;
+      min-height: 48px;
+    }
+  }
+</style>
+
+<section
+  id="{{ section_anchor_id }}"
+  class="wondear-eb-grid-section"
+  aria-label="{{ section.settings.aria_label | escape }}"
+>
+  <div class="wondear-eb-grid-container">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <header class="wondear-eb-grid-header">
+        {% if section.settings.heading != blank %}
+          <h2 class="wondear-eb-grid-heading">
+            {{ section.settings.heading | escape }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.subheading != blank %}
+          <div class="wondear-eb-grid-subheading">
+            {{ section.settings.subheading }}
+          </div>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    <div class="wondear-eb-grid-list" role="list">
+      {% for block in section.blocks %}
+        {% liquid
+          assign card_product = block.settings.product
+
+          assign card_variant = blank
+          assign product_url = blank
+
+          if card_product != blank
+            assign card_variant = card_product.selected_or_first_available_variant
+            assign product_url = card_product.url
+          endif
+
+          assign card_url = block.settings.custom_url
+
+          if card_url == blank
+            assign card_url = product_url
+          endif
+
+          assign image_link_url = card_url
+
+          assign learn_more_url = product_url
+
+          if learn_more_url == blank
+            assign learn_more_url = card_url
+          endif
+
+          assign card_image = block.settings.image
+
+          if card_image == blank and card_product != blank
+            assign card_image = card_product.featured_image
+          endif
+
+          assign card_title = blank
+
+          if card_product != blank
+            assign card_title = card_product.title
+          endif
+
+          assign product_compare_price_text = blank
+          assign product_current_price_text = blank
+          assign product_save_text = blank
+          assign coupon_price_text = blank
+          assign coupon_note = blank
+          assign coupon_code = blank
+          assign coupon_discount_cents = 0
+          assign card_coupon_enabled = block.settings.enable_coupon_price
+
+          if section.settings.show_coupon_price and card_coupon_enabled
+            assign coupon_code = block.settings.coupon_code | default: section.settings.default_coupon_code
+            assign coupon_discount_amount = block.settings.coupon_discount_amount | default: section.settings.default_coupon_discount_amount | default: 0
+            assign coupon_discount_cents = coupon_discount_amount | times: 100
+          endif
+
+          if card_product != blank
+            assign product_current_price_text = card_product.price | money
+
+            if card_product.price_varies
+              assign product_current_price_text = 'From ' | append: product_current_price_text
+            endif
+
+            if card_product.compare_at_price > card_product.price
+              assign product_compare_price_text = card_product.compare_at_price | money
+              assign product_save_amount = card_product.compare_at_price | minus: card_product.price
+              assign product_save_money = product_save_amount | money
+              assign product_save_text = 'Save ' | append: product_save_money
+            endif
+
+            if card_coupon_enabled and coupon_discount_cents > 0
+              assign coupon_price = card_product.price | minus: coupon_discount_cents
+
+              if coupon_price < 0
+                assign coupon_price = 0
+              endif
+
+              assign coupon_price_text = coupon_price | money
+
+              if card_product.price_varies
+                assign coupon_price_text = 'From ' | append: coupon_price_text
+              endif
+
+              assign coupon_note_template = section.settings.coupon_note_text | default: 'Use code [code] at checkout.'
+              assign coupon_note = coupon_note_template | replace: '[code]', coupon_code
+            endif
+          endif
+        %}
+
+        <article class="wondear-eb-grid-card" role="listitem" {{ block.shopify_attributes }}>
+          {% if block.settings.badge != blank %}
+            <span class="wondear-eb-grid-badge">{{ block.settings.badge | escape }}</span>
+          {% endif %}
+
+          {% if image_link_url != blank %}
+            <a
+              class="wondear-eb-grid-image-wrap wondear-eb-grid-image-link"
+              href="{{ image_link_url }}"
+              aria-label="{{ card_title | default: 'View product' | escape }}"
+            >
+              {% if card_image != blank %}
+                {{
+                  card_image
+                  | image_url: width: 900
+                  | image_tag:
+                    class: 'wondear-eb-grid-image',
+                    loading: 'lazy',
+                    decoding: 'async',
+                    alt: card_title
+                }}
+              {% else %}
+                <div class="wondear-eb-grid-placeholder">
+                  Choose a product or image
+                </div>
+              {% endif %}
+            </a>
+          {% else %}
+            <div class="wondear-eb-grid-image-wrap">
+              {% if card_image != blank %}
+                {{
+                  card_image
+                  | image_url: width: 900
+                  | image_tag:
+                    class: 'wondear-eb-grid-image',
+                    loading: 'lazy',
+                    decoding: 'async',
+                    alt: card_title
+                }}
+              {% else %}
+                <div class="wondear-eb-grid-placeholder">
+                  Choose a product or image
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <div class="wondear-eb-grid-info">
+            {% if card_title != blank %}
+              <h3 class="wondear-eb-grid-title">
+                {% if card_url != blank %}
+                  <a href="{{ card_url }}">{{ card_title | escape }}</a>
+                {% else %}
+                  {{ card_title | escape }}
+                {% endif %}
+              </h3>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <div class="wondear-eb-grid-desc">
+                {{ block.settings.description }}
+              </div>
+            {% endif %}
+
+            {% if product_compare_price_text != blank or product_current_price_text != blank or product_save_text != blank %}
+              <div class="wondear-eb-grid-price-row">
+                {% if product_compare_price_text != blank %}
+                  <span class="wondear-eb-grid-regular-price">{{ product_compare_price_text }}</span>
+                {% endif %}
+
+                {% if product_current_price_text != blank %}
+                  <span class="wondear-eb-grid-early-price">{{ product_current_price_text }}</span>
+                {% endif %}
+
+                {% if product_save_text != blank %}
+                  <span class="wondear-eb-grid-save">{{ product_save_text }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if coupon_price_text != blank %}
+              <div class="wondear-eb-grid-coupon-price-box" aria-label="Price after coupon">
+                <div class="wondear-eb-grid-coupon-top">
+                  <span class="wondear-eb-grid-coupon-label">
+                    {{ section.settings.coupon_price_label | default: 'After Coupon' | escape }}
+                    {% if coupon_code != blank %}
+                      <span class="wondear-eb-grid-coupon-code">{{ coupon_code | escape }}</span>
+                    {% endif %}
+                  </span>
+
+                  <strong class="wondear-eb-grid-coupon-price">{{ coupon_price_text }}</strong>
+                </div>
+
+                {% if coupon_note != blank %}
+                  <p class="wondear-eb-grid-coupon-note">{{ coupon_note | escape }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <div class="wondear-eb-grid-actions">
+              {% if block.settings.primary_button_text != blank %}
+                {% if card_variant != blank and card_variant.available %}
+                  <form class="wondear-eb-grid-checkout-form" method="post" action="{{ routes.cart_add_url }}">
+                    <input type="hidden" name="id" value="{{ card_variant.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    {% if card_coupon_enabled and section.settings.apply_coupon_to_checkout and coupon_code != blank and coupon_discount_cents > 0 %}
+                      <input type="hidden" name="return_to" value="/checkout?discount={{ coupon_code | url_encode }}">
+                    {% else %}
+                      <input type="hidden" name="return_to" value="/checkout">
+                    {% endif %}
+
+                    <button class="wondear-eb-grid-button" type="submit">
+                      {{ block.settings.primary_button_text | escape }}
+                    </button>
+                  </form>
+                {% elsif card_product != blank %}
+                  <button class="wondear-eb-grid-button" type="button" disabled>
+                    Sold Out
+                  </button>
+                {% elsif card_url != blank %}
+                  <a class="wondear-eb-grid-button" href="{{ card_url }}">
+                    {{ block.settings.primary_button_text | escape }}
+                  </a>
+                {% endif %}
+              {% endif %}
+
+              {% if block.settings.secondary_button_text != blank and learn_more_url != blank %}
+                <a class="wondear-eb-grid-button wondear-eb-grid-button-secondary" href="{{ learn_more_url }}">
+                  {{ block.settings.secondary_button_text | escape }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Wondear Early Bird Grid",
+  "tag": "section",
+  "class": "section-wondear-early-bird-grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "ARIA label",
+      "default": "Wondear early bird products"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Early Bird Access to Wondear Favorites"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Pre-order selected Wondear products with limited early bird pricing.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container width",
+      "min": 960,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1340
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "default": "3",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "tablet_columns",
+      "label": "Tablet columns",
+      "default": "2",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "default": "carousel",
+      "options": [
+        {
+          "value": "carousel",
+          "label": "Horizontal carousel"
+        },
+        {
+          "value": "stack",
+          "label": "Stacked cards"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_width",
+      "label": "Mobile carousel card width",
+      "min": 70,
+      "max": 95,
+      "step": 1,
+      "unit": "vw",
+      "default": 82
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "min": 8,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "header_width",
+      "label": "Header max width",
+      "min": 600,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 860
+    },
+    {
+      "type": "range",
+      "id": "header_bottom_gap",
+      "label": "Header bottom gap",
+      "min": 16,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "mobile_header_bottom_gap",
+      "label": "Mobile header bottom gap",
+      "min": 12,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Desktop horizontal padding",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_x",
+      "label": "Mobile horizontal padding",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_min_size",
+      "label": "Heading minimum size",
+      "min": 24,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "heading_max_size",
+      "label": "Heading maximum size",
+      "min": 42,
+      "max": 86,
+      "step": 1,
+      "unit": "px",
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "label": "Mobile heading size",
+      "min": 20,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "label": "Heading font weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "label": "Card title size",
+      "min": 16,
+      "max": 34,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_title_size",
+      "label": "Mobile card title size",
+      "min": 16,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 21
+    },
+    {
+      "type": "header",
+      "content": "Card and image"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card content padding",
+      "min": 12,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_padding",
+      "label": "Mobile card content padding",
+      "min": 10,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Coupon price display"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_coupon_price",
+      "label": "Show price after coupon",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "coupon_price_label",
+      "label": "Coupon price label",
+      "default": "After Coupon"
+    },
+    {
+      "type": "text",
+      "id": "default_coupon_code",
+      "label": "Default coupon code",
+      "default": "PD100",
+      "info": "Used when a product card does not have its own coupon code override."
+    },
+    {
+      "type": "text",
+      "id": "default_coupon_discount_amount",
+      "label": "Default coupon discount amount",
+      "default": "100",
+      "info": "Enter number only. Example: 50 means $50 off; 100 means $100 off. Do not include currency symbols."
+    },
+    {
+      "type": "text",
+      "id": "coupon_note_text",
+      "label": "Coupon note text",
+      "default": "Use code [code] at checkout.",
+      "info": "Use [code] as the coupon code placeholder."
+    },
+    {
+      "type": "checkbox",
+      "id": "apply_coupon_to_checkout",
+      "label": "Apply coupon code to checkout button",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f6f1ea"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "image_background_color",
+      "label": "Image background",
+      "default": "#f3eee7"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "General text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card title color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "early_price_color",
+      "label": "Early bird price color",
+      "default": "#c85f42"
+    },
+    {
+      "type": "color",
+      "id": "coupon_price_color",
+      "label": "Coupon price color",
+      "default": "#d32f2f"
+    },
+    {
+      "type": "color",
+      "id": "coupon_label_color",
+      "label": "Coupon label color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "coupon_background_color",
+      "label": "Coupon price background",
+      "default": "#fff7f9"
+    },
+    {
+      "type": "color",
+      "id": "coupon_border_color",
+      "label": "Coupon price border",
+      "default": "#f0c2c9"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#c85f42"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Primary button background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Primary button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Primary button hover",
+      "default": "#333333"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom image",
+          "info": "If blank, the selected product featured image will be used."
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Early Bird"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_coupon_price",
+          "label": "Enable coupon price for this product card",
+          "default": true,
+          "info": "Turn this off for products that do not have a coupon. When off, the after-coupon price and checkout discount code will not show for this card."
+        },
+        {
+          "type": "text",
+          "id": "coupon_code",
+          "label": "Coupon code override",
+          "info": "Leave blank to use the default coupon code from section settings. Example: PD50 or PD100."
+        },
+        {
+          "type": "text",
+          "id": "coupon_discount_amount",
+          "label": "Coupon discount amount override",
+          "info": "Leave blank to use the default discount amount. Enter number only. Example: 50 means $50 off."
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "custom_url",
+          "label": "Product landing page link",
+          "info": "If blank, the selected product URL will be used. Product image and title will use this link."
+        },
+        {
+          "type": "text",
+          "id": "primary_button_text",
+          "label": "Primary button text",
+          "default": "Pre-Order Now"
+        },
+        {
+          "type": "text",
+          "id": "secondary_button_text",
+          "label": "Secondary button text",
+          "default": "Learn More"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wondear Early Bird Grid",
+      "blocks": [
+        {
+          "type": "product_card",
+          "settings": {
+            "badge": "Early Bird",
+            "description": "<p>A comfortable hands-free LED mask designed for simple at-home skincare routines.</p>",
+            "custom_url": "/products/wondear-3d-infrared-photon-skincare-mask",
+            "primary_button_text": "Pre-Order Now",
+            "secondary_button_text": "Learn More"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "badge": "Limited Batch",
+            "description": "<p>A flexible full-body light therapy mat for easy daily home sessions.</p>",
+            "custom_url": "/products/wondear-red-light-therapy-mat",
+            "primary_button_text": "Pre-Order Now",
+            "secondary_button_text": "Learn More"
+          }
+        },
+        {
+          "type": "product_card",
+          "settings": {
+            "badge": "New Arrival",
+            "description": "<p>An enclosed full-body format designed for comfortable red and near-infrared light sessions.</p>",
+            "custom_url": "/products/wondear-red-light-therapy-bag",
+            "primary_button_text": "Pre-Order Now",
+            "secondary_button_text": "Learn More"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

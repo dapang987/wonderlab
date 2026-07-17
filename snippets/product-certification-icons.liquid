@@ -1,0 +1,112 @@
+{% doc %}
+  Renders up to five certification icons below the product media gallery.
+
+  @param {object} settings - Product information section settings
+{% enddoc %}
+
+{% liquid
+  assign has_certification_icons = settings.show_cert_icons
+%}
+
+{% if has_certification_icons %}
+  <div
+    class="product-certification-icons"
+    aria-label="Product certifications"
+    style="
+      --cert-icons-gap: {{ settings.cert_gap }}px;
+      --cert-icons-top-spacing: {{ settings.cert_top_spacing }}px;
+      --cert-icon-size: {{ settings.cert_icon_size }}px;
+      --cert-icons-mobile-columns: {{ settings.cert_mobile_columns }};
+      --cert-icons-mobile-gap: {{ settings.cert_mobile_gap }}px;
+      --cert-icon-mobile-size: {{ settings.cert_mobile_icon_size }}px;
+    "
+  >
+    {% for i in (1..5) %}
+      {% liquid
+        assign icon_key = 'cert_icon_' | append: i
+        assign certification_icon = settings[icon_key]
+        assign fallback_alt = 'Certification ' | append: i
+        assign icon_alt = certification_icon.alt | default: fallback_alt
+
+        case i
+          when 1
+            assign default_icon_url = 'https://cdn.shopify.com/s/files/1/0726/2086/7673/files/vv5.jpg?v=1781186352'
+          when 2
+            assign default_icon_url = 'https://cdn.shopify.com/s/files/1/0726/2086/7673/files/vv4.jpg?v=1781186158'
+          when 3
+            assign default_icon_url = 'https://cdn.shopify.com/s/files/1/0726/2086/7673/files/vv3.jpg?v=1781185978'
+          when 4
+            assign default_icon_url = 'https://cdn.shopify.com/s/files/1/0726/2086/7673/files/vv7.jpg?v=1781286994'
+          when 5
+            assign default_icon_url = 'https://cdn.shopify.com/s/files/1/0726/2086/7673/files/vv2.jpg?v=1781185535'
+        endcase
+      %}
+
+      <div class="product-certification-icons__item">
+        {% if certification_icon != blank %}
+          {{
+            certification_icon
+            | image_url: width: 360
+            | image_tag:
+              loading: 'lazy',
+              widths: '72, 96, 120, 160, 240, 360',
+              sizes: '(min-width: 750px) 140px, 96px',
+              class: 'product-certification-icons__image',
+              alt: icon_alt
+          }}
+        {% else %}
+          {% # theme-check-disable RemoteAsset %}
+          <img
+            src="{{ default_icon_url }}"
+            class="product-certification-icons__image"
+            alt="{{ fallback_alt }}"
+            width="658"
+            height="315"
+            loading="lazy"
+          >
+          {% # theme-check-enable RemoteAsset %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .product-certification-icons {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center;
+    gap: var(--cert-icons-gap);
+    position: relative;
+    isolation: isolate;
+    align-self: start;
+    height: fit-content;
+    width: 100%;
+    margin-block-start: var(--cert-icons-top-spacing);
+    background: var(--color-background);
+  }
+
+  .product-certification-icons__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .product-certification-icons__image {
+    display: block;
+    width: min(100%, var(--cert-icon-size));
+    height: auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-certification-icons {
+      grid-template-columns: repeat(var(--cert-icons-mobile-columns), minmax(0, 1fr));
+      gap: var(--cert-icons-mobile-gap);
+    }
+
+    .product-certification-icons__image {
+      width: min(100%, var(--cert-icon-mobile-size));
+    }
+  }
+{% endstylesheet %}

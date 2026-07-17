@@ -1,0 +1,93 @@
+<div class="product-drawer-block-container" {{ block.shopify_attributes }}>
+  <button type="button" class="drawer-trigger-btn button button--secondary" data-drawer-target="product-desc-drawer-{{ block.id }}">
+    {{ block.settings.button_label }}
+    <span class="icon-arrow">→</span>
+  </button>
+
+  <div id="product-desc-drawer-{{ block.id }}" class="custom-product-drawer" aria-hidden="true">
+    <div class="drawer-overlay" data-drawer-close></div>
+    
+    <div class="drawer-inner">
+      <div class="drawer-header">
+        <h3 class="drawer-title">{{ block.settings.drawer_title }}</h3>
+        <button type="button" class="drawer-close-btn" data-drawer-close aria-label="关闭">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      
+      <div class="drawer-body rte">
+        {{ product.description }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .product-drawer-block-container { margin: 15px 0; width: 100%; }
+  .drawer-trigger-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; font-size: 16px; font-weight: bold; cursor: pointer; }
+  .custom-product-drawer { position: fixed; z-index: 999999; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh; display: flex; justify-content: flex-end; pointer-events: none; visibility: hidden; }
+  .custom-product-drawer .drawer-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); opacity: 0; transition: opacity 0.3s ease; }
+  .custom-product-drawer .drawer-inner { position: relative; width: 450px; max-width: 90vw; height: 100%; background: rgb(var(--color-background, #fff)); color: rgb(var(--color-foreground, #000)); transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+  .custom-product-drawer.is-active { pointer-events: auto; visibility: visible; }
+  .custom-product-drawer.is-active .drawer-overlay { opacity: 1; }
+  .custom-product-drawer.is-active .drawer-inner { transform: translateX(0); }
+  .custom-product-drawer .drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+  .custom-product-drawer .drawer-title { margin: 0; font-size: 1.5rem; }
+  .custom-product-drawer .drawer-close-btn { background: none; border: none; cursor: pointer; padding: 5px; color: inherit; display: flex; align-items: center; justify-content: center; }
+  .custom-product-drawer .drawer-close-btn:hover { opacity: 0.7; }
+  .custom-product-drawer .drawer-body { padding: 25px; overflow-y: auto; flex: 1; }
+  .custom-product-drawer .drawer-body img { max-width: 100%; height: auto; }
+</style>
+
+<script>
+  if (!window.drawerScriptLoaded) {
+    window.drawerScriptLoaded = true;
+    document.addEventListener('click', function(e) {
+      const trigger = e.target.closest('.drawer-trigger-btn');
+      if (trigger) {
+        e.preventDefault();
+        const targetId = trigger.getAttribute('data-drawer-target');
+        const drawer = document.getElementById(targetId);
+        if (drawer) {
+          drawer.classList.add('is-active');
+          document.body.style.overflow = 'hidden'; 
+        }
+      }
+      
+      const closeBtn = e.target.closest('[data-drawer-close]');
+      if (closeBtn) {
+        e.preventDefault();
+        const drawer = closeBtn.closest('.custom-product-drawer');
+        if (drawer) {
+          drawer.classList.remove('is-active');
+          document.body.style.overflow = ''; 
+        }
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "抽屉式产品描述",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "按钮文字",
+      "default": "查看详细产品介绍"
+    },
+    {
+      "type": "text",
+      "id": "drawer_title",
+      "label": "抽屉面板标题",
+      "default": "详细说明"
+    }
+  ],
+  "presets": [
+    {
+      "name": "抽屉式产品描述"
+    }
+  ]
+}
+{% endschema %}

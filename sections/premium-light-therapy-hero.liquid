@@ -1,0 +1,1341 @@
+{% comment %}
+  Premium Light Therapy Hero
+  - Shopify Section for Horizon theme
+  - Requires Swiper + GSAP + ScrollTrigger loaded globally in theme.liquid
+{% endcomment %}
+
+<section
+  id="lux-hero-{{ section.id }}"
+  class="lux-hero-section"
+  data-section-id="{{ section.id }}"
+  data-autoplay="{{ section.settings.enable_autoplay }}"
+  data-autoplay-delay="{{ section.settings.autoplay_delay | times: 1000 }}"
+>
+  <div class="lux-hero-wrap">
+    <div
+      class="lux-hero"
+      style="
+        --lux-page-bg: {{ section.settings.page_bg }};
+        --lux-card-radius: {{ section.settings.card_radius }}px;
+        --lux-card-max-width: {{ section.settings.max_width }}px;
+        --lux-card-height: {{ section.settings.card_height }}px;
+        --lux-text-strong: {{ section.settings.text_strong }};
+        --lux-text-soft: {{ section.settings.text_soft }};
+        --lux-pill-bg: {{ section.settings.pill_bg }};
+        --lux-pill-border: {{ section.settings.pill_border }};
+        --lux-button-bg: {{ section.settings.button_bg }};
+        --lux-button-text: {{ section.settings.button_text }};
+      "
+    >
+      <span class="lux-hero-glow glow-1"></span>
+      <span class="lux-hero-glow glow-2"></span>
+      <span class="lux-hero-glow glow-3"></span>
+
+      <button class="lux-nav lux-nav-prev" aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M14.5 5L8 11.5L14.5 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button class="lux-nav lux-nav-next" aria-label="Next slide">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M9.5 5L16 11.5L9.5 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div class="swiper lux-swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% liquid
+              assign bg_gradient = block.settings.bg_gradient
+              assign panel_variant = block.settings.panel_variant
+              assign image = block.settings.product_image
+            %}
+            <div
+              class="swiper-slide"
+              {{ block.shopify_attributes }}
+              data-bg="{{ bg_gradient | escape }}"
+            >
+              <div class="lux-slide-inner">
+                <div class="lux-copy">
+                  {% if block.settings.kicker != blank %}
+                    <p class="lux-kicker">{{ block.settings.kicker }}</p>
+                  {% endif %}
+
+                  <h2 class="lux-title">
+                    {% if block.settings.title_strong != blank %}
+                      <span class="lux-title-strong">{{ block.settings.title_strong }}</span>
+                    {% endif %}
+                    {% if block.settings.title_soft != blank %}
+                      <span class="lux-title-soft">{{ block.settings.title_soft }}</span>
+                    {% endif %}
+                  </h2>
+                </div>
+
+                <div class="lux-product-zone" data-parallax>
+                  <div class="lux-product-shadow"></div>
+
+                  {% if image != blank %}
+                    <div class="lux-product-image-wrap js-tilt {% if panel_variant != blank %}{{ panel_variant }}{% endif %}">
+                      {{
+                        image
+                        | image_url: width: 1200
+                        | image_tag:
+                          loading: 'lazy',
+                          class: 'lux-product-image',
+                          widths: '600, 900, 1200, 1600, 2000',
+                          sizes: '(max-width: 767px) 88vw, (max-width: 1100px) 560px, 760px'
+                      }}
+                    </div>
+                  {% else %}
+                    <div class="lux-product-frame js-tilt {% if panel_variant != blank %}{{ panel_variant }}{% endif %}">
+                      <div class="lux-panel-top-screws">
+                        <span></span><span></span><span></span><span></span>
+                      </div>
+                      <div class="lux-side-vent"></div>
+                      <div class="lux-grill">
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                      </div>
+                      <div class="lux-led-grid" data-led-grid></div>
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="lux-floating-pill">
+                  <div class="lux-pill-label">{{ block.settings.label }}</div>
+                  <div class="lux-pill-price">{{ block.settings.price_text }}</div>
+
+                  {% if block.settings.button_text != blank %}
+                    <a
+                      href="{% if block.settings.button_link != blank %}{{ block.settings.button_link }}{% else %}#{% endif %}"
+                      class="lux-pill-button"
+                    >
+                      {{ block.settings.button_text }}
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="swiper-pagination lux-pagination"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    #lux-hero-{{ section.id }} {
+      --page-bg: var(--lux-page-bg, #f2eee8);
+      --card-radius: var(--lux-card-radius, 42px);
+      --card-max-width: var(--lux-card-max-width, 1320px);
+      --card-height: var(--lux-card-height, 860px);
+
+      --text-strong: var(--lux-text-strong, #fff8f4);
+      --text-soft: var(--lux-text-soft, rgba(255, 240, 235, 0.62));
+
+      --pill-bg: var(--lux-pill-bg, rgba(98, 53, 56, 0.68));
+      --pill-border: var(--lux-pill-border, rgba(255, 255, 255, 0.08));
+
+      --button-bg: var(--lux-button-bg, #f3eee7);
+      --button-text: var(--lux-button-text, #171311);
+
+      --transition-fast: 0.3s ease;
+      --transition-slow: 0.6s ease;
+      background: var(--page-bg);
+    }
+
+    #lux-hero-{{ section.id }} * {
+      box-sizing: border-box;
+    }
+
+    #lux-hero-{{ section.id }} .lux-hero-wrap {
+      width: 100%;
+      padding: 48px 24px 72px;
+    }
+
+    #lux-hero-{{ section.id }} .lux-hero {
+      position: relative;
+      max-width: var(--card-max-width);
+      min-height: var(--card-height);
+      margin: 0 auto;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 22% 28%, rgba(255, 79, 79, 0.82), transparent 30%),
+        radial-gradient(circle at 57% 26%, rgba(255, 80, 113, 0.55), transparent 24%),
+        radial-gradient(circle at 78% 72%, rgba(255, 255, 255, 0.36), transparent 28%),
+        linear-gradient(130deg, #ff6d33 0%, #ff1737 24%, #ff2140 44%, #ff4a57 62%, #ef9f96 80%, #efd9d6 100%);
+      box-shadow:
+        0 30px 80px rgba(114, 76, 64, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      isolation: isolate;
+      transform: translateZ(0);
+    }
+
+    #lux-hero-{{ section.id }} .lux-hero::before,
+    #lux-hero-{{ section.id }} .lux-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #lux-hero-{{ section.id }} .lux-hero::before {
+      background:
+        radial-gradient(circle at 18% 68%, rgba(255, 255, 255, 0.08), transparent 24%),
+        radial-gradient(circle at 62% 44%, rgba(255, 255, 255, 0.08), transparent 16%),
+        radial-gradient(circle at 85% 82%, rgba(255, 210, 224, 0.12), transparent 18%);
+      mix-blend-mode: screen;
+      opacity: 0.95;
+    }
+
+    #lux-hero-{{ section.id }} .lux-hero::after {
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.06) 0%,
+        rgba(255, 255, 255, 0.01) 32%,
+        rgba(0, 0, 0, 0.06) 100%
+      );
+    }
+
+    #lux-hero-{{ section.id }} .lux-hero-glow {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(40px);
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform, opacity;
+    }
+
+    #lux-hero-{{ section.id }} .glow-1 {
+      width: 300px;
+      height: 300px;
+      top: 68px;
+      left: 100px;
+      background: rgba(255, 124, 79, 0.42);
+    }
+
+    #lux-hero-{{ section.id }} .glow-2 {
+      width: 360px;
+      height: 360px;
+      top: 120px;
+      left: 48%;
+      transform: translateX(-50%);
+      background: rgba(255, 96, 140, 0.22);
+    }
+
+    #lux-hero-{{ section.id }} .glow-3 {
+      width: 420px;
+      height: 420px;
+      right: 40px;
+      bottom: 36px;
+      background: rgba(255, 239, 237, 0.28);
+    }
+
+    #lux-hero-{{ section.id }} .lux-swiper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    #lux-hero-{{ section.id }} .swiper-slide {
+      position: relative;
+      min-height: var(--card-height);
+      display: flex;
+      align-items: stretch;
+    }
+
+    #lux-hero-{{ section.id }} .lux-slide-inner {
+      position: relative;
+      width: 100%;
+      min-height: var(--card-height);
+      padding: 88px 64px 148px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    #lux-hero-{{ section.id }} .lux-copy {
+      position: relative;
+      z-index: 3;
+      max-width: 1200px;
+      text-align: center;
+      margin: 0 auto;
+    }
+
+    #lux-hero-{{ section.id }} .lux-kicker {
+      margin: 0 0 12px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 244, 240, 0.72);
+    }
+
+    #lux-hero-{{ section.id }} .lux-title {
+      margin: 0;
+      font-size: clamp(40px, 4vw, 62px);
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+
+    #lux-hero-{{ section.id }} .lux-title-strong {
+      color: var(--text-strong);
+    }
+
+    #lux-hero-{{ section.id }} .lux-title-soft {
+      color: var(--text-soft);
+    }
+
+    #lux-hero-{{ section.id }} .lux-product-zone {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: min(1120px, 82vw);
+      transform: translateX(-50%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    #lux-hero-{{ section.id }} .lux-product-shadow {
+      position: absolute;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 62%;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(73, 20, 26, 0.18);
+      filter: blur(18px);
+      z-index: 0;
+    }
+
+    #lux-hero-{{ section.id }} .lux-product-image-wrap,
+    #lux-hero-{{ section.id }} .lux-product-frame {
+      position: relative;
+      width: 580px;
+      z-index: 1;
+      transform-style: preserve-3d;
+      will-change: transform;
+      pointer-events: auto;
+    }
+
+    #lux-hero-{{ section.id }} .lux-product-image-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lux-hero-{{ section.id }} .lux-product-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 1240px;
+      object-fit: contain;
+      filter: drop-shadow(0 18px 40px rgba(70, 24, 20, 0.14));
+    }
+
+    #lux-hero-{{ section.id }} .lux-product-frame {
+      aspect-ratio: 0.58 / 1;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(238,238,238,0.98) 55%, rgba(220,220,220,1) 100%);
+      box-shadow:
+        0 18px 40px rgba(70, 24, 20, 0.14),
+        inset 0 0 0 2px rgba(255,255,255,0.55),
+        inset 8px 0 16px rgba(255,255,255,0.32),
+        inset -10px 0 20px rgba(20,20,20,0.05);
+      overflow: hidden;
+    }
+
+    #lux-hero-{{ section.id }} .variant-2 {
+      width: 640px;
+    }
+
+    #lux-hero-{{ section.id }} .variant-3 {
+      width: 560px;
+      border-radius: 26px;
+    }
+
+    #lux-hero-{{ section.id }} .lux-panel-top-screws {
+      position: absolute;
+      top: 10px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 3;
+    }
+
+    #lux-hero-{{ section.id }} .lux-panel-top-screws span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #8a8a8a, #d8d8d8);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);
+      opacity: 0.9;
+    }
+
+    #lux-hero-{{ section.id }} .lux-side-vent {
+      position: absolute;
+      top: 84px;
+      right: 0;
+      width: 16px;
+      height: 84px;
+      border-radius: 8px 0 0 8px;
+      background: #151515;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      z-index: 3;
+    }
+
+    #lux-hero-{{ section.id }} .lux-grill {
+      position: absolute;
+      bottom: 96px;
+      right: 6px;
+      width: 20px;
+      height: 86px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px 3px;
+      z-index: 3;
+      opacity: 0.72;
+    }
+
+    #lux-hero-{{ section.id }} .lux-grill span {
+      display: block;
+      width: 100%;
+      height: 4px;
+      border-radius: 3px;
+      background: #2a2a2a;
+    }
+
+    #lux-hero-{{ section.id }} .lux-led-grid {
+      position: absolute;
+      inset: 38px 22px 28px 22px;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 10px;
+      align-content: start;
+      z-index: 2;
+    }
+
+    #lux-hero-{{ section.id }} .variant-2 .lux-led-grid {
+      grid-template-columns: repeat(9, 1fr);
+      gap: 10px;
+      inset: 38px 22px 26px 22px;
+    }
+
+    #lux-hero-{{ section.id }} .variant-3 .lux-led-grid {
+      grid-template-columns: repeat(7, 1fr);
+      gap: 11px;
+      inset: 38px 22px 26px 22px;
+    }
+
+    #lux-hero-{{ section.id }} .lux-led {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 45% 40%, rgba(255,255,255,0.92) 0 14%, rgba(255,193,209,0.86) 15% 28%, rgba(245,54,84,0.94) 29% 56%, rgba(172,5,36,0.98) 57% 100%);
+      box-shadow:
+        0 0 10px rgba(255, 61, 105, 0.32),
+        inset 0 2px 4px rgba(255,255,255,0.4),
+        inset 0 -2px 4px rgba(116,0,30,0.35);
+      overflow: hidden;
+    }
+
+    #lux-hero-{{ section.id }} .lux-led::after {
+      content: "";
+      position: absolute;
+      top: 20%;
+      left: 24%;
+      width: 18%;
+      height: 18%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.72);
+      filter: blur(1px);
+    }
+
+    #lux-hero-{{ section.id }} .lux-floating-pill {
+      position: absolute;
+      left: 50%;
+      bottom: 64px;
+      transform: translateX(-50%);
+      width: min(800px, calc(100% - 72px));
+      border-radius: 999px;
+      background: var(--pill-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--pill-border);
+      box-shadow: 0 30px 80px rgba(62, 24, 28, 0.18);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr auto;
+      align-items: center;
+      gap: 20px;
+      padding: 12px 12px 12px 34px;
+      z-index: 4;
+      will-change: transform, opacity;
+    }
+
+    #lux-hero-{{ section.id }} .lux-pill-label {
+      min-width: 0;
+      color: #fff2ed;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    
+    }
+
+    #lux-hero-{{ section.id }} .lux-pill-price {
+      color: #fff2ed;
+      font-size: clamp(22px, 2vw, 28px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    #lux-hero-{{ section.id }} .lux-pill-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 164px;
+      min-height: 64px;
+      padding: 0 28px;
+      border-radius: 999px;
+      background: var(--button-bg);
+      color: var(--button-text);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 700;
+      transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-fast);
+      box-shadow: 0 12px 32px rgba(20, 14, 10, 0.12);
+    }
+
+    #lux-hero-{{ section.id }} .lux-pill-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(20, 14, 10, 0.18);
+      background: #faf6ef;
+    }
+
+    #lux-hero-{{ section.id }} .lux-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 5;
+      width: 54px;
+      height: 54px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 245, 240, 0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(71, 25, 28, 0.12);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition:
+        transform var(--transition-fast),
+        background var(--transition-fast),
+        opacity var(--transition-fast);
+      color: #fff8f3;
+    }
+
+    #lux-hero-{{ section.id }} .lux-nav:hover {
+      transform: translateY(-50%) scale(1.04);
+      background: rgba(255, 245, 240, 0.26);
+    }
+
+    #lux-hero-{{ section.id }} .lux-nav svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    #lux-hero-{{ section.id }} .lux-nav-prev {
+      left: 22px;
+    }
+
+    #lux-hero-{{ section.id }} .lux-nav-next {
+      right: 22px;
+    }
+
+    #lux-hero-{{ section.id }} .lux-pagination {
+      position: absolute;
+      left: 50%;
+      bottom: 22px !important;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: inline-flex;
+      gap: 8px;
+      width: auto !important;
+    }
+
+    #lux-hero-{{ section.id }} .lux-pagination .swiper-pagination-bullet {
+      width: 10px;
+      height: 10px;
+      margin: 0 !important;
+      background: rgba(255, 243, 238, 0.36);
+      opacity: 1;
+      transition:
+        width var(--transition-fast),
+        background var(--transition-fast),
+        border-radius var(--transition-fast);
+    }
+
+    #lux-hero-{{ section.id }} .lux-pagination .swiper-pagination-bullet-active {
+      width: 28px;
+      border-radius: 999px;
+      background: rgba(255, 248, 245, 0.95);
+    }
+
+    @media (max-width: 1100px) {
+      #lux-hero-{{ section.id }} {
+        --card-height: 820px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-slide-inner {
+        padding: 76px 42px 146px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-floating-pill {
+        width: min(720px, calc(100% - 56px));
+        grid-template-columns: 1fr 0.9fr auto;
+        padding-left: 24px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-product-zone {
+        width: min(980px, 78vw);
+      }
+
+      #lux-hero-{{ section.id }} .lux-product-image-wrap,
+      #lux-hero-{{ section.id }} .lux-product-frame {
+        width: 510px;
+      }
+
+      #lux-hero-{{ section.id }} .variant-2 {
+        width: 580px;
+      }
+
+      #lux-hero-{{ section.id }} .variant-3 {
+        width: 245px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      #lux-hero-{{ section.id }} {
+        --card-radius: 28px;
+        --card-height: 760px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-hero-wrap {
+        padding: 18px 14px 40px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-slide-inner {
+        min-height: var(--card-height);
+        padding: 42px 20px 190px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-kicker {
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-title {
+        font-size: clamp(30px, 8vw, 42px);
+        line-height: 1.08;
+      }
+
+      #lux-hero-{{ section.id }} .lux-nav {
+        width: 44px;
+        height: 44px;
+        top: auto;
+        bottom: 132px;
+        transform: none;
+      }
+
+      #lux-hero-{{ section.id }} .lux-nav:hover {
+        transform: scale(1.03);
+      }
+
+      #lux-hero-{{ section.id }} .lux-nav-prev {
+        left: 16px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-nav-next {
+        right: 16px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-product-zone {
+        width: min(96vw, 720px);
+      }
+
+      #lux-hero-{{ section.id }} .lux-product-shadow {
+        bottom: 18px;
+        width: 72%;
+      }
+
+      #lux-hero-{{ section.id }} .lux-product-image-wrap,
+      #lux-hero-{{ section.id }} .lux-product-frame {
+        width: 360px;
+      }
+
+      #lux-hero-{{ section.id }} .variant-2 {
+        width: 400px;
+      }
+
+      #lux-hero-{{ section.id }} .variant-3 {
+        width: 340px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-product-image {
+        max-height: 840px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-side-vent {
+        width: 12px;
+        height: 64px;
+        top: 60px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-grill {
+        bottom: 62px;
+        width: 16px;
+        height: 70px;
+        gap: 3px 2px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-led-grid {
+        inset: 26px 16px 20px 16px;
+        gap: 7px;
+      }
+
+      #lux-hero-{{ section.id }} .variant-2 .lux-led-grid {
+        inset: 26px 16px 20px 16px;
+        gap: 7px;
+      }
+
+      #lux-hero-{{ section.id }} .variant-3 .lux-led-grid {
+        inset: 26px 16px 18px 16px;
+        gap: 7px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-floating-pill {
+        width: calc(100% - 28px);
+        bottom: 52px;
+        border-radius: 28px;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 18px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-pill-label,
+      #lux-hero-{{ section.id }} .lux-pill-price {
+        text-align: left;
+      }
+
+      #lux-hero-{{ section.id }} .lux-pill-label {
+        font-size: 17px;
+        text-align:center;
+      }
+
+      #lux-hero-{{ section.id }} .lux-pill-price {
+        font-size: 24px;
+          text-align:center;
+      }
+
+      #lux-hero-{{ section.id }} .lux-pill-button {
+        width: 100%;
+        min-height: 56px;
+        font-size: 17px;
+      }
+
+      #lux-hero-{{ section.id }} .lux-pagination {
+        bottom: 16px !important;
+      }
+    }
+  </style>
+
+  <script>
+    (() => {
+  const sectionId = 'lux-hero-{{ section.id }}';
+
+  function getSection() {
+    return document.getElementById(sectionId);
+  }
+
+  function waitForLibraries(callback, maxTries = 120) {
+    let tries = 0;
+
+    const timer = setInterval(() => {
+      tries += 1;
+
+      const swiperReady = typeof window.Swiper !== 'undefined';
+      const gsapReady = typeof window.gsap !== 'undefined';
+      const scrollTriggerReady = typeof window.ScrollTrigger !== 'undefined';
+
+      if (swiperReady && gsapReady && scrollTriggerReady) {
+        clearInterval(timer);
+        callback();
+      } else if (tries >= maxTries) {
+        clearInterval(timer);
+        console.warn('Lux Hero: required libraries not available.');
+      }
+    }, 100);
+  }
+
+  function initSection() {
+    const sectionEl = getSection();
+    if (!sectionEl) return;
+    if (sectionEl.dataset.initialized === 'true') return;
+
+    const hero = sectionEl.querySelector('.lux-hero');
+    const swiperEl = sectionEl.querySelector('.lux-swiper');
+    const prevEl = sectionEl.querySelector('.lux-nav-prev');
+    const nextEl = sectionEl.querySelector('.lux-nav-next');
+    const paginationEl = sectionEl.querySelector('.lux-pagination');
+
+    const enableAutoplay = sectionEl.dataset.autoplay === 'true';
+    const autoplayDelay = parseInt(sectionEl.dataset.autoplayDelay || '5000', 10);
+
+    function populateLedGrids() {
+      sectionEl.querySelectorAll('[data-led-grid]').forEach((grid) => {
+        if (grid.dataset.ready === 'true') return;
+
+        const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+        let count = 112;
+
+        if (cols === 9) count = 126;
+        else if (cols === 7) count = 91;
+
+        for (let i = 0; i < count; i++) {
+          const led = document.createElement('span');
+          led.className = 'lux-led';
+          grid.appendChild(led);
+        }
+
+        grid.dataset.ready = 'true';
+      });
+    }
+
+    function initModule() {
+      const gsap = window.gsap;
+      const ScrollTrigger = window.ScrollTrigger;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      populateLedGrids();
+
+      const glow1 = sectionEl.querySelector('.glow-1');
+      const glow2 = sectionEl.querySelector('.glow-2');
+      const glow3 = sectionEl.querySelector('.glow-3');
+
+      function updateHeroBackground(slide) {
+        const bg = slide?.getAttribute('data-bg');
+        if (!bg) return;
+
+        gsap.to(hero, {
+          background: bg,
+          duration: 1.15,
+          ease: 'power2.out'
+        });
+      }
+
+      function resetSlideState(slide) {
+        const copy = slide.querySelector('.lux-copy');
+        const product = slide.querySelector('.js-tilt');
+        const pill = slide.querySelector('.lux-floating-pill');
+
+        gsap.set(copy, { y: 28, opacity: 0 });
+        gsap.set(product, { y: 46, opacity: 0, scale: 0.94, rotateX: 0, rotateY: 0 });
+        gsap.set(pill, { y: 20, opacity: 0 });
+      }
+
+      function animateActiveSlide(slide, isInit = false) {
+        const copy = slide.querySelector('.lux-copy');
+        const product = slide.querySelector('.js-tilt');
+        const pill = slide.querySelector('.lux-floating-pill');
+        const leds = slide.querySelectorAll('.lux-led');
+
+        const tl = gsap.timeline({
+          defaults: { ease: 'power3.out' }
+        });
+
+        tl.to(copy, {
+          y: 0,
+          opacity: 1,
+          duration: isInit ? 1.0 : 0.82
+        });
+
+        tl.to(product, {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: isInit ? 1.15 : 0.95
+        }, '-=0.55');
+
+        tl.to(pill, {
+          y: 0,
+          opacity: 1,
+          duration: isInit ? 0.85 : 0.75
+        }, '-=0.55');
+
+        if (leds.length) {
+          gsap.fromTo(
+            leds,
+            { opacity: 0.7, scale: 0.9 },
+            {
+              opacity: 1,
+              scale: 1,
+              stagger: { each: 0.008, from: 'center' },
+              duration: 0.45,
+              ease: 'power2.out',
+              delay: isInit ? 0.2 : 0.08
+            }
+          );
+        }
+      }
+
+      sectionEl.querySelectorAll('.swiper-slide').forEach(resetSlideState);
+
+      const swiperOptions = {
+        slidesPerView: 1,
+        loop: true,
+        speed: 1100,
+        allowTouchMove: true,
+        grabCursor: true,
+        pagination: {
+          el: paginationEl,
+          clickable: true
+        },
+        navigation: {
+          nextEl,
+          prevEl
+        },
+        on: {
+          init() {
+            animateActiveSlide(this.slides[this.activeIndex], true);
+            updateHeroBackground(this.slides[this.activeIndex]);
+          },
+          slideChangeTransitionStart() {
+            updateHeroBackground(this.slides[this.activeIndex]);
+          },
+          slideChangeTransitionEnd() {
+            animateActiveSlide(this.slides[this.activeIndex], false);
+          }
+        }
+      };
+
+      if (enableAutoplay) {
+        swiperOptions.autoplay = {
+          delay: autoplayDelay,
+          disableOnInteraction: false
+        };
+      }
+
+      new window.Swiper(swiperEl, swiperOptions);
+
+      if (glow1) {
+        gsap.to(glow1, {
+          x: 18,
+          y: -10,
+          scale: 1.08,
+          opacity: 0.65,
+          duration: 4.8,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      }
+
+      if (glow2) {
+        gsap.to(glow2, {
+          x: -18,
+          y: 12,
+          scale: 1.06,
+          opacity: 0.5,
+          duration: 5.6,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      }
+
+      if (glow3) {
+        gsap.to(glow3, {
+          x: -14,
+          y: -8,
+          scale: 1.1,
+          opacity: 0.6,
+          duration: 6.2,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      }
+
+      gsap.from(hero, {
+        scrollTrigger: {
+          trigger: hero,
+          start: 'top 82%'
+        },
+        y: 30,
+        opacity: 0,
+        duration: 1,
+        ease: 'power2.out'
+      });
+
+      sectionEl.querySelectorAll('[data-parallax]').forEach((el) => {
+        gsap.to(el, {
+          y: -24,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: hero,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.1
+          }
+        });
+      });
+
+      sectionEl.querySelectorAll('.js-tilt').forEach((card) => {
+        let bounds;
+
+        const onMove = (e) => {
+          bounds = bounds || card.getBoundingClientRect();
+          const x = e.clientX - bounds.left;
+          const y = e.clientY - bounds.top;
+          const rotateY = ((x / bounds.width) - 0.5) * 10;
+          const rotateX = ((y / bounds.height) - 0.5) * -10;
+
+          gsap.to(card, {
+            rotateY,
+            rotateX,
+            transformPerspective: 900,
+            transformOrigin: 'center center',
+            duration: 0.5,
+            ease: 'power3.out'
+          });
+        };
+
+        const reset = () => {
+          bounds = null;
+          gsap.to(card, {
+            rotateY: 0,
+            rotateX: 0,
+            duration: 0.65,
+            ease: 'power3.out'
+          });
+        };
+
+        card.addEventListener('mousemove', onMove);
+        card.addEventListener('mouseleave', reset);
+
+        card.addEventListener('touchstart', () => {
+          gsap.to(card, {
+            scale: 1.015,
+            duration: 0.25,
+            ease: 'power2.out'
+          });
+        }, { passive: true });
+
+        card.addEventListener('touchend', () => {
+          gsap.to(card, {
+            scale: 1,
+            rotateY: 0,
+            rotateX: 0,
+            duration: 0.4,
+            ease: 'power2.out'
+          });
+        }, { passive: true });
+      });
+
+      sectionEl.querySelectorAll('.js-tilt').forEach((panel, index) => {
+        gsap.to(panel, {
+          y: index % 2 === 0 ? -8 : -12,
+          duration: 2.6 + index * 0.25,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut'
+        });
+      });
+
+      sectionEl.querySelectorAll('.lux-pill-button').forEach((btn) => {
+        btn.addEventListener('mouseenter', () => {
+          gsap.to(btn, {
+            scale: 1.015,
+            duration: 0.28,
+            ease: 'power2.out'
+          });
+        });
+
+        btn.addEventListener('mouseleave', () => {
+          gsap.to(btn, {
+            scale: 1,
+            duration: 0.28,
+            ease: 'power2.out'
+          });
+        });
+      });
+
+      sectionEl.dataset.initialized = 'true';
+    }
+
+    waitForLibraries(initModule);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSection);
+  } else {
+    initSection();
+  }
+
+  document.addEventListener('shopify:section:load', function(event) {
+    if (event.detail && event.detail.sectionId === '{{ section.id }}') {
+      const sectionEl = getSection();
+      if (sectionEl) {
+        sectionEl.dataset.initialized = '';
+        initSection();
+      }
+    }
+  });
+})();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Premium light hero",
+  "tag": "section",
+  "class": "section-premium-light-hero",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay delay (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "color",
+      "id": "page_bg",
+      "label": "Page background",
+      "default": "#f2eee8"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Card max width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "default": 1320
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Card height",
+      "min": 680,
+      "max": 980,
+      "step": 10,
+      "default": 860
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card radius",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "default": 42
+    },
+    {
+      "type": "color",
+      "id": "text_strong",
+      "label": "Strong title color",
+      "default": "#fff8f4"
+    },
+    {
+      "type": "color",
+      "id": "text_soft",
+      "label": "Soft title color",
+      "default": "#d8b9b4"
+    },
+    {
+      "type": "color_background",
+      "id": "pill_bg",
+      "label": "Floating bar background",
+      "default": "rgba(98, 53, 56, 0.68)"
+    },
+    {
+      "type": "color",
+      "id": "pill_border",
+      "label": "Floating bar border",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#f3eee7"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button text color",
+      "default": "#171311"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Kicker",
+          "default": "Pro Series"
+        },
+        {
+          "type": "text",
+          "id": "title_strong",
+          "label": "Strong title",
+          "default": "Meet Pro Series 2.0,"
+        },
+        {
+          "type": "text",
+          "id": "title_soft",
+          "label": "Soft title",
+          "default": " the intelligent light therapy system built for precision, performance, and faster recovery."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Next Gen Red Light"
+        },
+        {
+          "type": "text",
+          "id": "price_text",
+          "label": "Price text",
+          "default": "starting at €2,200"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Buy now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Product image"
+        },
+        {
+          "type": "select",
+          "id": "panel_variant",
+          "label": "Panel variant",
+          "default": "",
+          "options": [
+            {
+              "value": "",
+              "label": "Default"
+            },
+            {
+              "value": "variant-2",
+              "label": "Variant 2"
+            },
+            {
+              "value": "variant-3",
+              "label": "Variant 3"
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "id": "bg_gradient",
+          "label": "Background gradient",
+          "default": "linear-gradient(130deg, #ff6d33 0%, #ff1737 24%, #ff2140 44%, #ff4a57 62%, #ef9f96 80%, #efd9d6 100%)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium light hero",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "kicker": "Pro Series",
+            "title_strong": "Meet Pro Series 2.0,",
+            "title_soft": " the intelligent light therapy system built for precision, performance, and faster recovery.",
+            "label": "Next Gen Red Light",
+            "price_text": "starting at €2,200",
+            "button_text": "Buy now",
+            "bg_gradient": "linear-gradient(130deg, #ff6d33 0%, #ff1737 24%, #ff2140 44%, #ff4a57 62%, #ef9f96 80%, #efd9d6 100%)"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "kicker": "Performance Recovery",
+            "title_strong": "Engineered for deep recovery,",
+            "title_soft": " daily performance, and modern wellness routines.",
+            "label": "Advanced Recovery",
+            "price_text": "starting at €2,800",
+            "button_text": "Explore now",
+            "panel_variant": "variant-2",
+            "bg_gradient": "linear-gradient(132deg, #ff8459 0%, #ff315a 24%, #ff4f6e 42%, #ff7a7e 58%, #f3b3a9 79%, #efe5dc 100%)"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "kicker": "Wellness Edition",
+            "title_strong": "Bring clinical-inspired light therapy",
+            "title_soft": " into a refined, at-home experience.",
+            "label": "Wellness Edition",
+            "price_text": "starting at €1,950",
+            "button_text": "Discover more",
+            "panel_variant": "variant-3",
+            "bg_gradient": "linear-gradient(130deg, #ff7a53 0%, #ff3658 22%, #ff5e73 44%, #f6a394 64%, #f2c9c1 82%, #efe7df 100%)"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

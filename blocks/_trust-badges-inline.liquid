@@ -1,0 +1,466 @@
+{% liquid
+  assign columns_desktop = block.settings.columns_desktop | default: 4
+%}
+
+<div
+  class="product-trust-badges-inline spacing-style"
+  {{ block.shopify_attributes }}
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    --ptbi-bg: {{ block.settings.card_bg }};
+    --ptbi-icon-bg: {{ block.settings.icon_bg }};
+    --ptbi-icon-border-color: {{ block.settings.icon_border_color }};
+    --ptbi-icon-border-width: {{ block.settings.icon_border_width }}px;
+    --ptbi-text: {{ block.settings.text_color }};
+    --ptbi-radius: {{ block.settings.card_radius }}px;
+    --ptbi-icon-circle-size: {{ block.settings.icon_circle_size }}px;
+    --ptbi-icon-size: {{ block.settings.icon_size }}px;
+    --ptbi-title-size-desktop: {{ block.settings.title_size_desktop }}px;
+    --ptbi-title-size-mobile: {{ block.settings.title_size_mobile }}px;
+    --ptbi-gap-x: {{ block.settings.column_gap }}px;
+    --ptbi-gap-y: {{ block.settings.row_gap }}px;
+    --ptbi-padding-x: {{ block.settings.padding_x }}px;
+    --ptbi-padding-y: {{ block.settings.padding_y }}px;
+    --ptbi-columns-desktop: {{ columns_desktop }};
+    --ptbi-mobile-columns: {{ block.settings.mobile_columns }};
+    --ptbi-mobile-gap: {{ block.settings.mobile_gap }}px;
+    --ptbi-mobile-padding-x: {{ block.settings.mobile_padding_x }}px;
+    --ptbi-mobile-padding-y: {{ block.settings.mobile_padding_y }}px;
+    --ptbi-mobile-icon-circle-size: {{ block.settings.mobile_icon_circle_size }}px;
+    --ptbi-mobile-icon-size: {{ block.settings.mobile_icon_size }}px;
+  "
+>
+  <div class="product-trust-badges-inline__inner">
+    {% for i in (1..4) %}
+      {% liquid
+        assign icon_key = 'icon_' | append: i
+        assign title_key = 'title_' | append: i
+        assign badge_icon = block.settings[icon_key]
+        assign badge_title = block.settings[title_key]
+      %}
+
+      {% if badge_icon != blank or badge_title != blank %}
+        <div class="product-trust-badges-inline__item">
+          {% if badge_icon != blank %}
+            <div class="product-trust-badges-inline__icon-wrap">
+              {{
+                badge_icon
+                | image_url: width: 160
+                | image_tag:
+                  loading: 'lazy',
+                  class: 'product-trust-badges-inline__icon',
+                  alt: badge_title
+              }}
+            </div>
+          {% endif %}
+
+          {% if badge_title != blank %}
+            <div class="product-trust-badges-inline__title">
+              {{ badge_title }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .product-trust-badges-inline {
+    width: 100%;
+  }
+
+  .product-trust-badges-inline__inner {
+    display: grid;
+    grid-template-columns: repeat(var(--ptbi-columns-desktop), minmax(0, 1fr));
+    column-gap: var(--ptbi-gap-x);
+    row-gap: var(--ptbi-gap-y);
+    background: var(--ptbi-bg);
+    border-radius: var(--ptbi-radius);
+    padding: var(--ptbi-padding-y) var(--ptbi-padding-x);
+  }
+
+  .product-trust-badges-inline__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .product-trust-badges-inline__icon-wrap {
+    width: var(--ptbi-icon-circle-size);
+    height: var(--ptbi-icon-circle-size);
+    border-radius: 999px;
+    background: var(--ptbi-icon-bg);
+    border: var(--ptbi-icon-border-width) solid var(--ptbi-icon-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  .product-trust-badges-inline__icon {
+    width: var(--ptbi-icon-size);
+    height: var(--ptbi-icon-size);
+    object-fit: contain;
+    display: block;
+  }
+
+  .product-trust-badges-inline__title {
+    margin: 0;
+    color: var(--ptbi-text);
+    font-size: var(--ptbi-title-size-desktop);
+    line-height: 1.3;
+    font-weight: 600;
+    text-wrap: balance;
+    word-break: break-word;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-trust-badges-inline__inner {
+      grid-template-columns: repeat(var(--ptbi-mobile-columns), minmax(0, 1fr));
+      column-gap: var(--ptbi-mobile-gap);
+      row-gap: var(--ptbi-mobile-gap);
+      padding: var(--ptbi-mobile-padding-y) var(--ptbi-mobile-padding-x);
+      border-radius: min(var(--ptbi-radius), 16px);
+    }
+
+    .product-trust-badges-inline__item {
+      gap: 8px;
+    }
+
+    .product-trust-badges-inline__icon-wrap {
+      width: var(--ptbi-mobile-icon-circle-size);
+      height: var(--ptbi-mobile-icon-circle-size);
+    }
+
+    .product-trust-badges-inline__icon {
+      width: var(--ptbi-mobile-icon-size);
+      height: var(--ptbi-mobile-icon-size);
+    }
+
+    .product-trust-badges-inline__title {
+      font-size: var(--ptbi-title-size-mobile);
+      line-height: 1.25;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Trust badges inline",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badge content"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_1",
+      "label": "Icon 1"
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "label": "Title 1",
+      "default": "FDA-Registered"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_2",
+      "label": "Icon 2"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "label": "Title 2",
+      "default": "1 Year Warranty"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_3",
+      "label": "Icon 3"
+    },
+    {
+      "type": "text",
+      "id": "title_3",
+      "label": "Title 3",
+      "default": "HSA/FSA Eligible"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_4",
+      "label": "Icon 4"
+    },
+    {
+      "type": "text",
+      "id": "title_4",
+      "label": "Title 4",
+      "default": "60-Day Money Back"
+    },
+
+    {
+      "type": "header",
+      "content": "Desktop layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Desktop column gap",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "Desktop row gap",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Desktop horizontal padding",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Desktop vertical padding",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "range",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "min": 4,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "label": "Mobile gap",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_x",
+      "label": "Mobile horizontal padding",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_y",
+      "label": "Mobile vertical padding",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_circle_size",
+      "label": "Mobile icon circle size",
+      "min": 36,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "label": "Mobile icon size",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Background color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg",
+      "label": "Icon circle background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_border_color",
+      "label": "Icon circle border color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "range",
+      "id": "icon_border_width",
+      "label": "Icon circle border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "icon_circle_size",
+      "label": "Desktop icon circle size",
+      "min": 48,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 92
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Desktop icon size",
+      "min": 20,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Title size desktop",
+      "min": 2,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size mobile",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top spacing",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left spacing",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right spacing",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges inline"
+    }
+  ]
+}
+{% endschema %}

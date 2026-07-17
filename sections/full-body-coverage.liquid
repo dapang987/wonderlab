@@ -1,0 +1,909 @@
+{% comment %}
+  Full Body Coverage Section
+  - Added image/text swap position controls
+  - Changed stat "number" setting from number to text
+  - Added smart counter animation:
+    * supports "7560"
+    * supports "7,560+"
+    * supports "2052 LEDs"
+    * complex text like "660nm + 850nm" stays static
+  - Shopify section compatible
+  - Optimized to reduce excessive side whitespace
+  - GSAP / ScrollTrigger animation included
+  - Added desktop/mobile text alignment controls for heading and content
+{% endcomment %}
+
+<section id="fbc-{{ section.id }}" class="fbc-section">
+  <style>
+    /* 强制重置 Shopify 自动生成的父级容器，消除默认的主题留白 */
+    #shopify-section-{{ section.id }} {
+      max-width: 100% !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+
+    #fbc-{{ section.id }}{
+      --fbc-bg: {{ section.settings.bg_color }};
+      --fbc-text: {{ section.settings.text_color }};
+      --fbc-muted: {{ section.settings.muted_color }};
+      --fbc-accent: {{ section.settings.accent_color }};
+      --fbc-container: {{ section.settings.container_width }}px;
+      --fbc-gap: {{ section.settings.desktop_gap }}px;
+
+      --fbc-heading-size: {{ section.settings.heading_size_mobile }}px;
+      --fbc-title-size: {{ section.settings.title_size_mobile }}px;
+      --fbc-body-size: {{ section.settings.body_size_mobile }}px;
+      --fbc-stat-size: {{ section.settings.stat_size_mobile }}px;
+
+      --fbc-section-pt: {{ section.settings.padding_top_mobile }}px;
+      --fbc-section-pb: {{ section.settings.padding_bottom_mobile }}px;
+      --fbc-side-padding: {{ section.settings.side_padding_mobile }}px;
+
+      --fbc-image-radius: {{ section.settings.image_radius }}px;
+      --fbc-image-height: {{ section.settings.image_height_mobile }}px;
+
+      --fbc-heading-align: {{ section.settings.heading_alignment_mobile | default: 'left' }};
+      --fbc-copy-align: {{ section.settings.content_alignment_mobile | default: 'left' }};
+      --fbc-stats-justify: {% case section.settings.content_alignment_mobile %}{% when 'center' %}center{% when 'right' %}flex-end{% else %}flex-start{% endcase %};
+    }
+
+    @media (min-width: 768px){
+      #fbc-{{ section.id }}{
+        --fbc-heading-size: {{ section.settings.heading_size }}px;
+        --fbc-title-size: {{ section.settings.title_size }}px;
+        --fbc-body-size: {{ section.settings.body_size }}px;
+        --fbc-stat-size: {{ section.settings.stat_size }}px;
+        --fbc-section-pt: {{ section.settings.padding_top }}px;
+        --fbc-section-pb: {{ section.settings.padding_bottom }}px;
+        --fbc-side-padding: {{ section.settings.side_padding }}px;
+        --fbc-image-height: {{ section.settings.image_height }}px;
+
+        --fbc-heading-align: {{ section.settings.heading_alignment_desktop | default: 'center' }};
+        --fbc-copy-align: {{ section.settings.content_alignment_desktop | default: 'left' }};
+        --fbc-stats-justify: {% case section.settings.content_alignment_desktop %}{% when 'center' %}center{% when 'right' %}flex-end{% else %}flex-start{% endcase %};
+      }
+    }
+
+    #fbc-{{ section.id }},
+    #fbc-{{ section.id }} *,
+    #fbc-{{ section.id }} *::before,
+    #fbc-{{ section.id }} *::after{
+      box-sizing: border-box;
+    }
+
+    #fbc-{{ section.id }}{
+      background: var(--fbc-bg);
+      padding: var(--fbc-section-pt) var(--fbc-side-padding) var(--fbc-section-pb);
+      overflow: hidden;
+      width: 100%;
+    }
+
+    #fbc-{{ section.id }} .fbc-container{
+      width: 100%;
+      max-width: min(var(--fbc-container), calc(100vw - var(--fbc-side-padding) * 2));
+      margin: 0 auto;
+    }
+
+    #fbc-{{ section.id }} .fbc-heading{
+      margin: 0 0 52px;
+      text-align: var(--fbc-heading-align);
+      font-size: var(--fbc-heading-size);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--fbc-text);
+    }
+
+    #fbc-{{ section.id }} .fbc-grid{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.18fr);
+      gap: var(--fbc-gap);
+      align-items: center;
+      width: 100%;
+    }
+
+    #fbc-{{ section.id }} .fbc-copy{
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+      padding-right: 16px;
+      order: 1;
+      text-align: var(--fbc-copy-align);
+    }
+
+    #fbc-{{ section.id }} .fbc-media{
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      height: var(--fbc-image-height);
+      border-radius: var(--fbc-image-radius);
+      overflow: hidden;
+      background: {{ section.settings.image_fallback_bg }};
+      order: 2;
+    }
+
+    /* 桌面端互换位置 */
+    {% if section.settings.swap_positions_desktop %}
+      @media (min-width: 768px){
+        #fbc-{{ section.id }} .fbc-copy{
+          order: 2;
+          padding-right: 0;
+          padding-left: 16px;
+        }
+        #fbc-{{ section.id }} .fbc-media{
+          order: 1;
+        }
+      }
+    {% else %}
+      @media (min-width: 768px){
+        #fbc-{{ section.id }} .fbc-copy{
+          order: 1;
+          padding-right: 16px;
+          padding-left: 0;
+        }
+        #fbc-{{ section.id }} .fbc-media{
+          order: 2;
+        }
+      }
+    {% endif %}
+
+    #fbc-{{ section.id }} .fbc-title{
+      margin: 0 0 18px;
+      font-size: var(--fbc-title-size);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--fbc-text);
+      text-align: inherit;
+    }
+
+    #fbc-{{ section.id }} .fbc-text{
+      margin: 0 0 38px;
+      font-size: var(--fbc-body-size);
+      line-height: 1.7;
+      color: var(--fbc-muted);
+      max-width: none;
+      width: 100%;
+      text-align: inherit;
+    }
+
+    #fbc-{{ section.id }} .fbc-text p{
+      margin: 0;
+    }
+
+    #fbc-{{ section.id }} .fbc-stats{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px 40px;
+      align-items: flex-start;
+      justify-content: var(--fbc-stats-justify);
+      width: 100%;
+    }
+
+    #fbc-{{ section.id }} .fbc-stat{
+      min-width: 150px;
+      flex: 0 0 auto;
+      text-align: var(--fbc-copy-align);
+    }
+
+    #fbc-{{ section.id }} .fbc-stat-number{
+      display: block;
+      margin: 0 0 8px;
+      font-size: var(--fbc-stat-size);
+      line-height: 0.95;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--fbc-accent);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    #fbc-{{ section.id }} .fbc-stat-label{
+      display: block;
+      font-size: 15px;
+      line-height: 1.35;
+      color: var(--fbc-text);
+      font-weight: 600;
+      text-align: inherit;
+    }
+
+    #fbc-{{ section.id }} .fbc-media img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    #fbc-{{ section.id }} .fbc-media-placeholder{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--fbc-text);
+      opacity: 0.5;
+      font-size: 14px;
+      text-align: center;
+      padding: 24px;
+    }
+
+    #fbc-{{ section.id }} .fbc-media::after{
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(0,0,0,0.04), rgba(0,0,0,0.01)),
+        linear-gradient(to right, rgba(255,255,255,0.02), rgba(255,255,255,0));
+      pointer-events: none;
+    }
+
+    @media (max-width: 1100px){
+      #fbc-{{ section.id }} .fbc-grid{
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 767px){
+      #fbc-{{ section.id }} .fbc-heading{
+        margin-bottom: 32px;
+        text-align: var(--fbc-heading-align);
+      }
+
+      #fbc-{{ section.id }} .fbc-grid{
+        grid-template-columns: 1fr;
+        gap: 26px;
+      }
+
+      {% if section.settings.swap_positions_mobile %}
+        #fbc-{{ section.id }} .fbc-copy{
+          order: 1;
+          max-width: none;
+          padding-right: 0;
+          padding-left: 0;
+        }
+
+        #fbc-{{ section.id }} .fbc-media{
+          order: 2;
+        }
+      {% else %}
+        #fbc-{{ section.id }} .fbc-copy{
+          order: 2;
+          max-width: none;
+          padding-right: 0;
+          padding-left: 0;
+        }
+
+        #fbc-{{ section.id }} .fbc-media{
+          order: 1;
+        }
+      {% endif %}
+
+      #fbc-{{ section.id }} .fbc-title{
+        margin-bottom: 14px;
+      }
+
+      #fbc-{{ section.id }} .fbc-text{
+        margin-bottom: 26px;
+      }
+
+      #fbc-{{ section.id }} .fbc-stats{
+        flex-wrap: nowrap;
+        gap: 16px;
+        justify-content: var(--fbc-stats-justify);
+        align-items: flex-start;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      #fbc-{{ section.id }} .fbc-stats::-webkit-scrollbar{
+        display: none;
+      }
+
+      #fbc-{{ section.id }} .fbc-stat{
+        flex: 0 0 auto;
+        min-width: 120px;
+      }
+
+      #fbc-{{ section.id }} .fbc-stat-label{
+        font-size: 13px;
+      }
+    }
+  </style>
+
+  <div class="fbc-container">
+    {% if section.settings.heading != blank %}
+      <h2 class="fbc-heading js-fbc-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="fbc-grid">
+      <div class="fbc-copy js-fbc-copy-{{ section.id }}">
+        {% if section.settings.title != blank %}
+          <h3 class="fbc-title">{{ section.settings.title }}</h3>
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+          <div class="fbc-text rte">{{ section.settings.text }}</div>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <div class="fbc-stats">
+            {% for block in section.blocks %}
+              <div class="fbc-stat js-fbc-stat-{{ section.id }}" {{ block.shopify_attributes }}>
+                {% if block.settings.number_text != blank %}
+                  <span class="fbc-stat-number js-fbc-counter-{{ section.id }}">{{ block.settings.number_text }}</span>
+                {% endif %}
+                {% if block.settings.label != blank %}
+                  <span class="fbc-stat-label">{{ block.settings.label }}</span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="fbc-media js-fbc-media-{{ section.id }}">
+        {% if section.settings.image != blank %}
+          {{
+            section.settings.image
+            | image_url: width: 2000
+            | image_tag:
+              loading: 'lazy',
+              widths: '600, 800, 1000, 1200, 1600, 2000',
+              sizes: '(max-width: 767px) 100vw, 50vw',
+              alt: section.settings.image.alt | default: section.settings.title
+          }}
+        {% else %}
+          <div class="fbc-media-placeholder">
+            Add an image in the theme editor
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var sectionId = 'fbc-{{ section.id }}';
+      var root = document.getElementById(sectionId);
+      if (!root) return;
+
+      function initSection() {
+        if (!window.gsap || !window.ScrollTrigger) return;
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        var heading = root.querySelector('.js-fbc-heading-{{ section.id }}');
+        var copy = root.querySelector('.js-fbc-copy-{{ section.id }}');
+        var stats = root.querySelectorAll('.js-fbc-stat-{{ section.id }}');
+        var counters = root.querySelectorAll('.js-fbc-counter-{{ section.id }}');
+        var media = root.querySelector('.js-fbc-media-{{ section.id }}');
+
+        function formatNumber(num, hasComma, decimals) {
+          var value = Number(num || 0);
+
+          if (decimals > 0) {
+            return value.toLocaleString('en-US', {
+              minimumFractionDigits: decimals,
+              maximumFractionDigits: decimals
+            });
+          }
+
+          if (hasComma) {
+            return Math.round(value).toLocaleString('en-US');
+          }
+
+          return String(Math.round(value));
+        }
+
+        function parseCounterText(raw) {
+          if (!raw) return null;
+
+          var text = String(raw).trim();
+
+          if (!text) return null;
+
+          var matches = text.match(/\d[\d,]*(?:\.\d+)?/g);
+          if (!matches || matches.length !== 1) return null;
+
+          var numericText = matches[0];
+          var startIndex = text.indexOf(numericText);
+          if (startIndex < 0) return null;
+
+          var prefix = text.slice(0, startIndex);
+          var suffix = text.slice(startIndex + numericText.length);
+
+          var normalized = numericText.replace(/,/g, '');
+          var endValue = parseFloat(normalized);
+
+          if (isNaN(endValue)) return null;
+
+          return {
+            prefix: prefix,
+            suffix: suffix,
+            endValue: endValue,
+            hasComma: numericText.indexOf(',') > -1,
+            decimals: (normalized.split('.')[1] || '').length
+          };
+        }
+
+        if (heading) {
+          gsap.from(heading, {
+            y: 28,
+            opacity: 0,
+            duration: 0.9,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: heading,
+              start: 'top 85%',
+              once: true
+            }
+          });
+        }
+
+        if (copy) {
+          gsap.from(copy, {
+            y: 36,
+            opacity: 0,
+            duration: 0.95,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: copy,
+              start: 'top 82%',
+              once: true
+            }
+          });
+        }
+
+        if (stats.length) {
+          gsap.from(stats, {
+            y: 20,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.12,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: stats[0],
+              start: 'top 88%',
+              once: true
+            }
+          });
+        }
+
+        if (counters.length) {
+          counters.forEach(function(counter) {
+            var raw = (counter.textContent || '').trim();
+            var parsed = parseCounterText(raw);
+
+            if (!parsed) {
+              counter.textContent = raw;
+              return;
+            }
+
+            counter.textContent = parsed.prefix + formatNumber(0, parsed.hasComma, parsed.decimals) + parsed.suffix;
+
+            var state = { value: 0 };
+
+            gsap.to(state, {
+              value: parsed.endValue,
+              duration: 1.6,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: counter,
+                start: 'top 90%',
+                once: true
+              },
+              onUpdate: function() {
+                counter.textContent =
+                  parsed.prefix +
+                  formatNumber(state.value, parsed.hasComma, parsed.decimals) +
+                  parsed.suffix;
+              },
+              onComplete: function() {
+                counter.textContent =
+                  parsed.prefix +
+                  formatNumber(parsed.endValue, parsed.hasComma, parsed.decimals) +
+                  parsed.suffix;
+              }
+            });
+          });
+        }
+
+        if (media) {
+          gsap.from(media, {
+            opacity: 0,
+            scale: 1.04,
+            duration: 1.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: media,
+              start: 'top 82%',
+              once: true
+            }
+          });
+        }
+
+        ScrollTrigger.refresh();
+      }
+
+      function waitForGSAP(callback) {
+        var maxTries = 60;
+        var tries = 0;
+
+        function check() {
+          tries++;
+          if (window.gsap && window.ScrollTrigger) {
+            callback();
+          } else if (tries < maxTries) {
+            setTimeout(check, 200);
+          }
+        }
+
+        check();
+      }
+
+      waitForGSAP(initSection);
+
+      document.addEventListener('shopify:section:load', function(e) {
+        if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+          waitForGSAP(initSection);
+        }
+      });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Full Body Coverage",
+  "tag": "section",
+  "class": "fbc-custom-wrapper section-full-body-coverage",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Innovative Design for Superior Results"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Cover Every Inch of Your Skin"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Engineered with a full-length design, this full-body light therapy solution is crafted to deliver broad, even coverage from head to toe. The expansive treatment area helps minimize missed spots while creating a more efficient, immersive session for skin support, recovery, and daily wellness.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Main image"
+    },
+
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "swap_positions_desktop",
+      "label": "Swap image and text position on desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "swap_positions_mobile",
+      "label": "Swap image and text position on mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container width",
+      "min": 1200,
+      "max": 2560,
+      "step": 20,
+      "unit": "px",
+      "default": 1600
+    },
+    {
+      "type": "range",
+      "id": "desktop_gap",
+      "label": "Desktop column gap",
+      "min": 20,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding desktop",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "side_padding_mobile",
+      "label": "Side padding mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "label": "Image height desktop",
+      "min": 300,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "default": 760
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "label": "Image height mobile",
+      "min": 220,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding desktop",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Top padding mobile",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Bottom padding mobile",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "text_alignment",
+      "id": "heading_alignment_desktop",
+      "label": "Heading alignment desktop",
+      "default": "center"
+    },
+    {
+      "type": "text_alignment",
+      "id": "heading_alignment_mobile",
+      "label": "Heading alignment mobile",
+      "default": "left"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment_desktop",
+      "label": "Content text alignment desktop",
+      "default": "left"
+    },
+    {
+      "type": "text_alignment",
+      "id": "content_alignment_mobile",
+      "label": "Content text alignment mobile",
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size desktop",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Heading size mobile",
+      "min": 18,
+      "max": 52,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size desktop",
+      "min": 20,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size mobile",
+      "min": 18,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body size desktop",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "body_size_mobile",
+      "label": "Body size mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "stat_size",
+      "label": "Stat number size desktop",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "stat_size_mobile",
+      "label": "Stat number size mobile",
+      "min": 18,
+      "max": 52,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f5f5f3"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1f1f1f"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Body text color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Stat accent color",
+      "default": "#ff5b57"
+    },
+    {
+      "type": "color",
+      "id": "image_fallback_bg",
+      "label": "Image fallback background",
+      "default": "#d80000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number_text",
+          "label": "Number text",
+          "default": "7,560"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "LEDs for Bag"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full Body Coverage",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "number_text": "7,560",
+            "label": "LEDs for Bag"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "number_text": "3,840",
+            "label": "LEDs for Mat"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

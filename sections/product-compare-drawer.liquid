@@ -1,0 +1,509 @@
+{% comment %}
+  Section: Product Compare Drawer
+{% endcomment %}
+
+{% assign product_count = section.blocks.size %}
+
+<section id="cmp-{{ section.id }}" class="cmp-root">
+<style>
+#cmp-{{ section.id }}{
+  --left-w: 200px;
+  --bg: {{ section.settings.bg_color }};
+  --ink: {{ section.settings.text_color }};
+  --muted: {{ section.settings.muted_color }};
+  --line: #e6e8ec;
+
+  --shadow: 0 10px 28px rgba(16,17,20,.10);
+  --shadow2: 0 6px 18px rgba(16,17,20,.08);
+  --radius: 16px;
+
+  --groupbar: #f2f3f5;
+  --padX: 18px;
+  
+  /* 动态外观设置 */
+  --base-font-size: {{ section.settings.base_font_size }}px;
+  --text-align: {{ section.settings.text_alignment }};
+}
+
+#cmp-{{ section.id }} *{box-sizing:border-box}
+
+#cmp-{{ section.id }}{
+  color: var(--ink);
+  background: var(--bg);
+}
+
+#cmp-{{ section.id }} .container{
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* top strip */
+#cmp-{{ section.id }} .topStripRow,
+#cmp-{{ section.id }} .cmpTable{
+  display: grid;
+  grid-template-columns: var(--left-w) repeat({{ product_count }}, minmax(0,1fr));
+}
+
+#cmp-{{ section.id }} .topStripRow{
+  align-items: center;
+  justify-items: center;
+  gap: 0;
+}
+
+#cmp-{{ section.id }} .btn-wrap{
+  justify-self: stretch;
+  padding-right: 18px;
+}
+
+#cmp-{{ section.id }} .compareBtn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 650;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: var(--base-font-size);
+}
+
+#cmp-{{ section.id }} .compareBtn .chev{
+  width: 18px;
+  height: 18px;
+  transition: transform .25s;
+}
+
+#cmp-{{ section.id }} .compareBtn[aria-expanded="true"] .chev{
+  transform: rotate(180deg);
+}
+
+/* cards */
+#cmp-{{ section.id }} .levelCard{
+  width: 100%;
+  max-width: 168px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(16,17,20,.08);
+  overflow: hidden;
+}
+
+#cmp-{{ section.id }} .levelCard__top{
+  background: #0b0c0f;
+  color: #fff;
+  font-weight: 700;
+  font-size: calc(var(--base-font-size) - 2px);
+  padding: 8px;
+  text-align: center;
+}
+
+#cmp-{{ section.id }} .levelCard__body{
+  padding: 5px;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+
+#cmp-{{ section.id }} .miniIcon{
+  width: 54px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(145deg,#ff5a6b,#c81d3b);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#cmp-{{ section.id }} .miniIcon img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#cmp-{{ section.id }} .levelCard__name{
+  font-size: var(--base-font-size);
+  font-weight: 650;
+  color: var(--ink);
+  text-align: center;
+}
+
+/* panel */
+#cmp-{{ section.id }} .comparePanel{
+  margin-top: 12px;
+  border-radius: calc(var(--radius) + 4px);
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: var(--shadow);
+
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: max-height .35s ease, opacity .25s ease, transform .25s ease;
+  overflow: hidden;
+}
+
+#cmp-{{ section.id }} .comparePanel.is-open{
+  max-height: 1400px;
+  opacity: 1;
+  transform: none;
+}
+
+#cmp-{{ section.id }} .compareInner{
+  padding: 14px;
+}
+
+#cmp-{{ section.id }} .cmpTable{
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+#cmp-{{ section.id }} .cell{
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 14px;
+  font-size: var(--base-font-size);
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* 动态对齐 */
+#cmp-{{ section.id }} .content-align{
+  text-align: var(--text-align);
+}
+#cmp-{{ section.id }} .muted{
+  color: var(--muted);
+}
+
+/* 分类标题行样式 */
+#cmp-{{ section.id }} .category-header{
+  background: var(--groupbar);
+  font-weight: 700;
+  grid-column: 1 / -1;
+  padding: 10px 14px;
+  font-size: calc(var(--base-font-size) - 1px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+
+#cmp-{{ section.id }} .stickyLeft{
+  font-weight: 600;
+}
+
+/* mobile */
+@media(max-width:768px){
+  #cmp-{{ section.id }} .topStripRow,
+  #cmp-{{ section.id }} .cmpTable{
+    grid-template-columns: repeat({{ product_count }}, minmax(0,1fr));
+  }
+
+  #cmp-{{ section.id }} .btn-wrap{
+    grid-column: 1 / -1;
+    margin-bottom: 12px;
+    padding-right: 0;
+  }
+
+  #cmp-{{ section.id }} .stickyLeft{
+    grid-column: 1 / -1;
+    text-align: center;
+    background: #f8f9fa;
+  }
+
+  #cmp-{{ section.id }} .category-header{
+    text-align: center;
+  }
+
+  #cmp-{{ section.id }} .levelCard{
+    max-width: none;
+  }
+
+  #cmp-{{ section.id }} .cell{
+    padding: 12px 10px;
+  }
+}
+</style>
+
+<div class="container">
+
+  <div class="topStrip">
+    <div class="topStripRow">
+
+      <div class="btn-wrap">
+        <button id="cmpBtn-{{ section.id }}" class="compareBtn" aria-expanded="false" type="button">
+          <span>{{ section.settings.button_text }}</span>
+          <svg class="chev" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/>
+          </svg>
+        </button>
+      </div>
+
+      {% for block in section.blocks %}
+        <div class="levelCard" {{ block.shopify_attributes }}>
+          <div class="levelCard__top">
+            {{ block.settings.level }}
+          </div>
+          <div class="levelCard__body">
+            <div class="miniIcon">
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 150 | image_tag: loading: 'lazy', alt: block.settings.title }}
+              {% endif %}
+            </div>
+            <div class="levelCard__name">
+              {{ block.settings.title }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div id="cmpPanel-{{ section.id }}" class="comparePanel">
+    <div class="compareInner">
+      <div class="cmpTable">
+
+        <div class="cell stickyLeft">Price</div>
+        {% for block in section.blocks %}
+          <div class="cell content-align">
+            {% if block.settings.price != blank %}{{ block.settings.price }}{% else %}—{% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="cell stickyLeft">Best For</div>
+        {% for block in section.blocks %}
+          <div class="cell content-align">
+            {% if block.settings.best_for != blank %}{{ block.settings.best_for }}{% else %}—{% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="cell category-header">Light Technology</div>
+
+        <div class="cell stickyLeft">LED</div>
+        {% for block in section.blocks %}
+          <div class="cell content-align">
+            {% if block.settings.led_count != blank %}{{ block.settings.led_count }}{% else %}—{% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="cell stickyLeft">LASER</div>
+        {% for block in section.blocks %}
+          <div class="cell content-align">
+            {% if block.settings.laser_count != blank %}{{ block.settings.laser_count }}{% else %}—{% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="cell category-header">Wavelengths</div>
+
+        <div class="cell stickyLeft">Red Light</div>
+        {% for block in section.blocks %}
+          <div class="cell content-align">
+            {% if block.settings.red_light != blank %}{{ block.settings.red_light }}{% else %}—{% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="cell stickyLeft">Near-Infrared Light</div>
+        {% for block in section.blocks %}
+          <div class="cell content-align">
+            {% if block.settings.nir_light != blank %}{{ block.settings.nir_light }}{% else %}—{% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="cell stickyLeft">Deep NIR</div>
+        {% for block in section.blocks %}
+          <div class="cell content-align">
+            {% if block.settings.deep_nir != blank %}{{ block.settings.deep_nir }}{% else %}—{% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="cell category-header">Other Specs</div>
+
+        <div class="cell stickyLeft">Irradiance</div>
+        {% for block in section.blocks %}
+          <div class="cell content-align">
+            {% if block.settings.irradiance != blank %}{{ block.settings.irradiance }}{% else %}—{% endif %}
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const btn = document.getElementById("cmpBtn-{{ section.id }}");
+  const panel = document.getElementById("cmpPanel-{{ section.id }}");
+
+  if (!btn || !panel) return;
+
+  btn.addEventListener("click", function(){
+    const open = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!open));
+    panel.classList.toggle("is-open");
+  });
+})();
+</script>
+
+</section>
+
+{% schema %}
+{
+  "name":"Product Compare Drawer",
+  "settings":[
+    {
+      "type": "header",
+      "content": "General Settings"
+    },
+    {
+      "type":"text",
+      "id":"button_text",
+      "label":"Button text",
+      "default":"Compare Products"
+    },
+    {
+      "type": "header",
+      "content": "Typography & Colors"
+    },
+    {
+      "type": "range",
+      "id": "base_font_size",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Base Font Size",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Main Text Color",
+      "default": "#101114"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted Text Color (Categories)",
+      "default": "#5b6168"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Table Content Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    }
+  ],
+
+  "blocks":[
+    {
+      "type":"product",
+      "name":"Product Column",
+      "settings":[
+        {
+          "type":"text",
+          "id":"level",
+          "label":"Level",
+          "default":"Entry-Level"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product Image"
+        },
+        {
+          "type":"text",
+          "id":"title",
+          "label":"Product Name",
+          "default":"LED Mat"
+        },
+        {
+          "type":"text",
+          "id":"price",
+          "label":"Price",
+          "default":"$459"
+        },
+        {
+          "type":"text",
+          "id":"best_for",
+          "label":"Best For",
+          "default":"Anti-aging care"
+        },
+        {
+          "type": "header",
+          "content": "Light Technology"
+        },
+        {
+          "type":"text",
+          "id":"led_count",
+          "label":"LED Count",
+          "default":"1,440 LEDs"
+        },
+        {
+          "type":"text",
+          "id":"laser_count",
+          "label":"LASER Count",
+          "info": "Leave blank if none to display '—'"
+        },
+        {
+          "type": "header",
+          "content": "Wavelengths"
+        },
+        {
+          "type":"text",
+          "id":"red_light",
+          "label":"Red Light",
+          "default":"660nm"
+        },
+        {
+          "type":"text",
+          "id":"nir_light",
+          "label":"Near-Infrared Light",
+          "default":"850nm"
+        },
+        {
+          "type":"text",
+          "id":"deep_nir",
+          "label":"Deep NIR",
+          "info": "Leave blank if none to display '—'"
+        },
+        {
+          "type": "header",
+          "content": "Other Specs"
+        },
+        {
+          "type":"text",
+          "id":"irradiance",
+          "label":"Irradiance",
+          "default":"120mw/cm²"
+        }
+      ]
+    }
+  ],
+
+  "max_blocks": 4,
+
+  "presets":[
+    {
+      "name":"Product Compare Drawer"
+    }
+  ]
+}
+{% endschema %}

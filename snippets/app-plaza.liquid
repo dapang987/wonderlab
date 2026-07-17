@@ -1,0 +1,8 @@
+{%- capture app-plaza-snippets -%}
+{%- include 'app-plaza-speed-up' -%}
+{%- endcapture -%}
+{%- unless app-plaza-snippets contains 'Liquid error' -%}
+{{ app-plaza-snippets }}
+{%- endunless -%}
+{%- include 'app-plaza-preconnect' -%}
+{{ 'app-plaza-font-display.css' | asset_url | stylesheet_tag: preload: true }}
