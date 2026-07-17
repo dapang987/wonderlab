@@ -1,0 +1,1363 @@
+{%- style -%}
+  /* ==========================================================================
+     Wondear Early Bird Pre-Order Module
+     Prefix: wondear-preorder
+     ========================================================================== */
+
+  :root {
+    --wndr-primary: #f3efe9;
+    --wndr-primary-hover: #fff7f9;
+    --wndr-bg-main: #000;
+    --wndr-border-light: rgba(255, 231, 220, 0.38);
+    --wndr-shadow-color: rgba(80, 0, 28, 0.2);
+    
+    --wndr-radius-sm: 8px;
+    --wndr-radius-md: 16px;
+    --wndr-radius-lg: 18px;
+    --wndr-radius-pill: 999px;
+
+    --wndr-transition-fast: 0.2s ease;
+    --wndr-transition-slow: 0.45s ease;
+  }
+
+  /* Dynamic Settings Mapped From Shopify Schema Settings */
+  #shopify-section-{{ section.id }} {
+    --wndr-title-color: {{ section.settings.title_color }};
+    --wndr-title-size-desk: {{ section.settings.title_size_desktop }}px;
+    --wndr-title-size-mob: {{ section.settings.title_size_mobile }}px;
+    
+    --wndr-subtitle-color: {{ section.settings.subtitle_color }};
+    --wndr-subtitle-size-desk: {{ section.settings.subtitle_size_desktop }}px;
+    --wndr-subtitle-size-mob: {{ section.settings.subtitle_size_mobile }}px;
+
+    --wndr-text-color: {{ section.settings.text_color }};
+
+    /* Pricing Custom Colors Variable Mappings */
+    --wndr-price-sale-color: {{ section.settings.price_sale_color }};
+    --wndr-price-regular-color: {{ section.settings.price_regular_color }};
+    --wndr-price-badge-bg: {{ section.settings.price_badge_bg_color }};
+    --wndr-price-badge-text: {{ section.settings.price_badge_text_color }};
+    --wndr-coupon-price-color: {{ section.settings.coupon_price_color }};
+    --wndr-coupon-bg-color: {{ section.settings.coupon_bg_color }};
+    --wndr-coupon-border-color: {{ section.settings.coupon_border_color }};
+  }
+
+  /* Scoped Section Containers Layout Styles */
+  #shopify-section-{{ section.id }} .wondear-preorder-section {
+    width: 100%;
+    padding: 18px 44px 26px;
+    background-color: var(--wndr-primary);
+  }
+
+  .wondear-preorder-panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(340px, 0.82fr) minmax(520px, 1.18fr);
+    gap: 62px;
+    max-width: 1340px;
+    margin: 0 auto;
+    padding: 76px 50px 78px;
+    border-radius: var(--wndr-radius-lg);
+    background: var(--wndr-primary);
+    overflow: hidden;
+  }
+
+  .wondear-preorder-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+    color: var(--wndr-text-color);
+  }
+
+  .wondear-preorder-copy {
+    max-width: 690px;
+  }
+
+  .wondear-preorder-eyebrow {
+    margin: 0 0 20px;
+    color: var(--wndr-text-color);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+
+  .wondear-preorder-title {
+    margin: 0;
+    color: var(--wndr-title-color);
+    font-size: var(--wndr-title-size-desk);
+    line-height: 0.95;
+    letter-spacing: 0;
+  }
+
+  .wondear-preorder-subtitle {
+    display: grid;
+    gap: 10px;
+    max-width: 620px;
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--wndr-subtitle-color);
+    font-size: var(--wndr-subtitle-size-desk);
+    line-height: 1.5;
+  }
+
+  .wondear-preorder-subtitle li {
+    position: relative;
+    margin: 0;
+    padding-left: 24px;
+  }
+
+  .wondear-preorder-subtitle li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--wndr-bg-main);
+    transform: translateY(-50%);
+  }
+
+  /* --- Pricing Block Dedicated Styles --- */
+  .wondear-preorder-pricing {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 24px;
+  }
+
+  .wondear-price-sale {
+    color: var(--wndr-price-sale-color);
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .wondear-price-regular {
+    color: var(--wndr-price-regular-color);
+    font-size: 20px;
+    font-weight: 600;
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .wondear-price-badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background-color: var(--wndr-price-badge-bg); 
+    color: var(--wndr-price-badge-text);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .wondear-coupon-price-wrap {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 8px;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--wndr-coupon-border-color);
+    border-radius: 14px;
+    background: var(--wndr-coupon-bg-color);
+    color: var(--wndr-text-color);
+  }
+
+  .wondear-coupon-price-main {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+
+  .wondear-coupon-label {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: var(--wndr-text-color);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
+
+  .wondear-coupon-code {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 9px;
+    border: 1px dashed currentColor;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.6px;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .wondear-coupon-price {
+    color: var(--wndr-coupon-price-color);
+    font-size: 30px;
+    font-weight: 950;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .wondear-coupon-note {
+    margin: 0;
+    color: var(--wndr-text-color);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+    opacity: 0.75;
+  }
+
+  /* --- Countdown Element Grid Layout Styles --- */
+  .wondear-preorder-countdown {
+    margin-top: 28px;
+  }
+
+  .wondear-countdown-label {
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--wndr-text-color);
+  }
+
+  .wondear-countdown-timer {
+    display: flex;
+    gap: 10px;
+  }
+
+  .wondear-countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    padding: 8px 10px;
+    background: var(--wndr-bg-main);
+    color: var(--wndr-primary);
+    border-radius: var(--wndr-radius-sm);
+  }
+
+  .wondear-countdown-num {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .wondear-countdown-unit {
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 4px;
+    opacity: 0.75;
+    text-transform: uppercase;
+  }
+
+  /* --- Countdown Expiration Status Interlocking System --- */
+  .wondear-preorder-panel.is-expired .wondear-preorder-countdown {
+    display: none !important;
+  }
+
+  .wondear-preorder-panel.is-expired .wondear-price-badge {
+    background-color: #D32F2F !important;
+    color: #ffffff !important;
+  }
+
+  /* --- Action Module Buttons Core Styles --- */
+  .wondear-preorder-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .wondear-preorder-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 164px;
+    min-height: 58px;
+    padding: 16px 30px;
+    border-radius: var(--wndr-radius-pill);
+    background: var(--wndr-bg-main);
+    color: var(--wndr-primary);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    text-decoration: none;
+    transition: transform var(--wndr-transition-fast), box-shadow var(--wndr-transition-fast), background-color var(--wndr-transition-fast);
+  }
+
+  .wondear-preorder-button:hover {
+    transform: translateY(-2px);
+    background: var(--wndr-primary-hover);
+    color: #111111; 
+    box-shadow: 0 18px 34px var(--wndr-shadow-color);
+  }
+
+  .wondear-preorder-button:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 4px;
+  }
+
+  /* --- Decorative Floating Elements And Highlight Cards --- */
+  .wondear-preorder-badge {
+    position: absolute;
+    top: 300px;
+    left: clamp(700px, 45vw, 860px);
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 118px;
+    height: 118px;
+    color: var(--wndr-title-color);
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: 2px;
+    text-align: center;
+    text-transform: uppercase;
+    transform: rotate(-18deg);
+    pointer-events: none;
+  }
+
+  .wondear-preorder-badge::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 3px dashed rgba(255, 255, 255, 0.92);
+    border-radius: var(--wndr-radius-pill);
+  }
+
+  .wondear-preorder-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    max-width: 746px;
+    margin-top: 76px;
+  }
+
+  .wondear-preorder-card {
+    min-height: 194px;
+    border: 1px solid var(--wndr-border-light);
+    border-radius: var(--wndr-radius-sm);
+    color: var(--wndr-text-color);
+  }
+
+  .wondear-preorder-card-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin: 0 0 26px;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.18;
+  }
+
+  .wondear-preorder-card-title strong {
+    display: block;
+    margin-top: -8px;
+    color: var(--wndr-text-color);
+    font-size: 68px;
+    line-height: 0.92;
+  }
+
+  .wondear-preorder-card-text {
+    margin: 0;
+    color: var(--wndr-text-color);
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.18;
+  }
+
+  /* --- Media Section & Product Image Showcase Frames --- */
+  .wondear-preorder-media {
+    position: relative;
+    align-self: center;
+    min-width: 0;
+  }
+
+  .wondear-preorder-media-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    border-radius: var(--wndr-radius-lg);
+  }
+
+  .wondear-preorder-media-link:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 4px;
+  }
+
+  .wondear-preorder-media-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    border-radius: var(--wndr-radius-lg);
+    background:
+      radial-gradient(circle at 50% 46%, rgba(255, 96, 96, 0.28), transparent 28%),
+      linear-gradient(135deg, #ddd8cf 0%, #c9c3ba 45%, #efebe4 100%);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wondear-preorder-product-img {
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: clamp(18px, 4vw, 42px);
+    box-sizing: border-box;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .wondear-preorder-product-img[src=""],
+  .wondear-preorder-media-frame.is-missing .wondear-preorder-product-img {
+    display: none;
+  }
+
+  .wondear-preorder-fallback {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: grid;
+    place-items: center;
+    padding: 60px;
+    color: var(--wndr-primary);
+    text-align: center;
+  }
+
+  .wondear-preorder-media-frame:not(.is-missing) .wondear-preorder-fallback {
+    display: none;
+  }
+
+  .wondear-preorder-fallback-label {
+    position: absolute;
+    right: 7%;
+    bottom: 7%;
+    max-width: 330px;
+    padding: 20px 22px;
+    border-radius: var(--wndr-radius-sm);
+    background: rgba(184, 19, 69, 0.94);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.18;
+    text-align: left;
+  }
+
+  /* Desktop Interactive Hover Fluid Micro-Animations */
+  @media (hover: hover) and (pointer: fine) {
+    .wondear-preorder-media-frame {
+      cursor: pointer;
+      transition: transform var(--wndr-transition-slow), box-shadow var(--wndr-transition-slow);
+    }
+
+    .wondear-preorder-product-img {
+      transition: transform 0.55s ease, filter 0.55s ease;
+      will-change: transform;
+    }
+
+    .wondear-preorder-media-frame:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 28px 60px rgba(80, 0, 28, 0.22);
+    }
+
+    .wondear-preorder-media-frame:hover .wondear-preorder-product-img {
+      transform: scale(1.035) translateY(-6px);
+      filter: brightness(1.06) contrast(1.04);
+    }
+  }
+
+  /* ==========================================================================
+     Responsive Grid Breakpoints & Mobile Optimization Queries
+     ========================================================================== */
+
+  @media (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .wondear-preorder-section {
+      padding: 16px;
+    }
+
+    .wondear-preorder-panel {
+      grid-template-columns: 1fr;
+      gap: 42px;
+      min-height: 0;
+      padding: 56px 34px 42px;
+    }
+
+    .wondear-preorder-content {
+      display: block;
+    }
+
+    .wondear-preorder-badge {
+      top: 330px;
+      left: auto;
+      right: 36px;
+    }
+
+    .wondear-preorder-details {
+      margin-top: 48px;
+    }
+
+    .wondear-preorder-title {
+      font-size: calc(var(--wndr-title-size-desk) * 0.88);
+    }
+
+    .wondear-preorder-media-frame {
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .wondear-preorder-title {
+      font-size: calc(var(--wndr-title-size-desk) * 0.78);
+    }
+  }
+
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} .wondear-preorder-section {
+      padding: 12px;
+    }
+
+    .wondear-preorder-panel {
+      gap: 28px;
+      padding: 38px 18px 20px;
+      border-radius: var(--wndr-radius-md);
+    }
+
+    .wondear-preorder-eyebrow {
+      margin-bottom: 14px;
+      font-size: 11px;
+    }
+
+    .wondear-preorder-title {
+      font-size: var(--wndr-title-size-mob);
+      line-height: 1;
+    }
+
+    .wondear-preorder-subtitle {
+      gap: 8px;
+      margin-top: 14px;
+      font-size: var(--wndr-subtitle-size-mob);
+    }
+
+    .wondear-preorder-subtitle li {
+      padding-left: 20px;
+    }
+
+    .wondear-preorder-subtitle li::before {
+      width: 6px;
+      height: 6px;
+    }
+    
+    /* Mobile UI Adaptations For Pricing & Countdown Blocks */
+    .wondear-preorder-pricing {
+      margin-top: 18px;
+      gap: 10px;
+    }
+
+    .wondear-price-sale {
+      font-size: 28px;
+    }
+
+    .wondear-price-regular {
+      font-size: 16px;
+    }
+
+    .wondear-price-badge {
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+
+    .wondear-coupon-price-wrap {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px 14px;
+    }
+
+    .wondear-coupon-price-main {
+      justify-content: space-between;
+      gap: 8px 12px;
+    }
+
+    .wondear-coupon-label {
+      font-size: 13px;
+    }
+
+    .wondear-coupon-code {
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+
+    .wondear-coupon-price {
+      font-size: 24px;
+    }
+
+    .wondear-coupon-note {
+      font-size: 12px;
+    }
+
+    .wondear-preorder-countdown {
+      margin-top: 20px;
+    }
+
+    .wondear-countdown-item {
+      min-width: 52px;
+      padding: 6px 8px;
+    }
+
+    .wondear-countdown-num {
+      font-size: 18px;
+    }
+
+    .wondear-countdown-unit {
+      font-size: 9px;
+    }
+
+    .wondear-preorder-actions {
+      margin-top: 24px;
+    }
+
+    .wondear-preorder-button {
+      width: 100%;
+      min-height: 54px;
+      font-size: 16px;
+    }
+
+    .wondear-preorder-badge {
+      display: none;
+    }
+
+    .wondear-preorder-details {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 38px;
+    }
+
+    .wondear-preorder-card {
+      min-height: 0;
+      padding: 22px 20px;
+    }
+
+    .wondear-preorder-card-title {
+      gap: 14px;
+      margin-bottom: 18px;
+      font-size: 26px;
+    }
+
+    .wondear-preorder-card-title strong {
+      font-size: 56px;
+    }
+
+    .wondear-preorder-card-text {
+      font-size: 16px;
+    }
+
+    .wondear-preorder-media {
+      order: -1;
+    }
+
+    .wondear-preorder-media-frame {
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .wondear-preorder-product-img {
+      padding: clamp(12px, 5vw, 24px);
+    }
+
+    .wondear-preorder-fallback {
+      padding: 34px;
+    }
+
+    .wondear-preorder-fallback-label {
+      right: 18px;
+      bottom: 18px;
+      max-width: calc(100% - 36px);
+      font-size: 16px;
+    }
+  }
+{%- endstyle -%}
+
+{%- assign selected_product = section.settings.selected_product -%}
+{%- assign selected_variant = blank -%}
+{%- assign variant_id_override = section.settings.variant_id_override | strip -%}
+
+{%- if selected_product != blank and variant_id_override != blank -%}
+  {%- for variant in selected_product.variants -%}
+    {%- assign variant_id_string = variant.id | append: '' -%}
+    {%- if variant_id_string == variant_id_override -%}
+      {%- assign selected_variant = variant -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if selected_product != blank and selected_variant == blank -%}
+  {%- assign selected_variant = selected_product.selected_or_first_available_variant -%}
+{%- endif -%}
+
+{%- assign product_image = selected_product.featured_image -%}
+{%- assign product_page_url = selected_product.url | default: section.settings.btn_2_link | default: '#' -%}
+{%- assign direct_checkout_url = section.settings.btn_1_link | default: '#' -%}
+
+{%- assign display_price = 19900 -%}
+{%- assign display_compare_at_price = 29900 -%}
+
+{%- if selected_variant != blank -%}
+  {%- assign display_price = selected_variant.price | default: 19900 -%}
+  {%- assign display_compare_at_price = selected_variant.compare_at_price | default: 0 -%}
+{%- elsif selected_product != blank -%}
+  {%- assign display_price = selected_product.price | default: 19900 -%}
+  {%- assign display_compare_at_price = selected_product.compare_at_price | default: 0 -%}
+{%- endif -%}
+
+{%- assign manual_display_price = section.settings.manual_display_price | strip -%}
+{%- assign manual_compare_at_price = section.settings.manual_compare_at_price | strip -%}
+
+{%- if manual_display_price != blank -%}
+  {%- assign display_price = manual_display_price | times: 100 -%}
+{%- endif -%}
+
+{%- if manual_compare_at_price != blank -%}
+  {%- assign display_compare_at_price = manual_compare_at_price | times: 100 -%}
+{%- endif -%}
+
+{%- assign base_price = display_price -%}
+{%- assign coupon_discount_amount = section.settings.coupon_discount_amount | default: 0 -%}
+{%- assign coupon_discount_cents = coupon_discount_amount | times: 100 -%}
+{%- assign coupon_price = base_price -%}
+
+{%- if coupon_discount_cents > 0 -%}
+  {%- assign coupon_price = base_price | minus: coupon_discount_cents -%}
+  {%- if coupon_price < 0 -%}
+    {%- assign coupon_price = 0 -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if selected_variant != blank and selected_variant.available -%}
+  {%- assign direct_checkout_url = routes.cart_url | append: '/' | append: selected_variant.id | append: ':1?checkout' -%}
+  {%- if section.settings.apply_coupon_to_primary_button and section.settings.coupon_code != blank -%}
+    {%- assign encoded_coupon_code = section.settings.coupon_code | url_encode -%}
+    {%- assign direct_checkout_url = direct_checkout_url | append: '&discount=' | append: encoded_coupon_code -%}
+  {%- endif -%}
+{%- elsif selected_product != blank -%}
+  {%- assign direct_checkout_url = product_page_url -%}
+{%- endif -%}
+
+<section class="wondear-preorder-section">
+  <div class="wondear-preorder-panel">
+
+    <div class="wondear-preorder-content">
+      <div class="wondear-preorder-copy">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="wondear-preorder-eyebrow">
+            {{ section.settings.eyebrow }}
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.title != blank -%}
+          <h2 class="wondear-preorder-title">
+            {{ section.settings.title }}
+          </h2>
+        {%- endif -%}
+
+        {%- comment -%} Core Dynamic Pricing Render Blocks {%- endcomment -%}
+        {%- if section.settings.show_price -%}
+          <div class="wondear-preorder-pricing">
+            {%- if selected_product != blank -%}
+              <span class="wondear-price-sale">{{ display_price | money }}</span>
+
+              {%- if display_compare_at_price > display_price -%}
+                <span class="wondear-price-regular">{{ display_compare_at_price | money }}</span>
+                <span class="wondear-price-badge">
+                  {%- if section.settings.price_badge_text != blank -%}
+                    {{ section.settings.price_badge_text }}
+                  {%- else -%}
+                    Save {{ display_compare_at_price | minus: display_price | money }}
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+            {%- else -%}
+              <span class="wondear-price-sale">$199.00</span>
+              <span class="wondear-price-regular">$299.00</span>
+              <span class="wondear-price-badge">
+                {%- if section.settings.price_badge_text != blank -%}
+                  {{ section.settings.price_badge_text }}
+                {%- else -%}
+                  Save $100.00
+                {%- endif -%}
+              </span>
+            {%- endif -%}
+          </div>
+
+          {%- if section.settings.show_coupon_price and coupon_discount_cents > 0 -%}
+            <div class="wondear-coupon-price-wrap" aria-label="Price after discount code">
+              <div class="wondear-coupon-price-main">
+                <span class="wondear-coupon-label">
+                  {{ section.settings.coupon_price_label | default: 'After Coupon' }}
+                  {%- if section.settings.coupon_code != blank -%}
+                    <span class="wondear-coupon-code">{{ section.settings.coupon_code | escape }}</span>
+                  {%- endif -%}
+                </span>
+                <span class="wondear-coupon-price">{{ coupon_price | money }}</span>
+              </div>
+
+              <p class="wondear-coupon-note">
+                {%- if section.settings.coupon_discount_note != blank -%}
+                  {{ section.settings.coupon_discount_note }}
+                {%- else -%}
+                  Save extra {{ coupon_discount_cents | money }} at checkout.
+                {%- endif -%}
+              </p>
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if section.settings.subtitle != blank -%}
+          {%- assign subtitle_items = section.settings.subtitle | newline_to_br | split: '<br />' -%}
+          <ul class="wondear-preorder-subtitle" aria-label="Pre-order details">
+            {%- for item in subtitle_items -%}
+              {%- assign clean_item = item | strip -%}
+              {%- if clean_item != blank -%}
+                <li>{{ clean_item | escape }}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- comment -%} Time-Sensitive Urgency Pre-Order Countdown Blocks {%- endcomment -%}
+        {%- if section.settings.show_countdown and section.settings.countdown_deadline != blank -%}
+          <div class="wondear-preorder-countdown" data-deadline="{{ section.settings.countdown_deadline | escape }}">
+            {%- if section.settings.countdown_text != blank -%}
+              <p class="wondear-countdown-label">{{ section.settings.countdown_text }}</p>
+            {%- endif -%}
+
+            <div class="wondear-countdown-timer">
+              <div class="wondear-countdown-item">
+                <span class="wondear-countdown-num data-days">00</span>
+                <span class="wondear-countdown-unit">Days</span>
+              </div>
+
+              <div class="wondear-countdown-item">
+                <span class="wondear-countdown-num data-hours">00</span>
+                <span class="wondear-countdown-unit">Hrs</span>
+              </div>
+
+              <div class="wondear-countdown-item">
+                <span class="wondear-countdown-num data-mins">00</span>
+                <span class="wondear-countdown-unit">Mins</span>
+              </div>
+
+              <div class="wondear-countdown-item">
+                <span class="wondear-countdown-num data-secs">00</span>
+                <span class="wondear-countdown-unit">Secs</span>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <div class="wondear-preorder-actions">
+          {%- if section.settings.btn_1_text != blank -%}
+            <a
+              class="wondear-preorder-button"
+              href="{{ direct_checkout_url }}"
+              aria-label="{{ section.settings.btn_1_text }}"
+            >
+              {{ section.settings.btn_1_text }}
+            </a>
+          {%- endif -%}
+
+          {%- if section.settings.btn_2_text != blank -%}
+            <a
+              class="wondear-preorder-button"
+              href="{{ product_page_url }}"
+              aria-label="{{ section.settings.btn_2_text }}"
+            >
+              {{ section.settings.btn_2_text }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="wondear-preorder-details" aria-label="Product highlights">
+        {%- if section.settings.card_1_title != blank or section.settings.card_1_text != blank -%}
+          <article class="wondear-preorder-card">
+            <h3 class="wondear-preorder-card-title">
+              {%- if section.settings.card_1_number != blank -%}
+                <strong>{{ section.settings.card_1_number }}</strong>
+              {%- endif -%}
+              <span>{{ section.settings.card_1_title }}</span>
+            </h3>
+
+            <p class="wondear-preorder-card-text">
+              {{ section.settings.card_1_text }}
+            </p>
+          </article>
+        {%- endif -%}
+
+        {%- if section.settings.card_2_title != blank or section.settings.card_2_text != blank -%}
+          <article class="wondear-preorder-card">
+            <h3 class="wondear-preorder-card-title">
+              <span>{{ section.settings.card_2_title }}</span>
+            </h3>
+
+            <p class="wondear-preorder-card-text">
+              {{ section.settings.card_2_text }}
+            </p>
+          </article>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.settings.badge_text != blank -%}
+      <div class="wondear-preorder-badge" aria-hidden="true">
+        {{ section.settings.badge_text | newline_to_br }}
+      </div>
+    {%- endif -%}
+
+    <div class="wondear-preorder-media">
+      <a
+        class="wondear-preorder-media-link"
+        href="{{ product_page_url }}"
+        aria-label="View {{ selected_product.title | default: section.settings.title | escape }}"
+      >
+        <div class="wondear-preorder-media-frame">
+          {%- if product_image != blank -%}
+            <img
+              class="wondear-preorder-product-img"
+              src="{{ product_image | image_url: width: 1200 }}"
+              srcset="{{ product_image | image_url: width: 600 }} 600w, {{ product_image | image_url: width: 1200 }} 1200w"
+              alt="{{ product_image.alt | default: selected_product.title | escape }}"
+              width="{{ product_image.width }}"
+              height="{{ product_image.height }}"
+              loading="lazy"
+              decoding="async"
+              onerror="this.closest('.wondear-preorder-media-frame').classList.add('is-missing');"
+            >
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'wondear-preorder-product-img' }}
+          {%- endif -%}
+
+          <div class="wondear-preorder-fallback" aria-hidden="true">
+            <div class="wondear-preorder-fallback-label">
+              {{ selected_product.title | default: section.settings.title }}
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+{%- comment -%} 
+  High-Performance Vanilla JS Engine
+  Features Native Apple/Safari Engine Compliance & Cross-Instance Cleansing Logic
+{%- endcomment -%}
+<script>
+  function initWondearCountdown() {
+    document.querySelectorAll('.wondear-preorder-countdown').forEach(function(countdownEl) {
+      const deadlineStr = countdownEl.getAttribute('data-deadline');
+      if (!deadlineStr) return;
+
+      // Anti-NaN Fix: Force transform dashes to slashes to conform to strict ECMA Safari specifications
+      const formattedDeadline = deadlineStr.replace(/-/g, '/');
+      const deadline = new Date(formattedDeadline).getTime();
+
+      if (isNaN(deadline)) {
+        console.warn('Wondear Countdown Warning: Incorrect date syntax structure. Please utilize YYYY-MM-DD HH:MM:SS');
+        return;
+      }
+
+      const daysEl = countdownEl.querySelector('.data-days');
+      const hoursEl = countdownEl.querySelector('.data-hours');
+      const minsEl = countdownEl.querySelector('.data-mins');
+      const secsEl = countdownEl.querySelector('.data-secs');
+      const panelEl = countdownEl.closest('.wondear-preorder-panel');
+
+      // Thread Sanitizer: Obliterate pre-existing threads on same elements to avert memory leaks/stuttering inside Theme Customizer
+      if (countdownEl.wondearInterval) {
+        clearInterval(countdownEl.wondearInterval);
+      }
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = deadline - now;
+
+        // Terminal State Interlock Handler
+        if (distance < 0) {
+          if (daysEl) daysEl.innerText = '00';
+          if (hoursEl) hoursEl.innerText = '00';
+          if (minsEl) minsEl.innerText = '00';
+          if (secsEl) secsEl.innerText = '00';
+          if (panelEl) panelEl.classList.add('is-expired'); 
+          clearInterval(countdownEl.wondearInterval);
+          return;
+        } else {
+          if (panelEl) panelEl.classList.remove('is-expired');
+        }
+
+        // Standard Chrono Time Conversions Calculation Matrix
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Standard String Digits Padding Layer
+        if (daysEl) daysEl.innerText = days < 10 ? '0' + days : days;
+        if (hoursEl) hoursEl.innerText = hours < 10 ? '0' + hours : hours;
+        if (minsEl) minsEl.innerText = minutes < 10 ? '0' + minutes : minutes;
+        if (secsEl) secsEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+      }
+
+      updateCountdown();
+      countdownEl.wondearInterval = setInterval(updateCountdown, 1000);
+    });
+  }
+
+  // Hook Initialization Layer For Pure Direct Client Requests
+  document.addEventListener('DOMContentLoaded', initWondearCountdown);
+
+  // Hook Re-Instantiation Layer Map For Dynamic Shopify Editor Refresh Pipeline Interceptions
+  document.addEventListener('shopify:section:load', function(event) {
+    if (event.target.querySelector('.wondear-preorder-countdown')) {
+      initWondearCountdown();
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Early Bird Pre-Order",
+  "settings": [
+    {
+      "type": "product",
+      "id": "selected_product",
+      "label": "Select Product (选择预售产品)",
+      "info": "The section will automatically pull this product's featured image and default URLs."
+    },
+    {
+      "type": "text",
+      "id": "variant_id_override",
+      "label": "Optional Variant ID Override (可选：指定变体 ID)",
+      "info": "If the selected product has multiple variants and you need a specific price/checkout variant, paste that variant ID here. Leave blank to use the first available variant."
+    },
+    {
+      "type": "header",
+      "content": "Typography & Layout Colors (排版与大盘颜色)"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color (主标题颜色)",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "min": 40,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size Desktop (桌面端标题大小)",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 24,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "label": "Title Size Mobile (移动端标题大小)",
+      "default": 43
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color (副标题颜色)",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Size Desktop (桌面端副标题大小)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle Size Mobile (移动端副标题大小)",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "General Text Color (全局基本文字颜色)",
+      "default": "#111111",
+      "info": "Applies to eyebrow text, highlight cards details, etc."
+    },
+    {
+      "type": "header",
+      "content": "Text Content Configuration (文本内容管理)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Label (小标眉体文本)",
+      "default": "Early Bird Pre-Order"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading Text (大标题文本)",
+      "default": "Red Light Therapy Bag"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle Content (副标题叙述内容)",
+      "default": "Early bird orders are expected to start shipping between June 5-10.\nDelivery usually takes 7-15 days after shipment."
+    },
+    {
+      "type": "header",
+      "content": "Pricing Functional Options (价格系统配置)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show Price & Discount Compare (开启价格与折扣展示)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "manual_display_price",
+      "label": "Manual Sale Price Override (手动展示现价)",
+      "info": "Optional. Enter number only, for example 759 means $759. Leave blank to use the selected variant price."
+    },
+    {
+      "type": "text",
+      "id": "manual_compare_at_price",
+      "label": "Manual Compare-at Price Override (手动展示原价)",
+      "info": "Optional. Enter number only, for example 999 means $999. Leave blank to use the selected variant compare-at price."
+    },
+    {
+      "type": "text",
+      "id": "price_badge_text",
+      "label": "Custom Discount Badge Override (自定义省钱标签文案)",
+      "info": "Leave completely blank to let the system automatically compute and display 'Save $X.XX'."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_coupon_price",
+      "label": "Show Price After Coupon (显示使用折扣券后的价格)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "coupon_price_label",
+      "label": "Coupon Price Label (折扣后价格标题)",
+      "default": "After Coupon"
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Coupon Code (折扣码)",
+      "default": "PD100"
+    },
+    {
+      "type": "text",
+      "id": "coupon_discount_amount",
+      "label": "Coupon Discount Amount (折扣金额)",
+      "default": "100",
+      "info": "Enter number only. Example: 50 means $50 off; 100 means $100 off. Do not include currency symbols."
+    },
+    {
+      "type": "text",
+      "id": "coupon_discount_note",
+      "label": "Coupon Price Note (折扣后价格说明)",
+      "default": "Use code PD100 at checkout."
+    },
+    {
+      "type": "checkbox",
+      "id": "apply_coupon_to_primary_button",
+      "label": "Apply Coupon Code To Primary Button URL (主按钮链接自动带上折扣码)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Pricing Panel Detailed Colors (价格专属颜色配置)"
+    },
+    {
+      "type": "color",
+      "id": "price_sale_color",
+      "label": "Sale/Early Bird Price Color (现价颜色)",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "price_regular_color",
+      "label": "Regular Compare-At Price Color (原价带有删除线颜色)",
+      "default": "#777777"
+    },
+    {
+      "type": "color",
+      "id": "price_badge_bg_color",
+      "label": "Badge Background Color (折扣标背景底色)",
+      "default": "#d32f2f"
+    },
+    {
+      "type": "color",
+      "id": "price_badge_text_color",
+      "label": "Badge Text Color (折扣标文字颜色)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "coupon_price_color",
+      "label": "Coupon Price Color (券后价颜色)",
+      "default": "#d32f2f"
+    },
+    {
+      "type": "color",
+      "id": "coupon_bg_color",
+      "label": "Coupon Price Box Background (券后价背景色)",
+      "default": "#fff7f9"
+    },
+    {
+      "type": "color",
+      "id": "coupon_border_color",
+      "label": "Coupon Price Box Border (券后价边框色)",
+      "default": "#d32f2f"
+    },
+    {
+      "type": "header",
+      "content": "Urgency Marketing Countdown (倒计时紧迫营销功能)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Enable Countdown Component (启用倒计时组件)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Countdown Informative Prompt Label (倒计时提示文案)",
+      "default": "Limited Time Early Bird Offer:"
+    },
+    {
+      "type": "text",
+      "id": "countdown_deadline",
+      "label": "Chrono Target Deadline (截止日期与时间点)",
+      "default": "2026-12-31 23:59:59",
+      "info": "Required strict syntax: YYYY-MM-DD HH:MM:SS (Example: 2026-06-05 18:00:00)"
+    },
+    {
+      "type": "textarea",
+      "id": "badge_text",
+      "label": "Circle Stamped Badge Text (圆圈标牌纯文本)",
+      "default": "Our\nEarly\nBird",
+      "info": "Use enter/return to separate different rows neatly inside the badge."
+    },
+    {
+      "type": "header",
+      "content": "Call-To-Action Action Controls (按钮行为链接)"
+    },
+    {
+      "type": "text",
+      "id": "btn_1_text",
+      "label": "Primary Button Text (主行动按钮文案)",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "btn_1_link",
+      "label": "Primary Button Link Destination (主行动按钮链接)",
+      "info": "When a selected product has an available variant, this button automatically goes to checkout with quantity 1. This custom link is used only as a fallback when no available product variant exists."
+    },
+    {
+      "type": "text",
+      "id": "btn_2_text",
+      "label": "Secondary Button Text (副行动按钮文案)",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "btn_2_link",
+      "label": "Secondary Button Link Destination (副行动按钮链接)",
+      "info": "Reserved as a fallback setting. When a product is selected, Learn More automatically links to the selected product page."
+    },
+    {
+      "type": "header",
+      "content": "Core Product Feature Highlight Card 1 (特性亮点卡片 1)"
+    },
+    {
+      "type": "text",
+      "id": "card_1_number",
+      "label": "Card 1 Display Hero Number (大排量展示数字)",
+      "default": "2"
+    },
+    {
+      "type": "text",
+      "id": "card_1_title",
+      "label": "Card 1 Title Caption (卡片 1 标题)",
+      "default": "Powerful Wavelengths"
+    },
+    {
+      "type": "textarea",
+      "id": "card_1_text",
+      "label": "Card 1 Descriptive Details Text (卡片 1 说明细节文案)",
+      "default": "660nm red light and 850nm near-infrared light for daily full-body care."
+    },
+    {
+      "type": "header",
+      "content": "Core Product Feature Highlight Card 2 (特性亮点卡片 2)"
+    },
+    {
+      "type": "text",
+      "id": "card_2_title",
+      "label": "Card 2 Title Caption (卡片 2 标题)",
+      "default": "Full-Body Flexible Mat"
+    },
+    {
+      "type": "textarea",
+      "id": "card_2_text",
+      "label": "Card 2 Descriptive Details Text (卡片 2 说明细节文案)",
+      "default": "Use it on the bed, floor, sofa, or chair for simple at-home sessions."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Early Bird Pre-Order"
+    }
+  ]
+}
+{% endschema %}

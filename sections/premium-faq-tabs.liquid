@@ -1,0 +1,903 @@
+<section id="premium-faq-{{ section.id }}" class="premium-faq-section">
+  {% assign first_tab_id = '' %}
+  {% if section.blocks.size > 0 %}
+    {% assign first_tab_id = section.blocks.first.id %}
+  {% endif %}
+
+  <div class="premium-faq__page">
+    <div class="premium-faq__shell">
+      {% if section.blocks.size > 0 %}
+        <div class="premium-faq__tabs-wrap">
+          <div class="premium-faq__tabs" role="tablist" aria-label="FAQ Categories">
+            {% for block in section.blocks %}
+              <button
+                class="premium-faq__tab {% if block.id == first_tab_id %}is-active{% endif %}"
+                type="button"
+                role="tab"
+                aria-selected="{% if block.id == first_tab_id %}true{% else %}false{% endif %}"
+                aria-controls="premium-faq-panel-{{ section.id }}-{{ block.id }}"
+                id="premium-faq-tab-{{ section.id }}-{{ block.id }}"
+                data-target="{{ block.id }}"
+                tabindex="{% if block.id == first_tab_id %}0{% else %}-1{% endif %}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.title | default: 'FAQ Tab' }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="premium-faq__panels">
+          {% for block in section.blocks %}
+            {% assign raw_faq = block.settings.faq_items | strip %}
+            {% assign faq_groups = raw_faq | split: '---' %}
+
+            <div
+              class="premium-faq__panel {% if block.id == first_tab_id %}is-active{% endif %}"
+              id="premium-faq-panel-{{ section.id }}-{{ block.id }}"
+              role="tabpanel"
+              aria-labelledby="premium-faq-tab-{{ section.id }}-{{ block.id }}"
+              data-panel="{{ block.id }}"
+              {% unless block.id == first_tab_id %}hidden{% endunless %}
+            >
+              {% if block.settings.panel_intro != blank %}
+                <div class="premium-faq__intro rte">
+                  {{ block.settings.panel_intro }}
+                </div>
+              {% endif %}
+
+              <div class="premium-faq__list">
+                {% assign item_count = 0 %}
+
+                {% for group in faq_groups %}
+                  {% assign chunk = group | strip %}
+                  {% if chunk != blank %}
+                    {% assign lines = chunk | newline_to_br | split: '<br />' %}
+                    {% assign question = '' %}
+                    {% assign answer = '' %}
+
+                    {% for line in lines %}
+                      {% assign current_line = line | strip %}
+                      {% if current_line != blank %}
+                        {% if question == blank %}
+                          {% assign question = current_line | remove_first: 'Q:' | remove_first: 'q:' | strip %}
+                        {% else %}
+                          {% assign clean_line = current_line | remove_first: 'A:' | remove_first: 'a:' | strip %}
+                          {% if answer == blank %}
+                            {% assign answer = clean_line %}
+                          {% else %}
+                            {% assign answer = answer | append: '<br>' | append: clean_line %}
+                          {% endif %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% if question != blank and answer != blank %}
+                      {% assign item_count = item_count | plus: 1 %}
+                      <div class="premium-faq__item{% if block.settings.open_first_item and item_count == 1 %} is-open{% endif %}">
+                        <button
+                          class="premium-faq__question"
+                          type="button"
+                          aria-expanded="{% if block.settings.open_first_item and item_count == 1 %}true{% else %}false{% endif %}"
+                        >
+                          <span class="premium-faq__question-text">{{ question }}</span>
+                          <span class="premium-faq__icon" aria-hidden="true"></span>
+                        </button>
+
+                        <div class="premium-faq__answer-wrap">
+                          <div class="premium-faq__answer-inner">
+                            <div class="premium-faq__answer rte">
+                              {{ answer }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+
+                {% if item_count == 0 %}
+                  <div class="premium-faq__empty">
+                    <p>
+                      Add FAQ content in this block using the format:<br>
+                      <strong>Q: Your question</strong><br>
+                      <strong>A: Your answer</strong><br>
+                      <strong>---</strong>
+                    </p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="premium-faq__empty">
+          <p>Please add at least one FAQ Tab block.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <style>
+    #shopify-section-{{ section.id }} {
+      --bg: {{ section.settings.bg_color }};
+      --bg-gradient-top: {{ section.settings.bg_gradient_top }};
+      --bg-gradient-middle: {{ section.settings.bg_gradient_middle }};
+      --bg-gradient-bottom: {{ section.settings.bg_gradient_bottom }};
+      --text: {{ section.settings.text_color }};
+      --text-soft: {{ section.settings.text_soft_color }};
+      --line: {{ section.settings.line_color }};
+      --button-active-bg: {{ section.settings.button_active_bg }};
+      --button-hover-bg: {{ section.settings.button_hover_bg }};
+      --max-width: {{ section.settings.max_width }}px;
+      --container-pad: {{ section.settings.container_pad_desktop }}px;
+      --faq-pad-y: {{ section.settings.faq_pad_y_desktop }}px;
+      --faq-pad-x: {{ section.settings.faq_pad_x_desktop }}px;
+      --btn-height: {{ section.settings.btn_height_desktop }}px;
+      --btn-min-width: {{ section.settings.btn_min_width_desktop }}px;
+      --btn-gap: {{ section.settings.btn_gap_desktop }}px;
+      --title-size: {{ section.settings.title_size_desktop }}px;
+      --body-size: {{ section.settings.body_size_desktop }}px;
+      --tracking: {{ section.settings.title_letter_spacing }}em;
+      --radius: {{ section.settings.radius }}px;
+      --transition: 0.28s ease;
+      --section-pt: {{ section.settings.padding_top }}px;
+      --section-pb: {{ section.settings.padding_bottom }}px;
+    }
+
+    #shopify-section-{{ section.id }} * {
+      box-sizing: border-box;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__page {
+      /* 背景强制突破主题限制，达到物理全屏 */
+      width: 100vw !important;
+      max-width: 100vw !important;
+      margin-left: calc(50% - 50vw) !important;
+      margin-right: calc(50% - 50vw) !important;
+      background-color: var(--bg);
+      background-image: linear-gradient(
+        to bottom,
+        var(--bg-gradient-top) 0%,
+        var(--bg-gradient-middle) 28%,
+        var(--bg-gradient-bottom) 100%
+      );
+      overflow-x: hidden;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__shell {
+      /* 核心修改点：内容区恢复最大宽度限制，并居中显示 */
+      width: 100%;
+      max-width: var(--max-width); 
+      margin: 0 auto;
+      padding-top: var(--section-pt);
+      padding-bottom: var(--section-pb);
+      padding-left: var(--container-pad);
+      padding-right: var(--container-pad);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__tabs-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2px 0 56px;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--btn-gap);
+      width: 100%;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__tab {
+      appearance: none;
+      border: 1.2px solid var(--line);
+      background: transparent;
+      color: rgba(20, 34, 42, 0.58);
+      min-width: var(--btn-min-width);
+      min-height: var(--btn-height);
+      padding: 0 28px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 13px;
+      line-height: 1;
+      letter-spacing: 0.16em;
+      font-weight: 700;
+      transition:
+        background-color var(--transition),
+        color var(--transition),
+        border-color var(--transition),
+        transform var(--transition);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__tab:hover {
+      background: var(--button-hover-bg);
+      color: var(--text);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__tab.is-active {
+      color: var(--text);
+      background: var(--button-active-bg);
+      border-color: var(--text);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__panel {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__panel.is-active {
+      display: block;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__intro {
+      margin: 0 0 28px;
+      color: var(--text-soft);
+      font-size: var(--body-size);
+      line-height: 1.8;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__intro p:last-child {
+      margin-bottom: 0;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__list {
+      border-top: 1.2px solid var(--line);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__item {
+      border-bottom: 1.2px solid var(--line);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__question {
+      width: 100%;
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: var(--faq-pad-y) var(--faq-pad-x);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__question-text {
+      flex: 1 1 auto;
+      margin: 0;
+      color: var(--text);
+      font-size: var(--title-size);
+      line-height: 1.45;
+      letter-spacing: var(--tracking);
+      font-weight: 800;
+      transition: opacity var(--transition);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__icon {
+      position: relative;
+      flex: 0 0 auto;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__icon::before,
+    #shopify-section-{{ section.id }} .premium-faq__icon::after {
+      content: "";
+      position: absolute;
+      background: currentColor;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__icon::before {
+      width: 14px;
+      height: 1.5px;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__icon::after {
+      width: 1.5px;
+      height: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__item.is-open .premium-faq__icon::after {
+      opacity: 0;
+      transform: scaleY(0.4);
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__answer-wrap {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.34s ease;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__item.is-open .premium-faq__answer-wrap {
+      grid-template-rows: 1fr;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__answer-inner {
+      overflow: hidden;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__answer {
+      padding: 0 52px 26px 0;
+      max-width: 100%;
+      color: var(--text-soft);
+      font-size: var(--body-size);
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__answer p:first-child {
+      margin-top: 0;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__answer p:last-child {
+      margin-bottom: 0;
+    }
+
+    #shopify-section-{{ section.id }} .premium-faq__empty {
+      padding: 24px 0;
+      color: var(--text-soft);
+      font-size: var(--body-size);
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1024px) {
+      #shopify-section-{{ section.id }} {
+        --container-pad: {{ section.settings.container_pad_tablet }}px;
+        --btn-gap: {{ section.settings.btn_gap_tablet }}px;
+        --btn-min-width: {{ section.settings.btn_min_width_tablet }}px;
+        --btn-height: {{ section.settings.btn_height_tablet }}px;
+        --faq-pad-y: {{ section.settings.faq_pad_y_tablet }}px;
+        --faq-pad-x: {{ section.settings.faq_pad_x_tablet }}px;
+        --title-size: {{ section.settings.title_size_tablet }}px;
+        --body-size: {{ section.settings.body_size_tablet }}px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      #shopify-section-{{ section.id }} {
+        --container-pad: {{ section.settings.container_pad_mobile }}px;
+        --btn-gap: {{ section.settings.btn_gap_mobile }}px;
+        --btn-min-width: 100%;
+        --btn-height: {{ section.settings.btn_height_mobile }}px;
+        --faq-pad-y: {{ section.settings.faq_pad_y_mobile }}px;
+        --faq-pad-x: {{ section.settings.faq_pad_x_mobile }}px;
+        --title-size: {{ section.settings.title_size_mobile }}px;
+        --body-size: {{ section.settings.body_size_mobile }}px;
+        --tracking: {{ section.settings.title_letter_spacing_mobile }}em;
+        --section-pt: {{ section.settings.padding_top_mobile }}px;
+        --section-pb: {{ section.settings.padding_bottom_mobile }}px;
+      }
+
+      #shopify-section-{{ section.id }} .premium-faq__tabs-wrap {
+        padding-bottom: 28px;
+      }
+
+      #shopify-section-{{ section.id }} .premium-faq__question {
+        gap: 16px;
+      }
+
+      #shopify-section-{{ section.id }} .premium-faq__answer {
+        padding: 0 32px 22px 0;
+      }
+    }
+  </style>
+
+  <script>
+    (function () {
+      const section = document.getElementById('premium-faq-{{ section.id }}');
+      if (!section) return;
+
+      const tabs = Array.from(section.querySelectorAll('.premium-faq__tab'));
+      const panels = Array.from(section.querySelectorAll('.premium-faq__panel'));
+
+      function activateTab(targetId, focusTab) {
+        tabs.forEach((tab) => {
+          const isActive = tab.dataset.target === targetId;
+          tab.classList.toggle('is-active', isActive);
+          tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          tab.setAttribute('tabindex', isActive ? '0' : '-1');
+
+          if (isActive && focusTab) {
+            tab.focus();
+          }
+        });
+
+        panels.forEach((panel) => {
+          const isActive = panel.dataset.panel === targetId;
+          panel.classList.toggle('is-active', isActive);
+
+          if (isActive) {
+            panel.removeAttribute('hidden');
+          } else {
+            panel.setAttribute('hidden', '');
+          }
+        });
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', function () {
+          activateTab(tab.dataset.target, false);
+        });
+
+        tab.addEventListener('keydown', function (event) {
+          let nextIndex = null;
+
+          if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+            nextIndex = (index + 1) % tabs.length;
+          }
+
+          if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+            nextIndex = (index - 1 + tabs.length) % tabs.length;
+          }
+
+          if (event.key === 'Home') {
+            nextIndex = 0;
+          }
+
+          if (event.key === 'End') {
+            nextIndex = tabs.length - 1;
+          }
+
+          if (nextIndex !== null) {
+            event.preventDefault();
+            activateTab(tabs[nextIndex].dataset.target, true);
+          }
+        });
+      });
+
+      const faqLists = section.querySelectorAll('.premium-faq__list');
+
+      faqLists.forEach((list) => {
+        const items = Array.from(list.querySelectorAll('.premium-faq__item'));
+
+        items.forEach((item) => {
+          const button = item.querySelector('.premium-faq__question');
+          if (!button) return;
+
+          button.addEventListener('click', function () {
+            const isOpen = item.classList.contains('is-open');
+
+            items.forEach((otherItem) => {
+              otherItem.classList.remove('is-open');
+              const otherButton = otherItem.querySelector('.premium-faq__question');
+              if (otherButton) {
+                otherButton.setAttribute('aria-expanded', 'false');
+              }
+            });
+
+            if (!isOpen) {
+              item.classList.add('is-open');
+              button.setAttribute('aria-expanded', 'true');
+            }
+          });
+        });
+      });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Premium FAQ Nested",
+  "tag": "section",
+  "class": "section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background base",
+      "default": "#f6f3ef"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_top",
+      "label": "Background gradient top",
+      "default": "#f3efeb"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_middle",
+      "label": "Background gradient middle",
+      "default": "#f7f4f0"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_bottom",
+      "label": "Background gradient bottom",
+      "default": "#f6f3ef"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading color",
+      "default": "#14222a"
+    },
+    {
+      "type": "color",
+      "id": "text_soft_color",
+      "label": "Answer text color",
+      "default": "#4f5c63"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Border color",
+      "default": "#14222a"
+    },
+    {
+      "type": "color",
+      "id": "button_active_bg",
+      "label": "Active tab background",
+      "default": "#f0ece7"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg",
+      "label": "Hover tab background",
+      "default": "#f4f1ed"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 1000,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1420
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Tab radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Section top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Section bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "container_pad_desktop",
+      "label": "Container side padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "btn_gap_desktop",
+      "label": "Tab gap",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "btn_min_width_desktop",
+      "label": "Tab min width",
+      "min": 120,
+      "max": 400,
+      "step": 4,
+      "unit": "px",
+      "default": 272
+    },
+    {
+      "type": "range",
+      "id": "btn_height_desktop",
+      "label": "Tab height",
+      "min": 36,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "faq_pad_y_desktop",
+      "label": "Question vertical padding",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "faq_pad_x_desktop",
+      "label": "Question horizontal padding",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "container_pad_tablet",
+      "label": "Container side padding (Tablet)",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "btn_gap_tablet",
+      "label": "Tab gap",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "btn_min_width_tablet",
+      "label": "Tab min width",
+      "min": 120,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "default": 220
+    },
+    {
+      "type": "range",
+      "id": "btn_height_tablet",
+      "label": "Tab height",
+      "min": 36,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "faq_pad_y_tablet",
+      "label": "Question vertical padding",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "faq_pad_x_tablet",
+      "label": "Question horizontal padding",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "container_pad_mobile",
+      "label": "Mobile container side padding",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "btn_gap_mobile",
+      "label": "Tab gap",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "btn_height_mobile",
+      "label": "Tab height",
+      "min": 36,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "faq_pad_y_mobile",
+      "label": "Question vertical padding",
+      "min": 8,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "faq_pad_x_mobile",
+      "label": "Question horizontal padding",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Question size desktop",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "body_size_desktop",
+      "label": "Answer size desktop",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "title_size_tablet",
+      "label": "Question size tablet",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "body_size_tablet",
+      "label": "Answer size tablet",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Question size mobile",
+      "min": 11,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "body_size_mobile",
+      "label": "Answer size mobile",
+      "min": 11,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Question letter spacing desktop",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing_mobile",
+      "label": "Question letter spacing mobile",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.1,
+      "default": 0.1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_tab",
+      "name": "FAQ Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab title",
+          "default": "General"
+        },
+        {
+          "type": "richtext",
+          "id": "panel_intro",
+          "label": "Intro text",
+          "default": "<p>Add an optional intro for this tab.</p>"
+        },
+        {
+          "type": "textarea",
+          "id": "faq_items",
+          "label": "FAQ items",
+          "info": "Format: Q: question / A: answer / --- to separate each item",
+          "default": "Q: What is red light therapy?\nA: Red light therapy uses specific wavelengths of light to support skin wellness and daily recovery routines.\n---\nQ: How often should I use it?\nA: Most users include it in their routine several times per week, depending on their goals and device instructions.\n---\nQ: Is it easy to use at home?\nA: Yes. It is designed to fit naturally into a home wellness routine."
+        },
+        {
+          "type": "checkbox",
+          "id": "open_first_item",
+          "label": "Open first item by default",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium FAQ Nested",
+      "blocks": [
+        {
+          "type": "faq_tab"
+        },
+        {
+          "type": "faq_tab"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

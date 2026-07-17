@@ -1,0 +1,819 @@
+{% comment %}
+  Dual Wavelength Penetration
+  - Converted from uploaded HTML into Shopify section
+  - Supports section settings + blocks
+  - Each block = one slide
+  - No external library required
+  - Modified: Added full-bleed (100vw) CSS to break out of theme wrapper constraints
+{% endcomment %}
+
+<section id="wavelength-section-{{ section.id }}" class="wavelength-section">
+  <style>
+    #wavelength-section-{{ section.id }}{
+      --bg: {{ section.settings.bg_color }};
+      --panel: {{ section.settings.panel_color }};
+      --text: {{ section.settings.text_color }};
+      --muted: {{ section.settings.muted_color }};
+      --line: {{ section.settings.line_color }};
+      --line-soft: {{ section.settings.line_soft_color }};
+      --accent: {{ section.settings.accent_color }};
+      --arrow: {{ section.settings.arrow_color }};
+      --max-width: {{ section.settings.max_width }}px;
+      --section-py: {{ section.settings.section_padding_y }}px;
+      --title-size: {{ section.settings.title_size }}px;
+      --circle-size: {{ section.settings.circle_size }}px;
+      --center-size: {{ section.settings.center_size }}px;
+      --label-size: {{ section.settings.label_size }}px;
+      --body-size: {{ section.settings.body_size }}px;
+    }
+
+    #wavelength-section-{{ section.id }},
+    #wavelength-section-{{ section.id }} * {
+      box-sizing: border-box;
+    }
+
+    /* 修改部分：强制全屏宽，突破主题外层容器限制 */
+    #wavelength-section-{{ section.id }} {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      padding: var(--section-py) 24px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    #wavelength-section-{{ section.id }} .wavelength-shell {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      background: var(--panel);
+      padding: 0 36px 52px;
+    }
+
+    #wavelength-section-{{ section.id }} .wavelength-header {
+      text-align: center;
+      margin-bottom: 18px;
+      animation: wavelengthFadeUp-{{ section.id }} .9s ease both;
+    }
+
+    #wavelength-section-{{ section.id }} .wavelength-title {
+      margin: 0;
+      font-size: var(--title-size);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    #wavelength-section-{{ section.id }} .wavelength-stage {
+      position: relative;
+      width: min(100%, 760px);
+      margin: 0 auto;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #wavelength-section-{{ section.id }} .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      z-index: 20;
+      transition: opacity .2s ease, transform .2s ease, color .2s ease;
+      color: var(--arrow);
+    }
+
+    #wavelength-section-{{ section.id }} .nav-btn:hover {
+      opacity: .95;
+      color: var(--text);
+    }
+
+    #wavelength-section-{{ section.id }} .nav-btn:active {
+      transform: translateY(-50%) scale(.96);
+    }
+
+    #wavelength-section-{{ section.id }} .nav-btn.left { left: -6px; }
+    #wavelength-section-{{ section.id }} .nav-btn.right { right: -6px; }
+
+    #wavelength-section-{{ section.id }} .nav-btn svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #wavelength-section-{{ section.id }} .visual-area {
+      position: relative;
+      width: var(--circle-size);
+      height: var(--circle-size);
+      max-width: 100%;
+      max-height: min(70vw, var(--circle-size));
+      aspect-ratio: 1 / 1;
+      overflow: visible;
+    }
+
+    #wavelength-section-{{ section.id }} .visual-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.08);
+      transition:
+        opacity .48s ease,
+        transform .58s cubic-bezier(.22,.9,.22,1);
+      will-change: transform, opacity;
+    }
+
+    #wavelength-section-{{ section.id }} .visual-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+      z-index: 2;
+    }
+
+    #wavelength-section-{{ section.id }} .visual-slide.leaving {
+      opacity: 0;
+      transform: scale(.92);
+      z-index: 1;
+    }
+
+    #wavelength-section-{{ section.id }} .circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.2px solid var(--line-soft);
+      transition:
+        border-color .45s ease,
+        transform .45s ease,
+        opacity .45s ease;
+    }
+
+    #wavelength-section-{{ section.id }} .circle.outer {
+      inset: 0;
+      border-color: var(--line-soft);
+    }
+
+    #wavelength-section-{{ section.id }} .circle.middle {
+      width: 84%;
+      height: 84%;
+      left: 8%;
+      top: 8%;
+      border-color: var(--line);
+    }
+
+    #wavelength-section-{{ section.id }} .circle.inner {
+      width: 56%;
+      height: 56%;
+      left: 22%;
+      top: 22%;
+      border-color: var(--line);
+    }
+
+    #wavelength-section-{{ section.id }} .circle.is-active {
+      border-color: var(--accent);
+    }
+
+    #wavelength-section-{{ section.id }} .center-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+      font-size: var(--center-size);
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    #wavelength-section-{{ section.id }} .content-stage {
+      position: relative;
+      max-width: 760px;
+      margin: 18px auto 0;
+      min-height: 190px;
+    }
+
+    #wavelength-section-{{ section.id }} .content-slide {
+      position: absolute;
+      inset: 0;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.04) translateY(8px);
+      transition:
+        opacity .42s ease,
+        transform .56s cubic-bezier(.22,.9,.22,1);
+      will-change: transform, opacity;
+    }
+
+    #wavelength-section-{{ section.id }} .content-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+      z-index: 2;
+    }
+
+    #wavelength-section-{{ section.id }} .content-slide.leaving {
+      opacity: 0;
+      transform: scale(.97) translateY(-6px);
+      z-index: 1;
+    }
+
+    #wavelength-section-{{ section.id }} .content-label {
+      margin: 0 0 16px;
+      font-size: var(--label-size);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    #wavelength-section-{{ section.id }} .content-desc {
+      margin: 0 auto;
+      max-width: 650px;
+      font-size: var(--body-size);
+      line-height: 1.6;
+      letter-spacing: .01em;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    @keyframes wavelengthFadeUp-{{ section.id }} {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 991px) {
+      #wavelength-section-{{ section.id }} {
+        --section-py: {{ section.settings.section_padding_y_tablet }}px;
+        --title-size: {{ section.settings.title_size_tablet }}px;
+        --circle-size: {{ section.settings.circle_size_tablet }}px;
+        --center-size: {{ section.settings.center_size_tablet }}px;
+        --label-size: {{ section.settings.label_size_tablet }}px;
+        --body-size: {{ section.settings.body_size_tablet }}px;
+      }
+
+      #wavelength-section-{{ section.id }} .wavelength-shell {
+        padding: 0 24px 44px;
+      }
+
+      #wavelength-section-{{ section.id }} .wavelength-stage {
+        min-height: 500px;
+      }
+
+      #wavelength-section-{{ section.id }} .nav-btn.left { left: -10px; }
+      #wavelength-section-{{ section.id }} .nav-btn.right { right: -10px; }
+
+      #wavelength-section-{{ section.id }} .content-stage {
+        min-height: 180px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      #wavelength-section-{{ section.id }} {
+        --section-py: {{ section.settings.section_padding_y_mobile }}px;
+        --title-size: {{ section.settings.title_size_mobile }}px;
+        --circle-size: {{ section.settings.circle_size_mobile }}px;
+        --center-size: {{ section.settings.center_size_mobile }}px;
+        --label-size: {{ section.settings.label_size_mobile }}px;
+        --body-size: {{ section.settings.body_size_mobile }}px;
+      }
+
+      #wavelength-section-{{ section.id }} {
+        padding-inline: 10px;
+      }
+
+      #wavelength-section-{{ section.id }} .wavelength-shell {
+        padding: 0 10px 28px;
+      }
+
+      #wavelength-section-{{ section.id }} .wavelength-header {
+        margin-bottom: 10px;
+      }
+
+      #wavelength-section-{{ section.id }} .wavelength-stage {
+        width: 100%;
+        min-height: 360px;
+      }
+
+      #wavelength-section-{{ section.id }} .visual-area {
+        width: var(--circle-size);
+        height: var(--circle-size);
+      }
+
+      #wavelength-section-{{ section.id }} .nav-btn {
+        width: 34px;
+        height: 34px;
+      }
+
+      #wavelength-section-{{ section.id }} .nav-btn.left { left: -2px; }
+      #wavelength-section-{{ section.id }} .nav-btn.right { right: -2px; }
+
+      #wavelength-section-{{ section.id }} .content-stage {
+        margin-top: 10px;
+        min-height: 170px;
+      }
+
+      #wavelength-section-{{ section.id }} .content-label {
+        margin-bottom: 12px;
+      }
+
+      #wavelength-section-{{ section.id }} .content-desc {
+        max-width: 92%;
+        line-height: 1.7;
+        font-weight: 600;
+      }
+    }
+
+    {% if section.blocks.size < 2 %}
+      #wavelength-section-{{ section.id }} .nav-btn {
+        display: none;
+      }
+    {% endif %}
+  </style>
+
+  <div class="wavelength-shell">
+    <header class="wavelength-header">
+      <h2 class="wavelength-title">{{ section.settings.heading }}</h2>
+    </header>
+
+    <div class="wavelength-stage">
+      <button class="nav-btn left" type="button" data-prev aria-label="Previous wavelength">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M29 10L15 24L29 38" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div class="visual-area" data-visual-area aria-live="polite">
+        {% for block in section.blocks %}
+          <div
+            class="visual-slide{% if forloop.first %} active{% endif %}"
+            data-visual-slide
+            {{ block.shopify_attributes }}
+          >
+            <div class="circle outer{% if block.settings.active_ring == 'outer' %} is-active{% endif %}"></div>
+            <div class="circle middle{% if block.settings.active_ring == 'middle' %} is-active{% endif %}"></div>
+            <div class="circle inner{% if block.settings.active_ring == 'inner' %} is-active{% endif %}"></div>
+            <div class="center-text">{{ block.settings.center_text }}</div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <button class="nav-btn right" type="button" data-next aria-label="Next wavelength">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M19 10L33 24L19 38" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="content-stage" data-content-stage>
+      {% for block in section.blocks %}
+        <div
+          class="content-slide{% if forloop.first %} active{% endif %}"
+          data-content-slide
+          {{ block.shopify_attributes }}
+        >
+          <h3 class="content-label">{{ block.settings.label }}</h3>
+          <p class="content-desc">{{ block.settings.desc }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const section = document.getElementById('wavelength-section-{{ section.id }}');
+      if (!section) return;
+      if (section.dataset.initialized === 'true') return;
+      section.dataset.initialized = 'true';
+
+      const visualNodes = Array.from(section.querySelectorAll('[data-visual-slide]'));
+      const contentNodes = Array.from(section.querySelectorAll('[data-content-slide]'));
+      const prevBtn = section.querySelector('[data-prev]');
+      const nextBtn = section.querySelector('[data-next]');
+      const visualArea = section.querySelector('[data-visual-area]');
+
+      if (!visualNodes.length || !contentNodes.length) return;
+
+      let current = 0;
+      let isAnimating = false;
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      function switchTo(nextIndex) {
+        if (isAnimating || nextIndex === current) return;
+        if (!visualNodes[nextIndex] || !contentNodes[nextIndex]) return;
+
+        isAnimating = true;
+
+        const currentVisual = visualNodes[current];
+        const nextVisual = visualNodes[nextIndex];
+        const currentContent = contentNodes[current];
+        const nextContent = contentNodes[nextIndex];
+
+        nextVisual.classList.remove('leaving');
+        nextContent.classList.remove('leaving');
+
+        nextVisual.classList.add('active');
+        nextContent.classList.add('active');
+
+        currentVisual.classList.add('leaving');
+        currentContent.classList.add('leaving');
+
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            currentVisual.classList.remove('active', 'leaving');
+            currentContent.classList.remove('active', 'leaving');
+            current = nextIndex;
+            isAnimating = false;
+          }, 620);
+        });
+      }
+
+      function nextSlide() {
+        const nextIndex = (current + 1) % visualNodes.length;
+        switchTo(nextIndex);
+      }
+
+      function prevSlide() {
+        const nextIndex = (current - 1 + visualNodes.length) % visualNodes.length;
+        switchTo(nextIndex);
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', prevSlide);
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', nextSlide);
+      }
+
+      section.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+      });
+
+      if (visualArea) {
+        visualArea.addEventListener('touchstart', function(e) {
+          touchStartX = e.changedTouches[0].clientX;
+        }, { passive: true });
+
+        visualArea.addEventListener('touchend', function(e) {
+          touchEndX = e.changedTouches[0].clientX;
+          const delta = touchEndX - touchStartX;
+          if (Math.abs(delta) < 40) return;
+          if (delta > 0) prevSlide();
+          if (delta < 0) nextSlide();
+        }, { passive: true });
+      }
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Dual Wavelength",
+  "tag": "section",
+  "class": "section section-dual-wavelength",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Penetrate Deeper with\nAdvanced Wavelength Design"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1120
+    },
+    {
+      "type": "range",
+      "id": "section_padding_y",
+      "label": "Desktop section padding top/bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "section_padding_y_tablet",
+      "label": "Tablet section padding top/bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "section_padding_y_mobile",
+      "label": "Mobile section padding top/bottom",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Desktop title size",
+      "min": 20,
+      "max": 90,
+      "step": 1,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "title_size_tablet",
+      "label": "Tablet title size",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Mobile title size",
+      "min": 16,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+
+    {
+      "type": "range",
+      "id": "circle_size",
+      "label": "Desktop circle size",
+      "min": 240,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 530
+    },
+    {
+      "type": "range",
+      "id": "circle_size_tablet",
+      "label": "Tablet circle size",
+      "min": 220,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 460
+    },
+    {
+      "type": "range",
+      "id": "circle_size_mobile",
+      "label": "Mobile circle size",
+      "min": 180,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 320
+    },
+
+    {
+      "type": "range",
+      "id": "center_size",
+      "label": "Desktop center text size",
+      "min": 12,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "center_size_tablet",
+      "label": "Tablet center text size",
+      "min": 12,
+      "max": 70,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "center_size_mobile",
+      "label": "Mobile center text size",
+      "min": 10,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Desktop label size",
+      "min": 16,
+      "max": 90,
+      "step": 1,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "label_size_tablet",
+      "label": "Tablet label size",
+      "min": 14,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "label_size_mobile",
+      "label": "Mobile label size",
+      "min": 12,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Desktop body text size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "body_size_tablet",
+      "label": "Tablet body text size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "body_size_mobile",
+      "label": "Mobile body text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#efedf0"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Inner panel background",
+      "default": "#f2f1f2"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#22262c"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted color",
+      "default": "#5a6068"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Circle line color",
+      "default": "#c9c9cb"
+    },
+    {
+      "type": "color",
+      "id": "line_soft_color",
+      "label": "Outer circle line color",
+      "default": "#d9d9db"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#ff1f16"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#6d7177"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "center_text",
+          "label": "Center text",
+          "default": "660+850nm"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "RED+NIR"
+        },
+        {
+          "type": "textarea",
+          "id": "desc",
+          "label": "Description",
+          "default": "Combining surface and deep-level therapy, dual wavelengths elevate cellular energy for comprehensive anti-aging, full-body recovery, and a revitalized, healthier you."
+        },
+        {
+          "type": "select",
+          "id": "active_ring",
+          "label": "Active ring",
+          "options": [
+            { "value": "outer", "label": "Outer" },
+            { "value": "middle", "label": "Middle" },
+            { "value": "inner", "label": "Inner" }
+          ],
+          "default": "middle"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dual Wavelength",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "center_text": "660+850nm",
+            "label": "RED+NIR",
+            "desc": "Combining surface and deep-level therapy, dual wavelengths elevate cellular energy for comprehensive anti-aging, full-body recovery, and a revitalized, healthier you.",
+            "active_ring": "middle"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "center_text": "660nm",
+            "label": "RED LIGHT",
+            "desc": "660nm red light targets surface-level skin support and helps promote a brighter, smoother, and more rejuvenated appearance.",
+            "active_ring": "inner"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "center_text": "850nm",
+            "label": "NIR LIGHT",
+            "desc": "850nm near-infrared light reaches deeper beneath the surface to support recovery, comfort, and full-body wellness.",
+            "active_ring": "outer"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1837 @@
+{% liquid
+  assign section_anchor = 'sph-hero-' | append: section.id
+  assign doctor_count = section.blocks.size
+%}
+
+<style>
+  #shopify-section-{{ section.id }} .sph-hero,
+  #shopify-section-{{ section.id }} .sph-hero *,
+  #shopify-section-{{ section.id }} .sph-doctor-showcase,
+  #shopify-section-{{ section.id }} .sph-doctor-showcase *,
+  #shopify-section-{{ section.id }} .sph-hero__width-wrap,
+  #shopify-section-{{ section.id }} .sph-hero__outer {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__outer {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    background: {{ section.settings.section_bg_color }};
+    overflow-x: clip;
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-showcase__header {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 24px 28px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-showcase__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(32px, 4vw, {{ section.settings.title_size }}px);
+    line-height: 1.1;
+    font-weight: {{ section.settings.title_weight }};
+    color: {{ section.settings.title_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-showcase__intro {
+    margin: 16px auto 0;
+    max-width: 720px;
+    font-size: {{ section.settings.subtitle_size }}px;
+    line-height: 1.65;
+    color: {{ section.settings.subtitle_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-showcase__tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto 28px;
+    padding: 0 20px 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-showcase__tab {
+    flex: 0 0 auto;
+    appearance: none;
+    min-height: 44px;
+    padding: 10px 20px;
+    border: 1px solid {{ section.settings.social_icon_border_color }};
+    border-radius: 999px;
+    background: {{ section.settings.social_icon_bg_color }};
+    color: {{ section.settings.title_color }};
+    font: inherit;
+    font-size: 14px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-showcase__tab:hover {
+    transform: translateY(-2px);
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-showcase__tab[aria-selected="true"] {
+    border-color: {{ section.settings.button_bg_color }};
+    background: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-slide[hidden] {
+    display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__credential {
+    margin: 12px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: {{ section.settings.subtitle_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__bio {
+    margin-top: {{ section.settings.subtitle_margin_top }}px;
+    font-size: {{ section.settings.subtitle_size }}px;
+    line-height: 1.7;
+    color: {{ section.settings.subtitle_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__bio > *:first-child {
+    margin-top: 0;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__bio > *:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .sph-doctor-showcase__empty {
+    margin: 0;
+    padding: 64px 24px;
+    text-align: center;
+    color: {{ section.settings.subtitle_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__width-wrap {
+    width: 100%;
+    max-width: {% if section.settings.section_width_mode == 'custom' %}{{ section.settings.section_max_width }}px{% else %}none{% endif %};
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: {{ section.settings.desktop_section_padding_x }}px;
+    padding-right: {{ section.settings.desktop_section_padding_x }}px;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero {
+    width: 100%;
+    min-height: {{ section.settings.desktop_height }}px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    overflow: hidden;
+    background: {{ section.settings.section_bg_color }};
+    font-family: var(--font-body--family);
+    color: {{ section.settings.title_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero--media-first .sph-hero__media {
+    order: -1;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__content {
+    background: {{ section.settings.content_bg_color }};
+    min-height: {{ section.settings.desktop_height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ section.settings.desktop_content_padding_y }}px {{ section.settings.desktop_content_padding_x }}px;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__content-inner {
+    width: 100%;
+    max-width: {{ section.settings.content_max_width }}px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(34px, 3.6vw, {{ section.settings.title_size }}px);
+    line-height: 1.08;
+    font-weight: {{ section.settings.title_weight }};
+    color: {{ section.settings.title_color }};
+    letter-spacing: 0;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__subtitle {
+    margin: {{ section.settings.subtitle_margin_top }}px 0 0;
+    font-family: var(--font-body--family);
+    font-size: {{ section.settings.subtitle_size }}px;
+    line-height: 1.6;
+    font-weight: {{ section.settings.subtitle_weight }};
+    color: {{ section.settings.subtitle_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: {{ section.settings.button_min_width }}px;
+    min-height: {{ section.settings.button_min_height }}px;
+    margin-top: {{ section.settings.button_margin_top }}px;
+    padding: 18px 36px;
+    background: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    border-radius: 999px;
+    border: 0;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: var(--font-body--family);
+    font-size: {{ section.settings.button_font_size }}px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: {{ section.settings.button_letter_spacing }}px;
+    transition: transform 0.28s ease, background 0.28s ease, box-shadow 0.28s ease;
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.12);
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__button:hover {
+    background: {{ section.settings.button_hover_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    transform: translateY(-3px);
+    box-shadow: 0 22px 42px rgba(0, 0, 0, 0.18);
+  }
+
+
+  #shopify-section-{{ section.id }} .sph-hero__social-wrap {
+    margin-top: {{ section.settings.social_margin_top }}px;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__social-label {
+    margin: 0 0 12px;
+    font-family: var(--font-body--family);
+    font-size: {{ section.settings.social_label_size }}px;
+    line-height: 1.4;
+    font-weight: 600;
+    color: {{ section.settings.social_label_color }};
+    letter-spacing: 0.02em;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__socials {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: {{ section.settings.social_icon_gap }}px;
+    justify-content: {% case section.settings.text_alignment %}{% when 'left' %}flex-start{% when 'right' %}flex-end{% else %}center{% endcase %};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__social-link {
+    width: {{ section.settings.social_icon_box_size }}px;
+    height: {{ section.settings.social_icon_box_size }}px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid {{ section.settings.social_icon_border_color }};
+    background: {{ section.settings.social_icon_bg_color }};
+    color: {{ section.settings.social_icon_color }};
+    text-decoration: none;
+    transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__social-link:hover {
+    transform: translateY(-3px);
+    background: {{ section.settings.social_icon_hover_bg_color }};
+    color: {{ section.settings.social_icon_hover_color }};
+    border-color: {{ section.settings.social_icon_hover_bg_color }};
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12);
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__social-link svg {
+    width: {{ section.settings.social_icon_size }}px;
+    height: {{ section.settings.social_icon_size }}px;
+    display: block;
+    fill: currentColor;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 0;
+    align-self: center;
+    background: {{ section.settings.media_bg_color }};
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__media video,
+  #shopify-section-{{ section.id }} .sph-hero__media img,
+  #shopify-section-{{ section.id }} .sph-hero__media .shopify-video {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: block;
+    object-fit: contain;
+    object-position: {{ section.settings.media_object_position }};
+    background: {{ section.settings.media_bg_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__media-image {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__media.is-image .sph-hero__media-video,
+  #shopify-section-{{ section.id }} .sph-hero__media.is-image video {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__media.is-image .sph-hero__media-image {
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    color: rgba(255,255,255,0.82);
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__play-toggle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    width: 60px;
+    height: 60px;
+    border: 0;
+    border-radius: 50%;
+    padding: 0;
+    line-height: 0;
+    background: {{ section.settings.play_button_bg_color }};
+    color: {{ section.settings.play_button_icon_color }};
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__play-toggle:hover {
+    transform: translate(-50%, -50%) scale(1.06);
+    background: {{ section.settings.play_button_hover_bg_color }};
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__play-toggle svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    transform: translate(-50%, -50%);
+    fill: currentColor;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__play-toggle.is-hidden {
+    display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__play-toggle .sph-icon-play,
+  #shopify-section-{{ section.id }} .sph-hero__play-toggle .sph-icon-pause {
+    display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__play-toggle.is-paused .sph-icon-play {
+    display: block !important;
+  }
+
+  #shopify-section-{{ section.id }} .sph-hero__play-toggle:not(.is-paused) .sph-icon-pause {
+    display: block !important;
+  }
+
+  @media (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .sph-hero__width-wrap {
+      padding-left: {{ section.settings.tablet_section_padding_x }}px;
+      padding-right: {{ section.settings.tablet_section_padding_x }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero {
+      min-height: {{ section.settings.tablet_height }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__content {
+      min-height: {{ section.settings.tablet_height }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__media {
+      aspect-ratio: 16 / 9;
+      height: auto;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__placeholder,
+    #shopify-section-{{ section.id }} .sph-hero__media video,
+    #shopify-section-{{ section.id }} .sph-hero__media img,
+    #shopify-section-{{ section.id }} .sph-hero__media .shopify-video {
+      height: 100%;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__title {
+      font-size: {{ section.settings.tablet_title_size }}px;
+      line-height: 1.1;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__subtitle {
+      font-size: {{ section.settings.tablet_subtitle_size }}px;
+      line-height: 1.6;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__button {
+      min-width: {{ section.settings.tablet_button_min_width }}px;
+      min-height: {{ section.settings.tablet_button_min_height }}px;
+      font-size: {{ section.settings.tablet_button_font_size }}px;
+      letter-spacing: {{ section.settings.tablet_button_letter_spacing }}px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} .sph-doctor-showcase__header {
+      padding: 40px 20px 22px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-doctor-showcase__heading {
+      font-size: {{ section.settings.mobile_title_size }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-doctor-showcase__intro,
+    #shopify-section-{{ section.id }} .sph-hero__bio {
+      font-size: {{ section.settings.mobile_subtitle_size }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-doctor-showcase__tabs {
+
+      margin-bottom: 18px;
+      padding-inline: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__width-wrap {
+      padding-left: {{ section.settings.mobile_section_padding_x }}px;
+      padding-right: {{ section.settings.mobile_section_padding_x }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero {
+      display: flex;
+      flex-direction: column-reverse;
+      min-height: auto;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero.sph-hero--mobile-content-first {
+      flex-direction: column;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__content {
+      min-height: auto;
+      padding: {{ section.settings.mobile_content_padding_top }}px {{ section.settings.mobile_content_padding_x }}px {{ section.settings.mobile_content_padding_bottom }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__media {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__placeholder,
+    #shopify-section-{{ section.id }} .sph-hero__media video,
+    #shopify-section-{{ section.id }} .sph-hero__media img,
+    #shopify-section-{{ section.id }} .sph-hero__media .shopify-video {
+      height: 100%;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__title {
+      font-size: {{ section.settings.mobile_title_size }}px;
+      line-height: 1.14;
+      letter-spacing: 0;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__subtitle {
+      margin-top: {{ section.settings.mobile_subtitle_margin_top }}px;
+      font-size: {{ section.settings.mobile_subtitle_size }}px;
+      line-height: 1.6;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__button {
+      width: 100%;
+      max-width: {{ section.settings.mobile_button_max_width }}px;
+      min-width: 0;
+      min-height: {{ section.settings.mobile_button_min_height }}px;
+      margin-top: {{ section.settings.mobile_button_margin_top }}px;
+      font-size: {{ section.settings.mobile_button_font_size }}px;
+      letter-spacing: {{ section.settings.mobile_button_letter_spacing }}px;
+    }
+
+
+    #shopify-section-{{ section.id }} .sph-hero__social-wrap {
+      margin-top: {{ section.settings.mobile_social_margin_top }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__socials {
+      justify-content: center;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__social-link {
+      width: {{ section.settings.mobile_social_icon_box_size }}px;
+      height: {{ section.settings.mobile_social_icon_box_size }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__social-link svg {
+      width: {{ section.settings.mobile_social_icon_size }}px;
+      height: {{ section.settings.mobile_social_icon_size }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__play-toggle {
+      top: 50%;
+      left: 50%;
+      width: 56px;
+      height: 56px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__play-toggle svg {
+      width: 21px;
+      height: 21px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #shopify-section-{{ section.id }} .sph-hero__media {
+      aspect-ratio: 16 / 9;
+      height: auto;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__placeholder,
+    #shopify-section-{{ section.id }} .sph-hero__media video,
+    #shopify-section-{{ section.id }} .sph-hero__media img,
+    #shopify-section-{{ section.id }} .sph-hero__media .shopify-video {
+      height: 100%;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__title {
+      font-size: {{ section.settings.small_mobile_title_size }}px;
+    }
+
+    #shopify-section-{{ section.id }} .sph-hero__subtitle {
+      font-size: {{ section.settings.small_mobile_subtitle_size }}px;
+    }
+  }
+</style>
+
+<div
+  id="{{ section_anchor }}"
+  class="sph-hero__outer sph-doctor-showcase"
+  data-sph-showcase
+  {% if section.settings.heading != blank %}
+    aria-labelledby="{{ section_anchor }}-heading"
+  {% else %}
+    aria-label="Doctor profiles"
+  {% endif %}
+>
+  <div class="sph-hero__width-wrap">
+    <header class="sph-doctor-showcase__header">
+      {% if section.settings.heading != blank %}
+        <h2 id="{{ section_anchor }}-heading" class="sph-doctor-showcase__heading">
+          {{ section.settings.heading | escape }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="sph-doctor-showcase__intro">{{ section.settings.subheading | escape }}</p>
+      {% endif %}
+    </header>
+
+    {% if doctor_count > 0 %}
+      {% if doctor_count > 1 %}
+        <div class="sph-doctor-showcase__tabs" role="tablist" aria-label="Choose a doctor">
+          {% for block in section.blocks %}
+            <button
+              id="{{ section_anchor }}-tab-{{ forloop.index0 }}"
+              class="sph-doctor-showcase__tab"
+              type="button"
+              role="tab"
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-controls="{{ section_anchor }}-slide-{{ forloop.index0 }}"
+              tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+              data-sph-tab
+              data-sph-index="{{ forloop.index0 }}"
+            >
+              {{ block.settings.name | default: 'Doctor' | escape }}
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% for block in section.blocks %}
+        {% liquid
+          assign has_shopify_video = false
+          assign has_external_video = false
+          assign has_video = false
+          assign has_fallback_image = false
+
+          if block.settings.video != blank
+            assign has_shopify_video = true
+            assign has_video = true
+          elsif block.settings.video_url != blank
+            assign has_external_video = true
+            assign has_video = true
+          endif
+
+          if block.settings.fallback_image != blank
+            assign has_fallback_image = true
+          endif
+        %}
+
+    <section
+      id="{{ section_anchor }}-slide-{{ forloop.index0 }}"
+      class="sph-hero sph-doctor-slide {% if section.settings.desktop_layout == 'media_first' %}sph-hero--media-first{% endif %} {% if section.settings.mobile_layout == 'content_first' %}sph-hero--mobile-content-first{% endif %}"
+      {% if doctor_count > 1 %}
+        role="tabpanel"
+        aria-labelledby="{{ section_anchor }}-tab-{{ forloop.index0 }}"
+      {% else %}
+        aria-label="{{ block.settings.name | default: 'Doctor' | escape }}"
+      {% endif %}
+      data-sph-slide
+      data-sph-index="{{ forloop.index0 }}"
+      data-sph-block-id="{{ block.id }}"
+      {% unless forloop.first %}hidden{% endunless %}
+      {{ block.shopify_attributes }}
+    >
+      <div class="sph-hero__content">
+        <div class="sph-hero__content-inner">
+          {% if block.settings.name != blank %}
+            <h3 class="sph-hero__title">{{ block.settings.name | escape }}</h3>
+          {% endif %}
+
+          {% if block.settings.credential != blank %}
+            <p class="sph-hero__credential">{{ block.settings.credential | escape }}</p>
+          {% endif %}
+
+          {% if block.settings.bio != blank %}
+            <div class="sph-hero__bio rte">{{ block.settings.bio }}</div>
+          {% endif %}
+
+          {% if block.settings.button_label != blank %}
+            <a
+              class="sph-hero__button"
+              href="{% if block.settings.button_link != blank %}{{ block.settings.button_link }}{% else %}#{% endif %}"
+              {% if block.settings.button_link == blank %}aria-disabled="true"{% endif %}
+            >
+              {{ block.settings.button_label | escape }}
+            </a>
+          {% endif %}
+
+
+          {% if section.settings.show_social_icons %}
+            {% if section.settings.instagram_url != blank or section.settings.facebook_url != blank or section.settings.tiktok_url != blank or section.settings.youtube_url != blank or section.settings.pinterest_url != blank or section.settings.x_url != blank %}
+              <div class="sph-hero__social-wrap" aria-label="Social media links">
+                {% if section.settings.social_label != blank %}
+                  <p class="sph-hero__social-label">{{ section.settings.social_label | escape }}</p>
+                {% endif %}
+
+                <div class="sph-hero__socials">
+                  {% if section.settings.instagram_url != blank %}
+                    <a class="sph-hero__social-link" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 2A3.75 3.75 0 0 0 4 7.75v8.5A3.75 3.75 0 0 0 7.75 20h8.5A3.75 3.75 0 0 0 20 16.25v-8.5A3.75 3.75 0 0 0 16.25 4h-8.5Zm4.25 3.1A4.9 4.9 0 1 1 7.1 12 4.9 4.9 0 0 1 12 7.1Zm0 2A2.9 2.9 0 1 0 14.9 12 2.9 2.9 0 0 0 12 9.1Zm5.05-2.75a1.15 1.15 0 1 1-1.15 1.15 1.15 1.15 0 0 1 1.15-1.15Z"></path>
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if section.settings.facebook_url != blank %}
+                    <a class="sph-hero__social-link" href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M14.2 8.2V6.7c0-.72.48-.9.82-.9h2.08V2.15L14.24 2.13c-3.18 0-3.9 2.38-3.9 3.9V8.2H7.83V12h2.5v9.87h3.87V12h3.02l.4-3.8H14.2Z"></path>
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if section.settings.tiktok_url != blank %}
+                    <a class="sph-hero__social-link" href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M16.62 2c.28 2.35 1.6 3.76 3.86 3.9v3.53a8.15 8.15 0 0 1-3.8-.95v6.77c0 3.43-2.08 6.6-6.47 6.6-3.5 0-6.34-2.3-6.34-5.72 0-3.72 2.88-5.86 6.6-5.56v3.7c-1.65-.26-2.94.52-2.94 1.86 0 1.25 1.12 2.08 2.48 2.08 1.63 0 2.74-.96 2.74-3.05V2h3.87Z"></path>
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if section.settings.youtube_url != blank %}
+                    <a class="sph-hero__social-link" href="{{ section.settings.youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M21.58 7.2a2.75 2.75 0 0 0-1.94-1.95C17.92 4.8 12 4.8 12 4.8s-5.92 0-7.64.45A2.75 2.75 0 0 0 2.42 7.2 28.58 28.58 0 0 0 2 12a28.58 28.58 0 0 0 .42 4.8 2.75 2.75 0 0 0 1.94 1.95c1.72.45 7.64.45 7.64.45s5.92 0 7.64-.45a2.75 2.75 0 0 0 1.94-1.95A28.58 28.58 0 0 0 22 12a28.58 28.58 0 0 0-.42-4.8ZM10 15.2V8.8l5.2 3.2L10 15.2Z"></path>
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if section.settings.pinterest_url != blank %}
+                    <a class="sph-hero__social-link" href="{{ section.settings.pinterest_url }}" target="_blank" rel="noopener noreferrer" aria-label="Pinterest">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12.1 2C6.58 2 3.18 5.76 3.18 9.84c0 2.72 1.52 4.33 2.4 4.33.36 0 .57-1 .57-1.28 0-.34-.86-1.05-.86-2.45 0-2.92 2.22-4.98 5.1-4.98 2.47 0 4.3 1.4 4.3 3.98 0 1.92-.78 5.52-3.27 5.52-.9 0-1.67-.65-1.67-1.58 0-1.37.96-2.7.96-4.1 0-2.38-3.38-1.95-3.38.92 0 .6.07 1.27.34 1.82-.5 2.12-1.52 5.28-1.52 7.46 0 .67.1 1.33.16 2 .12.14.06.13.24.05 1.84-2.52 1.77-3.02 2.6-6.32.45.86 1.6 1.33 2.52 1.33 3.86 0 5.56-3.76 5.56-7.16C17.24 4.98 14.88 2 12.1 2Z"></path>
+                      </svg>
+                    </a>
+                  {% endif %}
+
+                  {% if section.settings.x_url != blank %}
+                    <a class="sph-hero__social-link" href="{{ section.settings.x_url }}" target="_blank" rel="noopener noreferrer" aria-label="X">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M13.86 10.47 21.16 2h-1.73l-6.34 7.36L8.03 2H2.2l7.66 11.15L2.2 22h1.73l6.7-7.78L15.98 22h5.83l-7.95-11.53Zm-2.37 2.75-.78-1.11L4.54 3.3H7.2l4.98 7.12.78 1.11 6.48 9.26h-2.66l-5.29-7.57Z"></path>
+                      </svg>
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="sph-hero__media {% unless has_video %}is-image{% endunless %}" data-sph-media>
+        {% if has_shopify_video %}
+          {{ block.settings.video | video_tag: image_size: '1600x', loop: true, muted: false, controls: false, playsinline: true, preload: 'metadata', class: 'sph-hero__media-video' }}
+        {% elsif has_external_video %}
+          <video
+            class="sph-hero__media-video lazyVdHide"
+            data-src="{{ block.settings.video_url | escape }}"
+            loop
+            playsinline
+            preload="none"
+            {% if has_fallback_image %}poster="{{ block.settings.fallback_image | image_url: width: 1600 }}"{% endif %}
+          ></video>
+        {% endif %}
+
+        {% if has_fallback_image %}
+          {{ block.settings.fallback_image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'sph-hero__media-image',
+              loading: 'lazy',
+              widths: '375, 550, 750, 1100, 1500, 1600, 2000',
+              sizes: '(max-width: 767px) 100vw, 50vw',
+              alt: block.settings.fallback_image.alt
+          }}
+        {% elsif has_video == false %}
+          <div class="sph-hero__placeholder">
+            Add this doctor's video or fallback image in the block settings.
+          </div>
+        {% endif %}
+
+        <button class="sph-hero__play-toggle is-paused {% unless has_video %}is-hidden{% endunless %}" type="button" aria-label="Play video" data-sph-toggle>
+          <svg class="sph-icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 5h3.4v14H7V5zm6.6 0H17v14h-3.4V5z"></path>
+          </svg>
+
+          <svg class="sph-icon-play" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5v14l11-7L8 5z"></path>
+          </svg>
+        </button>
+      </div>
+        </section>
+      {% endfor %}
+
+    {% else %}
+      <p class="sph-doctor-showcase__empty">Add a Doctor block to show a profile and video.</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  (function () {
+    function initVideoSlide(slide, showcase) {
+      if (!slide || slide.dataset.sphVideoInitialized === 'true') return;
+
+      slide.dataset.sphVideoInitialized = 'true';
+
+      var media = slide.querySelector('[data-sph-media]');
+      var video = media ? media.querySelector('video') : null;
+      var toggle = slide.querySelector('[data-sph-toggle]');
+
+      if (!media || !toggle) return;
+
+      if (video) {
+        var deferredSrc = video.getAttribute('data-src');
+        if (!video.getAttribute('src') && deferredSrc) {
+          video.setAttribute('src', deferredSrc);
+          video.removeAttribute('data-src');
+        }
+      }
+
+      var sourceTag = video ? video.querySelector('source') : null;
+      var hasSource = Boolean(
+        video && (
+          (video.getAttribute('src') && video.getAttribute('src').trim() !== '') ||
+          (sourceTag && sourceTag.getAttribute('src') && sourceTag.getAttribute('src').trim() !== '')
+        )
+      );
+
+      if (!hasSource) {
+        media.classList.add('is-image');
+        toggle.classList.add('is-hidden');
+        return;
+      }
+
+      video.pause();
+      video.muted = false;
+      video.volume = 1;
+
+      toggle.classList.add('is-paused');
+      toggle.setAttribute('aria-label', 'Play video');
+
+      toggle.addEventListener('click', function () {
+        if (video.paused) {
+          showcase.querySelectorAll('video').forEach(function (otherVideo) {
+            if (otherVideo !== video) otherVideo.pause();
+          });
+
+          video.muted = false;
+          video.volume = 1;
+
+          var playPromise = video.play();
+
+          if (playPromise !== undefined) {
+            playPromise
+              .then(function () {
+                toggle.classList.remove('is-paused');
+                toggle.setAttribute('aria-label', 'Pause video');
+              })
+              .catch(function () {
+                toggle.classList.add('is-paused');
+                toggle.setAttribute('aria-label', 'Play video');
+              });
+          } else {
+            toggle.classList.remove('is-paused');
+            toggle.setAttribute('aria-label', 'Pause video');
+          }
+        } else {
+          video.pause();
+          toggle.classList.add('is-paused');
+          toggle.setAttribute('aria-label', 'Play video');
+        }
+      });
+
+      video.addEventListener('play', function () {
+        video.muted = false;
+        video.volume = 1;
+        toggle.classList.remove('is-paused');
+        toggle.setAttribute('aria-label', 'Pause video');
+      });
+
+      video.addEventListener('pause', function () {
+        toggle.classList.add('is-paused');
+        toggle.setAttribute('aria-label', 'Play video');
+      });
+    }
+
+    function initDoctorShowcase(showcase) {
+      if (!showcase || showcase.dataset.sphInitialized === 'true') return;
+
+      showcase.dataset.sphInitialized = 'true';
+
+      var slides = Array.prototype.slice.call(showcase.querySelectorAll('[data-sph-slide]'));
+      var tabs = Array.prototype.slice.call(showcase.querySelectorAll('[data-sph-tab]'));
+      var currentIndex = 0;
+
+      slides.forEach(function (slide) {
+        initVideoSlide(slide, showcase);
+      });
+
+      function showSlide(requestedIndex, moveFocus) {
+        if (!slides.length) return;
+
+        currentIndex = (requestedIndex + slides.length) % slides.length;
+
+        slides.forEach(function (slide, index) {
+          var isActive = index === currentIndex;
+          slide.hidden = !isActive;
+
+          if (!isActive) {
+            var video = slide.querySelector('video');
+            if (video) video.pause();
+          }
+        });
+
+        tabs.forEach(function (tab, index) {
+          var isActive = index === currentIndex;
+          tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          tab.setAttribute('tabindex', isActive ? '0' : '-1');
+        });
+
+        if (moveFocus && tabs[currentIndex]) tabs[currentIndex].focus();
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          showSlide(Number(tab.dataset.sphIndex), false);
+        });
+
+        tab.addEventListener('keydown', function (event) {
+          if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            showSlide(currentIndex - 1, true);
+          } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            showSlide(currentIndex + 1, true);
+          } else if (event.key === 'Home') {
+            event.preventDefault();
+            showSlide(0, true);
+          } else if (event.key === 'End') {
+            event.preventDefault();
+            showSlide(slides.length - 1, true);
+          }
+        });
+      });
+
+      showcase.sphShowSlide = showSlide;
+      showSlide(0, false);
+    }
+
+    function initAllDoctorShowcases(root) {
+      (root || document).querySelectorAll('[data-sph-showcase]').forEach(initDoctorShowcase);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        initAllDoctorShowcases(document);
+      });
+    } else {
+      initAllDoctorShowcases(document);
+    }
+
+    document.addEventListener('shopify:section:load', function (event) {
+      initAllDoctorShowcases(event.target);
+    });
+
+    document.addEventListener('shopify:block:select', function (event) {
+      var slide = event.target.closest('[data-sph-slide]');
+      if (!slide) return;
+
+      var showcase = slide.closest('[data-sph-showcase]');
+      if (showcase && typeof showcase.sphShowSlide === 'function') {
+        showcase.sphShowSlide(Number(slide.dataset.sphIndex), false);
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Doctor video showcase",
+  "tag": "section",
+  "class": "section-doctor-video-showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section introduction"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Meet our doctors"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Section introduction",
+      "default": "Learn more about our experienced medical team and their areas of expertise."
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Doctor media layout"
+    },
+    {
+      "type": "select",
+      "id": "media_object_position",
+      "label": "Media position",
+      "default": "center",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Social icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "Show social icons",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "social_label",
+      "label": "Social label",
+      "default": "Follow us"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram link"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook link"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TK / TikTok link"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube link"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest link"
+    },
+    {
+      "type": "url",
+      "id": "x_url",
+      "label": "X / Twitter link"
+    },
+    {
+      "type": "range",
+      "id": "social_margin_top",
+      "label": "Social icons top spacing",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_social_margin_top",
+      "label": "Mobile social icons top spacing",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "social_label_size",
+      "label": "Social label size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "social_icon_box_size",
+      "label": "Desktop icon circle size",
+      "min": 30,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "mobile_social_icon_box_size",
+      "label": "Mobile icon circle size",
+      "min": 28,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "social_icon_size",
+      "label": "Desktop icon size",
+      "min": 14,
+      "max": 34,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_social_icon_size",
+      "label": "Mobile icon size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 19
+    },
+    {
+      "type": "range",
+      "id": "social_icon_gap",
+      "label": "Icon gap",
+      "min": 6,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "social_label_color",
+      "label": "Social label color",
+      "default": "#6f6a63"
+    },
+    {
+      "type": "color",
+      "id": "social_icon_color",
+      "label": "Social icon color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "social_icon_bg_color",
+      "label": "Social icon background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "social_icon_border_color",
+      "label": "Social icon border",
+      "default": "#ded6cd"
+    },
+    {
+      "type": "color",
+      "id": "social_icon_hover_bg_color",
+      "label": "Social icon hover background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "social_icon_hover_color",
+      "label": "Social icon hover color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width_mode",
+      "label": "Section width mode",
+      "default": "full",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom max width"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "section_max_width",
+      "label": "Custom section max width",
+      "min": 900,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400,
+      "info": "Effective only when Section width mode is set to Custom max width. The outer background now remains full width to avoid white side blanks."
+    },
+    {
+      "type": "range",
+      "id": "desktop_section_padding_x",
+      "label": "Desktop outer side padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "tablet_section_padding_x",
+      "label": "Tablet outer side padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_section_padding_x",
+      "label": "Mobile outer side padding",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": "Desktop layout",
+      "default": "content_first",
+      "options": [
+        {
+          "value": "content_first",
+          "label": "Text left, media right"
+        },
+        {
+          "value": "media_first",
+          "label": "Media left, text right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "default": "media_first",
+      "options": [
+        {
+          "value": "media_first",
+          "label": "Media first"
+        },
+        {
+          "value": "content_first",
+          "label": "Text first"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop height",
+      "min": 420,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 760
+    },
+    {
+      "type": "range",
+      "id": "tablet_height",
+      "label": "Tablet height",
+      "min": 360,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 680
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile media height",
+      "min": 260,
+      "max": 760,
+      "step": 10,
+      "unit": "px",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "small_mobile_height",
+      "label": "Small mobile media height",
+      "min": 240,
+      "max": 680,
+      "step": 10,
+      "unit": "px",
+      "default": 430
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 360,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 620
+    },
+    {
+      "type": "range",
+      "id": "desktop_content_padding_y",
+      "label": "Desktop content vertical padding",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "desktop_content_padding_x",
+      "label": "Desktop content horizontal padding",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_padding_top",
+      "label": "Mobile content top padding",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_padding_bottom",
+      "label": "Mobile content bottom padding",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_padding_x",
+      "label": "Mobile content horizontal padding",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Desktop heading size",
+      "min": 24,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Heading weight",
+      "default": "700",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "tablet_title_size",
+      "label": "Tablet heading size",
+      "min": 20,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_size",
+      "label": "Mobile heading size",
+      "min": 18,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "small_mobile_title_size",
+      "label": "Small mobile heading size",
+      "min": 18,
+      "max": 42,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Desktop subheading size",
+      "min": 14,
+      "max": 42,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "subtitle_weight",
+      "label": "Subheading weight",
+      "default": "400",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "tablet_subtitle_size",
+      "label": "Tablet subheading size",
+      "min": 13,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "mobile_subtitle_size",
+      "label": "Mobile subheading size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "small_mobile_subtitle_size",
+      "label": "Small mobile subheading size",
+      "min": 12,
+      "max": 26,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "subtitle_margin_top",
+      "label": "Subheading top spacing",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_subtitle_margin_top",
+      "label": "Mobile subheading top spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "range",
+      "id": "button_min_width",
+      "label": "Desktop button min width",
+      "min": 160,
+      "max": 420,
+      "step": 4,
+      "unit": "px",
+      "default": 220
+    },
+    {
+      "type": "range",
+      "id": "button_min_height",
+      "label": "Desktop button min height",
+      "min": 44,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "button_margin_top",
+      "label": "Button top spacing",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Desktop button font size",
+      "min": 11,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_letter_spacing",
+      "label": "Desktop button letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "tablet_button_min_width",
+      "label": "Tablet button min width",
+      "min": 140,
+      "max": 380,
+      "step": 4,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "tablet_button_min_height",
+      "label": "Tablet button min height",
+      "min": 44,
+      "max": 90,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "tablet_button_font_size",
+      "label": "Tablet button font size",
+      "min": 11,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "tablet_button_letter_spacing",
+      "label": "Tablet button letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_max_width",
+      "label": "Mobile button max width",
+      "min": 180,
+      "max": 420,
+      "step": 4,
+      "unit": "px",
+      "default": 320
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_min_height",
+      "label": "Mobile button min height",
+      "min": 44,
+      "max": 84,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_margin_top",
+      "label": "Mobile button top spacing",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_font_size",
+      "label": "Mobile button font size",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_letter_spacing",
+      "label": "Mobile button letter spacing",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Section background",
+      "default": "#f3efe9"
+    },
+    {
+      "type": "color",
+      "id": "content_bg_color",
+      "label": "Content background",
+      "default": "#f3efe9"
+    },
+    {
+      "type": "color",
+      "id": "media_bg_color",
+      "label": "Media background",
+      "default": "#ebe4db"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subheading color",
+      "default": "#6f6a63"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button hover background",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "play_button_bg_color",
+      "label": "Play button background CSS",
+      "default": "rgba(67, 42, 24, 0.56)",
+      "info": "Use a CSS color value, for example rgba(67, 42, 24, 0.56)."
+    },
+    {
+      "type": "text",
+      "id": "play_button_hover_bg_color",
+      "label": "Play button hover background CSS",
+      "default": "rgba(30, 20, 14, 0.68)",
+      "info": "Use a CSS color value, for example rgba(30, 20, 14, 0.68)."
+    },
+    {
+      "type": "color",
+      "id": "play_button_icon_color",
+      "label": "Play button icon color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "doctor",
+      "name": "Doctor",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Doctor information"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Doctor name",
+          "default": "Dr. Jane Smith"
+        },
+        {
+          "type": "text",
+          "id": "credential",
+          "label": "Title / specialty",
+          "default": "Board-certified specialist"
+        },
+        {
+          "type": "richtext",
+          "id": "bio",
+          "label": "Introduction",
+          "default": "<p>Add the doctor's clinical focus, experience, qualifications, and approach to patient care.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "View profile"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "header",
+          "content": "Doctor video"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Shopify hosted video"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "External MP4 video URL",
+          "info": "Used only when no Shopify hosted video is selected. Enter a direct HTTPS .mp4 URL."
+        },
+        {
+          "type": "image_picker",
+          "id": "fallback_image",
+          "label": "Video poster / fallback image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Doctor video showcase",
+      "blocks": [
+        {
+          "type": "doctor",
+          "settings": {
+            "name": "Dr. Amelia Chen",
+            "credential": "Dermatology"
+          }
+        },
+        {
+          "type": "doctor",
+          "settings": {
+            "name": "Dr. Michael Lee",
+            "credential": "Aesthetic medicine"
+          }
+        },
+        {
+          "type": "doctor",
+          "settings": {
+            "name": "Dr. Sophia Wang",
+            "credential": "Hair and scalp health"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

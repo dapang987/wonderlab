@@ -1,0 +1,1679 @@
+{% liquid
+  assign section_anchor = 'WondearGoal-' | append: section.id
+%}
+
+<section
+  id="{{ section_anchor }}"
+  class="wondear-goal-scope"
+  aria-label="{{ section.settings.accessibility_label | escape }}"
+  style="
+    --wg-bg: {{ section.settings.background_color }};
+    --wg-card-bg: {{ section.settings.card_background_color }};
+    --wg-text: {{ section.settings.text_color }};
+    --wg-muted: {{ section.settings.muted_text_color }};
+    --wg-line: {{ section.settings.border_color }};
+    --wg-red: {{ section.settings.accent_color }};
+    --wg-dark: {{ section.settings.button_background_color }};
+    --wg-dark-hover: {{ section.settings.button_hover_color }};
+    --wg-white: {{ section.settings.light_button_background }};
+    --wg-radius: {{ section.settings.card_radius }}px;
+    --wg-section-padding-top: {{ section.settings.padding_top }}px;
+    --wg-section-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="wondear-goal__inner">
+    <header class="wondear-goal__header">
+      {% if section.settings.title != blank %}
+        <h2 class="wondear-goal__title">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        <div class="wondear-goal__nav-row">
+          <div class="wondear-goal__tabs" role="tablist" aria-label="{{ section.settings.tabs_accessibility_label | escape }}">
+            {% for block in section.blocks %}
+              {% liquid
+                assign tab_collection = block.settings.collection
+                assign tab_label = block.settings.goal_label
+
+                if tab_label == blank and tab_collection != blank
+                  assign tab_label = tab_collection.title
+                endif
+
+                if tab_label == blank
+                  assign tab_label = 'Goal'
+                endif
+              %}
+
+              <button
+                class="wondear-goal__tab{% if forloop.first %} is-active{% endif %}"
+                type="button"
+                role="tab"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-controls="WondearGoalPanel-{{ section.id }}-{{ block.id }}"
+                data-goal-tab="{{ block.id }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ tab_label | escape }}
+              </button>
+            {% endfor %}
+          </div>
+
+          <div class="wondear-goal__arrows is-hidden" data-goal-arrows aria-hidden="true">
+            <button class="wondear-goal__arrow" type="button" data-goal-prev aria-label="{{ section.settings.prev_label | escape }}">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+
+            <button class="wondear-goal__arrow" type="button" data-goal-next aria-label="{{ section.settings.next_label | escape }}">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      {% endif %}
+    </header>
+
+    {% if section.blocks.size > 0 %}
+      <div class="wondear-goal__content" data-goal-content>
+        {% for block in section.blocks %}
+          {% liquid
+            assign goal_collection = block.settings.collection
+            assign goal_label = block.settings.goal_label
+
+            if goal_label == blank and goal_collection != blank
+              assign goal_label = goal_collection.title
+            endif
+
+            if goal_label == blank
+              assign goal_label = 'Goal'
+            endif
+
+            assign hero_heading = block.settings.hero_heading
+
+            if hero_heading == blank
+              assign hero_heading = goal_label
+            endif
+
+            assign hero_link = block.settings.hero_link
+
+            if hero_link == blank and goal_collection != blank
+              assign hero_link = goal_collection.url
+            endif
+
+            if hero_link == blank
+              assign hero_link = routes.all_products_collection_url
+            endif
+
+            assign hero_image = block.settings.hero_image
+
+            if hero_image == blank and goal_collection != blank
+              assign hero_image = goal_collection.image | default: goal_collection.featured_image
+            endif
+          %}
+
+          <div
+            id="WondearGoalPanel-{{ section.id }}-{{ block.id }}"
+            class="wondear-goal__panel{% if forloop.first %} is-active{% endif %}"
+            role="tabpanel"
+            data-goal-panel="{{ block.id }}"
+            {% unless forloop.first %}hidden{% endunless %}
+          >
+            <div class="wondear-goal__grid" data-goal-track>
+              <article class="wondear-goal__hero">
+                {% if hero_image != blank %}
+                  <img
+                    class="wondear-goal__hero-image"
+                    src="{{ hero_image | image_url: width: 1100 }}"
+                    srcset="
+                      {{ hero_image | image_url: width: 550 }} 550w,
+                      {{ hero_image | image_url: width: 800 }} 800w,
+                      {{ hero_image | image_url: width: 1100 }} 1100w
+                    "
+                    sizes="(max-width: 749px) 50vw, (max-width: 989px) 82vw, 25vw"
+                    alt="{{ hero_image.alt | default: hero_heading | escape }}"
+                    loading="lazy"
+                    width="1100"
+                    height="1400"
+                  >
+                {% else %}
+                  <div class="wondear-goal__hero-placeholder" aria-hidden="true">
+                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+
+                <div class="wondear-goal__hero-content">
+                  <p class="wondear-goal__hero-kicker">{{ section.settings.collection_kicker | escape }}</p>
+                  <h3 class="wondear-goal__hero-word">{{ hero_heading | escape }}</h3>
+
+                  {% if block.settings.hero_button_label != blank %}
+                    <a class="wondear-goal__hero-btn" href="{{ hero_link }}">
+                      {{ block.settings.hero_button_label | escape }}
+                    </a>
+                  {% endif %}
+                </div>
+              </article>
+
+              {% if goal_collection != blank and goal_collection.products_count > 0 %}
+                {% for product in goal_collection.products limit: section.settings.products_to_show %}
+                  {% liquid
+                    assign current_variant = product.variants.first
+
+                    if current_variant == blank
+                      assign current_variant = product.selected_or_first_available_variant
+                    endif
+
+                    assign product_image = product.featured_image
+
+                    if product_image == blank and product.featured_media != blank
+                      assign product_image = product.featured_media.preview_image
+                    endif
+
+                    assign add_quantity = current_variant.quantity_rule.min | default: 1
+                    if add_quantity == blank or add_quantity < 1
+                      assign add_quantity = 1
+                    endif
+
+                    assign product_form_id = 'WondearGoalProductForm-' | append: section.id | append: '-' | append: block.id | append: '-' | append: product.id
+                    assign product_variant_media = ''
+
+                    if current_variant.featured_media.preview_image != blank
+                      assign product_variant_media = current_variant.featured_media.preview_image | image_url: width: 100
+                    elsif product.featured_media.preview_image != blank
+                      assign product_variant_media = product.featured_media.preview_image | image_url: width: 100
+                    elsif product_image != blank
+                      assign product_variant_media = product_image | image_url: width: 100
+                    endif
+                  %}
+
+                  <article class="wondear-goal__product">
+                    <a class="wondear-goal__image-wrap" href="{{ product.url | within: goal_collection }}" aria-label="{{ product.title | escape }}">
+                      {% if product_image != blank %}
+                        <img
+                          class="wondear-goal__product-image"
+                          src="{{ product_image | image_url: width: 900 }}"
+                          srcset="
+                            {{ product_image | image_url: width: 360 }} 360w,
+                            {{ product_image | image_url: width: 600 }} 600w,
+                            {{ product_image | image_url: width: 900 }} 900w
+                          "
+                          sizes="(max-width: 749px) 50vw, (max-width: 989px) 78vw, 24vw"
+                          alt="{{ product_image.alt | default: product.title | escape }}"
+                          loading="lazy"
+                          width="900"
+                          height="660"
+                        >
+                      {% else %}
+                        {{ 'product-1' | placeholder_svg_tag: 'wondear-goal__product-placeholder placeholder-svg' }}
+                      {% endif %}
+                    </a>
+
+                    <div class="wondear-goal__info">
+                      {% if section.settings.show_collection_label %}
+                        <div class="wondear-goal__collection-label">{{ goal_collection.title | escape }}</div>
+                      {% endif %}
+
+                      <h3 class="wondear-goal__product-title">
+                        <a href="{{ product.url | within: goal_collection }}">{{ product.title | escape }}</a>
+                      </h3>
+
+                      <p class="wondear-goal__price">
+                        {% if current_variant != blank %}
+                          {{ current_variant.price | money }}
+
+                          {% if current_variant.compare_at_price > current_variant.price %}
+                            <span class="wondear-goal__compare-price">{{ current_variant.compare_at_price | money }}</span>
+                          {% endif %}
+                        {% else %}
+                          {{ product.price | money }}
+                        {% endif %}
+                      </p>
+
+                      {% if current_variant != blank and current_variant.available %}
+                        <div class="wondear-goal__footer">
+                          <product-form-component
+                            id="{{ product_form_id }}-Component"
+                            data-section-id="{{ section.id }}"
+                            data-product-id="{{ product.id }}"
+                            data-product-url="{{ product.url }}"
+                            data-quantity-default="{{ add_quantity }}"
+                            data-quantity-error-max="{{ 'products.product.quantity_error_max' | t }}"
+                            on:submit="/handleSubmit"
+                          >
+                            <div
+                              class="visually-hidden"
+                              aria-live="assertive"
+                              role="status"
+                              aria-atomic="true"
+                              ref="liveRegion"
+                            ></div>
+
+                            {% form 'product', product, id: product_form_id, class: 'wondear-goal__product-form', data-type: 'add-to-cart-form' %}
+                              <input type="hidden" name="id" ref="variantId" value="{{ current_variant.id }}">
+                              <input type="hidden" name="quantity" value="{{ add_quantity }}">
+
+                              <span class="wondear-goal__cart-error product-form-text__error hidden" ref="addToCartTextError">
+                                <span class="svg-wrapper">
+                                  {{- 'icon-error.svg' | inline_asset_content -}}
+                                </span>
+                              </span>
+
+                              <add-to-cart-component
+                                ref="addToCartButtonContainer"
+                                data-product-variant-media="{{ product_variant_media }}"
+                                data-add-to-cart-animation="{{ settings.add_to_cart_animation }}"
+                              >
+                                <button
+                                  class="wondear-goal__cart-btn"
+                                  type="submit"
+                                  name="add"
+                                  ref="addToCartButton"
+                                  on:click="/handleClick"
+                                  aria-label="{{ section.settings.add_to_cart_label | escape }} - {{ product.title | escape }}"
+                                >
+                                  <span class="wondear-goal__cart-label">
+                                    {{ section.settings.add_to_cart_label | escape }}
+                                  </span>
+                                  <span class="wondear-goal__cart-added" aria-hidden="true">
+                                    {{ 'actions.added' | t }}
+                                  </span>
+                                  <span class="wondear-goal__cart-plus" aria-hidden="true">+</span>
+                                </button>
+                              </add-to-cart-component>
+                            {% endform %}
+                          </product-form-component>
+                        </div>
+                      {% else %}
+                        <div class="wondear-goal__footer">
+                          <button class="wondear-goal__cart-btn is-disabled" type="button" disabled>
+                            {{ section.settings.sold_out_label | escape }}
+                          </button>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </article>
+                {% endfor %}
+              {% else %}
+                <article class="wondear-goal__product wondear-goal__product--empty">
+                  <div class="wondear-goal__image-wrap">
+                    {{ 'product-1' | placeholder_svg_tag: 'wondear-goal__product-placeholder placeholder-svg' }}
+                  </div>
+
+                  <div class="wondear-goal__info">
+                    <h3 class="wondear-goal__product-title">Select a collection</h3>
+                    <p class="wondear-goal__price">Products will show automatically.</p>
+
+                    <div class="wondear-goal__footer">
+                      <button class="wondear-goal__cart-btn is-disabled" type="button" disabled>
+                        {{ section.settings.add_to_cart_label | escape }}
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+        <div class="wondear-goal__mobile-progress" aria-hidden="true">
+          <span data-goal-progress></span>
+        </div>
+      </div>
+    {% else %}
+      <div class="wondear-goal__empty">
+        Add goal blocks and select a collection for each tab.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #{{ section_anchor }} {
+    --wg-pill: 999px;
+    --wg-shadow: 0 18px 45px rgba(40, 35, 30, 0.08);
+
+    --wondear-shared-container: 1740px;
+    --wondear-shared-heading-size: clamp(34px, 3.6vw, 52px);
+    --wondear-shared-heading-size-mobile: clamp(28px, 8vw, 34px);
+    --wondear-shared-card-title-size: clamp(21px, 1.55vw, 30px);
+    --wondear-shared-card-title-size-mobile: 26px;
+    --wondear-shared-hero-title-size: clamp(28px, 2.7vw, 42px);
+    --wondear-shared-lead-size: 15.5px;
+    --wondear-shared-body-size: 14.5px;
+    --wondear-shared-body-size-mobile: 15px;
+    --wondear-shared-radius: 24px;
+    --wondear-text-main: #111111;
+    --wondear-text-body: #6f6a63;
+    --wondear-text-soft: #b1a79a;
+
+    background: var(--wg-bg);
+    color: var(--wondear-text-main);
+    padding: var(--wg-section-padding-top) 40px var(--wg-section-padding-bottom);
+    overflow: hidden;
+    font-family: var(--font-body--family, var(--font-body-family, inherit));
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  #{{ section_anchor }} * {
+    box-sizing: border-box;
+  }
+
+  #{{ section_anchor }} .wondear-goal__inner {
+    max-width: min({{ section.settings.max_width }}px, var(--wondear-shared-container));
+    margin: 0 auto;
+  }
+
+  #{{ section_anchor }} .wondear-goal__header {
+    margin-bottom: 38px;
+  }
+
+  #{{ section_anchor }} .wondear-goal__title {
+    margin: 0 0 44px;
+
+    font-size: var(--wondear-shared-heading-size);
+    line-height: 1.08;
+    font-weight: {{ section.settings.title_weight }};
+    letter-spacing: 0;
+    color: var(--wondear-text-main);
+  }
+
+  #{{ section_anchor }} .wondear-goal__nav-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: 1px solid var(--wg-line);
+  }
+
+  #{{ section_anchor }} .wondear-goal__tabs {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  #{{ section_anchor }} .wondear-goal__tabs::-webkit-scrollbar,
+  #{{ section_anchor }} .wondear-goal__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  #{{ section_anchor }} .wondear-goal__tab {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    position: relative;
+    padding: 0 0 18px;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--wondear-text-soft);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.25s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__tab::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 1px;
+    background: var(--wondear-text-main);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.25s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__tab.is-active {
+    color: var(--wondear-text-main);
+  }
+
+  #{{ section_anchor }} .wondear-goal__tab.is-active::after {
+    transform: scaleX(1);
+  }
+
+  #{{ section_anchor }} .wondear-goal__arrows {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 10px;
+    flex: 0 0 auto;
+  }
+
+  #{{ section_anchor }} .wondear-goal__arrows.is-hidden {
+    display: none;
+  }
+
+  #{{ section_anchor }} .wondear-goal__arrow {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 0;
+    background: #f1e8df;
+    color: #8a827b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__arrow:hover {
+    background: #e7ddd3;
+    color: #4d4d4d;
+    transform: translateY(-1px);
+  }
+
+  #{{ section_anchor }} .wondear-goal__arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #{{ section_anchor }} .wondear-goal__content {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__content.is-changing {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  #{{ section_anchor }} .wondear-goal__panel[hidden] {
+    display: none !important;
+  }
+
+  #{{ section_anchor }} .wondear-goal__grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: clamp(300px, 24vw, 420px);
+    grid-auto-columns: clamp(300px, 22vw, 380px);
+    gap: 18px;
+    align-items: stretch;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: 0;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero {
+    position: relative;
+    min-height: 610px;
+    border-radius: var(--wondear-shared-radius);
+    overflow: hidden;
+    isolation: isolate;
+    background: #d8c5b4;
+    box-shadow: var(--wg-shadow);
+    scroll-snap-align: start;
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero-image,
+  #{{ section_anchor }} .wondear-goal__hero-placeholder,
+  #{{ section_anchor }} .wondear-goal__hero-placeholder svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 0.7s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero:hover .wondear-goal__hero-image,
+  #{{ section_anchor }} .wondear-goal__hero:hover .wondear-goal__hero-placeholder {
+    transform: scale(1.045);
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      radial-gradient(circle at 35% 38%, rgba(232, 93, 98, 0.55), transparent 28%),
+      linear-gradient(90deg, rgba(137, 64, 45, 0.24), transparent 60%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.18));
+    transition: opacity 0.35s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero:hover::before {
+    opacity: 0.9;
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    min-height: 610px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    text-align: center;
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero-kicker {
+    margin: 0 0 12px;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 15px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero-word {
+    margin: 0 0 32px;
+    font-family: var(--font-heading--family, var(--font-heading-family, inherit));
+    font-size: var(--wondear-shared-hero-title-size);
+    line-height: 1.12;
+    font-weight: {{ section.settings.hero_title_weight }};
+    letter-spacing: 0;
+    color: var(--wg-white);
+    text-transform: capitalize;
+    text-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 13px 32px;
+    border-radius: var(--wg-pill);
+    background: var(--wg-white);
+    color: var(--wondear-text-main);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__hero-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12);
+    background: #fffaf5;
+  }
+
+  #{{ section_anchor }} .wondear-goal__product {
+    min-height: 610px;
+    border-radius: var(--wondear-shared-radius);
+    background: var(--wg-card-bg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    scroll-snap-align: start;
+  }
+
+  #{{ section_anchor }} .wondear-goal__product:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--wg-shadow);
+  }
+
+  #{{ section_anchor }} .wondear-goal__image-wrap {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  #{{ section_anchor }} .wondear-goal__product-image,
+  #{{ section_anchor }} .wondear-goal__product-placeholder {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.35s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__product:hover .wondear-goal__product-image,
+  #{{ section_anchor }} .wondear-goal__product:hover .wondear-goal__product-placeholder {
+    transform: scale(1.035);
+  }
+
+  #{{ section_anchor }} .wondear-goal__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 20px;
+  }
+
+  #{{ section_anchor }} .wondear-goal__collection-label {
+    margin: 0 0 12px;
+    color: var(--wondear-text-soft);
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  #{{ section_anchor }} .wondear-goal__product-title {
+    margin: 0 0 12px;
+    font-family: var(--font-heading--family, var(--font-heading-family, inherit));
+    font-size: var(--wondear-shared-card-title-size);
+    line-height: 1.12;
+    font-weight: {{ section.settings.product_title_weight }};
+    letter-spacing: 0;
+    color: var(--wondear-text-main);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  #{{ section_anchor }} .wondear-goal__product-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #{{ section_anchor }} .wondear-goal__product-title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  #{{ section_anchor }} .wondear-goal__price {
+    margin: 0 0 20px;
+    font-size: var(--wondear-shared-body-size);
+    line-height: 1.5;
+    font-weight: 400;
+    color: #d21f3c;
+  }
+
+  #{{ section_anchor }} .wondear-goal__compare-price {
+    margin-left: 8px;
+    color: var(--wondear-text-body);
+    text-decoration: line-through;
+    opacity: 0.78;
+  }
+
+  #{{ section_anchor }} .wondear-goal__footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  #{{ section_anchor }} .wondear-goal__product-form {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  #{{ section_anchor }} .wondear-goal__footer product-form-component,
+  #{{ section_anchor }} .wondear-goal__footer add-to-cart-component {
+    display: inline-block;
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-error {
+    margin: 0;
+    color: #d21f3c;
+    font-size: 13px;
+    line-height: 1.35;
+    align-items: flex-start;
+    gap: 7px;
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-error .svg-wrapper {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    margin-top: 1px;
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-btn {
+    appearance: none;
+    border: 0;
+    min-height: 44px;
+    padding: 12px 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border-radius: var(--wg-pill);
+    background: var(--wg-dark);
+    color: var(--wg-white);
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-added {
+    display: none;
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-btn[data-added="true"] {
+    background: var(--wg-dark-hover);
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-btn[data-added="true"] .wondear-goal__cart-label,
+  #{{ section_anchor }} .wondear-goal__cart-btn[data-added="true"] .wondear-goal__cart-plus {
+    display: none;
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-btn[data-added="true"] .wondear-goal__cart-added {
+    display: inline;
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-btn:hover:not(:disabled) {
+    background: var(--wg-dark-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-btn:disabled,
+  #{{ section_anchor }} .wondear-goal__cart-btn.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  #{{ section_anchor }} .wondear-goal__cart-plus {
+    font-size: 18px;
+    line-height: 0;
+    margin-top: -1px;
+    font-weight: 400;
+  }
+
+  #{{ section_anchor }} .wondear-goal__mobile-progress {
+    display: none;
+  }
+
+  #{{ section_anchor }} .wondear-goal__empty {
+    padding: 32px;
+    border: 1px dashed var(--wg-line);
+    border-radius: var(--wondear-shared-radius);
+    color: var(--wondear-text-body);
+  }
+
+  @media (max-width: 1280px) {
+    #{{ section_anchor }} {
+      padding-inline: 28px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__grid {
+      grid-template-columns: clamp(280px, 24vw, 360px);
+      grid-auto-columns: clamp(280px, 25vw, 340px);
+      gap: 18px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__image-wrap {
+      height: auto;
+      padding: 24px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero,
+    #{{ section_anchor }} .wondear-goal__hero-content,
+    #{{ section_anchor }} .wondear-goal__product {
+      min-height: 560px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__info {
+      padding-inline: 20px;
+    }
+  }
+
+  @media (max-width: 989px) {
+    #{{ section_anchor }} {
+      padding: 54px 18px 56px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__title {
+      margin-bottom: 30px;
+      font-size: var(--wondear-shared-heading-size-mobile);
+      line-height: 1.14;
+      letter-spacing: 0;
+    }
+
+    #{{ section_anchor }} .wondear-goal__tab {
+      font-size: 14px;
+      padding-bottom: 15px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__arrows {
+      display: none;
+    }
+
+    #{{ section_anchor }} .wondear-goal__grid {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero {
+      flex: 0 0 82vw;
+      min-height: 520px;
+      scroll-snap-align: start;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero-content {
+      min-height: 520px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__product {
+      flex: 0 0 78vw;
+      min-width: 280px;
+      min-height: 520px;
+      scroll-snap-align: start;
+    }
+
+    #{{ section_anchor }} .wondear-goal__image-wrap {
+      height: auto;
+      padding: 24px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__product-title {
+      font-size: min(var(--wondear-shared-card-title-size-mobile), 26px);
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+  }
+
+  @media (max-width: 749px) {
+    #{{ section_anchor }} {
+      padding: 42px 0 48px;
+      background: var(--wg-bg);
+    }
+
+    #{{ section_anchor }} .wondear-goal__inner {
+      width: 100%;
+      max-width: none;
+      padding: 0 16px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__header {
+      margin-bottom: 26px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__title {
+      margin: 0 0 28px;
+      font-size: var(--wondear-shared-heading-size-mobile);
+      line-height: 1.14;
+      letter-spacing: 0;
+      text-align:center;
+    }
+
+    #{{ section_anchor }} .wondear-goal__nav-row {
+      display: block;
+      border-bottom: 1px solid var(--wg-line);
+      overflow: hidden;
+    }
+
+    #{{ section_anchor }} .wondear-goal__tabs {
+      display: flex;
+      gap: 22px;
+      width: 100%;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+
+    #{{ section_anchor }} .wondear-goal__tab {
+      flex: 0 0 auto;
+      padding: 0 0 15px;
+      font-size: 14px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--wondear-text-soft);
+    }
+
+    #{{ section_anchor }} .wondear-goal__tab.is-active {
+      color: var(--wondear-text-main);
+    }
+
+    #{{ section_anchor }} .wondear-goal__tab::after {
+      height: 2px;
+      background: var(--wondear-text-main);
+    }
+
+    #{{ section_anchor }} .wondear-goal__content {
+      margin-right: 0;
+    }
+
+    #{{ section_anchor }} .wondear-goal__grid {
+      display: flex !important;
+      grid-template-columns: none !important;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 16px;
+      padding: 8px 16px 20px;
+      margin-inline: -16px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero,
+    #{{ section_anchor }} .wondear-goal__product {
+      flex: 0 0 calc((100vw - 48px) / 2);
+      width: calc((100vw - 48px) / 2);
+      min-width: 0;
+      max-width: none;
+      height: clamp(360px, 86vw, 560px);
+      min-height: 0;
+      scroll-snap-align: start;
+      border-radius: var(--wondear-shared-radius);
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero {
+      aspect-ratio: auto;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero-content {
+      min-height: 0;
+      height: 100%;
+      padding: 22px 12px 18px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero-kicker {
+      margin-bottom: 8px;
+      font-size: 11px;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero-word {
+      margin-bottom: 18px;
+      font-size: clamp(22px, 6vw, 30px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero-btn {
+      min-height: 36px;
+      padding: 9px 16px;
+      font-size: 11px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__product {
+      background: var(--wg-card-bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #{{ section_anchor }} .wondear-goal__image-wrap {
+      aspect-ratio: auto;
+      height: clamp(145px, 38vw, 300px);
+      padding: 18px 12px 8px;
+      flex: 0 0 auto;
+    }
+
+    #{{ section_anchor }} .wondear-goal__product-image,
+    #{{ section_anchor }} .wondear-goal__product-placeholder {
+      width: 100%;
+      height: 100%;
+      max-height: none;
+      object-fit: contain;
+    }
+
+    #{{ section_anchor }} .wondear-goal__info {
+      flex: 1;
+      min-height: 0;
+      height: auto;
+      padding: 0 12px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #{{ section_anchor }} .wondear-goal__collection-label {
+      margin-bottom: 7px;
+      font-size: 10px;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+    }
+
+    #{{ section_anchor }} .wondear-goal__product-title {
+      margin-bottom: 8px;
+      font-size: clamp(16px, 4.5vw, 22px);
+      line-height: 1.12;
+      letter-spacing: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      overflow-wrap: anywhere;
+    }
+
+    #{{ section_anchor }} .wondear-goal__price {
+      margin-bottom: 14px;
+      font-size: clamp(12px, 3.6vw, 14px);
+      line-height: 1.45;
+    }
+
+    #{{ section_anchor }} .wondear-goal__compare-price {
+      display: block;
+      margin-left: 0;
+      margin-top: 2px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__footer {
+      margin-top: auto;
+    }
+
+    #{{ section_anchor }} .wondear-goal__product-form {
+      width: 100%;
+    }
+
+    #{{ section_anchor }} .wondear-goal__cart-btn {
+      min-height: 36px;
+      width: auto;
+      max-width: 100%;
+      padding: 9px 12px;
+      font-size: 11px;
+      border-radius: 999px;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    #{{ section_anchor }} .wondear-goal__cart-plus {
+      font-size: 14px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__mobile-progress {
+      display: block;
+      height: 4px;
+      margin: 0;
+      border-radius: 999px;
+      background: #ebe6e1;
+      overflow: hidden;
+    }
+
+    #{{ section_anchor }} .wondear-goal__mobile-progress span {
+      display: block;
+      width: 24%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--wg-red);
+      transform-origin: left center;
+      transition: width 0.2s ease;
+    }
+  }
+
+  @media (max-width: 389px) {
+    #{{ section_anchor }} .wondear-goal__title {
+      font-size: clamp(28px, 8vw, 34px);
+    }
+
+    #{{ section_anchor }} .wondear-goal__tabs {
+      gap: 18px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__tab {
+      font-size: 13px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__grid {
+      gap: 12px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero,
+    #{{ section_anchor }} .wondear-goal__product {
+      flex-basis: calc((100vw - 44px) / 2);
+      width: calc((100vw - 44px) / 2);
+      height: 350px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero-word {
+      font-size: 22px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__hero-btn {
+      padding-inline: 13px;
+      font-size: 10px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__image-wrap {
+      height: 138px;
+      padding: 16px 10px 8px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__info {
+      padding: 0 10px 14px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__product-title {
+      font-size: 15px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__price {
+      font-size: 12px;
+    }
+
+    #{{ section_anchor }} .wondear-goal__cart-btn {
+      min-height: 34px;
+      font-size: 10px;
+      padding-inline: 10px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    function initWondearGoal(root) {
+      if (!root || root.dataset.wondearGoalInitialized === 'true') return;
+      root.dataset.wondearGoalInitialized = 'true';
+
+      var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-goal-tab]'));
+      var panels = Array.prototype.slice.call(root.querySelectorAll('[data-goal-panel]'));
+      var content = root.querySelector('[data-goal-content]');
+      var arrows = root.querySelector('[data-goal-arrows]');
+      var prevButton = root.querySelector('[data-goal-prev]');
+      var nextButton = root.querySelector('[data-goal-next]');
+      var progressBar = root.querySelector('[data-goal-progress]');
+
+      function getActivePanel() {
+        return root.querySelector('[data-goal-panel].is-active') || panels[0];
+      }
+
+      function getActiveTrack() {
+        var activePanel = getActivePanel();
+        return activePanel ? activePanel.querySelector('[data-goal-track]') : null;
+      }
+
+      function isTrackOverflowing(track) {
+        if (!track) return false;
+        return track.scrollWidth - track.clientWidth > 2;
+      }
+
+      function updateArrowVisibility() {
+        var track = getActiveTrack();
+        var shouldShowArrows = isTrackOverflowing(track);
+
+        if (!arrows) return;
+
+        arrows.classList.toggle('is-hidden', !shouldShowArrows);
+        arrows.setAttribute('aria-hidden', shouldShowArrows ? 'false' : 'true');
+
+        if (prevButton) prevButton.disabled = !shouldShowArrows;
+        if (nextButton) nextButton.disabled = !shouldShowArrows;
+      }
+
+      function updateMobileProgress() {
+        var track = getActiveTrack();
+        if (!track || !progressBar) return;
+
+        var maxScroll = track.scrollWidth - track.clientWidth;
+
+        if (maxScroll <= 0) {
+          progressBar.style.width = '100%';
+          return;
+        }
+
+        var progress = track.scrollLeft / maxScroll;
+        var width = 24 + progress * 76;
+
+        progressBar.style.width = width + '%';
+      }
+
+      function updateLayoutState() {
+        updateMobileProgress();
+        updateArrowVisibility();
+      }
+
+      function scheduleLayoutStateUpdate() {
+        window.requestAnimationFrame(updateLayoutState);
+      }
+
+      function setActiveTab(goalId) {
+        tabs.forEach(function (tab) {
+          var active = tab.dataset.goalTab === goalId;
+
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+
+        if (content) content.classList.add('is-changing');
+
+        window.setTimeout(function () {
+          panels.forEach(function (panel) {
+            var active = panel.dataset.goalPanel === goalId;
+
+            panel.classList.toggle('is-active', active);
+            panel.hidden = !active;
+
+            if (active) {
+              var track = panel.querySelector('[data-goal-track]');
+              if (track) track.scrollLeft = 0;
+            }
+          });
+
+          if (content) content.classList.remove('is-changing');
+          scheduleLayoutStateUpdate();
+        }, 160);
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          setActiveTab(tab.dataset.goalTab);
+        });
+      });
+
+      if (prevButton) {
+        prevButton.addEventListener('click', function () {
+          var track = getActiveTrack();
+
+          if (!track || !isTrackOverflowing(track)) return;
+
+          track.scrollBy({
+            left: -Math.min(420, track.clientWidth * 0.85),
+            behavior: 'smooth'
+          });
+        });
+      }
+
+      if (nextButton) {
+        nextButton.addEventListener('click', function () {
+          var track = getActiveTrack();
+
+          if (!track || !isTrackOverflowing(track)) return;
+
+          track.scrollBy({
+            left: Math.min(420, track.clientWidth * 0.85),
+            behavior: 'smooth'
+          });
+        });
+      }
+
+      panels.forEach(function (panel) {
+        var track = panel.querySelector('[data-goal-track]');
+
+        if (track) {
+          track.addEventListener('scroll', updateMobileProgress, { passive: true });
+        }
+      });
+
+      root.querySelectorAll('img').forEach(function (image) {
+        if (image.complete) return;
+
+        image.addEventListener('load', scheduleLayoutStateUpdate, { once: true });
+      });
+
+      window.addEventListener('resize', scheduleLayoutStateUpdate);
+
+      if (window.ResizeObserver) {
+        var resizeObserver = new ResizeObserver(scheduleLayoutStateUpdate);
+        resizeObserver.observe(root);
+      }
+
+      scheduleLayoutStateUpdate();
+    }
+
+    var root = document.getElementById('{{ section_anchor }}');
+
+    initWondearGoal(root);
+
+    document.addEventListener('shopify:section:load', function (event) {
+      if (!event.target) return;
+
+      var sectionRoot = event.target.querySelector('#{{ section_anchor }}');
+
+      if (sectionRoot) initWondearGoal(sectionRoot);
+    });
+
+    document.addEventListener('shopify:block:select', function (event) {
+      var currentRoot = document.getElementById('{{ section_anchor }}');
+
+      if (!currentRoot || !event.detail || !event.detail.blockId) return;
+
+      var tab = currentRoot.querySelector('[data-goal-tab="' + event.detail.blockId + '"]');
+
+      if (tab) tab.click();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Wondear Collection Goals",
+  "tag": "section",
+  "class": "section-wondear-collection-goals",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop by Goal"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Section accessibility label",
+      "default": "Shop by Goal"
+    },
+    {
+      "type": "text",
+      "id": "tabs_accessibility_label",
+      "label": "Tabs accessibility label",
+      "default": "Shop by goal tabs"
+    },
+    {
+      "type": "text",
+      "id": "prev_label",
+      "label": "Previous button label",
+      "default": "Previous products"
+    },
+    {
+      "type": "text",
+      "id": "next_label",
+      "label": "Next button label",
+      "default": "Next products"
+    },
+    {
+      "type": "text",
+      "id": "collection_kicker",
+      "label": "Hero small label",
+      "default": "Product Series"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_label",
+      "label": "Add to cart label",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold out label",
+      "default": "Sold Out"
+    },
+    {
+      "type": "text",
+      "id": "from_price_label",
+      "label": "From price label",
+      "default": "From"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_label",
+      "label": "Show collection title on product cards",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show per collection",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Content max width",
+      "min": 1100,
+      "max": 1900,
+      "step": 20,
+      "unit": "px",
+      "default": 1760
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 76
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card radius",
+      "min": 0,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Heading weight",
+      "default": "700",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "hero_title_weight",
+      "label": "Hero title weight",
+      "default": "700",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "product_title_weight",
+      "label": "Product title weight",
+      "default": "700",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f3efe9"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#ebe4db"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#6f6a63"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#e4dacf"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent / progress",
+      "default": "#e85d62"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Product button background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Product button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "light_button_background",
+      "label": "Hero button / light text",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "goal_collection",
+      "name": "Goal collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Product collection"
+        },
+        {
+          "type": "text",
+          "id": "goal_label",
+          "label": "Tab label",
+          "info": "Leave blank to use the collection title."
+        },
+        {
+          "type": "text",
+          "id": "hero_heading",
+          "label": "Hero heading",
+          "info": "Leave blank to use the tab label or collection title."
+        },
+        {
+          "type": "image_picker",
+          "id": "hero_image",
+          "label": "Hero image",
+          "info": "Leave blank to use the collection image."
+        },
+        {
+          "type": "text",
+          "id": "hero_button_label",
+          "label": "Hero button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "hero_link",
+          "label": "Hero button link",
+          "info": "Leave blank to link to the selected collection."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wondear Collection Goals",
+      "blocks": [
+        {
+          "type": "goal_collection",
+          "settings": {
+            "goal_label": "Recovery",
+            "hero_heading": "Recovery"
+          }
+        },
+        {
+          "type": "goal_collection",
+          "settings": {
+            "goal_label": "Beauty",
+            "hero_heading": "Beauty"
+          }
+        },
+        {
+          "type": "goal_collection",
+          "settings": {
+            "goal_label": "Wellness",
+            "hero_heading": "Wellness"
+          }
+        },
+        {
+          "type": "goal_collection",
+          "settings": {
+            "goal_label": "Sleep",
+            "hero_heading": "Sleep"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

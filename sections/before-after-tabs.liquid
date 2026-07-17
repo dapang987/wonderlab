@@ -1,0 +1,842 @@
+{% comment %}
+  Section: RLT Tabs (Swiper + GSAP)
+  ✅ Left preview always shows all groups (via blocks)
+  ✅ Tabs map 1:1 to group index
+  ✅ Configurable: font sizes, colors, alignment/position, paddings, container width
+  ✅ FIX: Layout symmetry (1fr 1fr grid for perfect balance)
+  ✅ FIX: Visible Swiper overflow (prevents half-cut images) while preventing body scroll
+  ✅ FIX: Mobile blank on tab switch (Using Swiper native API to append/remove slides)
+  ✅ FIX: Added Debounce on resize event for better performance
+  ✅ FIX: Dynamic alt tags for SEO and accessibility
+  ✅ UPDATE: Removed Swiper pagination bullets, while keeping mobile swipe
+  ✅ UPDATE: Reduced mobile image size and height ratio for better mobile layout
+  ✅ FIX: Removed tab scrollIntoView to prevent mobile auto horizontal sliding on tab click
+{% endcomment %}
+
+<section id="rlt-{{ section.id }}" class="rlt-wrap" data-section-id="{{ section.id }}">
+  <style>
+    #rlt-{{ section.id }}{
+      --bg: {{ section.settings.bg | default: '#ffffff' }};
+      --text: {{ section.settings.text | default: '#111111' }};
+      --muted: {{ section.settings.muted | default: '#5b5f66' }};
+      --border: {{ section.settings.border | default: '#e6e7ea' }};
+      --accent: {{ section.settings.accent | default: '#ff6a3d' }};
+
+      --indicator-bg: {{ section.settings.indicator_bg | default: '#111111' }};
+      --tab-active-text: {{ section.settings.tab_active_text | default: '#ffffff' }};
+
+      --container: {{ section.settings.container | default: 1740 }}px;
+      --pad-y: {{ section.settings.pad_y | default: 86 }}px;
+      --pad-x: {{ section.settings.pad_x | default: 28 }}px;
+
+      --h1: clamp({{ section.settings.h1_min | default: 28 }}px, {{ section.settings.h1_vw_tenths | default: 40 | divided_by: 10.0 }}vw, {{ section.settings.h1_max | default: 54 }}px);
+      --sub: clamp({{ section.settings.sub_min | default: 14 }}px, {{ section.settings.sub_vw_tenths | default: 12 | divided_by: 10.0 }}vw, {{ section.settings.sub_max | default: 18 }}px);
+
+      --percent-size: clamp({{ section.settings.percent_min | default: 48 }}px, {{ section.settings.percent_vw | default: 6 }}vw, {{ section.settings.percent_max | default: 92 }}px);
+      --desc-size: {{ section.settings.desc_size | default: 16 }}px;
+
+      --big-w-min: {{ section.settings.big_w_min | default: 220 }}px;
+      --big-w-fluid: {{ section.settings.big_w_fluid | default: 28 }}vw;
+      --big-w-max: {{ section.settings.big_w_max | default: 300 }}px;
+
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden; 
+    }
+
+    #rlt-{{ section.id }} *{ box-sizing: border-box; }
+
+    #rlt-{{ section.id }} .inner{
+      padding: var(--pad-y) var(--pad-x);
+      max-width: var(--container);
+      margin: 0 auto;
+    }
+
+    #rlt-{{ section.id }} .hero{
+      text-align: {{ section.settings.hero_align | default: 'center' }};
+      max-width: {{ section.settings.hero_max_w | default: 980 }}px;
+      margin: 0 auto 34px;
+    }
+
+    #rlt-{{ section.id }} .hero h2{
+      margin:0 0 10px;
+      font-size: var(--h1);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    #rlt-{{ section.id }} .hero p{
+      margin: 0 auto;
+      max-width: {{ section.settings.hero_p_max_w | default: 900 }}px;
+      font-size: var(--sub);
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    #rlt-{{ section.id }} .tabs{
+      margin: 26px auto 40px;
+      display:flex;
+      justify-content: {{ section.settings.tabs_justify | default: 'center' }};
+    }
+
+    #rlt-{{ section.id }} .tabs-shell{
+      position:relative;
+      display:flex;
+      gap: 0;
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      overflow: hidden;
+      max-width: {{ section.settings.tabs_max_w | default: 720 }}px;
+      width: 100%;
+    }
+
+    #rlt-{{ section.id }} .tab-btn{
+      position:relative;
+      z-index:2;
+      flex: 1 1 0;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight: 700;
+      color: var(--text);
+      font-size: {{ section.settings.tab_font_size | default: 14 }}px;
+      letter-spacing: .01em;
+      white-space: nowrap;
+      transition: color .18s ease;
+    }
+
+    #rlt-{{ section.id }} .tab-btn[aria-selected="true"]{ 
+      color: var(--tab-active-text); 
+    }
+
+    #rlt-{{ section.id }} .tab-indicator{
+      position:absolute;
+      z-index:1;
+      left: 6px;
+      top: 6px;
+      height: calc(100% - 12px);
+      width: 25%;
+      border-radius: 999px;
+      background: var(--indicator-bg);
+      transform: translateX(0);
+      will-change: transform, width;
+    }
+
+    #rlt-{{ section.id }} .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    {% if section.settings.layout == 'stat_right' %}
+      #rlt-{{ section.id }} .stat{ order: 2; }
+      #rlt-{{ section.id }} .gallery{ order: 1; }
+    {% endif %}
+
+    #rlt-{{ section.id }} .stat{
+      padding: 6px 0;
+      text-align: {{ section.settings.stat_align | default: 'left' }};
+      max-width: 500px; 
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    #rlt-{{ section.id }} .percent{
+      font-size: var(--percent-size);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--accent);
+      line-height: 1;
+      margin: 0 0 10px;
+    }
+
+    #rlt-{{ section.id }} .stat p{
+      margin:0;
+      max-width: {{ section.settings.stat_max_w | default: 360 }}px;
+      font-size: var(--desc-size);
+      line-height: 1.45;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    #rlt-{{ section.id }} .gallery{
+      display:grid;
+      grid-template-columns: 110px 1fr;
+      gap: 20px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    @media (min-width: 1024px){
+      #rlt-{{ section.id }} .gallery{
+        grid-template-columns: 160px auto;
+        justify-content: flex-start;
+      }
+    }
+
+    #rlt-{{ section.id }} .thumbs{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      align-self: stretch;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    #rlt-{{ section.id }} .thumb-pair{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 4px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      outline: none;
+      user-select: none;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+
+    #rlt-{{ section.id }} .thumb-pair:hover{ 
+      transform: translateY(-1px); 
+    }
+
+    #rlt-{{ section.id }} .thumb-pair.is-active{
+      border-color: rgba(17,17,17,.18);
+      box-shadow: 0 10px 26px rgba(17, 24, 39, .08);
+      background: #fff;
+    }
+
+    #rlt-{{ section.id }} .thumb-pair:focus-visible{
+      border-color: rgba(17,17,17,.35);
+      box-shadow: 0 0 0 4px rgba(17,17,17,.10), 0 10px 26px rgba(17, 24, 39, .08);
+    }
+
+    #rlt-{{ section.id }} .thumb{
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      overflow:hidden;
+      background: #e9eaee;
+    }
+
+    #rlt-{{ section.id }} .thumb img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      transform: scale(1.02);
+    }
+
+    #rlt-{{ section.id }} .big{ 
+      min-width: 0; 
+    }
+
+    #rlt-{{ section.id }} .big-card{
+      width: clamp(var(--big-w-min), var(--big-w-fluid), var(--big-w-max));
+      aspect-ratio: 3 / 5;
+      height: auto;
+      border-radius: {{ section.settings.radius | default: 22 }}px;
+      background: #eef0f3;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position: relative;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+
+    #rlt-{{ section.id }} .big-card img{
+      width: 100%;
+      height: 100%;
+      object-fit: {{ section.settings.image_fit | default: 'cover' }};
+      display:block;
+      background-color: #eef0f3;
+    }
+
+    #rlt-{{ section.id }} .swiper{ 
+      width:100%; 
+      min-width: 0; 
+      overflow: visible !important; 
+    }
+    
+    #rlt-{{ section.id }} .swiper-slide{ 
+      height:auto; 
+      width:auto; 
+    }
+
+    @media (max-width: 1023px){
+      #rlt-{{ section.id }} .inner{
+        padding: {{ section.settings.pad_y_m | default: 52 }}px {{ section.settings.pad_x_m | default: 18 }}px;
+      }
+
+      #rlt-{{ section.id }} .tabs{ 
+        margin: 18px auto 26px; 
+      }
+
+      #rlt-{{ section.id }} .tabs-shell{
+        justify-content:flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      #rlt-{{ section.id }} .tabs-shell::-webkit-scrollbar{ 
+        display:none; 
+      }
+
+      #rlt-{{ section.id }} .tab-btn{
+        flex: 0 0 auto;
+        padding: 10px 16px;
+      }
+
+      #rlt-{{ section.id }} .grid{
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      #rlt-{{ section.id }} .stat{
+        text-align: center;
+        max-width: 100%;
+      }
+      
+      #rlt-{{ section.id }} .stat p{ 
+        max-width: 520px; 
+        margin: 0 auto;
+      }
+
+      #rlt-{{ section.id }} .gallery{
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      #rlt-{{ section.id }} .thumbs{
+        flex-direction: row;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        justify-content: flex-start;
+        scrollbar-width: none;
+      }
+
+      #rlt-{{ section.id }} .thumbs::-webkit-scrollbar{ 
+        display:none; 
+      }
+
+      #rlt-{{ section.id }} .thumb-pair{
+        flex: 0 0 auto;
+        width: 120px;
+      }
+
+      #rlt-{{ section.id }} .big-card{
+        width: min(72vw, {{ section.settings.big_w_mobile_max | default: 300 }}px);
+        aspect-ratio: 4 / 5;
+      }
+    }
+
+    @media (max-width: 520px){
+      #rlt-{{ section.id }} .thumb-pair{ 
+        width: 104px; 
+      }
+
+      #rlt-{{ section.id }} .big-card{
+        width: min(74vw, {{ section.settings.big_w_mobile_small | default: 280 }}px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #rlt-{{ section.id }} *{ 
+        transition:none !important; 
+        animation:none !important; 
+      }
+    }
+  </style>
+
+  <div class="inner">
+    {% if section.settings.heading != blank or section.settings.subheading != blank %}
+      <header class="hero">
+        {% if section.settings.heading != blank %}
+          <h2>{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p>{{ section.settings.subheading }}</p>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    <div class="tabs" aria-label="Benefits tabs">
+      <div class="tabs-shell" role="tablist" aria-orientation="horizontal">
+        <div class="tab-indicator" aria-hidden="true"></div>
+
+        {% for block in section.blocks %}
+          <button
+            class="tab-btn"
+            role="tab"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.tab_label | default: 'Tab' }}
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="stat">
+        <div class="percent" id="percentText-{{ section.id }}">—%</div>
+        <p id="descText-{{ section.id }}">—</p>
+      </div>
+
+      <div class="gallery">
+        <div class="thumbs" id="thumbs-{{ section.id }}" aria-label="Preview images"></div>
+
+        <div class="big">
+          <div class="swiper" id="bigSwiper-{{ section.id }}">
+            <div class="swiper-wrapper" id="bigSlides-{{ section.id }}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const root = document.querySelector("#rlt-{{ section.id }}");
+    if (!root) return;
+
+    if (root.dataset.inited === "1") return;
+    root.dataset.inited = "1";
+
+    const tabShell  = root.querySelector(".tabs-shell");
+    const indicator = root.querySelector(".tab-indicator");
+    const tabBtns   = Array.from(root.querySelectorAll(".tab-btn"));
+
+    const percentEl = document.querySelector("#percentText-{{ section.id }}");
+    const descEl    = document.querySelector("#descText-{{ section.id }}");
+
+    const thumbsEl  = document.querySelector("#thumbs-{{ section.id }}");
+    const slidesEl  = document.querySelector("#bigSlides-{{ section.id }}");
+    const bigWrapEl = root.querySelector(".big");
+
+    const GROUPS = [
+      {% for block in section.blocks %}
+        {
+          label: {{ block.settings.tab_label | default: 'Tab' | json }},
+          percent: {{ block.settings.percent_tenths | default: 0 }} / 10,
+          desc: {{ block.settings.desc | default: '' | json }},
+          thumbs: [
+            {% if block.settings.thumb_1 != blank %}
+              { src: {{ block.settings.thumb_1 | image_url: width: 600 | json }}, alt: {{ block.settings.thumb_1.alt | default: block.settings.tab_label | json }} }
+            {% else %}null{% endif %},
+            {% if block.settings.thumb_2 != blank %}
+              { src: {{ block.settings.thumb_2 | image_url: width: 600 | json }}, alt: {{ block.settings.thumb_2.alt | default: block.settings.tab_label | json }} }
+            {% else %}null{% endif %}
+          ],
+          images: [
+            {% if block.settings.image_1 != blank %}
+              { src: {{ block.settings.image_1 | image_url: width: 1800 | json }}, alt: {{ block.settings.image_1.alt | default: block.settings.tab_label | json }} }
+            {% else %}null{% endif %},
+            {% if block.settings.image_2 != blank %}
+              { src: {{ block.settings.image_2 | image_url: width: 1800 | json }}, alt: {{ block.settings.image_2.alt | default: block.settings.tab_label | json }} }
+            {% else %}null{% endif %}
+          ]
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+
+    if (!GROUPS.length || !tabShell || !indicator || !tabBtns.length) return;
+
+    const HAS_SWIPER = !!window.Swiper;
+    const HAS_GSAP   = !!window.gsap;
+
+    let swiper = null;
+    if (HAS_SWIPER) {
+      swiper = new window.Swiper("#bigSwiper-{{ section.id }}", {
+        speed: 450,
+        spaceBetween: 24,
+        slidesPerView: "auto",
+        loop: false,
+        breakpoints: {
+          1024: { allowTouchMove: false }
+        }
+      });
+    }
+
+    function renderBigSlides(images) {
+      const validImages = (images || []).filter(Boolean);
+      let slidesHTML = [];
+
+      if (validImages.length) {
+        validImages.forEach(img => {
+          slidesHTML.push(`
+            <div class="swiper-slide">
+              <div class="big-card">
+                <img src="${img.src}" alt="${img.alt}" loading="lazy" />
+              </div>
+            </div>
+          `);
+        });
+      } else {
+        slidesHTML.push(`
+          <div class="swiper-slide">
+            <div class="big-card">
+              <div style="padding:16px;font-weight:700;color:rgba(17,17,17,.7);text-align:center;">
+                Add images in the section blocks.
+              </div>
+            </div>
+          </div>
+        `);
+      }
+
+      if (swiper) {
+        swiper.removeAllSlides();
+        swiper.appendSlide(slidesHTML);
+        swiper.updateSize();
+        swiper.updateSlides();
+        swiper.updateProgress();
+        swiper.updateSlidesClasses();
+        swiper.slideTo(0, 0);
+      } else if (slidesEl) {
+        slidesEl.innerHTML = slidesHTML.join("");
+      }
+    }
+
+    const numState = { val: Number(GROUPS[0].percent || 0) };
+
+    function tweenPercent(toVal){
+      if (!percentEl) return;
+
+      if (!HAS_GSAP) {
+        numState.val = Number(toVal || 0);
+        percentEl.textContent = `${numState.val.toFixed(1)}%`;
+        return;
+      }
+
+      window.gsap.killTweensOf(numState);
+      window.gsap.to(numState, {
+        val: Number(toVal || 0),
+        duration: 0.55,
+        ease: "power2.out",
+        overwrite: "auto",
+        onUpdate: () => {
+          percentEl.textContent = `${numState.val.toFixed(1)}%`;
+        }
+      });
+    }
+
+    function moveIndicatorTo(btn, immediate){
+      if (!btn || !tabShell || !indicator) return;
+
+      const x = btn.offsetLeft;
+      const w = btn.offsetWidth;
+
+      if (HAS_GSAP && !immediate) {
+        window.gsap.to(indicator, {
+          x,
+          width: w,
+          duration: 0.35,
+          ease: "power3.out",
+          overwrite: "auto"
+        });
+      } else {
+        indicator.style.transform = `translate3d(${x}px,0,0)`;
+        indicator.style.width = `${w}px`;
+      }
+    }
+
+    function syncIndicator(){
+      const activeBtn = tabBtns.find(b => b.getAttribute("aria-selected") === "true") || tabBtns[0];
+      if (!activeBtn) return;
+      moveIndicatorTo(activeBtn, true);
+    }
+
+    tabShell.addEventListener("scroll", () => {
+      if (tabShell._rltScrollRAF) cancelAnimationFrame(tabShell._rltScrollRAF);
+      tabShell._rltScrollRAF = requestAnimationFrame(syncIndicator);
+    }, { passive: true });
+
+    let currentIndex = 0;
+    let switchTL = null;
+
+    function renderThumbsOnce() {
+      if (!thumbsEl) return;
+      thumbsEl.innerHTML = "";
+
+      GROUPS.forEach((g, idx) => {
+        const pairBtn = document.createElement("button");
+        pairBtn.type = "button";
+        pairBtn.className = "thumb-pair" + (idx === currentIndex ? " is-active" : "");
+        pairBtn.dataset.index = String(idx);
+        pairBtn.setAttribute("aria-label", `Preview group ${idx + 1}`);
+        pairBtn.setAttribute("aria-pressed", String(idx === currentIndex));
+
+        const t1 = g.thumbs && g.thumbs[0] ? g.thumbs[0] : null;
+        const t2 = g.thumbs && g.thumbs[1] ? g.thumbs[1] : null;
+
+        pairBtn.innerHTML = `
+          <div class="thumb">${t1 ? `<img src="${t1.src}" alt="${t1.alt}" loading="lazy">` : ""}</div>
+          <div class="thumb">${t2 ? `<img src="${t2.src}" alt="${t2.alt}" loading="lazy">` : ""}</div>
+        `;
+
+        pairBtn.addEventListener("click", () => setActiveGroup(idx, true));
+        pairBtn.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setActiveGroup(idx, true);
+          }
+        });
+
+        thumbsEl.appendChild(pairBtn);
+      });
+    }
+
+    function updateThumbActive(){
+      if (!thumbsEl) return;
+      const cards = Array.from(thumbsEl.querySelectorAll(".thumb-pair"));
+      cards.forEach((c, i) => {
+        const isActive = i === currentIndex;
+        c.classList.toggle("is-active", isActive);
+        c.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
+    function setTabActiveByIndex(idx){
+      tabBtns.forEach((b, i) => b.setAttribute("aria-selected", String(i === idx)));
+      moveIndicatorTo(tabBtns[idx], false);
+    }
+
+    function setActiveGroup(idx, animate = true){
+      const g = GROUPS[idx];
+      if (!g) return;
+
+      if (HAS_GSAP) {
+        if (switchTL) switchTL.kill();
+        window.gsap.killTweensOf([descEl, bigWrapEl, numState, indicator]);
+      }
+
+      currentIndex = idx;
+      setTabActiveByIndex(idx);
+      updateThumbActive();
+
+      const doRender = () => {
+        if (descEl) descEl.textContent = g.desc || "";
+        tweenPercent(Number(g.percent || 0));
+        renderBigSlides(g.images || []);
+      };
+
+      if (!HAS_GSAP || !animate) {
+        doRender();
+        return;
+      }
+
+      switchTL = window.gsap.timeline({ defaults: { ease: "power2.out" } });
+
+      switchTL.to([descEl, bigWrapEl].filter(Boolean), {
+        opacity: 0, y: 8, duration: 0.22, overwrite: "auto"
+      }, 0);
+
+      switchTL.add(() => { doRender(); }, 0.22);
+
+      switchTL
+        .to([descEl, bigWrapEl].filter(Boolean), { opacity: 1, y: 0, duration: 0.32, overwrite: "auto" }, "+=0.02")
+        .fromTo(root.querySelectorAll(".big-card"), { scale: 0.985 }, { scale: 1, duration: 0.30 }, "<");
+    }
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = Number(btn.dataset.index);
+        setActiveGroup(idx, true);
+      });
+    });
+
+    let resizeTimer;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        syncIndicator();
+        if (swiper) swiper.update();
+      }, 150);
+    };
+
+    window.addEventListener("resize", onResize);
+
+    renderThumbsOnce();
+    setActiveGroup(0, false);
+
+    requestAnimationFrame(syncIndicator);
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        syncIndicator();
+        if (swiper) swiper.update();
+      }).catch(()=>{});
+    }
+
+    {% if section.settings.enable_entrance_anim %}
+      if (HAS_GSAP) {
+        const hero = root.querySelector(".hero");
+        const h2 = hero ? hero.querySelector("h2") : null;
+        const p  = hero ? hero.querySelector("p") : null;
+
+        window.gsap.set([h2, p, tabShell, percentEl, descEl, thumbsEl, bigWrapEl].filter(Boolean), { opacity: 0, y: 14 });
+
+        const tl = window.gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        if (h2) tl.to(h2, { opacity: 1, y: 0, duration: 0.55 });
+        if (p)  tl.to(p,  { opacity: 1, y: 0, duration: 0.42 }, "-=0.25");
+
+        tl.to(tabShell, { opacity: 1, y: 0, duration: 0.42 }, "-=0.18")
+          .to(percentEl, { opacity: 1, y: 0, duration: 0.42 }, "-=0.12")
+          .to(descEl, { opacity: 1, y: 0, duration: 0.38 }, "-=0.22")
+          .to([thumbsEl, bigWrapEl].filter(Boolean), { opacity: 1, y: 0, duration: 0.44, stagger: 0.07 }, "-=0.22")
+          .fromTo(root.querySelectorAll(".big-card"), { scale: 0.985 }, { scale: 1, duration: 0.35 }, "-=0.25");
+      }
+    {% endif %}
+
+    function cleanup(){
+      try { 
+        window.removeEventListener("resize", onResize); 
+      } catch(e){}
+
+      try {
+        if (swiper && typeof swiper.destroy === "function") swiper.destroy(true, true);
+      } catch(e){}
+
+      swiper = null;
+
+      try { 
+        root.dataset.inited = "0"; 
+      } catch(e){}
+    }
+
+    document.addEventListener("shopify:section:unload", function(e){
+      if (!e || !e.detail || String(e.detail.sectionId) !== String("{{ section.id }}")) return;
+      cleanup();
+    });
+
+    document.addEventListener("shopify:section:load", function(e){
+      if (!e || !e.detail || String(e.detail.sectionId) !== String("{{ section.id }}")) return;
+    });
+  });
+</script>
+</section>
+
+{% schema %}
+{
+  "name": "RLT Tabs (Swiper + GSAP)",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A Full-Body Reset In One Effortless Wrap." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Slip in, press start, and let high-density red + near-infrared light support recovery, relaxation, and better sleep—without flipping panels or constantly repositioning." },
+
+    { "type": "select", "id": "layout", "label": "Layout", "default": "stat_left", "options": [
+      { "value": "stat_left", "label": "Stat left, gallery right" },
+      { "value": "stat_right", "label": "Gallery left, stat right" }
+    ]},
+
+    { "type": "select", "id": "hero_align", "label": "Hero text align", "default": "center", "options": [
+      { "value": "left", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "right", "label": "Right" }
+    ]},
+
+    { "type": "select", "id": "stat_align", "label": "Stat text align", "default": "left", "options": [
+      { "value": "left", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "right", "label": "Right" }
+    ]},
+
+    { "type": "select", "id": "tabs_justify", "label": "Tabs position", "default": "center", "options": [
+      { "value": "flex-start", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "flex-end", "label": "Right" }
+    ]},
+
+    { "type": "range", "id": "container", "label": "Container width (px)", "min": 960, "max": 2200, "step": 20, "default": 1740 },
+    { "type": "range", "id": "pad_y", "label": "Padding Y (desktop)", "min": 0, "max": 160, "step": 2, "default": 86 },
+    { "type": "range", "id": "pad_x", "label": "Padding X (desktop)", "min": 0, "max": 80, "step": 2, "default": 28 },
+    { "type": "range", "id": "pad_y_m", "label": "Padding Y (mobile)", "min": 0, "max": 120, "step": 2, "default": 52 },
+    { "type": "range", "id": "pad_x_m", "label": "Padding X (mobile)", "min": 0, "max": 50, "step": 1, "default": 18 },
+
+    { "type": "range", "id": "hero_max_w", "label": "Hero max width (px)", "min": 520, "max": 1200, "step": 10, "default": 980 },
+    { "type": "range", "id": "hero_p_max_w", "label": "Subheading max width (px)", "min": 520, "max": 1200, "step": 10, "default": 900 },
+
+    { "type": "range", "id": "tabs_max_w", "label": "Tabs max width (px)", "min": 360, "max": 1000, "step": 10, "default": 720 },
+    { "type": "range", "id": "tab_font_size", "label": "Tab font size (px)", "min": 12, "max": 18, "step": 1, "default": 14 },
+
+    { "type": "range", "id": "h1_min", "label": "Heading min size (px)", "min": 18, "max": 48, "step": 1, "default": 32 },
+    { "type": "range", "id": "h1_vw_tenths", "label": "Heading fluid (vw ×10)", "min": 20, "max": 70, "step": 1, "default": 40 },
+    { "type": "range", "id": "h1_max", "label": "Heading max size (px)", "min": 28, "max": 80, "step": 1, "default": 54 },
+
+    { "type": "range", "id": "sub_min", "label": "Subheading min size (px)", "min": 12, "max": 20, "step": 1, "default": 14 },
+    { "type": "range", "id": "sub_vw_tenths", "label": "Subheading fluid (vw ×10)", "min": 8, "max": 22, "step": 1, "default": 12 },
+    { "type": "range", "id": "sub_max", "label": "Subheading max size (px)", "min": 14, "max": 28, "step": 1, "default": 18 },
+
+    { "type": "range", "id": "percent_min", "label": "Percent min size (px)", "min": 28, "max": 80, "step": 1, "default": 56 },
+    { "type": "range", "id": "percent_vw", "label": "Percent fluid (vw)", "min": 3, "max": 10, "step": 1, "default": 6 },
+    { "type": "range", "id": "percent_max", "label": "Percent max size (px)", "min": 48, "max": 140, "step": 1, "default": 92 },
+
+    { "type": "range", "id": "desc_size", "label": "Description size (px)", "min": 12, "max": 22, "step": 1, "default": 16 },
+    { "type": "range", "id": "stat_max_w", "label": "Description max width (px)", "min": 240, "max": 680, "step": 10, "default": 360 },
+
+    { "type": "range", "id": "big_w_min", "label": "Big card min width (px)", "min": 160, "max": 320, "step": 5, "default": 220 },
+    { "type": "range", "id": "big_w_fluid", "label": "Big card fluid (vw)", "min": 16, "max": 40, "step": 1, "default": 28 },
+    { "type": "range", "id": "big_w_max", "label": "Big card max width (px)", "min": 240, "max": 520, "step": 5, "default": 300 },
+    { "type": "range", "id": "big_w_mobile_max", "label": "Big card mobile max (px)", "min": 240, "max": 520, "step": 5, "default": 300 },
+    { "type": "range", "id": "big_w_mobile_small", "label": "Big card small mobile max (px)", "min": 220, "max": 420, "step": 5, "default": 280 },
+
+    { "type": "range", "id": "radius", "label": "Big card radius (px)", "min": 10, "max": 40, "step": 1, "default": 22 },
+
+    { "type": "select", "id": "image_fit", "label": "Image fit", "default": "cover", "options": [
+      { "value": "cover", "label": "Cover (crop, no distortion)" },
+      { "value": "contain", "label": "Contain (no crop)" }
+    ]},
+
+    { "type": "color", "id": "bg", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text", "label": "Text", "default": "#111111" },
+    { "type": "color", "id": "muted", "label": "Muted text", "default": "#5b5f66" },
+    { "type": "color", "id": "border", "label": "Border", "default": "#e6e7ea" },
+    { "type": "color", "id": "accent", "label": "Accent (percent)", "default": "#ff6a3d" },
+    { "type": "color", "id": "indicator_bg", "label": "Tab indicator background", "default": "#111111" },
+    { "type": "color", "id": "tab_active_text", "label": "Active tab text", "default": "#ffffff" },
+
+    { "type": "checkbox", "id": "enable_entrance_anim", "label": "Enable entrance animation", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Group",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "tab_label", "label": "Tab label", "default": "Wrinkles" },
+        { "type": "range", "id": "percent_tenths", "label": "Percent (×10) e.g. 98.7% = 987", "min": 0, "max": 1000, "step": 10, "default": 990 },
+        { "type": "text", "id": "desc", "label": "Description", "default": "Reduce the appearance of wrinkles and fine lines in 4 weeks" },
+        { "type": "image_picker", "id": "thumb_1", "label": "Thumb 1" },
+        { "type": "image_picker", "id": "thumb_2", "label": "Thumb 2" },
+        { "type": "image_picker", "id": "image_1", "label": "Big image 1" },
+        { "type": "image_picker", "id": "image_2", "label": "Big image 2" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RLT Tabs (Swiper + GSAP)",
+      "blocks": [
+        { "type": "group" },
+        { "type": "group" },
+        { "type": "group" },
+        { "type": "group" }
+      ]
+    }
+  ]
+}
+{% endschema %}

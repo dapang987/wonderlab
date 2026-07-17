@@ -1,0 +1,39 @@
+<div class="premium-faq__item" {{ block.shopify_attributes }}>
+  <button class="premium-faq__question" type="button" aria-expanded="false">
+    <span class="premium-faq__question-text">{{ block.settings.question }}</span>
+    <span class="premium-faq__icon" aria-hidden="true"></span>
+  </button>
+
+  <div class="premium-faq__answer-wrap">
+    <div class="premium-faq__answer-inner">
+      <div class="premium-faq__answer rte">
+        {{ block.settings.answer }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "FAQ Item",
+  "settings": [
+    {
+      "type": "text",
+      "id": "question",
+      "label": "Question",
+      "default": "What is your question?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer",
+      "label": "Answer",
+      "default": "<p>Write the answer here.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Item"
+    }
+  ]
+}
+{% endschema %}

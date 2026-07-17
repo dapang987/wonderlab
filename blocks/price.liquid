@@ -1,0 +1,804 @@
+{%- liquid
+  assign block_settings = block.settings
+  assign product_resource = closest.product
+  assign selected_variant = product_resource.selected_or_first_available_variant
+
+  assign compare_at_price = selected_variant.compare_at_price | default: 0
+  assign sale_price = selected_variant.price | default: 0
+  assign discount_percent = 0
+  assign has_discount = false
+  assign show_discount_badge = false
+
+  if compare_at_price > sale_price and compare_at_price > 0
+    assign discount_percent = compare_at_price | minus: sale_price | times: 100.0 | divided_by: compare_at_price | round
+    assign has_discount = true
+  endif
+
+  if block_settings.discount_badge_enabled
+    if block_settings.discount_badge_sale_only
+      if has_discount
+        assign show_discount_badge = true
+      endif
+    else
+      assign show_discount_badge = true
+    endif
+  endif
+
+  capture discount_badge_text
+    echo block_settings.discount_badge_text | default: '[percent]% OFF + FREE SHIPPING' | replace: '[percent]', discount_percent
+  endcapture
+-%}
+
+{% liquid
+  if block_settings.type_preset == 'rte' or block_settings.type_preset == 'paragraph'
+    assign is_rte = true
+  endif
+
+  capture text_block_classes
+    if block_settings.width == '100%'
+      echo 'text-block--align-' | append: block_settings.alignment
+      if block_settings.max_width == 'none'
+        echo ' text-block--full-width'
+      endif
+    endif
+    if block_settings.type_preset == 'custom'
+      echo ' custom-typography'
+      if block_settings.font_size != ''
+        echo ' custom-font-size'
+      endif
+      if block_settings.color != ''
+        echo ' custom-color'
+      endif
+    endif
+    if block_settings.background
+      echo ' text-block--background'
+    endif
+    if is_rte
+      echo ' rte'
+    endif
+  endcapture
+%}
+
+<product-price
+  class="text-block {{ text_block_classes }} text-{{ block_settings.alignment }} {{ block_settings.type_preset | default: 'paragraph' }} spacing-style"
+  data-block-id="{{ block.id }}"
+  data-product-id="{{ product_resource.id }}"
+  style="
+    {% render 'typography-style', settings: block_settings %}
+    {% render 'spacing-style', settings: block_settings %}
+    --width: {{ block_settings.width }};
+    --sale-price-size: {{ block_settings.sale_price_size }};
+    --sale-price-color: {{ block_settings.sale_price_color }};
+    --compare-price-size: {{ block_settings.compare_price_size }};
+    --compare-price-color: {{ block_settings.compare_price_color }};
+    --discount-badge-bg: {{ block_settings.discount_badge_bg | default: '#B94734' }};
+    --discount-badge-color: {{ block_settings.discount_badge_color | default: '#FFFFFF' }};
+    --discount-badge-font-size: {{ block_settings.discount_badge_font_size | default: 13 }}px;
+    --discount-badge-font-size-mobile: {{ block_settings.discount_badge_font_size_mobile | default: 10 }}px;
+    --discount-badge-font-weight: {{ block_settings.discount_badge_font_weight | default: '700' }};
+    --discount-badge-radius: {{ block_settings.discount_badge_radius | default: 4 }}px;
+    --discount-badge-padding-x: {{ block_settings.discount_badge_padding_x | default: 8 }}px;
+    --discount-badge-padding-y: {{ block_settings.discount_badge_padding_y | default: 5 }}px;
+    --discount-badge-gap: {{ block_settings.discount_badge_gap | default: 8 }}px;
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="product-price-row">
+    <div class="product-price-main">
+      {% render 'price',
+        show_unit_price: true,
+        product_resource: product_resource,
+        show_sale_price_first: block_settings.show_sale_price_first
+      %}
+    </div>
+
+    {% if show_discount_badge %}
+      <span class="product-price-discount-badge">
+        {{ discount_badge_text | strip | escape }}
+      </span>
+    {% endif %}
+  </div>
+
+  {% if block_settings.show_tax_info %}
+    <div class="tax-note">
+      {%- if cart.duties_included and cart.taxes_included -%}
+        {{ 'content.duties_and_taxes_included' | t }}
+      {%- elsif cart.taxes_included -%}
+        {{ 'content.taxes_included' | t }}
+      {%- elsif cart.duties_included -%}
+        {{ 'content.duties_included' | t }}
+      {%- endif -%}
+
+      {%- if shop.shipping_policy.body != blank -%}
+        {{ 'content.shipping_policy' | t }}
+      {%- endif -%}
+    </div>
+  {% endif %}
+
+  {%- if selected_variant != blank and block_settings.show_installments -%}
+    <div class="installments">
+      {%- assign product_form_installment_id = 'product-form-installment-' | append: block.id -%}
+      {%- form 'product', product_resource, id: product_form_installment_id, class: 'payment-terms' -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ selected_variant.id }}"
+        >
+        {{ form | payment_terms }}
+      {%- endform -%}
+    </div>
+  {%- endif -%}
+</product-price>
+
+{% # theme-check-disable %}
+{% stylesheet %}
+  .tax-note:empty {
+    display: none;
+  }
+
+  product-price .price {
+    font-size: var(--sale-price-size);
+    color: var(--sale-price-color);
+  }
+
+  product-price .compare-at-price {
+    font-size: var(--compare-price-size);
+    color: var(--compare-price-color);
+    text-decoration: line-through;
+    opacity: 0.72;
+  }
+
+  product-price .product-price-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--discount-badge-gap);
+  }
+
+  product-price.text-center .product-price-row {
+    justify-content: center;
+  }
+
+  product-price.text-right .product-price-row {
+    justify-content: flex-end;
+  }
+
+  product-price .product-price-main {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  product-price .product-price-main .price {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  product-price .product-price-discount-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    padding: var(--discount-badge-padding-y) var(--discount-badge-padding-x);
+    border-radius: var(--discount-badge-radius);
+    background: var(--discount-badge-bg);
+    color: var(--discount-badge-color);
+    font-size: var(--discount-badge-font-size);
+    font-weight: var(--discount-badge-font-weight);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 749px) {
+    product-price .product-price-row {
+      gap: min(var(--discount-badge-gap), 6px);
+    }
+
+    product-price .product-price-discount-badge {
+      max-width: min(100%, calc(100vw - 32px));
+      padding-block: max(3px, calc(var(--discount-badge-padding-y) - 1px));
+      padding-inline: max(6px, calc(var(--discount-badge-padding-x) - 2px));
+      font-size: clamp(var(--discount-badge-font-size-mobile), 3.1vw, var(--discount-badge-font-size));
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+  }
+
+  form.payment-terms {
+    padding-top: 0.5em;
+    font-size: min(0.85em, var(--font-paragraph--size));
+    font-weight: var(--font-paragraph--weight);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+
+  .installments:not(:has(shopify-payment-terms)) {
+    display: none;
+  }
+
+  product-price .volume-pricing-note,
+  product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) .volume-pricing-note {
+    display: block;
+    font-family: var(--font-body--family);
+    font-weight: normal;
+    font-size: var(--font-size--xs);
+    line-height: normal;
+    letter-spacing: normal;
+    text-transform: none;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.product_price",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.resource_reference_product_price"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:content.edit_price_in_theme_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_price_first",
+      "label": "t:settings.show_sale_price_first",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_installments",
+      "label": "t:settings.installments",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tax_info",
+      "label": "t:settings.show_tax_info",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:content.typography"
+    },
+    {
+      "type": "select",
+      "id": "type_preset",
+      "label": "t:settings.preset",
+      "options": [
+        {
+          "value": "",
+          "label": "t:options.default"
+        },
+        {
+          "value": "paragraph",
+          "label": "t:options.paragraph"
+        },
+        {
+          "value": "h1",
+          "label": "t:options.h1"
+        },
+        {
+          "value": "h2",
+          "label": "t:options.h2"
+        },
+        {
+          "value": "h3",
+          "label": "t:options.h3"
+        },
+        {
+          "value": "h4",
+          "label": "t:options.h4"
+        },
+        {
+          "value": "h5",
+          "label": "t:options.h5"
+        },
+        {
+          "value": "h6",
+          "label": "t:options.h6"
+        },
+        {
+          "value": "custom",
+          "label": "t:options.custom"
+        }
+      ],
+      "info": "t:info.edit_presets_in_theme_settings"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "fit-content",
+          "label": "t:options.fit_content"
+        },
+        {
+          "value": "100%",
+          "label": "t:options.fill"
+        }
+      ],
+      "default": "100%"
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "default": "left",
+      "visible_if": "{{ block.settings.width != 'fit-content' }}"
+    },
+    {
+      "type": "select",
+      "id": "font",
+      "label": "t:settings.font",
+      "options": [
+        {
+          "value": "var(--font-body--family)",
+          "label": "t:options.body"
+        },
+        {
+          "value": "var(--font-subheading--family)",
+          "label": "t:options.subheading"
+        },
+        {
+          "value": "var(--font-heading--family)",
+          "label": "t:options.heading"
+        },
+        {
+          "value": "var(--font-accent--family)",
+          "label": "t:options.accent"
+        }
+      ],
+      "default": "var(--font-body--family)",
+      "visible_if": "{{ block.settings.type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "font_size",
+      "label": "t:settings.size",
+      "options": [
+        {
+          "value": "",
+          "label": "t:options.default"
+        },
+        {
+          "value": "0.625rem",
+          "label": "10px"
+        },
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        },
+        {
+          "value": "1.25rem",
+          "label": "20px"
+        },
+        {
+          "value": "1.5rem",
+          "label": "24px"
+        },
+        {
+          "value": "2rem",
+          "label": "32px"
+        },
+        {
+          "value": "2.5rem",
+          "label": "40px"
+        },
+        {
+          "value": "3rem",
+          "label": "48px"
+        },
+        {
+          "value": "3.5rem",
+          "label": "56px"
+        },
+        {
+          "value": "4.5rem",
+          "label": "72px"
+        },
+        {
+          "value": "5.5rem",
+          "label": "88px"
+        },
+        {
+          "value": "7.5rem",
+          "label": "120px"
+        },
+        {
+          "value": "9.5rem",
+          "label": "152px"
+        },
+        {
+          "value": "11.5rem",
+          "label": "184px"
+        }
+      ],
+      "default": "1rem",
+      "visible_if": "{{ block.settings.type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "line_height",
+      "label": "t:settings.line_height",
+      "options": [
+        {
+          "value": "tight",
+          "label": "t:options.tight"
+        },
+        {
+          "value": "normal",
+          "label": "t:options.normal"
+        },
+        {
+          "value": "loose",
+          "label": "t:options.loose"
+        }
+      ],
+      "default": "normal",
+      "visible_if": "{{ block.settings.type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "letter_spacing",
+      "label": "t:settings.letter_spacing",
+      "options": [
+        {
+          "value": "tight",
+          "label": "t:options.tight"
+        },
+        {
+          "value": "normal",
+          "label": "t:options.normal"
+        },
+        {
+          "value": "loose",
+          "label": "t:options.loose"
+        }
+      ],
+      "default": "normal",
+      "visible_if": "{{ block.settings.type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "case",
+      "label": "t:settings.case",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.default"
+        },
+        {
+          "value": "uppercase",
+          "label": "t:options.uppercase"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ block.settings.type_preset == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "t:settings.color",
+      "options": [
+        {
+          "value": "var(--color-foreground)",
+          "label": "t:options.text"
+        },
+        {
+          "value": "var(--color-foreground-heading)",
+          "label": "t:options.heading"
+        },
+        {
+          "value": "var(--color-primary)",
+          "label": "t:options.link"
+        }
+      ],
+      "default": "var(--color-foreground)",
+      "visible_if": "{{ block.settings.type_preset != 'rte' }}"
+    },
+    {
+      "type": "header",
+      "content": "Price style"
+    },
+    {
+      "type": "select",
+      "id": "sale_price_size",
+      "label": "Sale price size",
+      "options": [
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        },
+        {
+          "value": "1.25rem",
+          "label": "20px"
+        },
+        {
+          "value": "1.5rem",
+          "label": "24px"
+        },
+        {
+          "value": "2rem",
+          "label": "32px"
+        },
+        {
+          "value": "2.5rem",
+          "label": "40px"
+        },
+        {
+          "value": "3rem",
+          "label": "48px"
+        }
+      ],
+      "default": "2rem"
+    },
+    {
+      "type": "color",
+      "id": "sale_price_color",
+      "label": "Sale price color",
+      "default": "#D21F3C"
+    },
+    {
+      "type": "select",
+      "id": "compare_price_size",
+      "label": "Compare-at price size",
+      "options": [
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        },
+        {
+          "value": "1.25rem",
+          "label": "20px"
+        },
+        {
+          "value": "1.5rem",
+          "label": "24px"
+        },
+        {
+          "value": "2rem",
+          "label": "32px"
+        }
+      ],
+      "default": "1rem"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare-at price color",
+      "default": "#7A7A7A"
+    },
+    {
+      "type": "header",
+      "content": "Discount badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "discount_badge_enabled",
+      "label": "Show discount badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "discount_badge_sale_only",
+      "label": "Show only when product is on sale",
+      "default": true,
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "discount_badge_text",
+      "label": "Badge text",
+      "default": "[percent]% OFF + FREE SHIPPING",
+      "info": "Use [percent] to output the automatically calculated discount percentage.",
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "color",
+      "id": "discount_badge_bg",
+      "label": "Badge background color",
+      "default": "#B94734",
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "color",
+      "id": "discount_badge_color",
+      "label": "Badge text color",
+      "default": "#FFFFFF",
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_font_size",
+      "label": "Badge font size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 13,
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_font_size_mobile",
+      "label": "Badge mobile font size",
+      "min": 9,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 10,
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "select",
+      "id": "discount_badge_font_weight",
+      "label": "Badge font weight",
+      "options": [
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "800",
+          "label": "Extra bold"
+        }
+      ],
+      "default": "700",
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_radius",
+      "label": "Badge border radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 4,
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_padding_x",
+      "label": "Badge horizontal padding",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8,
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_padding_y",
+      "label": "Badge vertical padding",
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 5,
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "discount_badge_gap",
+      "label": "Gap between price and badge",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8,
+      "visible_if": "{{ block.settings.discount_badge_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.product_price",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}
+{% # theme-check-enable %}

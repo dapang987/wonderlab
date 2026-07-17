@@ -1,0 +1,1278 @@
+{
+  "sections": {
+    "main": {
+      "type": "product-information",
+      "blocks": {
+        "media-gallery": {
+          "type": "_product-media-gallery",
+          "static": true,
+          "settings": {
+            "media_presentation": "carousel",
+            "media_columns": "two",
+            "image_gap": 4,
+            "large_first_image": false,
+            "icons_style": "none",
+            "slideshow_controls_style": "thumbnails",
+            "slideshow_mobile_controls_style": "thumbnails",
+            "thumbnail_position": "right",
+            "thumbnail_width": 44,
+            "thumbnail_radius": 0,
+            "aspect_ratio": "1",
+            "constrain_to_viewport": true,
+            "media_fit": "contain",
+            "media_radius": 0,
+            "extend_media": false,
+            "zoom": true,
+            "video_loop": false,
+            "hide_variants": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "details_position": "flex-start",
+            "gap": 12,
+            "sticky_details_desktop": true,
+            "inherit_color_scheme": true,
+            "color_scheme": "scheme-1",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 24,
+            "padding-block-end": 24,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "judge_me_reviews_preview_badge_jBGdY6": {
+              "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+              "settings": {}
+            },
+            "group_icgrde": {
+              "type": "group",
+              "name": "Header",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 12,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "background_media": "none",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_xrnftG": {
+                  "type": "text",
+                  "name": "Product title",
+                  "settings": {
+                    "text": "<h1>{{ closest.product.title }}</h1>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h4",
+                    "font": "var(--font-primary--family)",
+                    "font_size": "",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "price_tVjtKg": {
+                  "type": "price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": true,
+                    "show_tax_info": false,
+                    "type_preset": "paragraph",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "color": "var(--color-foreground)",
+                    "sale_price_size": "1.5rem",
+                    "sale_price_color": "#a80d22",
+                    "compare_price_size": "1rem",
+                    "compare_price_color": "#7a7a7a",
+                    "discount_badge_enabled": true,
+                    "discount_badge_sale_only": true,
+                    "discount_badge_text": "[percent]% OFF + FREE SHIPPING",
+                    "discount_badge_bg": "#a80d22",
+                    "discount_badge_color": "#ffffff",
+                    "discount_badge_font_size": 13,
+                    "discount_badge_font_size_mobile": 10,
+                    "discount_badge_font_weight": "700",
+                    "discount_badge_radius": 4,
+                    "discount_badge_padding_x": 8,
+                    "discount_badge_padding_y": 5,
+                    "discount_badge_gap": 8,
+                    "padding-block-start": 4,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "product_selling_points_5Point": {
+                  "type": "product-selling-points",
+                  "name": "Five selling points",
+                  "disabled": true,
+                  "settings": {
+                    "point_1": "<strong>Aging Defense:</strong> Supports cellular resilience and helps protect against everyday oxidative stress for healthy aging.",
+                    "point_2": "<strong>Joint Mobility:</strong> Supports joint flexibility, comfortable movement, and an active lifestyle.",
+                    "point_3": "<strong>Pain Relief:</strong> Helps ease occasional joint and muscle discomfort after everyday activity.",
+                    "point_4": "<strong>Better Sleep &amp; Energy Boost:</strong> Promotes restful sleep at night and refreshed, steady energy throughout the day.",
+                    "point_5": "<strong>Longevity Support:</strong> Provides whole-body support for lasting vitality, resilience, and long-term wellness.",
+                    "show_more_text": "Show more",
+                    "show_less_text": "Show less",
+                    "open_by_default": false,
+                    "font_size": 18,
+                    "font_size_mobile": 16,
+                    "toggle_font_size": 18,
+                    "toggle_font_size_mobile": 16,
+                    "item_gap": 3,
+                    "toggle_margin_top": 18,
+                    "text_color": "#171717",
+                    "toggle_color": "#8a8a8a",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "custom_liquid_3ALrjV": {
+                  "type": "custom-liquid",
+                  "name": "t:names.custom_liquid",
+                  "settings": {
+                    "custom_liquid": "<style>\n  .truemed-instructions-open {\n    color: #6f6a63 !important;\n  }\n\n  .truemed-logo-img {\n    height: 13px !important;\n    margin: 2px 0 0 3px !important;\n  }\n</style>\n\n<div\n  id=\"truemed-instructions\"\n  style=\"font-size: 14px;\"\n  icon-height=\"12\"\n  data-public-id=\"tm_qual_jue2e03cdk\">\n</div>\n\n<script\n  src=\"https://static.truemed.com/widgets/product-page-widget.min.js\"\n  defer>\n</script>"
+                  },
+                  "blocks": {}
+                },
+                "custom_liquid_L83Rfm": {
+                  "type": "custom-liquid",
+                  "name": "t:names.custom_liquid",
+                  "settings": {
+                    "custom_liquid": "<!-- NEW40 Coupon Ticket Start -->\n<div class=\"wondear-new40-coupon\">\n  <div\n    class=\"wondear-new40-ticket\"\n    data-coupon-code=\"NEW40\"\n    data-copy-text=\"Copy\"\n    data-copied-text=\"Copied!\"\n    role=\"region\"\n    aria-label=\"Copy coupon code NEW40\"\n  >\n    <div class=\"wondear-new40-left\">\n      <div class=\"wondear-new40-gift\" aria-hidden=\"true\">🎁</div>\n    </div>\n\n    <div class=\"wondear-new40-middle\">\n      <div class=\"wondear-new40-discount\">$40 OFF</div>\n      <div class=\"wondear-new40-condition\">Min. spend $150 · Entire order</div>\n    </div>\n\n    <button class=\"wondear-new40-right\" type=\"button\" aria-label=\"Copy discount code NEW40\">\n      <span class=\"wondear-new40-copy-text\">Copy</span>\n      <span class=\"wondear-new40-code\">NEW40</span>\n    </button>\n  </div>\n</div>\n\n<style>\n  .wondear-new40-coupon {\n    width: 100%;\n    max-width: 600px;\n\n  }\n\n  .wondear-new40-ticket {\n    --coupon-bg: #fde5ef;\n    --coupon-bg-left: #fff1f6;\n    --coupon-bg-right: #f8cfe0;\n    --coupon-text: #1a1114;\n\n    position: relative;\n    display: grid;\n    grid-template-columns: 0.85fr 1.7fr 1.1fr;\n    align-items: center;\n    width: 100%;\n    min-height: 96px;\n    overflow: hidden;\n    background: linear-gradient(\n      90deg,\n      var(--coupon-bg-left) 0%,\n      var(--coupon-bg) 58%,\n      var(--coupon-bg-right) 100%\n    );\n    color: var(--coupon-text);\n    isolation: isolate;\n  }\n\n  .wondear-new40-left {\n    position: relative;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    height: 100%;\n    overflow: hidden;\n  }\n\n  .wondear-new40-left::before {\n    content: \"\";\n    position: absolute;\n    inset: -45%;\n    background:\n      repeating-conic-gradient(\n        from 0deg,\n        rgba(255, 255, 255, 0.72) 0deg 8deg,\n        rgba(255, 211, 225, 0.35) 8deg 16deg\n      );\n    opacity: 0.85;\n    z-index: -1;\n  }\n\n  .wondear-new40-left::after {\n    content: \"\";\n    position: absolute;\n    inset: 0;\n    background:\n      radial-gradient(circle at 22% 45%, rgba(255, 113, 139, 0.35) 0 2px, transparent 3px),\n      radial-gradient(circle at 72% 28%, rgba(255, 183, 56, 0.55) 0 2px, transparent 3px),\n      radial-gradient(circle at 63% 68%, rgba(255, 80, 111, 0.4) 0 2px, transparent 3px),\n      radial-gradient(circle at 35% 75%, rgba(255, 188, 69, 0.55) 0 2px, transparent 3px);\n    pointer-events: none;\n  }\n\n  .wondear-new40-gift {\n    position: relative;\n    z-index: 2;\n    font-size: clamp(42px, 7vw, 72px);\n    line-height: 1;\n    filter: drop-shadow(0 8px 12px rgba(126, 20, 34, 0.18));\n  }\n\n  .wondear-new40-middle {\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    min-width: 0;\n    height: 100%;\n    padding: 12px 18px;\n  }\n\n  .wondear-new40-discount {\n    font-size: clamp(28px, 3.4vw, 42px);\n    font-weight: 700;\n    line-height: 1;\n    letter-spacing: -0.04em;\n    color: var(--coupon-text);\n    white-space: nowrap;\n  }\n\n  .wondear-new40-condition {\n    margin-top: 8px;\n    font-size: 13px;\n    line-height: 1.35;\n    color: rgba(26, 17, 20, 0.68);\n  }\n\n  .wondear-new40-right {\n    position: relative;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    gap: 6px;\n    height: 100%;\n    min-width: 0;\n    padding: 14px 12px;\n    border: 0;\n    background: rgba(248, 207, 224, 0.58);\n    color: var(--coupon-text);\n    text-align: center;\n    cursor: pointer;\n    appearance: none;\n    font-family: inherit;\n    transition: background-color 0.2s ease, transform 0.2s ease;\n  }\n\n  .wondear-new40-right:hover {\n    background: rgba(248, 207, 224, 0.86);\n  }\n\n  .wondear-new40-right:active {\n    transform: scale(0.985);\n  }\n\n  .wondear-new40-copy-text {\n    display: block;\n    font-size: clamp(18px, 2vw, 26px);\n    font-weight: 400;\n    line-height: 1.05;\n  }\n\n  .wondear-new40-code {\n    display: block;\n    font-size: clamp(18px, 2vw, 26px);\n    font-weight: 700;\n    line-height: 1.05;\n    letter-spacing: -0.02em;\n  }\n\n  .wondear-new40-ticket::before {\n    content: \"\";\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    left: calc((0.85 / 3.65) * 100% + (1.7 / 3.65) * 100%);\n    width: 2px;\n    transform: translateX(-1px);\n    background-image: linear-gradient(\n      to bottom,\n      transparent 0,\n      transparent 6px,\n      rgba(255, 255, 255, 0.95) 6px,\n      rgba(255, 255, 255, 0.95) 10px,\n      transparent 10px,\n      transparent 16px\n    );\n    background-size: 2px 16px;\n    background-repeat: repeat-y;\n    z-index: 3;\n    pointer-events: none;\n  }\n\n  .wondear-new40-ticket::after {\n    content: \"\";\n    position: absolute;\n    left: calc((0.85 / 3.65) * 100% + (1.7 / 3.65) * 100%);\n    top: 0;\n    width: 36px;\n    height: 100%;\n    transform: translateX(-18px);\n    background:\n      radial-gradient(circle at 50% 0, #ffffff 0 17px, transparent 18px),\n      radial-gradient(circle at 50% 100%, #ffffff 0 17px, transparent 18px);\n    z-index: 4;\n    pointer-events: none;\n  }\n\n  .wondear-new40-ticket.is-copied .wondear-new40-right {\n    background: rgba(248, 207, 224, 0.95);\n  }\n\n  @media screen and (max-width: 749px) {\n    .wondear-new40-coupon {\n      max-width: 100%;\n      margin: 14px 0 16px;\n    }\n\n    .wondear-new40-ticket {\n      grid-template-columns: 0.75fr 1.45fr 1fr;\n      min-height: 86px;\n    }\n\n    .wondear-new40-middle {\n      padding: 10px 10px;\n    }\n\n    .wondear-new40-discount {\n      font-size: clamp(23px, 6.5vw, 32px);\n    }\n\n    .wondear-new40-condition {\n      margin-top: 6px;\n      font-size: 11px;\n      line-height: 1.3;\n    }\n\n    .wondear-new40-right {\n      padding: 10px 8px;\n      gap: 4px;\n    }\n\n    .wondear-new40-copy-text,\n    .wondear-new40-code {\n      font-size: clamp(15px, 4.8vw, 21px);\n    }\n\n    .wondear-new40-gift {\n      font-size: clamp(36px, 12vw, 56px);\n    }\n\n    .wondear-new40-ticket::before,\n    .wondear-new40-ticket::after {\n      left: calc((0.75 / 3.2) * 100% + (1.45 / 3.2) * 100%);\n    }\n\n    .wondear-new40-ticket::after {\n      width: 28px;\n      transform: translateX(-14px);\n      background:\n        radial-gradient(circle at 50% 0, #ffffff 0 13px, transparent 14px),\n        radial-gradient(circle at 50% 100%, #ffffff 0 13px, transparent 14px);\n    }\n  }\n</style>\n\n<script>\n  (function () {\n    function fallbackCopyText(text) {\n      var textarea = document.createElement('textarea');\n      textarea.value = text;\n      textarea.setAttribute('readonly', '');\n      textarea.style.position = 'fixed';\n      textarea.style.top = '-9999px';\n      textarea.style.left = '-9999px';\n      document.body.appendChild(textarea);\n      textarea.select();\n\n      var success = false;\n\n      try {\n        success = document.execCommand('copy');\n      } catch (err) {\n        success = false;\n      }\n\n      document.body.removeChild(textarea);\n      return success;\n    }\n\n    function copyText(text) {\n      if (navigator.clipboard && window.isSecureContext) {\n        return navigator.clipboard.writeText(text);\n      }\n\n      return new Promise(function (resolve, reject) {\n        var success = fallbackCopyText(text);\n        success ? resolve() : reject();\n      });\n    }\n\n    function initNEW40Coupon() {\n      var tickets = document.querySelectorAll('.wondear-new40-ticket');\n\n      tickets.forEach(function (ticket) {\n        if (ticket.dataset.initialized === 'true') return;\n\n        ticket.dataset.initialized = 'true';\n\n        var button = ticket.querySelector('.wondear-new40-right');\n        var copyTextEl = ticket.querySelector('.wondear-new40-copy-text');\n        var codeEl = ticket.querySelector('.wondear-new40-code');\n\n        if (!button || !copyTextEl || !codeEl) return;\n\n        var couponCode = ticket.getAttribute('data-coupon-code') || codeEl.textContent.trim();\n        var defaultCopyText = ticket.getAttribute('data-copy-text') || 'Copy';\n        var copiedText = ticket.getAttribute('data-copied-text') || 'Copied!';\n\n        button.addEventListener('click', function () {\n          copyText(couponCode)\n            .then(function () {\n              ticket.classList.add('is-copied');\n              copyTextEl.textContent = copiedText;\n\n              window.clearTimeout(ticket._copyTimer);\n              ticket._copyTimer = window.setTimeout(function () {\n                ticket.classList.remove('is-copied');\n                copyTextEl.textContent = defaultCopyText;\n              }, 1500);\n            })\n            .catch(function () {\n              copyTextEl.textContent = 'Failed';\n\n              window.clearTimeout(ticket._copyTimer);\n              ticket._copyTimer = window.setTimeout(function () {\n                copyTextEl.textContent = defaultCopyText;\n              }, 1500);\n            });\n        });\n      });\n    }\n\n    if (document.readyState === 'loading') {\n      document.addEventListener('DOMContentLoaded', initNEW40Coupon);\n    } else {\n      initNEW40Coupon();\n    }\n\n    document.addEventListener('shopify:section:load', initNEW40Coupon);\n  })();\n</script>\n<!-- NEW40 Coupon Ticket End -->"
+                  },
+                  "blocks": {}
+                },
+                "product_header_benefits_N9r7Hq": {
+                  "type": "product-header-benefits",
+                  "name": "Product header benefits",
+                  "disabled": true,
+                  "settings": {
+                    "icon_1": "aging_defense",
+                    "label_1": "Aging Defense",
+                    "icon_2": "joint_mobility",
+                    "label_2": "Joint Mobility",
+                    "icon_3": "pain_relief",
+                    "label_3": "Pain Relief",
+                    "icon_4": "better_sleep",
+                    "label_4": "Better Sleep",
+                    "icon_5": "energy_boost",
+                    "label_5": "Energy Boost",
+                    "icon_6": "longevity_support",
+                    "label_6": "Longevity Support",
+                    "background_color": "#fbf7ef",
+                    "divider_color": "#ded8cd",
+                    "text_color": "#111111",
+                    "icon_color": "#000000",
+                    "font_size": 18,
+                    "font_size_mobile": 14,
+                    "font_weight": "700",
+                    "icon_size": 30,
+                    "icon_size_mobile": 24,
+                    "row_height": 68,
+                    "row_height_mobile": 62,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_xrnftG",
+                "price_tVjtKg",
+                "product_selling_points_5Point",
+                "custom_liquid_3ALrjV",
+                "custom_liquid_L83Rfm",
+                "product_header_benefits_N9r7Hq"
+              ]
+            },
+            "divider_VJhene": {
+              "type": "_divider",
+              "name": "t:names.divider",
+              "settings": {
+                "thickness": 1,
+                "corner_radius": "square",
+                "width_percent": 100,
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              },
+              "blocks": {}
+            },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": false,
+                "alignment": "left",
+                "enable_variant_cards": true,
+                "variant_card_selection_label": "Select option:",
+                "variant_card_prepend_product_title": false,
+                "variant_card_show_free_gift_badge": false,
+                "variant_card_free_gift_text": "Free gift",
+                "variant_card_best_seller_value": "",
+                "variant_card_best_seller_text": "Best Seller",
+                "variant_card_savings_text": "Save [amount]",
+                "variant_card_gift_1_title": "",
+                "variant_card_gift_1_price": "",
+                "variant_card_gift_2_title": "",
+                "variant_card_gift_2_price": "",
+                "variant_card_gift_3_title": "",
+                "variant_card_gift_3_price": "",
+                "variant_card_gift_4_title": "",
+                "variant_card_gift_4_price": "",
+                "variant_card_gift_5_title": "",
+                "variant_card_gift_5_price": "",
+                "variant_card_gift_6_title": "",
+                "variant_card_gift_6_price": "",
+                "variant_card_gift_7_title": "",
+                "variant_card_gift_7_price": "",
+                "variant_card_gift_note": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "buy_buttons_eYQEYi": {
+              "type": "buy-buttons",
+              "settings": {
+                "stacking": true,
+                "show_pickup_availability": false,
+                "gift_card_form": true,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button"
+                  },
+                  "blocks": {}
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                }
+              },
+              "block_order": []
+            },
+            "trust_badges_inline_4zWKtg": {
+              "type": "_trust-badges-inline",
+              "name": "Trust badges inline",
+              "settings": {
+                "icon_1": "shopify://shop_images/1.FDA.svg",
+                "title_1": "FDA-Registered",
+                "icon_2": "shopify://shop_images/2.1.svg",
+                "title_2": "1 Year Warranty",
+                "icon_3": "shopify://shop_images/3.HSAFSA.svg",
+                "title_3": "HSA/FSA Eligible",
+                "icon_4": "shopify://shop_images/4..svg",
+                "title_4": "100-Day Money Back",
+                "columns_desktop": 4,
+                "column_gap": 20,
+                "row_gap": 20,
+                "padding_x": 0,
+                "padding_y": 0,
+                "mobile_columns": 4,
+                "mobile_gap": 8,
+                "mobile_padding_x": 0,
+                "mobile_padding_y": 0,
+                "mobile_icon_circle_size": 48,
+                "mobile_icon_size": 40,
+                "card_bg": "rgba(0,0,0,0)",
+                "icon_bg": "#e1edf5",
+                "icon_border_color": "#1f1f1f",
+                "icon_border_width": 1,
+                "text_color": "#2d2d2d",
+                "card_radius": 0,
+                "icon_circle_size": 65,
+                "icon_size": 50,
+                "title_size_desktop": 10,
+                "title_size_mobile": 12,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "custom_liquid_XVQcL8": {
+              "type": "custom-liquid",
+              "name": "t:names.custom_liquid",
+              "disabled": true,
+              "settings": {
+                "custom_liquid": "{% comment %}\n  Wondear - HSA/FSA Reimbursement by Flex\n  Suggested placement: under product price / above Add to Cart button\n{% endcomment %}\n\n<div class=\"wondear-flex-reimbursement\" data-flex-reimbursement>\n  <div class=\"wondear-flex-reimbursement__header\">\n    <div class=\"wondear-flex-reimbursement__icon\" aria-hidden=\"true\">\n      <svg viewBox=\"0 0 24 24\" fill=\"none\">\n        <path d=\"M12 2.75L19.25 6V11.4C19.25 15.95 16.18 20.18 12 21.25C7.82 20.18 4.75 15.95 4.75 11.4V6L12 2.75Z\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linejoin=\"round\"/>\n        <path d=\"M8.8 12.15L10.9 14.25L15.45 9.7\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n      </svg>\n    </div>\n\n    <div class=\"wondear-flex-reimbursement__title-wrap\">\n      <p class=\"wondear-flex-reimbursement__eyebrow\">HSA/FSA Reimbursement by Flex</p>\n      <h3 class=\"wondear-flex-reimbursement__title\">\n        You may be eligible for reimbursement\n      </h3>\n    </div>\n  </div>\n\n  <div class=\"wondear-flex-reimbursement__body\">\n    <p class=\"wondear-flex-reimbursement__text\">\n      Complete a quick Flex consultation. If eligible, you’ll receive a Letter of Medical Necessity and can submit it with your Wondear receipt for HSA/FSA reimbursement.\n    </p>\n\n    <div class=\"wondear-flex-reimbursement__steps\">\n      <div class=\"wondear-flex-reimbursement__step\">\n        <span>1</span>\n        <p>Complete Flex consultation</p>\n      </div>\n      <div class=\"wondear-flex-reimbursement__step\">\n        <span>2</span>\n        <p>Purchase from Wondear</p>\n      </div>\n      <div class=\"wondear-flex-reimbursement__step\">\n        <span>3</span>\n        <p>Submit for reimbursement</p>\n      </div>\n    </div>\n\n    <a\n      class=\"wondear-flex-reimbursement__button\"\n      href=\"https://www.withflex.com/brand/wondear\"\n      target=\"_blank\"\n      rel=\"noopener noreferrer\"\n    >\n      Check Eligibility with Flex\n      <svg viewBox=\"0 0 20 20\" fill=\"none\" aria-hidden=\"true\">\n        <path d=\"M7.5 4.5H15.5V12.5\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n        <path d=\"M15 5L5 15\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"/>\n      </svg>\n    </a>\n\n    <p class=\"wondear-flex-reimbursement__note\">\n      Please use a standard credit or debit card at checkout. Do not use your HSA/FSA card at checkout.\n    </p>\n  </div>\n</div>\n\n<style>\n  .wondear-flex-reimbursement {\n    width: 100%;\n    margin: 18px 0;\n    padding: 18px;\n    border-radius: 18px;\n    background: #f3efe9;\n    border: 1px solid rgba(17, 17, 17, 0.08);\n    color: #111111;\n    font-family: var(--font-body--family);\n  }\n\n  .wondear-flex-reimbursement__header {\n    display: flex;\n    align-items: flex-start;\n    gap: 12px;\n    margin-bottom: 14px;\n  }\n\n  .wondear-flex-reimbursement__icon {\n    flex: 0 0 42px;\n    width: 42px;\n    height: 42px;\n    border-radius: 999px;\n    background: #ebe4db;\n    color: #111111;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n  }\n\n  .wondear-flex-reimbursement__icon svg {\n    width: 24px;\n    height: 24px;\n  }\n\n  .wondear-flex-reimbursement__title-wrap {\n    min-width: 0;\n  }\n\n  .wondear-flex-reimbursement__eyebrow {\n    margin: 0 0 5px;\n    font-size: 12px;\n    line-height: 1.2;\n    font-weight: 700;\n    letter-spacing: 0.04em;\n    text-transform: uppercase;\n    color: #8a8177;\n  }\n\n  .wondear-flex-reimbursement__title {\n    margin: 0;\n    font-family: var(--font-heading--family);\n    font-size: clamp(18px, 1.5vw, 22px);\n    line-height: 1.18;\n    font-weight: 700;\n    color: #111111;\n  }\n\n  .wondear-flex-reimbursement__body {\n    display: block;\n  }\n\n  .wondear-flex-reimbursement__text {\n    margin: 0 0 14px;\n    font-size: 14px;\n    line-height: 1.55;\n    font-weight: 400;\n    color: #6f6a63;\n  }\n\n  .wondear-flex-reimbursement__steps {\n    display: grid;\n    grid-template-columns: repeat(3, minmax(0, 1fr));\n    gap: 8px;\n    margin: 0 0 14px;\n  }\n\n  .wondear-flex-reimbursement__step {\n    padding: 10px 8px;\n    border-radius: 12px;\n    background: rgba(255, 255, 255, 0.48);\n    border: 1px solid rgba(17, 17, 17, 0.06);\n  }\n\n  .wondear-flex-reimbursement__step span {\n    width: 22px;\n    height: 22px;\n    margin: 0 0 7px;\n    border-radius: 999px;\n    background: #111111;\n    color: #ffffff;\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    font-size: 12px;\n    line-height: 1;\n    font-weight: 700;\n  }\n\n  .wondear-flex-reimbursement__step p {\n    margin: 0;\n    font-size: 12px;\n    line-height: 1.35;\n    font-weight: 600;\n    color: #111111;\n  }\n\n  .wondear-flex-reimbursement__button {\n    width: 100%;\n    min-height: 46px;\n    padding: 0 18px;\n    border-radius: 999px;\n    background: #111111;\n    color: #ffffff;\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    gap: 8px;\n    font-size: 14px;\n    line-height: 1;\n    font-weight: 700;\n    text-decoration: none;\n    transition: opacity 0.2s ease, transform 0.2s ease;\n  }\n\n  .wondear-flex-reimbursement__button:hover {\n    color: #ffffff;\n    opacity: 0.88;\n    transform: translateY(-1px);\n  }\n\n  .wondear-flex-reimbursement__button svg {\n    width: 16px;\n    height: 16px;\n  }\n\n  .wondear-flex-reimbursement__note {\n    margin: 12px 0 0;\n    font-size: 12px;\n    line-height: 1.45;\n    color: #8a8177;\n  }\n\n  @media screen and (max-width: 749px) {\n    .wondear-flex-reimbursement {\n      margin: 16px 0;\n      padding: 16px;\n      border-radius: 16px;\n    }\n\n    .wondear-flex-reimbursement__header {\n      gap: 10px;\n    }\n\n    .wondear-flex-reimbursement__icon {\n      flex-basis: 38px;\n      width: 38px;\n      height: 38px;\n    }\n\n    .wondear-flex-reimbursement__title {\n      font-size: 18px;\n    }\n\n    .wondear-flex-reimbursement__steps {\n      grid-template-columns: 1fr;\n      gap: 7px;\n    }\n\n    .wondear-flex-reimbursement__step {\n      display: flex;\n      align-items: center;\n      gap: 9px;\n      padding: 9px 10px;\n    }\n\n    .wondear-flex-reimbursement__step span {\n      margin: 0;\n      flex: 0 0 22px;\n    }\n\n    .wondear-flex-reimbursement__button {\n      min-height: 48px;\n    }\n  }\n</style>"
+              },
+              "blocks": {}
+            },
+            "accordion_UV43Ne": {
+              "type": "accordion",
+              "name": "t:names.accordion",
+              "settings": {
+                "icon": "caret",
+                "dividers": true,
+                "type_preset": "h6",
+                "inherit_color_scheme": true,
+                "color_scheme": "",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "accordion_row_GxyVV4": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Description",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "text_tB4r7B": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.description }}",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_tB4r7B"
+                  ]
+                },
+                "accordion_row_BCT8p7": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Shipping Policy",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "text_gexgj3": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.metafields.custom.shipping_policy | metafield_tag }}",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_gexgj3"
+                  ]
+                },
+                "accordion_row_WLRhVd": {
+                  "type": "_accordion-row",
+                  "settings": {
+                    "heading": "Refund Policy",
+                    "open_by_default": false,
+                    "icon": "none",
+                    "width": 20
+                  },
+                  "blocks": {
+                    "text_cPPpfR": {
+                      "type": "text",
+                      "settings": {
+                        "text": "{{ closest.product.metafields.custom.return_policy | metafield_tag }}",
+                        "width": "100%",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "text_cPPpfR"
+                  ]
+                }
+              },
+              "block_order": [
+                "accordion_row_GxyVV4",
+                "accordion_row_BCT8p7",
+                "accordion_row_WLRhVd"
+              ]
+            }
+          },
+          "block_order": [
+            "judge_me_reviews_preview_badge_jBGdY6",
+            "group_icgrde",
+            "divider_VJhene",
+            "variant_picker_R3rGDr",
+            "buy_buttons_eYQEYi",
+            "trust_badges_inline_4zWKtg",
+            "custom_liquid_XVQcL8",
+            "accordion_UV43Ne"
+          ]
+        }
+      },
+      "settings": {
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": false,
+        "limit_details_width": false,
+        "gap": 24,
+        "enable_sticky_add_to_cart": true,
+        "color_scheme": "scheme-57736384-a3b7-43b2-af59-4bccc4a723d6",
+        "padding-block-start": 10,
+        "padding-block-end": 10
+      }
+    },
+    "benefits_showcase_gmQnd6": {
+      "type": "benefits-showcase",
+      "blocks": {
+        "benefit_card_aypxUK": {
+          "type": "benefit_card",
+          "settings": {
+            "image": "shopify://shop_images/four-modes.png",
+            "title": "4 Light Modes for Personalized Skincare Routines",
+            "lead": "<p>Choose from multiple light settings to match different skincare needs and daily care preferences. The mask gives users more flexibility than a single-mode device, making it suitable for regular home skincare routines.</p>",
+            "body": "",
+            "tag_1": "",
+            "tag_2": "",
+            "tag_3": ""
+          }
+        },
+        "benefit_card_GegUH6": {
+          "type": "benefit_card",
+          "settings": {
+            "image": "shopify://shop_images/3d-mask-2.png",
+            "title": "Comfortable 3D Fit for Everyday Wear",
+            "lead": "<p>The contoured 3D shape is designed to sit naturally on the face, while the adjustable strap helps keep the mask secure during each session. Lightweight and comfortable for consistent skincare routines.</p>",
+            "body": "",
+            "tag_1": "",
+            "tag_2": "",
+            "tag_3": ""
+          }
+        },
+        "benefit_card_RQU8UB": {
+          "type": "benefit_card",
+          "settings": {
+            "image": "shopify://shop_images/3d-mask-1.png",
+            "title": "Relaxing, Hands-Free Care at Home",
+            "lead": "<p>Enjoy a comfortable LED light therapy session while relaxing on the sofa. The hands-free design makes it easy to use during quiet moments at home, helping skincare feel simple and effortless.</p>",
+            "body": "",
+            "tag_1": "",
+            "tag_2": "",
+            "tag_3": ""
+          }
+        }
+      },
+      "block_order": [
+        "benefit_card_aypxUK",
+        "benefit_card_GegUH6",
+        "benefit_card_RQU8UB"
+      ],
+      "name": "Benefits Showcase",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Designed for Personalized, Effortless Skincare",
+        "heading_align_desktop": "center",
+        "heading_align_mobile": "center",
+        "card_text_align_desktop": "left",
+        "card_text_align_mobile": "left",
+        "eyebrow_size": 16,
+        "eyebrow_weight": "500",
+        "heading_size_desktop": 58,
+        "heading_size_mobile": 34,
+        "heading_weight": "800",
+        "card_title_size_desktop": 50,
+        "card_title_size_mobile": 32,
+        "card_title_weight": "800",
+        "lead_size_desktop": 22,
+        "lead_size_mobile": 16,
+        "lead_weight": "500",
+        "body_size_desktop": 17,
+        "body_size_mobile": 15,
+        "body_weight": "500",
+        "tag_size": 16,
+        "tag_weight": "500",
+        "container_width": 1240,
+        "bg_radius": 0,
+        "card_radius": 34,
+        "padding_top": 88,
+        "padding_bottom": 100,
+        "page_bg": "#f3efe9",
+        "card_bg": "#ebe4db",
+        "text_main": "#111111",
+        "text_body": "#6f6a63",
+        "text_soft": "#b1a79a"
+      }
+    },
+    "before_after_tabs_fG8PkE": {
+      "type": "before-after-tabs",
+      "blocks": {
+        "group_6NbhwG": {
+          "type": "group",
+          "settings": {
+            "tab_label": "Fine Lines",
+            "percent_tenths": 910,
+            "desc": "said fine lines appeared less noticeable",
+            "thumb_1": "shopify://shop_images/3d-Fine_Lines-before.png",
+            "thumb_2": "shopify://shop_images/3d-Fine_Lines-after.png",
+            "image_1": "shopify://shop_images/3d-Fine_Lines-before.png",
+            "image_2": "shopify://shop_images/3d-Fine_Lines-after.png"
+          }
+        },
+        "group_MiHWqp": {
+          "type": "group",
+          "settings": {
+            "tab_label": "Redness",
+            "percent_tenths": 860,
+            "desc": "said visible redness looked calmer",
+            "thumb_1": "shopify://shop_images/3d-redness-before.png",
+            "thumb_2": "shopify://shop_images/3d-redness-after.png",
+            "image_1": "shopify://shop_images/3d-redness-before.png",
+            "image_2": "shopify://shop_images/3d-redness-after.png"
+          }
+        },
+        "group_YFV8HC": {
+          "type": "group",
+          "settings": {
+            "tab_label": "Skin Texture",
+            "percent_tenths": 890,
+            "desc": "said their skin felt smoother and more refined",
+            "thumb_1": "shopify://shop_images/3d-Skin_Texture-before.png",
+            "thumb_2": "shopify://shop_images/3d-Skin_Texture-after.png",
+            "image_1": "shopify://shop_images/3d-Skin_Texture-before.png",
+            "image_2": "shopify://shop_images/3d-Skin_Texture-after.png"
+          }
+        },
+        "group_BYRKxV": {
+          "type": "group",
+          "settings": {
+            "tab_label": "Overall Glow",
+            "percent_tenths": 940,
+            "desc": "said their skin looked more radiant and refreshed",
+            "thumb_1": "shopify://shop_images/3D-Overall_Glow-before.png",
+            "thumb_2": "shopify://shop_images/3D-Overall_Glow-after.png",
+            "image_1": "shopify://shop_images/3D-Overall_Glow-before.png",
+            "image_2": "shopify://shop_images/3D-Overall_Glow-after.png"
+          }
+        }
+      },
+      "block_order": [
+        "group_6NbhwG",
+        "group_MiHWqp",
+        "group_YFV8HC",
+        "group_BYRKxV"
+      ],
+      "name": "RLT Tabs (Swiper + GSAP)",
+      "settings": {
+        "heading": "Real User Results",
+        "subheading": "",
+        "layout": "stat_left",
+        "hero_align": "center",
+        "stat_align": "left",
+        "tabs_justify": "center",
+        "container": 1740,
+        "pad_y": 86,
+        "pad_x": 28,
+        "pad_y_m": 52,
+        "pad_x_m": 18,
+        "hero_max_w": 980,
+        "hero_p_max_w": 900,
+        "tabs_max_w": 720,
+        "tab_font_size": 14,
+        "h1_min": 32,
+        "h1_vw_tenths": 40,
+        "h1_max": 54,
+        "sub_min": 14,
+        "sub_vw_tenths": 12,
+        "sub_max": 18,
+        "percent_min": 56,
+        "percent_vw": 6,
+        "percent_max": 92,
+        "desc_size": 16,
+        "stat_max_w": 360,
+        "big_w_min": 220,
+        "big_w_fluid": 28,
+        "big_w_max": 300,
+        "big_w_mobile_max": 360,
+        "big_w_mobile_small": 320,
+        "radius": 22,
+        "image_fit": "cover",
+        "bg": "#f2eee8",
+        "text": "#111111",
+        "muted": "#5b5f66",
+        "border": "#e6e7ea",
+        "accent": "#ff6a3d",
+        "indicator_bg": "#111111",
+        "tab_active_text": "#ffffff",
+        "enable_entrance_anim": true
+      }
+    },
+    "how_to_use_3MfYyC": {
+      "type": "how-to-use",
+      "blocks": {
+        "step_UdVh7L": {
+          "type": "step",
+          "settings": {
+            "image": "shopify://shop_images/Step1.png",
+            "image_alt": "Cleanse your skin before using the LED face mask",
+            "step_label": "Step",
+            "title": "Cleanse Your Skin",
+            "text": "Start with clean, dry skin before your light therapy session."
+          }
+        },
+        "step_bHTdnL": {
+          "type": "step",
+          "settings": {
+            "image": "shopify://shop_images/Step2.png",
+            "image_alt": "Choose a light mode on the LED face mask controller",
+            "step_label": "Step",
+            "title": "Choose Your Light Mode",
+            "text": "Select the light mode that best fits your daily skincare routine."
+          }
+        },
+        "step_k9hd9j": {
+          "type": "step",
+          "settings": {
+            "image": "shopify://shop_images/Step3.png",
+            "image_alt": "Wear the LED face mask and relax at home",
+            "step_label": "Step",
+            "title": "Wear and Relax",
+            "text": "Put on the mask, sit back, and enjoy a simple hands-free session."
+          }
+        },
+        "step_mVe6m9": {
+          "type": "step",
+          "settings": {
+            "image": "shopify://shop_images/Step4.png",
+            "image_alt": "Repeat the LED skincare routine consistently",
+            "step_label": "Step",
+            "title": "Repeat Consistently",
+            "text": "Use regularly as part of your skincare ritual for best routine consistency."
+          }
+        }
+      },
+      "block_order": [
+        "step_UdVh7L",
+        "step_bHTdnL",
+        "step_k9hd9j",
+        "step_mVe6m9"
+      ],
+      "name": "Usage steps carousel",
+      "settings": {
+        "eyebrow": "",
+        "heading": "A Simple Skincare Ritual in Just Minutes",
+        "subheading": "Follow four easy steps to make LED light therapy part of your daily skincare routine.",
+        "section_bg": "#f2eee8",
+        "card_bg": "#f7f3ef",
+        "text_main": "#111111",
+        "text_body": "#5f5a55",
+        "text_soft": "#9a9288",
+        "accent_color": "#d86b5f",
+        "container_width": 1740,
+        "padding_top": 88,
+        "padding_bottom": 96,
+        "heading_size_desktop": 58,
+        "heading_size_mobile": 34,
+        "card_radius": 8,
+        "card_radius_mobile": 8,
+        "carousel_label": "Skincare usage steps"
+      }
+    },
+    "split_product_video_hero_section_XgUbnw": {
+      "type": "split-product-video-hero-section",
+      "blocks": {
+        "doctor_X4VVkU": {
+          "type": "doctor",
+          "settings": {
+            "name": "Dr. Bob",
+            "credential": "",
+            "bio": "<p>\"I like red light therapy because it’s gentle, non-invasive, and easy to use at home. It may help support skin vitality, relaxation, and daily recovery when used consistently.\"</p>",
+            "button_label": "",
+            "button_link": "",
+            "video": "shopify://files/videos/Wondear_ Professional Red Light Care at Home_1080p_caption (1).mp4",
+            "video_url": ""
+          }
+        },
+        "doctor_kAiWPx": {
+          "type": "doctor",
+          "settings": {
+            "name": "Dr. Paul Anderson",
+            "credential": "",
+            "bio": "<p>Dr. A discusses the growing popularity of red light therapy, exploring its benefits and the medical parameters of the red end of the light spectrum.</p>",
+            "button_label": "",
+            "button_link": "",
+            "video": "shopify://files/videos/微信视频2026-07-14_155829_516.mp4",
+            "video_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "doctor_X4VVkU",
+        "doctor_kAiWPx"
+      ],
+      "name": "Split product video hero",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "text_alignment": "center",
+        "media_object_position": "center",
+        "show_social_icons": true,
+        "social_label": "Follow us",
+        "instagram_url": "",
+        "facebook_url": "",
+        "tiktok_url": "",
+        "youtube_url": "",
+        "pinterest_url": "",
+        "x_url": "",
+        "social_margin_top": 24,
+        "mobile_social_margin_top": 20,
+        "social_label_size": 13,
+        "social_icon_box_size": 42,
+        "mobile_social_icon_box_size": 40,
+        "social_icon_size": 20,
+        "mobile_social_icon_size": 19,
+        "social_icon_gap": 10,
+        "social_label_color": "#6f6a63",
+        "social_icon_color": "#111111",
+        "social_icon_bg_color": "#ffffff",
+        "social_icon_border_color": "#ded6cd",
+        "social_icon_hover_bg_color": "#111111",
+        "social_icon_hover_color": "#ffffff",
+        "section_width_mode": "custom",
+        "section_max_width": 1400,
+        "desktop_section_padding_x": 0,
+        "tablet_section_padding_x": 0,
+        "mobile_section_padding_x": 0,
+        "desktop_layout": "content_first",
+        "mobile_layout": "media_first",
+        "desktop_height": 760,
+        "tablet_height": 680,
+        "mobile_height": 480,
+        "small_mobile_height": 430,
+        "content_max_width": 620,
+        "desktop_content_padding_y": 72,
+        "desktop_content_padding_x": 40,
+        "mobile_content_padding_top": 56,
+        "mobile_content_padding_bottom": 60,
+        "mobile_content_padding_x": 20,
+        "title_size": 42,
+        "title_weight": "400",
+        "tablet_title_size": 34,
+        "mobile_title_size": 30,
+        "small_mobile_title_size": 28,
+        "subtitle_size": 24,
+        "subtitle_weight": "400",
+        "tablet_subtitle_size": 21,
+        "mobile_subtitle_size": 18,
+        "small_mobile_subtitle_size": 17,
+        "subtitle_margin_top": 24,
+        "mobile_subtitle_margin_top": 16,
+        "button_min_width": 308,
+        "button_min_height": 80,
+        "button_margin_top": 34,
+        "button_font_size": 17,
+        "button_letter_spacing": 7,
+        "tablet_button_min_width": 280,
+        "tablet_button_min_height": 70,
+        "tablet_button_font_size": 15,
+        "tablet_button_letter_spacing": 5,
+        "mobile_button_max_width": 320,
+        "mobile_button_min_height": 64,
+        "mobile_button_margin_top": 28,
+        "mobile_button_font_size": 14,
+        "mobile_button_letter_spacing": 4,
+        "section_bg_color": "#f4eee6",
+        "content_bg_color": "#f4eee6",
+        "media_bg_color": "#c79b73",
+        "title_color": "#111111",
+        "subtitle_color": "#222222",
+        "button_bg_color": "#111111",
+        "button_hover_bg_color": "#2a2a2a",
+        "button_text_color": "#ffffff",
+        "play_button_bg_color": "rgba(67, 42, 24, 0.56)",
+        "play_button_hover_bg_color": "rgba(30, 20, 14, 0.68)",
+        "play_button_icon_color": "#ffffff"
+      }
+    },
+    "media_recognition_Gmgy4d": {
+      "type": "media-recognition",
+      "blocks": {
+        "media_item_8QRHNF": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "” A beauty-tech inspired device that makes red light therapy feel simple, comfortable, and easy to add to a regular self-care routine. “",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Media logo",
+            "logo_text": "Allure",
+            "logo_style": "allure",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_Ln4TPN": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ Wondear offers an approachable way to explore red and near-infrared light therapy at home, with a body-friendly design made for repeated use. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Media logo",
+            "logo_text": "Byrdie",
+            "logo_style": "byrdie",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_Nqnr7y": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ Wellness meets design: Wondear gives at-home recovery a refined, minimalist feel. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Media logo",
+            "logo_text": "Vogue",
+            "logo_style": "vogue",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_DHDKmJ": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ Wondear reflects the growing convergence of beauty, wellness, and home-use technology in the red light therapy category. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Media logo",
+            "logo_text": "WWD",
+            "logo_style": "wwd",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_KeVczr": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ With dual-wavelength red and near-infrared LEDs, Wondear fits into the rising demand for beauty and wellness devices designed for home routines. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Media logo",
+            "logo_text": "HAPPI",
+            "logo_style": "happi",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_67wiAc": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ A full-body red light therapy experience designed for users looking to support skin, body comfort, and recovery-focused self-care at home. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Media logo",
+            "logo_text": "NewBeauty",
+            "logo_style": "newbeauty",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_ka6zgQ": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ Wondear brings red light therapy into the home with a full-body design built for daily recovery, comfort, and modern wellness routines. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Forbes logo",
+            "logo_text": "Forbes",
+            "logo_style": "forbes",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_44khpB": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ A practical at-home light therapy solution for users who care about device design, usability, and consistent full-body coverage. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Cybernews logo",
+            "logo_text": "cybernews",
+            "logo_style": "cybernews",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_YGzfr3": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ Wondear turns recovery into a softer, more luxurious self-care ritual—designed for calm evenings, post-workout routines, and everyday body comfort. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "ELLE logo",
+            "logo_text": "ELLE",
+            "logo_style": "elle",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_WCUexd": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ A sleek wellness essential for those who want spa-inspired light therapy without leaving home. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "Harper's BAZAAR logo",
+            "logo_text": "BAZAAR",
+            "logo_style": "bazaar",
+            "logo_subtext": "Harper's",
+            "custom_logo_font_size": 42
+          }
+        },
+        "media_item_JRif9e": {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "“ Built for active lifestyles, Wondear supports post-exercise recovery routines with broad red and near-infrared light coverage. ”",
+            "source_label": "",
+            "article_url": "",
+            "link_text": "",
+            "logo_alt": "SHAPE logo",
+            "logo_text": "SHAPE",
+            "logo_style": "shape",
+            "logo_subtext": "",
+            "custom_logo_font_size": 42
+          }
+        }
+      },
+      "block_order": [
+        "media_item_8QRHNF",
+        "media_item_Ln4TPN",
+        "media_item_Nqnr7y",
+        "media_item_DHDKmJ",
+        "media_item_KeVczr",
+        "media_item_67wiAc",
+        "media_item_ka6zgQ",
+        "media_item_44khpB",
+        "media_item_YGzfr3",
+        "media_item_WCUexd",
+        "media_item_JRif9e"
+      ],
+      "name": "Media recognition carousel",
+      "settings": {
+        "section_bg_color": "#f1eee8",
+        "eyebrow_text": "",
+        "heading": "Recognized by the Best in Top Media",
+        "header_alignment": "center",
+        "eyebrow_color": "#6f6f6f",
+        "eyebrow_font_size_desktop": 18,
+        "eyebrow_font_size_tablet": 15,
+        "eyebrow_font_size_mobile": 13,
+        "heading_color": "#000000",
+        "heading_font_size_desktop": 58,
+        "heading_font_size_tablet": 36,
+        "heading_font_size_mobile": 28,
+        "slider_margin_top": 52,
+        "card_content_alignment": "center",
+        "card_bg_color": "#ffffff",
+        "card_border_color": "#d8d8d8",
+        "card_radius": 12,
+        "quote_color": "#000000",
+        "quote_font_size_desktop": 18,
+        "quote_font_size_tablet": 16,
+        "quote_font_size_mobile": 14,
+        "quote_max_width": 280,
+        "source_color": "#777777",
+        "link_color": "#111111",
+        "logo_color": "#000000",
+        "logo_opacity": 0.9,
+        "logo_top_spacing": 24,
+        "logo_bottom_spacing": 28,
+        "logo_image_max_width": 220,
+        "logo_image_max_height": 64,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": true,
+        "autoplay_speed": 3500,
+        "desktop_items": 3,
+        "tablet_items": 2,
+        "mobile_items": 1.3,
+        "card_gap": 32,
+        "section_padding_top": 44,
+        "section_padding_bottom": 52
+      }
+    },
+    "faq_cta_minimal_kTW4zT": {
+      "type": "faq-cta-minimal",
+      "blocks": {
+        "faq_JYCPMq": {
+          "type": "faq",
+          "settings": {
+            "question": "When can I see/measure effects?",
+            "answer": "<p>Results vary by skin condition, usage consistency, and individual response. Some users may notice their skin looking more refreshed after several sessions, while visible changes in texture, tone, or overall glow are usually easier to evaluate after a few weeks of regular use.</p>",
+            "open_by_default": false
+          }
+        },
+        "faq_cG7RxX": {
+          "type": "faq",
+          "settings": {
+            "question": "What is the difference between red light and NIR light?",
+            "answer": "<p>Red light is visible and is commonly used to support the appearance of skin, including overall tone, texture, and radiance. Near-infrared light is not visible to the human eye and is designed to reach deeper layers, making it suitable for broader light therapy support. Together, they provide a more complete skincare and wellness-focused routine.</p>",
+            "open_by_default": false
+          }
+        },
+        "faq_UXkVEq": {
+          "type": "faq",
+          "settings": {
+            "question": "Is red light an alternative to sunlight?",
+            "answer": "<p>No. Red light therapy is not a replacement for natural sunlight or vitamin D exposure. It uses specific wavelengths of light for targeted skincare and wellness support, while sunlight contains a much broader spectrum, including UV rays. The mask is designed for controlled home-use light therapy, not as a substitute for sunlight.</p>",
+            "open_by_default": false
+          }
+        },
+        "faq_VYncH7": {
+          "type": "faq",
+          "settings": {
+            "question": "Why does it look like that the LEDs are switched off in the NIR setting?",
+            "answer": "<p>Near-infrared light is mostly invisible to the human eye, so the LEDs may appear dim or switched off even when they are working. This is normal. The device can still be emitting NIR light during the session, even if you cannot clearly see it.</p>",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": [
+        "faq_JYCPMq",
+        "faq_cG7RxX",
+        "faq_UXkVEq",
+        "faq_VYncH7"
+      ],
+      "name": "FAQ CTA minimal",
+      "settings": {
+        "line_1": "Have questions about LED skincare?",
+        "line_2": "",
+        "line_3": "Find clear answers before you choose.",
+        "button_label": "Explore the FAQ",
+        "button_link": "shopify://pages/faq",
+        "single_open": true,
+        "content_alignment_desktop": "left",
+        "content_alignment_mobile": "center",
+        "faq_alignment_desktop": "left",
+        "faq_alignment_mobile": "left",
+        "container_width": 1740,
+        "column_gap": 84,
+        "title_size": 46,
+        "title_size_mobile": 30,
+        "question_size": 18,
+        "question_size_mobile": 17,
+        "answer_size": 16,
+        "answer_size_mobile": 15,
+        "button_size": 18,
+        "button_size_mobile": 16,
+        "card_radius": 28,
+        "card_radius_mobile": 22,
+        "padding_top": 160,
+        "padding_bottom": 180,
+        "padding_top_mobile": 34,
+        "padding_bottom_mobile": 48,
+        "section_bg": "#f1eee8",
+        "card_bg": "#e8e3db",
+        "text_color": "#111111",
+        "soft_text_color": "#a7a29b",
+        "button_bg": "#050505",
+        "button_text": "#ffffff"
+      }
+    },
+    "1779789611e056e3bd": {
+      "type": "_blocks",
+      "blocks": {
+        "judge_me_reviews_review_widget_9miPLF": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_9miPLF"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-57736384-a3b7-43b2-af59-4bccc4a723d6",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "benefits_showcase_gmQnd6",
+    "before_after_tabs_fG8PkE",
+    "how_to_use_3MfYyC",
+    "split_product_video_hero_section_XgUbnw",
+    "media_recognition_Gmgy4d",
+    "faq_cta_minimal_kTW4zT",
+    "1779789611e056e3bd"
+  ]
+}

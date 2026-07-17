@@ -1,0 +1,520 @@
+{% comment %}
+  Section: IoT Feature Section
+  Usage: Save as sections/iot-feature-section.liquid
+{% endcomment %}
+
+<section id="iot-feature-{{ section.id }}" class="iot-feature-section">
+  <style>
+    #iot-feature-{{ section.id }}{
+      --page-bg: {{ section.settings.page_bg }};
+      --card-bg: {{ section.settings.card_bg }};
+      --text-main: {{ section.settings.text_main }};
+      --text-body: {{ section.settings.text_body }};
+      --text-muted: {{ section.settings.text_muted }};
+      --line: rgba(17,17,17,0.09);
+      --icon-bg: {{ section.settings.icon_bg }};
+      --radius-xl: {{ section.settings.card_radius }}px;
+      --radius-lg: 18px;
+      --container: {{ section.settings.container_width }}px;
+      --transition: 260ms cubic-bezier(.22,.61,.36,1);
+      background: var(--page-bg);
+      color: var(--text-main);
+      width: 100%;
+    }
+
+    #iot-feature-{{ section.id }},
+    #iot-feature-{{ section.id }} *{
+      box-sizing: border-box;
+    }
+
+    #iot-feature-{{ section.id }} .iot-feature__wrap{
+      width: 100%;
+      padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+      background: var(--page-bg);
+    }
+
+    #iot-feature-{{ section.id }} .iot-feature__inner{
+      width: min(100%, var(--container));
+      margin: 0 auto;
+    }
+
+    #iot-feature-{{ section.id }} .iot-feature__header{
+      width: min(100%, 900px);
+      margin: 0 auto 54px;
+      text-align: center;
+    }
+
+    #iot-feature-{{ section.id }} .iot-feature__title{
+      margin: 0;
+      font-size: clamp(2.2rem, 4vw, 4rem);
+      line-height: .98;
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      color: var(--text-main);
+    }
+
+    #iot-feature-{{ section.id }} .iot-feature__desc{
+      width: min(100%, 780px);
+      margin: 24px auto 0;
+      font-size: clamp(1.05rem, 1.5vw, 1.32rem);
+      line-height: 1.42;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--text-muted);
+    }
+
+    #iot-feature-{{ section.id }} .iot-feature__grid{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    #iot-feature-{{ section.id }} .iot-card{
+      position: relative;
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      padding: 38px 46px 28px;
+      min-height: 410px;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.16),
+        0 8px 20px rgba(0,0,0,0.02);
+      transition:
+        transform var(--transition),
+        box-shadow var(--transition),
+        background-color var(--transition);
+    }
+
+    #iot-feature-{{ section.id }} .iot-card:hover{
+      transform: translateY(-3px);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.16),
+        0 16px 30px rgba(0,0,0,0.04);
+      background: color-mix(in srgb, var(--card-bg) 96%, #ffffff 4%);
+    }
+
+    #iot-feature-{{ section.id }} .iot-card__title{
+      margin: 0 0 28px;
+      font-size: clamp(1.55rem, 2vw, 2.05rem);
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    #iot-feature-{{ section.id }} .iot-card__list{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #iot-feature-{{ section.id }} .iot-card__item{
+      display: grid;
+      grid-template-columns: 54px minmax(0,1fr);
+      gap: 18px;
+      align-items: center;
+      padding: 18px 0;
+    }
+
+    #iot-feature-{{ section.id }} .iot-card__item + .iot-card__item{
+      border-top: 1px solid var(--line);
+    }
+
+    #iot-feature-{{ section.id }} .iot-card__icon{
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--icon-bg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    }
+
+    #iot-feature-{{ section.id }} .iot-card__icon svg{
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    #iot-feature-{{ section.id }} .iot-card__text{
+      font-size: clamp(1.15rem, 1.38vw, 1.72rem);
+      line-height: 1.3;
+      letter-spacing: -0.03em;
+      font-weight: 400;
+      color: var(--text-body);
+      margin: 0;
+    }
+
+    @media (max-width: 1100px){
+      #iot-feature-{{ section.id }} .iot-feature__wrap{
+        padding: {{ section.settings.padding_top | times: 0.88 | round }}px 22px {{ section.settings.padding_bottom | times: 0.9 | round }}px;
+      }
+
+      #iot-feature-{{ section.id }} .iot-feature__header{
+        margin-bottom: 42px;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card{
+        padding: 34px 34px 24px;
+        min-height: auto;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card__item{
+        grid-template-columns: 50px minmax(0,1fr);
+        gap: 16px;
+        padding: 17px 0;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card__title{
+        margin-bottom: 24px;
+      }
+    }
+
+    @media (max-width: 860px){
+      #iot-feature-{{ section.id }} .iot-feature__grid{
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      #iot-feature-{{ section.id }} .iot-feature__header{
+        width: min(100%, 760px);
+      }
+
+      #iot-feature-{{ section.id }} .iot-feature__desc{
+        width: min(100%, 680px);
+      }
+    }
+
+    @media (max-width: 640px){
+      #iot-feature-{{ section.id }} .iot-feature__wrap{
+        padding: {{ section.settings.padding_top | times: 0.72 | round }}px 16px {{ section.settings.padding_bottom | times: 0.74 | round }}px;
+      }
+
+      #iot-feature-{{ section.id }} .iot-feature__header{
+        margin-bottom: 30px;
+      }
+
+      #iot-feature-{{ section.id }} .iot-feature__title{
+        letter-spacing: -0.05em;
+      }
+
+      #iot-feature-{{ section.id }} .iot-feature__desc{
+        margin-top: 18px;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card{
+        border-radius: 24px;
+        padding: 24px 20px 14px;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card__title{
+        margin-bottom: 14px;
+        font-size: 1.45rem;
+        line-height: 1.18;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card__item{
+        grid-template-columns: 46px minmax(0,1fr);
+        gap: 12px;
+        padding: 14px 0;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card__icon{
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card__icon svg{
+        width: 20px;
+        height: 20px;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card__text{
+        font-size: 1.03rem;
+        line-height: 1.35;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #iot-feature-{{ section.id }} .iot-card{
+        transition: none;
+      }
+
+      #iot-feature-{{ section.id }} .iot-card:hover{
+        transform: none;
+      }
+    }
+  </style>
+
+  <div class="iot-feature__wrap">
+    <div class="iot-feature__inner">
+      <div class="iot-feature__header">
+        {% if section.settings.title != blank %}
+          <h2 class="iot-feature__title">{{ section.settings.title }}</h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="iot-feature__desc">{{ section.settings.description }}</div>
+        {% endif %}
+      </div>
+
+      <div class="iot-feature__grid">
+        <article class="iot-card">
+          {% if section.settings.left_card_title != blank %}
+            <h3 class="iot-card__title">{{ section.settings.left_card_title }}</h3>
+          {% endif %}
+
+          <ul class="iot-card__list">
+            {% if section.settings.left_item_1 != blank %}
+              <li class="iot-card__item">
+                <span class="iot-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3v9l6 3"></path>
+                    <path d="M21 12a9 9 0 1 1-9-9"></path>
+                    <path d="M12 3a9 9 0 0 1 9 9"></path>
+                  </svg>
+                </span>
+                <p class="iot-card__text">{{ section.settings.left_item_1 }}</p>
+              </li>
+            {% endif %}
+
+            {% if section.settings.left_item_2 != blank %}
+              <li class="iot-card__item">
+                <span class="iot-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3.2"></circle>
+                    <path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a1.9 1.9 0 1 1-2.7 2.7l-.1-.1a1 1 0 0 0-1.1-.2 1 1 0 0 0-.6.9V20a1.9 1.9 0 1 1-3.8 0v-.2a1 1 0 0 0-.7-.9 1 1 0 0 0-1.1.2l-.1.1a1.9 1.9 0 1 1-2.7-2.7l.1-.1a1 1 0 0 0 .2-1.1 1 1 0 0 0-.9-.6H4a1.9 1.9 0 1 1 0-3.8h.2a1 1 0 0 0 .9-.7 1 1 0 0 0-.2-1.1l-.1-.1a1.9 1.9 0 1 1 2.7-2.7l.1.1a1 1 0 0 0 1.1.2h0a1 1 0 0 0 .6-.9V4a1.9 1.9 0 1 1 3.8 0v.2a1 1 0 0 0 .6.9h0a1 1 0 0 0 1.1-.2l.1-.1a1.9 1.9 0 1 1 2.7 2.7l-.1.1a1 1 0 0 0-.2 1.1v0a1 1 0 0 0 .9.6H20a1.9 1.9 0 1 1 0 3.8h-.2a1 1 0 0 0-.9.6Z"></path>
+                  </svg>
+                </span>
+                <p class="iot-card__text">{{ section.settings.left_item_2 }}</p>
+              </li>
+            {% endif %}
+
+            {% if section.settings.left_item_3 != blank %}
+              <li class="iot-card__item">
+                <span class="iot-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19V5"></path>
+                    <path d="M4 19h16"></path>
+                    <path d="m7 15 4-4 3 2 4-6"></path>
+                    <path d="m18 7 0 3"></path>
+                    <path d="m18 7h-3"></path>
+                  </svg>
+                </span>
+                <p class="iot-card__text">{{ section.settings.left_item_3 }}</p>
+              </li>
+            {% endif %}
+          </ul>
+        </article>
+
+        <article class="iot-card">
+          {% if section.settings.right_card_title != blank %}
+            <h3 class="iot-card__title">{{ section.settings.right_card_title }}</h3>
+          {% endif %}
+
+          <ul class="iot-card__list">
+            {% if section.settings.right_item_1 != blank %}
+              <li class="iot-card__item">
+                <span class="iot-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 7h8"></path>
+                    <path d="M16 7h4"></path>
+                    <path d="M10 7a2 2 0 1 0 4 0 2 2 0 0 0-4 0Z"></path>
+                    <path d="M4 17h4"></path>
+                    <path d="M12 17h8"></path>
+                    <path d="M8 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0Z"></path>
+                  </svg>
+                </span>
+                <p class="iot-card__text">{{ section.settings.right_item_1 }}</p>
+              </li>
+            {% endif %}
+
+            {% if section.settings.right_item_2 != blank %}
+              <li class="iot-card__item">
+                <span class="iot-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="16" height="16" rx="3"></rect>
+                    <path d="M12 15V9"></path>
+                    <path d="m9.5 11.5 2.5-2.5 2.5 2.5"></path>
+                  </svg>
+                </span>
+                <p class="iot-card__text">{{ section.settings.right_item_2 }}</p>
+              </li>
+            {% endif %}
+
+            {% if section.settings.right_item_3 != blank %}
+              <li class="iot-card__item">
+                <span class="iot-card__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="7" height="16" rx="2"></rect>
+                    <circle cx="16.5" cy="8" r="1.8"></circle>
+                    <circle cx="16.5" cy="16" r="1.8"></circle>
+                    <path d="M18.3 8H20"></path>
+                    <path d="M18.3 16H20"></path>
+                    <path d="M13 12h7"></path>
+                  </svg>
+                </span>
+                <p class="iot-card__text">{{ section.settings.right_item_3 }}</p>
+              </li>
+            {% endif %}
+          </ul>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "IoT Feature Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Light that listens. Data that learns."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>The Pro Series can be connected to the Luminous IoT Network – an optional upgrade for professionals who want to manage light therapy smarter, faster, and more precisely. Please enquire via email.</p>"
+    },
+    {
+      "type": "text",
+      "id": "left_card_title",
+      "label": "Left card title",
+      "default": "Smart insights: Usage Analytics"
+    },
+    {
+      "type": "text",
+      "id": "left_item_1",
+      "label": "Left item 1",
+      "default": "Track sessions and performance data"
+    },
+    {
+      "type": "text",
+      "id": "left_item_2",
+      "label": "Left item 2",
+      "default": "Discover peak usage times"
+    },
+    {
+      "type": "text",
+      "id": "left_item_3",
+      "label": "Left item 3",
+      "default": "Optimize workflows and offers"
+    },
+    {
+      "type": "text",
+      "id": "right_card_title",
+      "label": "Right card title",
+      "default": "Remote intelligence: Smart Management"
+    },
+    {
+      "type": "text",
+      "id": "right_item_1",
+      "label": "Right item 1",
+      "default": "Cloud-based updates & remote support"
+    },
+    {
+      "type": "text",
+      "id": "right_item_2",
+      "label": "Right item 2",
+      "default": "Upload new or seasonal light programs"
+    },
+    {
+      "type": "text",
+      "id": "right_item_3",
+      "label": "Right item 3",
+      "default": "Predictive maintenance & live diagnostics"
+    },
+    {
+      "type": "color",
+      "id": "page_bg",
+      "label": "Section background",
+      "default": "#ebe6de"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card background",
+      "default": "#e3ddd4"
+    },
+    {
+      "type": "color",
+      "id": "text_main",
+      "label": "Main text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_body",
+      "label": "Body text color",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "text_muted",
+      "label": "Muted text color",
+      "default": "#7c766f"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg",
+      "label": "Icon background",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container width",
+      "min": 1000,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1360
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 20,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 76
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 20,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "default": 92
+    }
+  ],
+  "presets": [
+    {
+      "name": "IoT Feature Section"
+    }
+  ]
+}
+{% endschema %}

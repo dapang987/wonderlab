@@ -1,0 +1,1558 @@
+{% comment %}
+  Wondear Influencer Carousel Section
+  Converted from standalone HTML into a Shopify Online Store 2.0 section.
+  Supports Shopify-hosted video uploads and YouTube links per influencer card.
+{% endcomment %}
+
+<section
+  id="wondear-influencer-carousel-{{ section.id }}"
+  class="wondear-influencer-carousel-section"
+  data-section-id="{{ section.id }}"
+  data-enable-autoplay="{{ section.settings.enable_autoplay }}"
+  data-autoplay-speed="{{ section.settings.autoplay_speed }}"
+  data-pause-on-hover="{{ section.settings.pause_on_hover }}"
+  aria-label="{{ section.settings.heading | default: 'Wondear influencer carousel' | escape }}"
+>
+  <style>
+    #wondear-influencer-carousel-{{ section.id }} {
+      --wondear-influencer-bg: {{ section.settings.background_color }};
+      --wondear-influencer-heading-color: {{ section.settings.heading_color }};
+      --wondear-influencer-subheading-color: {{ section.settings.subheading_color }};
+      --wondear-influencer-max-width: {{ section.settings.max_width }}px;
+      --wondear-influencer-padding-top: {{ section.settings.padding_top }}px;
+      --wondear-influencer-padding-bottom: {{ section.settings.padding_bottom }}px;
+      --wondear-influencer-card-gap: {{ section.settings.card_gap }}px;
+      --wondear-influencer-card-radius: {{ section.settings.card_radius }}px;
+      --wondear-influencer-arrow-color: {{ section.settings.arrow_color }};
+      --wondear-influencer-arrow-border: {{ section.settings.arrow_border_color }};
+      --wondear-influencer-arrow-hover-bg: {{ section.settings.arrow_hover_background }};
+
+      width: 100%;
+      overflow: hidden;
+      background: var(--wondear-influencer-bg);
+      padding: var(--wondear-influencer-padding-top) 0 var(--wondear-influencer-padding-bottom);
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} *,
+    #wondear-influencer-carousel-{{ section.id }} *::before,
+    #wondear-influencer-carousel-{{ section.id }} *::after {
+      box-sizing: border-box;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-header {
+      max-width: {{ section.settings.header_max_width }}px;
+      margin: 0 auto {{ section.settings.header_bottom_spacing }}px;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-heading {
+      margin: 0;
+      font-size: {{ section.settings.heading_font_size }}px;
+      line-height: 1.15;
+      font-weight: {{ section.settings.heading_font_weight }};
+      letter-spacing: {{ section.settings.heading_letter_spacing | divided_by: 100.0 }}em;
+      color: var(--wondear-influencer-heading-color);
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-subheading {
+      margin: 18px 0 0;
+      font-size: {{ section.settings.subheading_font_size }}px;
+      line-height: 1.5;
+      font-weight: 400;
+      letter-spacing: {{ section.settings.subheading_letter_spacing | divided_by: 100.0 }}em;
+      color: var(--wondear-influencer-subheading-color);
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-viewport {
+      max-width: var(--wondear-influencer-max-width);
+      margin: 0 auto;
+      overflow: visible;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-track {
+      display: flex;
+      gap: var(--wondear-influencer-card-gap);
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: auto;
+      scroll-snap-type: none;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0 {{ section.settings.side_padding }}px 4px;
+      cursor: grab;
+      backface-visibility: hidden;
+      will-change: scroll-position;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-track.is-dragging {
+      cursor: grabbing;
+      scroll-behavior: auto;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card {
+      position: relative;
+      flex: 0 0 calc((100% - (var(--wondear-influencer-card-gap) * ({{ section.settings.columns_desktop }} - 1))) / {{ section.settings.columns_desktop }});
+      aspect-ratio: 9 / 16;
+      min-width: 0;
+      overflow: hidden;
+      border-radius: var(--wondear-influencer-card-radius);
+      background: #f4f4f4;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      border: 0;
+      padding: 0;
+      font: inherit;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      transform: translateY(0);
+      transition: transform 0.28s ease, box-shadow 0.28s ease;
+      backface-visibility: hidden;
+      contain: paint;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card img,
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-youtube-thumb,
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card svg.placeholder-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-youtube-thumb {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.02) 0%,
+        rgba(0, 0, 0, 0.04) 48%,
+        rgba(0, 0, 0, 0.16) 100%
+      );
+      pointer-events: none;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-play {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.42);
+      backdrop-filter: blur(8px);
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-play svg {
+      width: 14px;
+      height: 14px;
+      margin-left: 2px;
+      display: block;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-label {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      z-index: 2;
+      max-width: calc(100% - 24px);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: {{ section.settings.controls_top_spacing }}px;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-arrow {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--wondear-influencer-arrow-border);
+      background: transparent;
+      color: var(--wondear-influencer-arrow-color);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+      padding: 0;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-arrow:hover {
+      background: var(--wondear-influencer-arrow-hover-bg);
+      transform: translateY(-1px);
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-arrow svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0, 0, 0, 0.72);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.24s ease, visibility 0.24s ease;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-modal-dialog {
+      position: relative;
+      width: min(960px, 100%);
+      background: #000000;
+      border-radius: 14px;
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.38);
+      overflow: hidden;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-video-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000000;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-video-wrap iframe,
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-video-wrap video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #000000;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-video-wrap video {
+      object-fit: contain;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-video-wrap iframe[hidden],
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-video-wrap video[hidden] {
+      display: none;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.42);
+      color: #ffffff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-modal-close svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    @media screen and (max-width: 1199px) {
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card {
+        flex-basis: calc((100% - (var(--wondear-influencer-card-gap) * ({{ section.settings.columns_tablet }} - 1))) / {{ section.settings.columns_tablet }});
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-heading {
+        font-size: {{ section.settings.heading_font_size_tablet }}px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-subheading {
+        font-size: {{ section.settings.subheading_font_size_tablet }}px;
+      }
+    }
+
+    @media screen and (max-width: 989px) {
+      #wondear-influencer-carousel-{{ section.id }} {
+        padding-top: {{ section.settings.padding_top_tablet }}px;
+        padding-bottom: {{ section.settings.padding_bottom_tablet }}px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-header {
+        margin-bottom: {{ section.settings.header_bottom_spacing_tablet }}px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card {
+        flex-basis: calc((100% - (var(--wondear-influencer-card-gap) * 2)) / 3);
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-heading {
+        letter-spacing: {{ section.settings.heading_letter_spacing_tablet | divided_by: 100.0 }}em;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-subheading {
+        letter-spacing: {{ section.settings.subheading_letter_spacing_tablet | divided_by: 100.0 }}em;
+      }
+    }
+
+    @media screen and (max-width: 767px) {
+      #wondear-influencer-carousel-{{ section.id }} {
+        padding-top: {{ section.settings.padding_top_mobile }}px;
+        padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-header {
+        max-width: 360px;
+        margin-bottom: {{ section.settings.header_bottom_spacing_mobile }}px;
+        padding: 0 16px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-heading {
+        font-size: {{ section.settings.heading_font_size_mobile }}px;
+        line-height: 1.2;
+        letter-spacing: {{ section.settings.heading_letter_spacing_mobile | divided_by: 100.0 }}em;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-subheading {
+        margin-top: 12px;
+        font-size: {{ section.settings.subheading_font_size_mobile }}px;
+        line-height: 1.55;
+        letter-spacing: {{ section.settings.subheading_letter_spacing_mobile | divided_by: 100.0 }}em;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-track {
+        gap: {{ section.settings.card_gap_mobile }}px;
+        padding: 0 {{ section.settings.side_padding_mobile }}px 4px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card {
+        flex: 0 0 {{ section.settings.mobile_card_width }}vw;
+        max-width: {{ section.settings.mobile_card_max_width }}px;
+        border-radius: {{ section.settings.card_radius_mobile }}px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-controls {
+        margin-top: {{ section.settings.controls_top_spacing_mobile }}px;
+        gap: 14px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-arrow {
+        width: 38px;
+        height: 38px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-label {
+        font-size: 11px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-modal {
+        padding: 54px 14px 20px;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-modal-dialog {
+        border-radius: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-track {
+        scroll-behavior: auto;
+      }
+
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-card,
+      #wondear-influencer-carousel-{{ section.id }} .wondear-influencer-carousel-arrow {
+        transition: none;
+      }
+    }
+  </style>
+
+  {% if section.settings.heading != blank or section.settings.subheading != blank %}
+    <div class="wondear-influencer-carousel-header">
+      {% if section.settings.heading != blank %}
+        <h2 class="wondear-influencer-carousel-heading">
+          {{ section.settings.heading | escape }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <div class="wondear-influencer-carousel-subheading">
+          {{ section.settings.subheading | escape | newline_to_br }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="wondear-influencer-carousel-viewport">
+    <div class="wondear-influencer-carousel-track">
+      {% for block in section.blocks %}
+        {% liquid
+          assign youtube_url = block.settings.youtube_url
+          assign uploaded_video_source = blank
+          assign card_image = block.settings.image
+          assign card_label = block.settings.label | default: 'Creator Review'
+          assign image_alt = block.settings.image_alt | default: card_label
+
+          if block.settings.video != blank
+            for source in block.settings.video.sources
+              if source.format == 'mp4'
+                assign uploaded_video_source = source
+                break
+              endif
+            endfor
+
+            if uploaded_video_source == blank
+              assign uploaded_video_source = block.settings.video.sources.first
+            endif
+
+            if card_image == blank
+              assign card_image = block.settings.video.preview_image
+            endif
+          endif
+        %}
+
+        <button
+          type="button"
+          class="wondear-influencer-carousel-card"
+          data-youtube-url="{{ youtube_url | escape }}"
+          data-video-url="{{ uploaded_video_source.url | escape }}"
+          {% if block.settings.video.preview_image != blank %}
+            data-video-poster="{{ block.settings.video.preview_image | image_url: width: 1600 }}"
+          {% endif %}
+          aria-label="{{ image_alt | escape }}"
+          {{ block.shopify_attributes }}
+        >
+          {% if card_image != blank %}
+            {{
+              card_image
+              | image_url: width: 900
+              | image_tag:
+                loading: 'lazy',
+                decoding: 'async',
+                draggable: false,
+                widths: '360, 540, 720, 900, 1080',
+                sizes: '(max-width: 767px) 72vw, (max-width: 989px) 33vw, (max-width: 1199px) 25vw, 20vw',
+                alt: image_alt
+            }}
+          {% elsif youtube_url != blank %}
+            <span class="wondear-influencer-carousel-youtube-thumb" aria-hidden="true"></span>
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+
+          {% if block.settings.show_play_icon %}
+            <span class="wondear-influencer-carousel-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7L8 5z"></path>
+              </svg>
+            </span>
+          {% endif %}
+
+          {% if card_label != blank %}
+            <span class="wondear-influencer-carousel-label">
+              {{ card_label | escape }}
+            </span>
+          {% endif %}
+        </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if section.settings.show_controls %}
+    <div class="wondear-influencer-carousel-controls">
+      <button class="wondear-influencer-carousel-arrow wondear-influencer-carousel-prev" type="button" aria-label="Previous">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button class="wondear-influencer-carousel-arrow wondear-influencer-carousel-next" type="button" aria-label="Next">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  {% endif %}
+
+  <div class="wondear-influencer-carousel-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Video player">
+    <div class="wondear-influencer-carousel-modal-dialog">
+      <button class="wondear-influencer-carousel-modal-close" type="button" aria-label="Close video">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="wondear-influencer-carousel-video-wrap">
+        <iframe
+          src=""
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          loading="lazy"
+          hidden
+        ></iframe>
+        <video controls playsinline preload="metadata" hidden></video>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    (function () {
+      function initWondearInfluencerCarousel(section) {
+        if (!section || section.dataset.wondearInfluencerInitialized === 'true') return;
+
+        const track = section.querySelector('.wondear-influencer-carousel-track');
+        const prevBtn = section.querySelector('.wondear-influencer-carousel-prev');
+        const nextBtn = section.querySelector('.wondear-influencer-carousel-next');
+        const modal = section.querySelector('.wondear-influencer-carousel-modal');
+        const modalClose = section.querySelector('.wondear-influencer-carousel-modal-close');
+        const modalIframe = section.querySelector('.wondear-influencer-carousel-video-wrap iframe');
+        const modalVideo = section.querySelector('.wondear-influencer-carousel-video-wrap video');
+
+        if (!track || track.children.length === 0) return;
+
+        section.dataset.wondearInfluencerInitialized = 'true';
+
+        const enableAutoplay = section.dataset.enableAutoplay === 'true';
+        const pauseOnHover = section.dataset.pauseOnHover === 'true';
+        const autoplaySpeed = Number(section.dataset.autoplaySpeed || 40);
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        let animationFrame = null;
+        let lastTimestamp = null;
+        let isPaused = false;
+        let resumeTimer = null;
+        let originalWidth = 0;
+        let originalSlides = [];
+        let resizeFrame = null;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartScrollLeft = 0;
+        let hasDragged = false;
+
+        function getYouTubeId(url) {
+          if (!url) return '';
+
+          const value = String(url).trim();
+
+          if (/^[a-zA-Z0-9_-]{11}$/.test(value)) {
+            return value;
+          }
+
+          try {
+            const parsedUrl = new URL(value);
+            const hostname = parsedUrl.hostname.replace(/^www\./, '');
+
+            if (hostname === 'youtu.be') {
+              return parsedUrl.pathname.split('/').filter(Boolean)[0] || '';
+            }
+
+            if (hostname === 'youtube.com' || hostname === 'm.youtube.com' || hostname === 'music.youtube.com' || hostname === 'youtube-nocookie.com') {
+              if (parsedUrl.searchParams.get('v')) {
+                return parsedUrl.searchParams.get('v');
+              }
+
+              const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+              const embedIndex = pathParts.indexOf('embed');
+              const shortsIndex = pathParts.indexOf('shorts');
+
+              if (embedIndex > -1 && pathParts[embedIndex + 1]) {
+                return pathParts[embedIndex + 1];
+              }
+
+              if (shortsIndex > -1 && pathParts[shortsIndex + 1]) {
+                return pathParts[shortsIndex + 1];
+              }
+            }
+          } catch (error) {
+            return '';
+          }
+
+          return '';
+        }
+
+        function hydrateYouTubeThumbnails() {
+          const cards = track.querySelectorAll('.wondear-influencer-carousel-card');
+
+          cards.forEach(function (card) {
+            const thumb = card.querySelector('.wondear-influencer-carousel-youtube-thumb');
+            const youtubeId = getYouTubeId(card.dataset.youtubeUrl);
+
+            if (thumb && youtubeId) {
+              thumb.style.backgroundImage = 'url(https://img.youtube.com/vi/' + youtubeId + '/hqdefault.jpg)';
+            }
+          });
+        }
+
+        function resetModalPlayers() {
+          if (modalIframe) {
+            modalIframe.src = '';
+            modalIframe.hidden = true;
+          }
+
+          if (modalVideo) {
+            modalVideo.pause();
+            modalVideo.removeAttribute('src');
+            modalVideo.removeAttribute('poster');
+            modalVideo.load();
+            modalVideo.hidden = true;
+          }
+        }
+
+        function showVideoModal() {
+          if (!modal) return;
+
+          pauseAutoplay();
+          modal.hidden = false;
+          modal.setAttribute('aria-hidden', 'false');
+
+          requestAnimationFrame(function () {
+            modal.classList.add('is-open');
+          });
+        }
+
+        function openUploadedVideo(videoUrl, posterUrl) {
+          if (!videoUrl || !modal || !modalVideo) return;
+
+          resetModalPlayers();
+          modalVideo.hidden = false;
+          modalVideo.src = videoUrl;
+
+          if (posterUrl) {
+            modalVideo.poster = posterUrl;
+          }
+
+          showVideoModal();
+
+          const playPromise = modalVideo.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(function () {
+              // Browser autoplay policies may require the visitor to press play.
+            });
+          }
+        }
+
+        function openYouTubeVideo(youtubeUrl) {
+          const youtubeId = getYouTubeId(youtubeUrl);
+
+          if (!youtubeId || !modal || !modalIframe) return;
+
+          resetModalPlayers();
+          modalIframe.hidden = false;
+          modalIframe.src = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+          showVideoModal();
+        }
+
+        function closeVideoModal() {
+          if (!modal) return;
+
+          modal.classList.remove('is-open');
+          modal.setAttribute('aria-hidden', 'true');
+
+          window.setTimeout(function () {
+            modal.hidden = true;
+            resetModalPlayers();
+          }, 240);
+
+          pauseAutoplay(1200);
+        }
+
+        function appendCloneSet(round) {
+          originalSlides.forEach(function (slide, index) {
+            const clone = slide.cloneNode(true);
+
+            clone.dataset.wondearInfluencerClone = 'true';
+            clone.dataset.wondearInfluencerCloneRound = String(round);
+            clone.dataset.wondearInfluencerOriginalIndex = String(index);
+            clone.setAttribute('aria-hidden', 'true');
+            clone.setAttribute('tabindex', '-1');
+
+            const focusableItems = clone.querySelectorAll('a, button, input, textarea, select');
+            focusableItems.forEach(function (item) {
+              item.setAttribute('tabindex', '-1');
+            });
+
+            track.appendChild(clone);
+          });
+        }
+
+        function cloneSlides() {
+          if (track.dataset.cloned === 'true') return;
+
+          originalSlides = Array.from(track.children).filter(function (slide) {
+            return slide.dataset.wondearInfluencerClone !== 'true';
+          });
+
+          if (!originalSlides.length) return;
+
+          let cloneRound = 1;
+          appendCloneSet(cloneRound);
+
+          while (track.scrollWidth < track.clientWidth * 2.5 && cloneRound < 10) {
+            cloneRound += 1;
+            appendCloneSet(cloneRound);
+          }
+
+          track.dataset.cloned = 'true';
+        }
+
+        function updateOriginalWidth() {
+          const firstOriginal = originalSlides[0] || track.querySelector('.wondear-influencer-carousel-card');
+          const firstClone = track.querySelector('[data-wondear-influencer-clone="true"]');
+
+          if (firstOriginal && firstClone) {
+            originalWidth = firstClone.offsetLeft - firstOriginal.offsetLeft;
+          }
+
+          if (!originalWidth || originalWidth < 1) {
+            originalWidth = Math.max(0, track.scrollWidth / 2);
+          }
+        }
+
+        function resetLoopPosition() {
+          if (!originalWidth) return;
+
+          if (track.scrollLeft >= originalWidth) {
+            track.scrollLeft = track.scrollLeft - originalWidth;
+          } else if (track.scrollLeft < 0) {
+            track.scrollLeft = track.scrollLeft + originalWidth;
+          }
+        }
+
+        function pauseAutoplay(delay) {
+          isPaused = true;
+          clearTimeout(resumeTimer);
+
+          if (typeof delay === 'number') {
+            resumeTimer = setTimeout(function () {
+              isPaused = false;
+              lastTimestamp = null;
+            }, delay);
+          }
+        }
+
+        function resumeAutoplay() {
+          clearTimeout(resumeTimer);
+          isPaused = false;
+          lastTimestamp = null;
+        }
+
+        function autoplay(timestamp) {
+          if (!enableAutoplay || reducedMotion) return;
+
+          if (!lastTimestamp) {
+            lastTimestamp = timestamp;
+          }
+
+          const delta = Math.min(timestamp - lastTimestamp, 64);
+          lastTimestamp = timestamp;
+
+          if (!isPaused && !isDragging && originalWidth > 0) {
+            track.scrollLeft += (autoplaySpeed * delta) / 1000;
+            resetLoopPosition();
+          }
+
+          animationFrame = requestAnimationFrame(autoplay);
+        }
+
+        function getScrollStep() {
+          const card = track.querySelector('.wondear-influencer-carousel-card');
+
+          if (!card) return 300;
+
+          const trackStyle = window.getComputedStyle(track);
+          const gap = parseFloat(trackStyle.gap || trackStyle.columnGap || 0);
+
+          return card.getBoundingClientRect().width + gap;
+        }
+
+        function scrollByDirection(direction) {
+          const step = getScrollStep();
+
+          pauseAutoplay(2000);
+
+          if (direction < 0 && originalWidth && track.scrollLeft < step) {
+            track.scrollLeft += originalWidth;
+          }
+
+          track.scrollBy({
+            left: step * direction,
+            behavior: 'smooth'
+          });
+
+          window.setTimeout(resetLoopPosition, 520);
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener('click', function () {
+            scrollByDirection(-1);
+          });
+        }
+
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function () {
+            scrollByDirection(1);
+          });
+        }
+
+        if (pauseOnHover) {
+          section.addEventListener('mouseenter', function () {
+            pauseAutoplay();
+          });
+
+          section.addEventListener('mouseleave', function () {
+            resumeAutoplay();
+          });
+        }
+
+        track.addEventListener('touchstart', function () {
+          pauseAutoplay();
+        }, { passive: true });
+
+        track.addEventListener('touchend', function () {
+          pauseAutoplay(1800);
+        }, { passive: true });
+
+        track.addEventListener('pointerdown', function (event) {
+          if (event.pointerType !== 'mouse') return;
+
+          isDragging = true;
+          hasDragged = false;
+          dragStartX = event.clientX;
+          dragStartScrollLeft = track.scrollLeft;
+          track.classList.add('is-dragging');
+          pauseAutoplay();
+        });
+
+        window.addEventListener('pointermove', function (event) {
+          if (!isDragging) return;
+
+          const moveX = event.clientX - dragStartX;
+
+          if (Math.abs(moveX) > 4) {
+            hasDragged = true;
+          }
+
+          track.scrollLeft = dragStartScrollLeft - moveX;
+          resetLoopPosition();
+        });
+
+        window.addEventListener('pointerup', function () {
+          if (!isDragging) return;
+
+          isDragging = false;
+          track.classList.remove('is-dragging');
+          pauseAutoplay(2000);
+        });
+
+        track.addEventListener('click', function (event) {
+          if (hasDragged) {
+            event.preventDefault();
+            event.stopPropagation();
+            hasDragged = false;
+          }
+        }, true);
+
+        track.addEventListener('click', function (event) {
+          const card = event.target.closest('.wondear-influencer-carousel-card');
+
+          if (!card || !track.contains(card)) return;
+
+          const uploadedVideoUrl = card.dataset.videoUrl;
+          const uploadedVideoPoster = card.dataset.videoPoster;
+          const youtubeUrl = card.dataset.youtubeUrl;
+
+          if (!uploadedVideoUrl && !youtubeUrl) return;
+
+          event.preventDefault();
+
+          if (uploadedVideoUrl) {
+            openUploadedVideo(uploadedVideoUrl, uploadedVideoPoster);
+          } else {
+            openYouTubeVideo(youtubeUrl);
+          }
+        });
+
+        if (modalClose) {
+          modalClose.addEventListener('click', closeVideoModal);
+        }
+
+        if (modal) {
+          modal.addEventListener('click', function (event) {
+            if (event.target === modal) {
+              closeVideoModal();
+            }
+          });
+        }
+
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape' && modal && !modal.hidden) {
+            closeVideoModal();
+          }
+        });
+
+        window.addEventListener('resize', function () {
+          if (resizeFrame) {
+            cancelAnimationFrame(resizeFrame);
+          }
+
+          resizeFrame = requestAnimationFrame(function () {
+            updateOriginalWidth();
+            resetLoopPosition();
+          });
+        });
+
+        cloneSlides();
+        hydrateYouTubeThumbnails();
+
+        requestAnimationFrame(function () {
+          updateOriginalWidth();
+
+          if (enableAutoplay && !reducedMotion) {
+            animationFrame = requestAnimationFrame(autoplay);
+          }
+        });
+
+        document.addEventListener('shopify:section:unload', function (event) {
+          if (event.target && event.target.contains(section)) {
+            if (animationFrame) {
+              cancelAnimationFrame(animationFrame);
+            }
+
+            if (resizeFrame) {
+              cancelAnimationFrame(resizeFrame);
+            }
+
+            clearTimeout(resumeTimer);
+            closeVideoModal();
+          }
+        });
+      }
+
+      const section = document.getElementById('wondear-influencer-carousel-{{ section.id }}');
+      initWondearInfluencerCarousel(section);
+
+      document.addEventListener('shopify:section:load', function (event) {
+        const loadedSection = event.target.querySelector('#wondear-influencer-carousel-{{ section.id }}');
+        initWondearInfluencerCarousel(loadedSection);
+      });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "influencer carousel",
+  "tag": "section",
+  "class": "section-wondear-influencer-carousel",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Watch a Real Wondear Creator Experience"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "See how a wellness creator uses Wondear as part of an at-home recovery and self-care routine."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Section max width",
+      "min": 960,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "default": 1620
+    },
+    {
+      "type": "range",
+      "id": "header_max_width",
+      "label": "Header max width",
+      "min": 480,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 980
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop cards per view",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Tablet cards per view",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_width",
+      "label": "Mobile card width",
+      "min": 55,
+      "max": 90,
+      "step": 1,
+      "unit": "vw",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_max_width",
+      "label": "Mobile card max width",
+      "min": 240,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "default": 320
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Card gap",
+      "min": 4,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_gap_mobile",
+      "label": "Mobile card gap",
+      "min": 4,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "side_padding_mobile",
+      "label": "Mobile side padding",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "card_radius_mobile",
+      "label": "Mobile card border radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "padding_top_tablet",
+      "label": "Tablet padding top",
+      "min": 0,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_tablet",
+      "label": "Tablet padding bottom",
+      "min": 0,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Mobile padding top",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Mobile padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "header_bottom_spacing",
+      "label": "Header bottom spacing",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "header_bottom_spacing_tablet",
+      "label": "Tablet header bottom spacing",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "header_bottom_spacing_mobile",
+      "label": "Mobile header bottom spacing",
+      "min": 0,
+      "max": 70,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "controls_top_spacing",
+      "label": "Controls top spacing",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "controls_top_spacing_mobile",
+      "label": "Mobile controls top spacing",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "label": "Heading font size",
+      "min": 20,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_tablet",
+      "label": "Tablet heading font size",
+      "min": 18,
+      "max": 56,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "Mobile heading font size",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Heading font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Heading letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing_tablet",
+      "label": "Tablet heading letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing_mobile",
+      "label": "Mobile heading letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size",
+      "label": "Subheading font size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_tablet",
+      "label": "Tablet subheading font size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_mobile",
+      "label": "Mobile subheading font size",
+      "min": 11,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "subheading_letter_spacing",
+      "label": "Subheading letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "subheading_letter_spacing_tablet",
+      "label": "Tablet subheading letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "subheading_letter_spacing_mobile",
+      "label": "Mobile subheading letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#5b5b5b"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#6f6f6f"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow icon color",
+      "default": "#e36b6b"
+    },
+    {
+      "type": "color",
+      "id": "arrow_border_color",
+      "label": "Arrow border color",
+      "default": "#f0a0a0"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_background",
+      "label": "Arrow hover background",
+      "default": "#fff1f1"
+    },
+    {
+      "type": "header",
+      "content": "Carousel behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable automatic scrolling",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Automatic scroll speed",
+      "min": 10,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Show arrow controls",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "influencer_card",
+      "name": "Influencer card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Card label"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Uploaded video",
+          "info": "Upload or select a Shopify-hosted video. When set, this video is used instead of the YouTube link."
+        },
+        {
+          "type": "text",
+          "id": "youtube_url",
+          "label": "YouTube video link",
+          "info": "Paste a YouTube watch, share, shorts, embed URL, or an 11-character YouTube video ID."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_play_icon",
+          "label": "Show play icon",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wondear influencer carousel",
+      "blocks": [
+        {
+          "type": "influencer_card",
+          "settings": {
+            "label": "Creator Review"
+          }
+        },
+        {
+          "type": "influencer_card",
+          "settings": {
+            "label": "Wellness Moment"
+          }
+        },
+        {
+          "type": "influencer_card",
+          "settings": {
+            "label": "Recovery Routine"
+          }
+        },
+        {
+          "type": "influencer_card",
+          "settings": {
+            "label": "At-Home Wellness"
+          }
+        },
+        {
+          "type": "influencer_card",
+          "settings": {
+            "label": "Daily Reset"
+          }
+        },
+        {
+          "type": "influencer_card",
+          "settings": {
+            "label": "Creator Routine"
+          }
+        },
+        {
+          "type": "influencer_card",
+          "settings": {
+            "label": "Relaxation"
+          }
+        },
+        {
+          "type": "influencer_card",
+          "settings": {
+            "label": "Wellness Review"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

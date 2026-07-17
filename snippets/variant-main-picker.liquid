@@ -1,0 +1,895 @@
+{%- doc -%}
+  Renders a default variant picker, used to display the variant picker in the variants block.
+
+  @param {object} product_resource - The product object.
+  @param {object} [block] - The block object
+{%- enddoc -%}
+
+{% assign block_settings = block.settings %}
+
+{% unless product_resource.has_only_default_variant %}
+  {% liquid
+    assign button_background_brightness = section.settings.color_scheme.settings.foreground | color_brightness
+    if button_background_brightness < 105
+      assign strikethrough_color_mix = '#000'
+    else
+      assign strikethrough_color_mix = '#fff'
+    endif
+  %}
+  <variant-picker
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}"
+    style="--color-strikethrough-mix: {{ strikethrough_color_mix }}; {% render 'spacing-style', settings: block_settings %}"
+    data-section-id="{{ section.id }}"
+    data-product-id="{{ product_resource.id }}"
+    data-block-id="{{ block.id }}"
+    data-product-url="{{ product_resource.url }}"
+    ref="mainVariantPicker"
+    {% if product.id == product_resource.id %}
+      data-template-product-match="true"
+    {% endif %}
+    {{ block.shopify_attributes }}
+    {% if request.visual_preview_mode %}
+      data-shopify-visual-preview
+    {% endif %}
+  >
+    <form class="variant-picker__form">
+      {%- for product_option in product_resource.options_with_values -%}
+        {%- liquid
+          assign swatch_count = product_option.values | map: 'swatch' | compact | size
+          assign variant_style = block_settings.variant_style
+
+          if swatch_count > 0 and block_settings.show_swatches
+            if block_settings.variant_style == 'dropdown'
+              assign variant_style = 'swatch_dropdown'
+            else
+              assign variant_style = 'swatch'
+            endif
+          endif
+
+          assign use_variant_cards = false
+          if variant_style == 'buttons' and settings.variant_button_width == 'equal-width-buttons' and block_settings.enable_variant_cards
+            assign use_variant_cards = true
+          endif
+
+          if use_variant_cards
+            assign selected_card_title = product_option.selected_value
+            assign selected_card_variant = product_resource.selected_or_first_available_variant
+            if selected_card_variant.options.size > 1
+              assign selected_card_title = selected_card_variant.options | join: ' | '
+            endif
+            if block_settings.variant_card_prepend_product_title
+              assign selected_card_title = product_resource.title | append: ' | ' | append: selected_card_title
+            endif
+          endif
+
+          if variant_style == 'buttons' and settings.variant_button_width == 'equal-width-buttons'
+            assign fieldset_id = section.id | append: '-' | append: product_resource.id | append: '-' | append: product_option.name | handleize
+            assign option_id_attribute = 'data-option-id="' | append: fieldset_id | append: '"'
+            assign longest_value = 0
+          endif
+        -%}
+
+        {%- if product_option.values.size == 1 and variant_style != 'swatch' -%}
+          <div
+            class="variant-option"
+            data-testid="variant-option-single"
+          >
+            {{- product_option.name | escape -}}
+            <span
+              class="variant-option__swatch-value"
+              data-testid="variant-option-single-value"
+            >
+              {{- product_option.selected_value -}}
+            </span>
+          </div>
+        {%- elsif variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
+          {%- assign fieldset_index = forloop.index0 -%}
+          <fieldset
+            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% if use_variant_cards %} variant-option--cards{% endif %}{% endif %}"
+            data-fieldset-index="{{ fieldset_index }}"
+            ref="fieldsets[]"
+            {{ option_id_attribute }}
+          >
+            <legend>
+              {%- if use_variant_cards -%}
+                <span class="variant-option__selection-label">
+                  {{- block_settings.variant_card_selection_label | default: 'Select option:' | replace: '[option]', 'option' | escape -}}
+                </span>
+                <strong class="variant-option__selected-value">{{ selected_card_title | escape }}</strong>
+              {%- else -%}
+                {{ product_option.name | escape -}}
+              {%- endif -%}
+              {%- if variant_style == 'swatch' and use_variant_cards == false -%}
+                <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
+              {%- endif %}
+            </legend>
+            {%- for product_option_value in product_option.values -%}
+              {% if product_option_value.size > longest_value and option_id_attribute %}
+                {% assign longest_value = product_option_value.size %}
+              {% endif %}
+              {% liquid
+                if use_variant_cards
+                  assign option_value_name = product_option_value.name | default: product_option_value
+                  assign card_variant = product_option_value.variant
+
+                  if card_variant == blank and product_resource.options.size == 1
+                    assign card_variant = product_resource.variants | where: 'title', option_value_name | first
+                  endif
+
+                  assign card_title = option_value_name
+                  if card_variant.options.size > 1
+                    assign card_title = card_variant.options | join: ' | '
+                  endif
+                  if block_settings.variant_card_prepend_product_title
+                    assign card_title = product_resource.title | append: ' | ' | append: card_title
+                  endif
+
+                  assign card_media = card_variant.featured_media
+                  if card_media == blank and product_option_value.product_url
+                    assign card_media = product_option_value.variant.product.featured_media
+                  endif
+                  assign card_image = card_media.preview_image | default: card_variant.featured_image | default: product_resource.featured_image
+
+                  assign card_price = card_variant.price | default: 0
+                  assign card_compare_at_price = card_variant.compare_at_price | default: 0
+                  assign card_savings = 0
+                  if card_compare_at_price > card_price
+                    assign card_savings = card_compare_at_price | minus: card_price
+                  endif
+
+                  assign free_gifts = card_variant.metafields.custom.free_gifts.value
+                  assign configured_gift_count = 0
+                  for gift_index in (1..7)
+                    assign gift_title_key = 'variant_card_gift_' | append: gift_index | append: '_title'
+                    assign gift_image_key = 'variant_card_gift_' | append: gift_index | append: '_image'
+                    assign gift_price_key = 'variant_card_gift_' | append: gift_index | append: '_price'
+                    if block_settings[gift_title_key] != blank or block_settings[gift_image_key] != blank or block_settings[gift_price_key] != blank
+                      assign configured_gift_count = configured_gift_count | plus: 1
+                    endif
+                  endfor
+
+                  assign free_gift_badge_text = block_settings.variant_card_free_gift_text | default: 'Free gift'
+                  assign show_free_gift_badge = block_settings.variant_card_show_free_gift_badge
+
+                  if free_gifts != blank or configured_gift_count > 0
+                    assign show_free_gift_badge = true
+                  endif
+
+                  assign variant_free_gift_badge_text = card_variant.metafields.custom.free_gift_badge_text
+                  if variant_free_gift_badge_text != blank and variant_free_gift_badge_text.value != blank
+                    assign free_gift_badge_text = variant_free_gift_badge_text.value
+                    assign show_free_gift_badge = true
+                  endif
+
+                  assign variant_show_free_gift_badge = card_variant.metafields.custom.show_free_gift_badge
+                  if variant_show_free_gift_badge != blank
+                    assign show_free_gift_badge = variant_show_free_gift_badge.value
+                  endif
+
+                  assign is_best_seller = false
+                  if card_variant.metafields.custom.best_seller.value == true
+                    assign is_best_seller = true
+                  elsif block_settings.variant_card_best_seller_value != blank and block_settings.variant_card_best_seller_value == option_value_name
+                    assign is_best_seller = true
+                  endif
+                endif
+              %}
+              <label
+                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
+              >
+                <input
+                  type="radio"
+                  name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                  value="{{ product_option_value | escape }}"
+                  aria-label="{{ product_option_value.name }}"
+                  {% if product_option_value.available == false %}
+                    aria-disabled="true"
+                  {% endif %}
+                  data-previous-checked="false"
+                  data-fieldset-index="{{ fieldset_index }}"
+                  data-input-index="{{ forloop.index0 }}"
+                  data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                  data-option-value-id="{{ product_option_value.id }}"
+                  data-option-available="{{ product_option_value.available }}"
+                  data-connected-product-url="{{ product_option_value.product_url }}"
+                  {% if product_option_value.variant.id %}
+                    data-variant-id="{{ product_option_value.variant.id }}"
+                  {% endif %}
+                  {% if product_option_value.selected %}
+                    data-current-checked="true"
+                    checked
+                  {% else %}
+                    data-current-checked="false"
+                  {% endif %}
+                >
+                {% if variant_style == 'swatch' %}
+                  {% liquid
+                    assign featured_media = product_option_value.variant.featured_media
+
+                    # If the variant has no featured media, and we have a combined listing product, then fall back to
+                    # using the featured media of the child product that is linked to this option value.
+                    if featured_media == blank and product_option_value.product_url
+                      assign featured_media = product_option_value.variant.product.featured_media
+                    endif
+                  %}
+
+                  {% render 'swatch',
+                    swatch: product_option_value.swatch,
+                    variant_image: featured_media,
+                    mode: 'unscaled'
+                  %}
+                {% elsif use_variant_cards %}
+                  <span
+                    class="variant-option__card"
+                    data-key="variant-option-card"
+                  >
+                    <span class="variant-option__card-header">
+                      <span class="variant-option__card-image">
+                        {% if card_image != blank %}
+                          {{
+                            card_image
+                            | image_url: width: 240
+                            | image_tag:
+                              loading: 'lazy',
+                              widths: '80, 120, 180, 240',
+                              sizes: '(max-width: 749px) 68px, 88px',
+                              alt: card_title
+                          }}
+                        {% endif %}
+                      </span>
+
+                      <span class="variant-option__card-summary">
+                        <span class="variant-option__card-main">
+                          {% if show_free_gift_badge or is_best_seller %}
+                            <span class="variant-option__card-badges">
+                              {% if show_free_gift_badge %}
+                                <span class="variant-option__card-badge">
+                                  {{- free_gift_badge_text | escape -}}
+                                </span>
+                              {% endif %}
+                              {% if is_best_seller %}
+                                <span class="variant-option__card-badge">
+                                  {{- block_settings.variant_card_best_seller_text | default: 'Best Seller' | escape -}}
+                                </span>
+                              {% endif %}
+                            </span>
+                          {% endif %}
+
+                          <span class="variant-option__card-title">{{- card_title | escape -}}</span>
+                        </span>
+
+                        {% if card_variant != blank %}
+                          <span class="variant-option__card-pricing">
+                            {% if card_savings > 0 %}
+                              {% liquid
+                                assign card_savings_money = card_savings | money_with_currency
+                                assign card_savings_text = block_settings.variant_card_savings_text | default: 'Save [amount]'
+                                assign card_savings_text = card_savings_text | replace: '[amount]', card_savings_money
+                              %}
+                              <span class="variant-option__card-badge variant-option__card-savings">
+                                {{- card_savings_text | escape -}}
+                              </span>
+                            {% endif %}
+                            <span class="variant-option__card-price">{{ card_price | money_with_currency }}</span>
+                            {% if card_savings > 0 %}
+                              <s class="variant-option__card-compare-price">
+                                {{- card_compare_at_price | money_with_currency -}}
+                              </s>
+                            {% endif %}
+                          </span>
+                        {% endif %}
+                      </span>
+                    </span>
+
+                    {% if free_gifts != blank or configured_gift_count > 0 or block_settings.variant_card_gift_note != blank %}
+                      <span class="variant-option__card-details">
+                        {% if free_gifts != blank %}
+                          <span class="variant-option__gift-list">
+                            {% for gift in free_gifts %}
+                              {% liquid
+                                assign gift_image = gift.featured_image
+                                assign gift_title = gift.title
+                                assign gift_original_price = gift.compare_at_price | default: gift.price
+
+                                if gift.product != blank
+                                  assign gift_image = gift.featured_image | default: gift.product.featured_image
+                                  assign gift_title = gift.product.title
+                                  unless gift.title == blank or gift.title == 'Default Title'
+                                    assign gift_title = gift_title | append: ' - ' | append: gift.title
+                                  endunless
+                                endif
+                              %}
+                              <span class="variant-option__gift-item">
+                                <span class="variant-option__gift-image">
+                                  {% if gift_image != blank %}
+                                    {{
+                                      gift_image
+                                      | image_url: width: 120
+                                      | image_tag: loading: 'lazy', widths: '60, 90, 120', sizes: '56px', alt: gift_title
+                                    }}
+                                  {% endif %}
+                                </span>
+                                <span class="variant-option__gift-content">
+                                  <span class="variant-option__gift-title">{{ gift_title | escape }}</span>
+                                  <span class="variant-option__gift-pricing">
+                                    <strong>{{ 0 | money_with_currency }}</strong>
+                                    {% if gift_original_price > 0 %}
+                                      <s>{{ gift_original_price | money_with_currency }}</s>
+                                    {% endif %}
+                                  </span>
+                                </span>
+                              </span>
+                            {% endfor %}
+                          </span>
+                        {% endif %}
+
+                        {% if configured_gift_count > 0 %}
+                          <span class="variant-option__gift-list">
+                            {% for gift_index in (1..7) %}
+                              {% liquid
+                                assign gift_title_key = 'variant_card_gift_' | append: gift_index | append: '_title'
+                                assign gift_image_key = 'variant_card_gift_' | append: gift_index | append: '_image'
+                                assign gift_price_key = 'variant_card_gift_' | append: gift_index | append: '_price'
+                                assign configured_gift_title = block_settings[gift_title_key]
+                                assign configured_gift_image = block_settings[gift_image_key]
+                                assign configured_gift_price = block_settings[gift_price_key]
+                              %}
+                              {% if configured_gift_title != blank or configured_gift_image != blank or configured_gift_price != blank %}
+                                <span class="variant-option__gift-item">
+                                  <span class="variant-option__gift-image">
+                                    {% if configured_gift_image != blank %}
+                                      {{
+                                        configured_gift_image
+                                        | image_url: width: 120
+                                        | image_tag:
+                                          loading: 'lazy',
+                                          widths: '50, 75, 100, 120',
+                                          sizes: '50px',
+                                          alt: configured_gift_title
+                                      }}
+                                    {% endif %}
+                                  </span>
+                                  <span class="variant-option__gift-content">
+                                    {% if configured_gift_title != blank %}
+                                      <span class="variant-option__gift-title">{{ configured_gift_title | escape }}</span>
+                                    {% endif %}
+                                    <span class="variant-option__gift-pricing">
+                                      <strong>{{ 0 | money_with_currency }}</strong>
+                                      {% if configured_gift_price != blank %}
+                                        <s>{{ configured_gift_price | escape }}</s>
+                                      {% endif %}
+                                    </span>
+                                  </span>
+                                </span>
+                              {% endif %}
+                            {% endfor %}
+                          </span>
+                        {% endif %}
+
+                        {% if block_settings.variant_card_gift_note != blank %}
+                          <span class="variant-option__gift-note">
+                            {{- block_settings.variant_card_gift_note | escape | newline_to_br -}}
+                          </span>
+                        {% endif %}
+                      </span>
+                    {% endif %}
+                  </span>
+                {% else %}
+                  {% if product_option_value.available == true %}
+                    <span
+                      class="variant-option__button-label__pill"
+                      data-key="variant-option-pill"
+                    ></span>
+                  {% endif %}
+                  <span
+                    class="variant-option__button-label__text"
+                    data-key="variant-option-text"
+                  >
+                    {{- product_option_value | escape -}}
+                  </span>
+                {% endif %}
+                {% render 'strikethrough-variant', product_option: product_option_value %}
+              </label>
+            {%- endfor -%}
+            {% if option_id_attribute %}
+              {% style %}
+                [data-option-id="{{ fieldset_id }}"] {
+                  --variant-ch: {{ longest_value | times: 0.65 }}em;
+                }
+              {% endstyle %}
+            {% endif %}
+          </fieldset>
+        {%- elsif block_settings.variant_style == 'dropdowns' -%}
+          {%
+            # There is an opportunity to build a custom select component that will allow us to style the select element further (animation for dropdown, swatches shown in the dropdown options, etc)
+            # It's too bad as it mean rebuilding baked in behaviours but I think we've already done that for the locale selectors
+            # in dawn. So it might mean more time spent in setting it up but worth it for future updates/styling.
+          %}
+          {% liquid
+            assign property_being_updated = false
+            if settings.variant_swatch_width != settings.variant_swatch_height
+              assign property_being_updated = true
+              # (original width / original height) x new height (20px at the moment) = new width
+              assign new_width = settings.variant_swatch_width | times: 1.0 | divided_by: settings.variant_swatch_height | times: 20
+            endif
+          %}
+
+          <div class="variant-option variant-option--dropdowns">
+            <label for="Option-{{ block.id }}-{{ forloop.index0 }}">{{ product_option.name | escape }}</label>
+            <div
+              class="variant-option__select-wrapper"
+              style="
+                {%- if property_being_updated  -%}
+                  --variant-picker-swatch-width: clamp(10px,{{ new_width }}px, 50px);
+                {%- endif -%}
+              "
+            >
+              <select
+                id="Option-{{ block.id }}-{{ forloop.index0 }}"
+                name="options[{{ product_option.name | escape }}]"
+                class="variant-option__select"
+              >
+                {%- for product_option_value in product_option.values -%}
+                  <option
+                    value="{{ product_option_value | escape }}"
+                    data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                    data-option-value-id="{{ product_option_value.id }}"
+                    data-variant-id="{{ product_option_value.variant.id }}"
+                    data-connected-product-url="{{ product_option_value.product_url }}"
+                    {% if product_option_value.selected %}
+                      selected="selected"
+                    {% endif %}
+                  >
+                    {% if product_option_value.available == false %}
+                      {{ product_option_value | escape }} - {{ 'content.unavailable' | t }}
+                    {% else %}
+                      {{ product_option_value | escape }}
+                    {% endif %}
+                  </option>
+                {%- endfor -%}
+              </select>
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="icon icon-caret"
+                viewBox="0 0 10 6"
+              >
+                {%- render 'icon', icon: 'caret' -%}
+              </svg>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      <script type="application/json">
+        {{ product_resource.selected_or_first_available_variant | json }}
+      </script>
+    </form>
+  </variant-picker>
+{% endunless %}
+
+{% stylesheet %}
+  /* Variant picker container styles - unique to main variant picker */
+  .variant-picker {
+    width: 100%;
+  }
+
+  .variant-picker__form {
+    width: 100%;
+  }
+
+  /* Promotional variant cards with variant images */
+  .variant-option--cards {
+    --variant-card-accent: #eb1d2a;
+    --variant-card-border: #dedede;
+
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .variant-option--cards legend {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    margin-block-end: 14px;
+    color: #171717;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .variant-option--cards .variant-option__selection-label {
+    color: #35383d;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .variant-option--cards .variant-option__selected-value {
+    display: block;
+    width: 100%;
+    color: #111;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .variant-picker .variant-option--cards .variant-option__button-label {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 20px;
+    border: 1px solid var(--variant-card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    color: #111;
+    white-space: normal;
+    text-align: start;
+  }
+
+  .variant-picker .variant-option--cards .variant-option__button-label::before,
+  .variant-picker .variant-option--cards .variant-option__button-label::after {
+    display: none;
+  }
+
+  .variant-picker .variant-option--cards .variant-option__button-label:hover {
+    border-color: #999;
+    background: #fff;
+    color: #111;
+  }
+
+  .variant-picker .variant-option--cards .variant-option__button-label:has(:checked),
+  .variant-picker .variant-option--cards .variant-option__button-label:has(:checked):hover {
+    border-color: var(--variant-card-border);
+    background: #fff;
+    color: #111;
+    box-shadow: 0 0 0 1px #111 inset;
+  }
+
+  .variant-option--cards .variant-option__card {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .variant-option--cards .variant-option__card-header {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
+  }
+
+  .variant-option--cards .variant-option__card-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 88px;
+    height: 88px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #f7f7f7;
+  }
+
+  .variant-option--cards .variant-option__card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .variant-option--cards .variant-option__card-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 18px;
+    min-width: 0;
+  }
+
+  .variant-option--cards .variant-option__card-main {
+    display: grid;
+    align-items: start;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .variant-option--cards .variant-option__card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .variant-option--cards .variant-option__card-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: 26px;
+    padding: 5px 12px;
+    border-radius: 5px;
+    background: var(--variant-card-accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 12px;
+  }
+
+  .variant-option--cards .variant-option__card-title {
+    display: block;
+    padding-block-start: 10px;
+    color: #111;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .variant-option--cards .variant-option__card-pricing {
+    display: grid;
+    justify-items: end;
+    gap: 1px;
+    min-width: max-content;
+    text-align: end;
+  }
+
+  .variant-option--cards .variant-option__card-savings {
+    margin-block-end: 2px;
+    white-space: nowrap;
+  }
+
+  .variant-option--cards .variant-option__card-price {
+    color: #111;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .variant-option--cards .variant-option__card-compare-price {
+    color: var(--variant-card-accent);
+    font-size: 16px;
+    line-height: 1.2;
+    text-decoration-thickness: 1.5px;
+    white-space: nowrap;
+  }
+
+  .variant-option--cards .variant-option__card-details {
+    display: none;
+    margin-block-start: 22px;
+    padding-block-start: 18px;
+    border-block-start: 1px solid #e7e7e7;
+  }
+
+  .variant-option--cards .variant-option__button-label:has(:checked) .variant-option__card-details {
+    display: block;
+  }
+
+  .variant-option--cards .variant-option__gift-list {
+    display: grid;
+    gap: 3px;
+  }
+
+  .variant-option--cards .variant-option__gift-list + .variant-option__gift-list {
+    margin-block-start: 3px;
+  }
+
+  .variant-option--cards .variant-option__gift-item {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    align-items: center;
+    gap: 5px;
+  }
+
+  .variant-option--cards .variant-option__gift-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .variant-option--cards .variant-option__gift-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .variant-option--cards .variant-option__gift-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .variant-option--cards .variant-option__gift-title {
+    color: #4a4f56;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .variant-option--cards .variant-option__gift-pricing {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: #111;
+    font-size: 15px;
+    line-height: 1.25;
+  }
+
+  .variant-option--cards .variant-option__gift-pricing s {
+    color: #8b8b8b;
+  }
+
+  .variant-option--cards .variant-option__gift-note {
+    display: block;
+    margin-block-start: 14px;
+    color: #6b7079;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .variant-picker .variant-option--cards .variant-option__button-label:has([data-option-available='false']) {
+    border-width: 1px;
+    opacity: 0.55;
+  }
+
+  @media screen and (max-width: 749px) {
+    .variant-picker .variant-option--cards .variant-option__button-label {
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .variant-option--cards .variant-option__card-header {
+      grid-template-columns: 56px minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 10px;
+    }
+
+    .variant-option--cards .variant-option__card-image {
+      display: flex;
+      grid-column: 1;
+      grid-row: 1;
+      width: 56px;
+      height: 56px;
+    }
+
+    .variant-option--cards .variant-option__card-summary {
+      display: contents;
+    }
+
+    .variant-option--cards .variant-option__card-main {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .variant-option--cards .variant-option__card-title {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.3;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    .variant-option--cards legend {
+      gap: 8px;
+      margin-block-end: 16px;
+    }
+
+    .variant-option--cards .variant-option__selection-label {
+      font-size: 16px;
+    }
+
+    .variant-option--cards .variant-option__selected-value {
+      font-size: 17px;
+    }
+
+    .variant-option--cards .variant-option__card-pricing {
+      grid-column: 3;
+      grid-row: 1;
+      justify-items: end;
+      min-width: max-content;
+      text-align: end;
+    }
+
+    .variant-option--cards .variant-option__card-price {
+      font-size: 20px;
+    }
+
+    .variant-option--cards .variant-option__gift-item {
+      grid-template-columns: 55px minmax(0, 1fr);
+      gap: 7px;
+    }
+
+    .variant-option--cards .variant-option__gift-image {
+      width: 55px;
+      height: 55px;
+    }
+  }
+
+  .variant-picker[data-shopify-visual-preview] {
+    min-width: 300px;
+    padding-inline-start: max(4px, var(--padding-inline-start));
+  }
+
+  /* Dropdown variant option styles */
+  .variant-option__select-wrapper {
+    display: flex;
+    position: relative;
+    border: var(--style-border-width-inputs) solid var(--color-border);
+    border-radius: var(--style-border-radius-inputs);
+    align-items: center;
+    margin-top: var(--margin-2xs);
+    overflow: clip;
+  }
+
+  .variant-option__select-wrapper:has(.swatch) {
+    --variant-picker-swatch-width: 20px;
+    --variant-picker-swatch-height: 20px;
+  }
+
+  .variant-option__select-wrapper:hover {
+    border-color: var(--color-variant-hover-border);
+  }
+
+  .variant-option__select:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .variant-option__select {
+    padding-block: var(--padding-md);
+    padding-inline: var(--padding-lg) calc(var(--padding-lg) + var(--icon-size-2xs));
+    appearance: none;
+    border: 0;
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .variant-option__select-wrapper .icon {
+    position: absolute;
+    right: var(--padding-md);
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--icon-size-2xs);
+    height: var(--icon-size-2xs);
+    pointer-events: none;
+  }
+
+  .variant-option__select--has-swatch {
+    padding-inline-start: calc((2 * var(--padding-sm)) + var(--variant-picker-swatch-width));
+  }
+
+  .variant-option__select-wrapper .swatch {
+    position: absolute;
+    top: 50%;
+    left: var(--padding-md);
+    transform: translateY(-50%);
+  }
+
+  /* Variant picker alignment modifiers */
+  .variant-picker--center,
+  .variant-picker--center .variant-option {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .variant-picker--right,
+  .variant-picker--right .variant-option {
+    text-align: right;
+    justify-content: right;
+  }
+{% endstylesheet %}

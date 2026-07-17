@@ -1,0 +1,1659 @@
+{% comment %}
+  Premium Footer Showcase
+  Save as: sections/premium-footer-showcase.liquid
+
+  Updated:
+  - Real 3-column footer menus
+  - Parent titles render correctly
+  - Nested submenu rendering supported
+  - Added phone metric
+  - Payment methods use pasted SVG code instead of uploaded images
+  - Payment SVG keeps original fill/stroke colors
+  - Removed payment Swiper / horizontal scrolling
+  - Added native Shopify customer email signup form inside footer brand column
+  - Requires GSAP + ScrollTrigger loaded globally in theme.liquid for animations
+  - Added TK / TikTok social icon and URL setting
+{% endcomment %}
+
+<section
+  id="premium-footer-{{ section.id }}"
+  class="premium-footer-section"
+  data-section-id="{{ section.id }}"
+>
+  <div class="pf-page-shell">
+    <footer class="pf-footer-showcase">
+      <div class="pf-footer-inner">
+        <div class="pf-footer-grid">
+          <section class="pf-footer-brand pf-footer-animate pf-footer-animate-brand">
+            <div class="pf-brand-lockup">
+              {% if section.settings.brand_logo != blank %}
+                <span class="pf-brand-logo pf-brand-logo-image" aria-hidden="true">
+                  {{
+                    section.settings.brand_logo
+                    | image_url: width: 240
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'pf-brand-logo-img',
+                      widths: '120, 180, 240'
+                  }}
+                </span>
+              {% else %}
+                <span class="pf-brand-logo" aria-hidden="true">
+                  <svg viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="14" cy="28" r="10" fill="#F5F3EF"/>
+                    <circle cx="26" cy="14" r="10" fill="#F5F3EF"/>
+                    <circle cx="38" cy="28" r="10" fill="#F5F3EF"/>
+                    <circle cx="14" cy="14" r="10" fill="#F5F3EF" opacity="0.92"/>
+                  </svg>
+                </span>
+              {% endif %}
+
+              <div class="pf-brand-name">
+                {{ section.settings.brand_name }}
+              </div>
+            </div>
+
+            <div class="pf-social-row">
+              {% if section.settings.instagram_url != blank %}
+                <a href="{{ section.settings.instagram_url }}" class="pf-social-btn" aria-label="Instagram">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+                  </svg>
+                </a>
+              {% endif %}
+
+              {% if section.settings.tiktok_url != blank %}
+                <a href="{{ section.settings.tiktok_url }}" class="pf-social-btn" aria-label="TikTok">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                    <path d="M15.7 3.1c.3 2.3 1.6 3.8 4 4v3.2a7.5 7.5 0 0 1-4-1.2v5.9c0 3.5-2.4 5.9-5.8 5.9-3.1 0-5.6-2.3-5.6-5.4 0-3.3 2.7-5.6 6.2-5.3v3.3c-1.6-.3-2.9.5-2.9 1.9 0 1.2 1 2.1 2.2 2.1 1.4 0 2.3-.9 2.3-2.7V3.1h3.6Z"/>
+                  </svg>
+                </a>
+              {% endif %}
+
+              {% if section.settings.linkedin_url != blank %}
+                <a href="{{ section.settings.linkedin_url }}" class="pf-social-btn" aria-label="LinkedIn">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.8 8.9H3.4V20h3.4V8.9Zm.2-3.4A2 2 0 1 0 3 5.5a2 2 0 0 0 4 .1ZM20.6 13.2c0-3.4-1.8-5-4.3-5-2 0-2.9 1.1-3.4 1.8v-1.5H9.6c0 1 .1 11.5 0 11.5h3.3v-6.4c0-.3 0-.7.1-1 .3-.7 1-1.5 2.1-1.5 1.5 0 2.1 1.1 2.1 2.8V20h3.4v-6.8Z"/>
+                  </svg>
+                </a>
+              {% endif %}
+
+              {% if section.settings.facebook_url != blank %}
+                <a href="{{ section.settings.facebook_url }}" class="pf-social-btn" aria-label="Facebook">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14 8.2h2.6V5.1c-.4-.1-1.8-.1-3-.1-3 0-5 1.8-5 5.2v2.9H6v3.4h2.6V20h3.5v-3.5h2.9l.5-3.4H12v-2.6c0-1 .3-1.7 2-1.7Z"/>
+                  </svg>
+                </a>
+              {% endif %}
+
+              {% if section.settings.youtube_url != blank %}
+                <a href="{{ section.settings.youtube_url }}" class="pf-social-btn" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.2 8.2a2.8 2.8 0 0 0-2-2c-1.8-.5-7.2-.5-7.2-.5s-5.4 0-7.2.5a2.8 2.8 0 0 0-2 2c-.5 1.8-.5 3.8-.5 3.8s0 2 .5 3.8a2.8 2.8 0 0 0 2 2c1.8.5 7.2.5 7.2.5s5.4 0 7.2-.5a2.8 2.8 0 0 0 2-2c.5-1.8.5-3.8.5-3.8s0-2-.5-3.8ZM10.3 15.4V8.6l5.6 3.4-5.6 3.4Z"/>
+                  </svg>
+                </a>
+              {% endif %}
+            </div>
+
+            {% if section.settings.show_newsletter %}
+              {% assign footer_newsletter_form_id = section.id | prepend: 'PremiumFooterNewsletter-' %}
+
+              <div class="pf-newsletter pf-footer-animate pf-footer-animate-newsletter">
+                {% if section.settings.newsletter_eyebrow != blank %}
+                  <div class="pf-newsletter-eyebrow">
+                    {{ section.settings.newsletter_eyebrow | escape }}
+                  </div>
+                {% endif %}
+
+                {% if section.settings.newsletter_heading != blank %}
+                  <h3 class="pf-newsletter-heading">
+                    {{ section.settings.newsletter_heading | escape }}
+                  </h3>
+                {% endif %}
+
+                {% if section.settings.newsletter_text != blank %}
+                  <div class="pf-newsletter-text">
+                    {{ section.settings.newsletter_text }}
+                  </div>
+                {% endif %}
+
+                {% form 'customer', class: 'pf-newsletter-form' %}
+                  <input
+                    name="contact[id]"
+                    type="hidden"
+                    value="{{ footer_newsletter_form_id }}"
+                  >
+                  <input
+                    name="contact[tags]"
+                    type="hidden"
+                    value="newsletter"
+                  >
+
+                  <div class="pf-newsletter-field">
+                    <label
+                      for="PremiumFooterNewsletterEmail-{{ section.id }}"
+                      class="visually-hidden"
+                    >
+                      {{ section.settings.newsletter_placeholder | escape }}
+                    </label>
+
+                    <input
+                      id="PremiumFooterNewsletterEmail-{{ section.id }}"
+                      class="pf-newsletter-input"
+                      type="email"
+                      name="contact[email]"
+                      value="{% if customer %}{{ customer.email }}{% endif %}"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      autocomplete="email"
+                      placeholder="{{ section.settings.newsletter_placeholder | escape }}"
+                      required
+                      {% if form.errors and form.id == footer_newsletter_form_id %}
+                        autofocus
+                        aria-invalid="true"
+                        aria-describedby="PremiumFooterNewsletterError-{{ section.id }}"
+                      {% elsif form.posted_successfully? and form.id == footer_newsletter_form_id %}
+                        aria-describedby="PremiumFooterNewsletterSuccess-{{ section.id }}"
+                      {% endif %}
+                    >
+
+                    <button
+                      type="submit"
+                      class="pf-newsletter-button"
+                      aria-label="{{ section.settings.newsletter_button_label | escape }}"
+                    >
+                      <span>{{ section.settings.newsletter_button_label | escape }}</span>
+                      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                        <path d="M4 10h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        <path d="m11 5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  {% if form.errors and form.id == footer_newsletter_form_id %}
+                    <div
+                      id="PremiumFooterNewsletterError-{{ section.id }}"
+                      class="pf-newsletter-message pf-newsletter-message--error"
+                      tabindex="-1"
+                    >
+                      {{ form.errors.translated_fields.email | capitalize }}
+                      {{ form.errors.messages.email }}
+                    </div>
+                  {% endif %}
+
+                  {% if form.posted_successfully? and form.id == footer_newsletter_form_id %}
+                    <div
+                      id="PremiumFooterNewsletterSuccess-{{ section.id }}"
+                      class="pf-newsletter-message pf-newsletter-message--success"
+                      tabindex="-1"
+                    >
+                      {{ section.settings.newsletter_success_text | escape }}
+                    </div>
+                  {% endif %}
+                {% endform %}
+              </div>
+            {% endif %}
+
+            <div class="pf-brand-metrics">
+              {% if section.settings.metric_1 != blank %}
+                <div class="pf-metric-item">
+                  <span class="pf-metric-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="7.5" r="4.5" stroke="currentColor"/>
+                      <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6" stroke="currentColor" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                  <span>{{ section.settings.metric_1 }}</span>
+                </div>
+              {% endif %}
+
+              {% if section.settings.metric_2 != blank %}
+                <div class="pf-metric-item">
+                  <span class="pf-metric-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M8 19h8" stroke="currentColor" stroke-linecap="round"/>
+                      <path d="M10 4h4" stroke="currentColor" stroke-linecap="round"/>
+                      <path d="M6.5 15.5c0 2 2.5 3.5 5.5 3.5s5.5-1.5 5.5-3.5c0-1.3-.9-2.2-2.1-2.9-.7-.4-1.1-1.1-1.1-1.9V8a2.3 2.3 0 1 0-4.6 0v2.7c0 .8-.4 1.5-1.1 1.9-1.2.7-2.1 1.6-2.1 2.9Z" stroke="currentColor"/>
+                    </svg>
+                  </span>
+                  <span>{{ section.settings.metric_2 }}</span>
+                </div>
+              {% endif %}
+
+              {% if section.settings.metric_3 != blank %}
+                <div class="pf-metric-item">
+                  <span class="pf-metric-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M4 20V9" stroke="currentColor" stroke-linecap="round"/>
+                      <path d="M10 20V4" stroke="currentColor" stroke-linecap="round"/>
+                      <path d="M16 20v-7" stroke="currentColor" stroke-linecap="round"/>
+                      <path d="M22 20v-12" stroke="currentColor" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                  <span>{{ section.settings.metric_3 }}</span>
+                </div>
+              {% endif %}
+
+              {% if section.settings.metric_phone != blank %}
+                <div class="pf-metric-item">
+                  <span class="pf-metric-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M6.6 4.5h2.3l1.2 3.1c.2.5.1 1-.2 1.4l-1 1a14.8 14.8 0 0 0 5.1 5.1l1-1c.4-.3.9-.4 1.4-.2l3.1 1.2v2.3c0 .8-.6 1.4-1.4 1.4h-.8C10.3 18.8 5.2 13.7 5.2 7.3v-.8c0-.8.6-1.4 1.4-1.4Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <a
+                    href="tel:{{ section.settings.metric_phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' }}"
+                    class="pf-metric-phone"
+                  >
+                    {{ section.settings.metric_phone }}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </section>
+
+          {% assign footer_menu_left = section.settings.menu_left %}
+          {% assign footer_menu_center = section.settings.menu_center %}
+          {% assign footer_menu_right = section.settings.menu_right %}
+
+          <div class="pf-footer-links-wrap">
+            <nav class="pf-footer-links-col pf-footer-animate pf-footer-animate-links-left" aria-label="Footer left links">
+              {% if footer_menu_left != blank and footer_menu_left.links != blank %}
+                {% for link in footer_menu_left.links %}
+                  <div class="pf-footer-menu-group">
+                    <a href="{{ link.url }}" class="pf-footer-link pf-footer-link-parent">
+                      {{ link.title }}
+                    </a>
+
+                    {% if link.links != blank %}
+                      <div class="pf-footer-sublinks">
+                        {% for child_link in link.links %}
+                          <a href="{{ child_link.url }}" class="pf-footer-sublink">
+                            {{ child_link.title }}
+                          </a>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Technology</a>
+                </div>
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Company</a>
+                </div>
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Shop</a>
+                </div>
+              {% endif %}
+            </nav>
+
+            <nav class="pf-footer-links-col pf-footer-animate pf-footer-animate-links-center" aria-label="Footer center links">
+              {% if footer_menu_center != blank and footer_menu_center.links != blank %}
+                {% for link in footer_menu_center.links %}
+                  <div class="pf-footer-menu-group">
+                    <a href="{{ link.url }}" class="pf-footer-link pf-footer-link-parent">
+                      {{ link.title }}
+                    </a>
+
+                    {% if link.links != blank %}
+                      <div class="pf-footer-sublinks">
+                        {% for child_link in link.links %}
+                          <a href="{{ child_link.url }}" class="pf-footer-sublink">
+                            {{ child_link.title }}
+                          </a>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Commercial</a>
+                </div>
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Blog</a>
+                </div>
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Contact</a>
+                </div>
+              {% endif %}
+            </nav>
+
+            <nav class="pf-footer-links-col pf-footer-animate pf-footer-animate-links-right" aria-label="Footer right links">
+              {% if footer_menu_right != blank and footer_menu_right.links != blank %}
+                {% for link in footer_menu_right.links %}
+                  <div class="pf-footer-menu-group">
+                    <a href="{{ link.url }}" class="pf-footer-link pf-footer-link-parent">
+                      {{ link.title }}
+                    </a>
+
+                    {% if link.links != blank %}
+                      <div class="pf-footer-sublinks">
+                        {% for child_link in link.links %}
+                          <a href="{{ child_link.url }}" class="pf-footer-sublink">
+                            {{ child_link.title }}
+                          </a>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Shipping &amp; Delivery</a>
+                </div>
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Privacy Policy</a>
+                </div>
+                <div class="pf-footer-menu-group">
+                  <a href="#" class="pf-footer-link pf-footer-link-parent">Terms &amp; Conditions</a>
+                </div>
+              {% endif %}
+            </nav>
+          </div>
+        </div>
+
+        <div class="pf-payment-zone pf-footer-animate pf-footer-animate-payments">
+          <div class="pf-payment-track" aria-label="Accepted payment methods">
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'payment_logo' %}
+                  <div class="pf-payment-item" {{ block.shopify_attributes }}>
+                    {% if block.settings.logo_svg != blank %}
+                      <span
+                        class="pf-payment-logo pf-payment-logo-svg"
+                        {% if block.settings.logo_label != blank %}
+                          aria-label="{{ block.settings.logo_label | escape }}"
+                        {% elsif block.settings.logo_text != blank %}
+                          aria-label="{{ block.settings.logo_text | escape }}"
+                        {% else %}
+                          aria-label="Payment method"
+                        {% endif %}
+                        role="img"
+                      >
+                        {{ block.settings.logo_svg }}
+                      </span>
+                    {% elsif block.settings.logo_text != blank %}
+                      <span class="pf-payment-logo pf-payment-logo-text">
+                        {{ block.settings.logo_text }}
+                      </span>
+                    {% endif %}
+                  </div>
+              {% endcase %}
+            {% endfor %}
+          </div>
+        </div>
+
+        {% if section.settings.disclaimer != blank %}
+          <div class="pf-footer-meta pf-footer-animate pf-footer-animate-disclaimer">
+            <div class="pf-footer-disclaimer">
+              {{ section.settings.disclaimer }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </footer>
+  </div>
+
+  <style>
+    #premium-footer-{{ section.id }} {
+      --pf-page-bg: {{ section.settings.page_bg }};
+      --pf-footer-bg: {{ section.settings.footer_bg }};
+      --pf-footer-radius: {{ section.settings.footer_radius }}px;
+      --pf-text-primary: {{ section.settings.text_primary }};
+      --pf-text-secondary: {{ section.settings.text_secondary }};
+      --pf-text-muted: {{ section.settings.text_muted }};
+      --pf-icon-bg: {{ section.settings.icon_bg }};
+      --pf-icon-bg-hover: {{ section.settings.icon_bg_hover }};
+      --pf-max-width: {{ section.settings.max_width }}px;
+      --pf-shadow-soft: 0 28px 80px rgba(0, 0, 0, 0.18);
+      --pf-transition-fast: 0.28s ease;
+      --pf-transition-slow: 0.55s ease;
+      background: var(--pf-page-bg);
+    }
+
+    #premium-footer-{{ section.id }} * {
+      box-sizing: border-box;
+    }
+
+    #premium-footer-{{ section.id }} a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    #premium-footer-{{ section.id }} .pf-page-shell {
+      padding: 8px 24px 24px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-showcase {
+      position: relative;
+      max-width: var(--pf-max-width);
+      margin: 0 auto;
+      background: var(--pf-footer-bg);
+      border-radius: var(--pf-footer-radius);
+      overflow: hidden;
+      box-shadow: var(--pf-shadow-soft);
+      isolation: isolate;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-showcase::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,0.06), transparent 22%),
+        radial-gradient(circle at 82% 82%, rgba(255,255,255,0.04), transparent 18%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-inner {
+      position: relative;
+      z-index: 1;
+      padding: 56px 56px 36px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-grid {
+      display: grid;
+      grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+      gap: 80px;
+      align-items: start;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-brand {
+      max-width: 380px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 34px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-brand-logo {
+      width: 38px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    #premium-footer-{{ section.id }} .pf-brand-logo svg,
+    #premium-footer-{{ section.id }} .pf-brand-logo-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #premium-footer-{{ section.id }} .pf-brand-logo-image {
+      width: auto;
+      height: auto;
+      max-width: 60px;
+      max-height: 40px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-brand-name {
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      color: var(--pf-text-primary);
+    }
+
+    #premium-footer-{{ section.id }} .pf-social-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 46px;
+      flex-wrap: wrap;
+    }
+
+    #premium-footer-{{ section.id }} .pf-social-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 14px;
+      background: var(--pf-icon-bg);
+      border: 1px solid rgba(255,255,255,0.03);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition:
+        transform var(--pf-transition-fast),
+        background var(--pf-transition-fast),
+        box-shadow var(--pf-transition-fast);
+      color: var(--pf-text-primary);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    #premium-footer-{{ section.id }} .pf-social-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      background: var(--pf-icon-bg-hover);
+      box-shadow: 0 14px 26px rgba(0,0,0,0.28);
+    }
+
+    #premium-footer-{{ section.id }} .pf-social-btn svg {
+      width: 27px;
+      height: 27px;
+      display: block;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter {
+      margin: -16px 0 42px;
+      max-width: 380px;
+      color: var(--pf-text-primary);
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-eyebrow {
+      margin-bottom: 10px;
+      color: var(--pf-text-secondary);
+      font-size: 12px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-heading {
+      margin: 0 0 10px;
+      color: var(--pf-text-primary);
+      font-size: 24px;
+      line-height: 1.12;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-text {
+      margin: 0 0 18px;
+      color: var(--pf-text-secondary);
+      font-size: 14px;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-text p {
+      margin: 0;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-field {
+      display: flex;
+      align-items: stretch;
+      min-height: 54px;
+      padding: 5px;
+      border: 1px solid rgba(245,243,239,0.16);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.055);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      transition:
+        border-color var(--pf-transition-fast),
+        background var(--pf-transition-fast),
+        box-shadow var(--pf-transition-fast);
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-field:focus-within {
+      border-color: rgba(245,243,239,0.38);
+      background: rgba(255,255,255,0.075);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 0 0 3px rgba(245,243,239,0.08);
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-input {
+      width: 100%;
+      min-width: 0;
+      flex: 1 1 auto;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--pf-text-primary);
+      padding: 0 16px;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-input::placeholder {
+      color: rgba(245,243,239,0.46);
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-button {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 118px;
+      border: 0;
+      border-radius: 999px;
+      padding: 0 18px;
+      background: var(--pf-text-primary);
+      color: #050505;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition:
+        transform var(--pf-transition-fast),
+        background var(--pf-transition-fast),
+        opacity var(--pf-transition-fast);
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-button:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-button svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-message {
+      color: var(--pf-text-secondary);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-message--success {
+      color: rgba(180, 235, 190, 0.94);
+    }
+
+    #premium-footer-{{ section.id }} .pf-newsletter-message--error {
+      color: rgba(255, 180, 180, 0.95);
+    }
+
+    #premium-footer-{{ section.id }} .pf-brand-metrics {
+      display: grid;
+      gap: 22px;
+      max-width: 340px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-metric-item {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 14px;
+      align-items: start;
+      color: rgba(245,243,239,0.92);
+      font-size: 15px;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+
+    #premium-footer-{{ section.id }} .pf-metric-icon {
+      color: rgba(245,243,239,0.9);
+      opacity: 0.88;
+      margin-top: 1px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-metric-icon svg {
+      width: 24px;
+      height: 24px;
+      display: block;
+      stroke-width: 1.8;
+    }
+
+    #premium-footer-{{ section.id }} .pf-metric-phone {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    #premium-footer-{{ section.id }} .pf-metric-phone:hover {
+      text-decoration: underline;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-links-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 40px;
+      align-items: start;
+      min-width: 0;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-links-col {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      padding-top: 6px;
+      min-width: 0;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-menu-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      font-size: 18px;
+      line-height: 1.3;
+      font-weight: 500;
+      color: rgba(245,243,239,0.88);
+      transition:
+        color var(--pf-transition-fast),
+        transform var(--pf-transition-fast);
+      letter-spacing: -0.02em;
+      word-break: break-word;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 1px;
+      background: rgba(245,243,239,0.65);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform var(--pf-transition-fast);
+      opacity: 0.88;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-link:hover {
+      color: var(--pf-text-primary);
+      transform: translateX(4px);
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-link:hover::after {
+      transform: scaleX(1);
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-link-parent {
+      font-weight: 600;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-sublinks {
+      display: grid;
+      gap: 8px;
+      padding-left: 2px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-sublink {
+      width: fit-content;
+      max-width: 100%;
+      font-size: 15px;
+      line-height: 1.4;
+      color: rgba(245,243,239,0.56);
+      transition:
+        color var(--pf-transition-fast),
+        transform var(--pf-transition-fast);
+      word-break: break-word;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-sublink:hover {
+      color: rgba(245,243,239,0.9);
+      transform: translateX(3px);
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-meta {
+      margin-top: 42px;
+      display: grid;
+      grid-template-columns: minmax(300px, 980px);
+      gap: 24px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-footer-disclaimer {
+      max-width: 1100px;
+      color: var(--pf-text-muted);
+      font-size: 15px;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+    }
+
+    #premium-footer-{{ section.id }} .pf-payment-zone {
+      margin-top: 64px;
+      position: relative;
+    }
+
+    #premium-footer-{{ section.id }} .pf-payment-track {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      overflow: visible;
+    }
+
+    #premium-footer-{{ section.id }} .pf-payment-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+
+      padding: 6px 4px;
+      color: rgba(255,255,255,0.92);
+      opacity: 0.78;
+      transition:
+        opacity var(--pf-transition-fast),
+        transform var(--pf-transition-fast);
+      user-select: none;
+    }
+
+    #premium-footer-{{ section.id }} .pf-payment-item:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+
+    #premium-footer-{{ section.id }} .pf-payment-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    #premium-footer-{{ section.id }} .pf-payment-logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.92);
+    }
+
+    #premium-footer-{{ section.id }} .pf-payment-logo-svg {
+      width: auto;
+      max-width: 120px;
+    }
+
+    #premium-footer-{{ section.id }} .pf-payment-logo-svg svg {
+      display: block;
+      width: auto;
+      height: 28px;
+      max-width: 120px;
+      max-height: 28px;
+    }
+
+    @media (max-width: 1400px) {
+      #premium-footer-{{ section.id }} .pf-footer-grid {
+        gap: 48px;
+        grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-links-wrap {
+        grid-template-columns: repeat(3, minmax(150px, 1fr));
+        gap: 28px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-brand-name {
+        font-size: 30px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-payment-zone {
+        margin-top: 92px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      #premium-footer-{{ section.id }} .pf-page-shell {
+        padding: 12px 16px 16px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-inner {
+        padding: 38px 26px 26px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 34px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-links-wrap {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-meta {
+        margin-top: 34px;
+        grid-template-columns: 1fr;
+      }
+
+      #premium-footer-{{ section.id }} .pf-payment-zone {
+        margin-top: 68px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      #premium-footer-{{ section.id }} .pf-page-shell {
+        padding: 10px 12px 12px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-inner {
+        padding: 24px 18px 18px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-brand-lockup {
+        margin-bottom: 24px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-brand-name {
+        font-size: 26px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-social-row {
+        margin-bottom: 28px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-social-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-social-btn svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-newsletter {
+        margin: 0 0 30px;
+        max-width: none;
+      }
+
+      #premium-footer-{{ section.id }} .pf-newsletter-heading {
+        font-size: 21px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-newsletter-text {
+        font-size: 13px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-newsletter-field {
+        min-height: 52px;
+        border-radius: 18px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-newsletter-button {
+        min-width: 48px;
+        width: 48px;
+        padding: 0;
+      }
+
+      #premium-footer-{{ section.id }} .pf-newsletter-button span {
+        display: none;
+      }
+
+      #premium-footer-{{ section.id }} .pf-brand-metrics {
+        gap: 18px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-metric-item {
+        font-size: 14px;
+        gap: 12px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-links-wrap {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-links-col {
+        gap: 16px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-link {
+        font-size: 17px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-sublink {
+        font-size: 14px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-meta {
+        margin-top: 28px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-footer-disclaimer {
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      #premium-footer-{{ section.id }} .pf-payment-zone {
+        margin-top: 32px;
+      }
+
+
+      #premium-footer-{{ section.id }} .pf-payment-item {
+        min-width: 56px;
+        padding: 4px 3px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-payment-logo-text {
+        font-size: 15px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-payment-logo-svg {
+        max-width: 90px;
+      }
+
+      #premium-footer-{{ section.id }} .pf-payment-logo-svg svg {
+        height: 22px;
+        max-width: 90px;
+        max-height: 22px;
+      }
+    }
+  </style>
+
+  <script>
+    (() => {
+      const sectionId = '{{ section.id }}';
+
+      function getSection() {
+        return document.getElementById('premium-footer-' + sectionId);
+      }
+
+      function waitForLibraries(callback, maxTries = 120) {
+        let tries = 0;
+
+        const timer = setInterval(() => {
+          tries += 1;
+
+          const gsapReady = typeof window.gsap !== 'undefined';
+
+          if (gsapReady) {
+            clearInterval(timer);
+            callback();
+          } else if (tries >= maxTries) {
+            clearInterval(timer);
+
+            const sectionEl = getSection();
+
+            if (sectionEl) {
+              sectionEl.dataset.initialized = 'true';
+            }
+
+            console.warn('Premium footer showcase: GSAP is not available. Static footer remains visible.');
+          }
+        }, 100);
+      }
+
+      function destroySection(sectionEl) {
+        if (!sectionEl) return;
+
+        sectionEl.dataset.initialized = '';
+      }
+
+      function initFooter() {
+        const sectionEl = getSection();
+
+        if (!sectionEl) return;
+        if (sectionEl.dataset.initialized === 'true' || sectionEl.dataset.initialized === 'pending') return;
+
+        sectionEl.dataset.initialized = 'pending';
+
+        const footer = sectionEl.querySelector('.pf-footer-showcase');
+
+        if (!footer) {
+          sectionEl.dataset.initialized = 'true';
+          return;
+        }
+
+        if (window.gsap) {
+          const gsap = window.gsap;
+          const ScrollTrigger = window.ScrollTrigger;
+
+          if (ScrollTrigger) {
+            gsap.registerPlugin(ScrollTrigger);
+          }
+
+          const animateItems = footer.querySelectorAll('.pf-footer-animate');
+
+          gsap.set(animateItems, {
+            opacity: 0,
+            y: 26
+          });
+
+          gsap.fromTo(
+            footer,
+            {
+              opacity: 0,
+              y: 30
+            },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: 'power3.out',
+              scrollTrigger: ScrollTrigger
+                ? {
+                    trigger: footer,
+                    start: 'top 88%',
+                    once: true
+                  }
+                : undefined
+            }
+          );
+
+          const tl = gsap.timeline(
+            ScrollTrigger
+              ? {
+                  scrollTrigger: {
+                    trigger: footer,
+                    start: 'top 84%',
+                    once: true
+                  }
+                }
+              : {}
+          );
+
+          const brandEl = sectionEl.querySelector('.pf-footer-animate-brand');
+          const newsletterEl = sectionEl.querySelector('.pf-footer-animate-newsletter');
+          const leftEl = sectionEl.querySelector('.pf-footer-animate-links-left');
+          const centerEl = sectionEl.querySelector('.pf-footer-animate-links-center');
+          const rightEl = sectionEl.querySelector('.pf-footer-animate-links-right');
+          const disclaimerEl = sectionEl.querySelector('.pf-footer-animate-disclaimer');
+          const paymentsEl = sectionEl.querySelector('.pf-footer-animate-payments');
+
+          if (brandEl) {
+            tl.to(brandEl, {
+              opacity: 1,
+              y: 0,
+              duration: 0.9,
+              ease: 'power3.out'
+            });
+          }
+
+          if (newsletterEl) {
+            tl.to(
+              newsletterEl,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.75,
+                ease: 'power3.out'
+              },
+              '-=0.42'
+            );
+          }
+
+          if (leftEl) {
+            tl.to(
+              leftEl,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+              },
+              '-=0.45'
+            );
+          }
+
+          if (centerEl) {
+            tl.to(
+              centerEl,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+              },
+              '-=0.55'
+            );
+          }
+
+          if (rightEl) {
+            tl.to(
+              rightEl,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+              },
+              '-=0.55'
+            );
+          }
+
+          if (paymentsEl) {
+            tl.to(
+              paymentsEl,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.9,
+                ease: 'power2.out'
+              },
+              '-=0.28'
+            );
+          }
+
+          if (disclaimerEl) {
+            tl.to(
+              disclaimerEl,
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.75,
+                ease: 'power2.out'
+              },
+              '-=0.32'
+            );
+          }
+
+          if (ScrollTrigger) {
+            gsap.to(footer, {
+              y: -6,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: footer,
+                start: 'top bottom',
+                end: 'bottom bottom',
+                scrub: 1
+              }
+            });
+          }
+
+          sectionEl.querySelectorAll('.pf-social-btn').forEach((btn) => {
+            btn.addEventListener('mouseenter', () => {
+              gsap.to(btn, {
+                y: -3,
+                scale: 1.03,
+                duration: 0.28,
+                ease: 'power2.out'
+              });
+            });
+
+            btn.addEventListener('mouseleave', () => {
+              gsap.to(btn, {
+                y: 0,
+                scale: 1,
+                duration: 0.28,
+                ease: 'power2.out'
+              });
+            });
+          });
+
+          sectionEl.querySelectorAll('.pf-footer-link').forEach((link) => {
+            link.addEventListener('mouseenter', () => {
+              gsap.to(link, {
+                x: 4,
+                duration: 0.24,
+                ease: 'power2.out'
+              });
+            });
+
+            link.addEventListener('mouseleave', () => {
+              gsap.to(link, {
+                x: 0,
+                duration: 0.24,
+                ease: 'power2.out'
+              });
+            });
+          });
+
+          sectionEl.querySelectorAll('.pf-footer-sublink').forEach((link) => {
+            link.addEventListener('mouseenter', () => {
+              gsap.to(link, {
+                x: 3,
+                duration: 0.24,
+                ease: 'power2.out'
+              });
+            });
+
+            link.addEventListener('mouseleave', () => {
+              gsap.to(link, {
+                x: 0,
+                duration: 0.24,
+                ease: 'power2.out'
+              });
+            });
+          });
+
+          sectionEl.querySelectorAll('.pf-payment-item').forEach((item) => {
+            item.addEventListener('mouseenter', () => {
+              gsap.to(item, {
+                y: -2,
+                opacity: 1,
+                duration: 0.25,
+                ease: 'power2.out'
+              });
+            });
+
+            item.addEventListener('mouseleave', () => {
+              gsap.to(item, {
+                y: 0,
+                opacity: 0.78,
+                duration: 0.25,
+                ease: 'power2.out'
+              });
+            });
+          });
+        }
+
+        sectionEl.dataset.initialized = 'true';
+      }
+
+      function boot() {
+        waitForLibraries(initFooter);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        boot();
+      }
+
+      document.addEventListener('shopify:section:load', function(event) {
+        if (event.detail && event.detail.sectionId === sectionId) {
+          const sectionEl = getSection();
+
+          if (!sectionEl) return;
+
+          destroySection(sectionEl);
+          setTimeout(boot, 50);
+        }
+      });
+
+      document.addEventListener('shopify:section:unload', function(event) {
+        if (event.detail && event.detail.sectionId === sectionId) {
+          const sectionEl = getSection();
+
+          destroySection(sectionEl);
+        }
+      });
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Premium footer showcase",
+  "tag": "section",
+  "class": "section-premium-footer-showcase",
+  "settings": [
+    {
+      "type": "color",
+      "id": "page_bg",
+      "label": "Page background",
+      "default": "#ece8e1"
+    },
+    {
+      "type": "color",
+      "id": "footer_bg",
+      "label": "Footer background",
+      "default": "#050505"
+    },
+    {
+      "type": "range",
+      "id": "footer_radius",
+      "label": "Footer radius",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Footer max width",
+      "min": 1200,
+      "max": 2200,
+      "step": 20,
+      "default": 1880
+    },
+    {
+      "type": "color",
+      "id": "text_primary",
+      "label": "Primary text color",
+      "default": "#f5f3ef"
+    },
+    {
+      "type": "color",
+      "id": "text_secondary",
+      "label": "Secondary text color",
+      "default": "#b6b2ac"
+    },
+    {
+      "type": "color",
+      "id": "text_muted",
+      "label": "Muted text color",
+      "default": "#7c7974"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg",
+      "label": "Social icon background",
+      "default": "#1f2022"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg_hover",
+      "label": "Social icon hover background",
+      "default": "#2a2c2f"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Brand logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "luminous labs"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TK / TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "linkedin_url",
+      "label": "LinkedIn URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter signup",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_eyebrow",
+      "label": "Newsletter eyebrow",
+      "default": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "Get early access & updates"
+    },
+    {
+      "type": "richtext",
+      "id": "newsletter_text",
+      "label": "Newsletter text",
+      "default": "<p>Subscribe for product updates, early-bird offers, and helpful red light therapy tips.</p>"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_success_text",
+      "label": "Success message",
+      "default": "Thanks for subscribing."
+    },
+    {
+      "type": "text",
+      "id": "metric_1",
+      "label": "Metric 1",
+      "default": "Combined across all platforms: 11k followers"
+    },
+    {
+      "type": "text",
+      "id": "metric_2",
+      "label": "Metric 2",
+      "default": "Daily: 50 requests/DMs"
+    },
+    {
+      "type": "text",
+      "id": "metric_3",
+      "label": "Metric 3",
+      "default": "Growth: 2% organic growth monthly"
+    },
+    {
+      "type": "text",
+      "id": "metric_phone",
+      "label": "Phone",
+      "default": "+1 (800) 123-4567"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_left",
+      "label": "Left menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_center",
+      "label": "Center menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_right",
+      "label": "Right menu"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "These statements have not been evaluated by the Food and Drug Administration. In the European Union, the intended use of our products does not fall within the scope of article 2 section 1 of 2017/45 MDR. Our products are not intended to diagnose, treat, cure, or prevent any disease."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "payment_logo",
+      "name": "Payment SVG",
+      "settings": [
+        {
+          "type": "text",
+          "id": "logo_label",
+          "label": "Payment method label",
+          "default": "Payment method"
+        },
+        {
+          "type": "textarea",
+          "id": "logo_svg",
+          "label": "SVG code",
+          "info": "Paste the full SVG code here, for example: <svg viewBox='0 0 64 24'>...</svg>."
+        },
+        {
+          "type": "text",
+          "id": "logo_text",
+          "label": "Fallback text",
+          "default": "PayPal"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium footer showcase",
+      "blocks": [
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "PayPal"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "Mastercard"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "Maestro"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "VISA"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "American Express"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "Klarna"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "JCB"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "Venmo"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "Apple Pay"
+          }
+        },
+        {
+          "type": "payment_logo",
+          "settings": {
+            "logo_text": "G Pay"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1559 @@
+{% comment %}
+  Wondear Media Recognition Carousel
+  File name: wondear-media-recognition-carousel-press-editorial.liquid
+{% endcomment %}
+
+{% liquid
+  assign wmc_card_align_items = 'center'
+
+  if section.settings.card_content_alignment == 'left'
+    assign wmc_card_align_items = 'flex-start'
+  elsif section.settings.card_content_alignment == 'right'
+    assign wmc_card_align_items = 'flex-end'
+  endif
+%}
+
+<section
+  id="wondear-media-carousel-{{ section.id }}"
+  class="wondear-media-carousel"
+  data-wondear-media-carousel
+  data-section-id="{{ section.id }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-autoplay-speed="{{ section.settings.autoplay_speed }}"
+  style="
+    --wmc-bg: {{ section.settings.section_bg_color }};
+    --wmc-padding-top: {{ section.settings.section_padding_top }}px;
+    --wmc-padding-bottom: {{ section.settings.section_padding_bottom }}px;
+    --wmc-card-gap: {{ section.settings.card_gap }}px;
+    --wmc-desktop-items: {{ section.settings.desktop_items }};
+    --wmc-tablet-items: {{ section.settings.tablet_items }};
+    --wmc-mobile-items: {{ section.settings.mobile_items }};
+    --wmc-header-align: {{ section.settings.header_alignment }};
+    --wmc-slider-margin-top: {{ section.settings.slider_margin_top }}px;
+    --wmc-card-align-items: {{ wmc_card_align_items }};
+    --wmc-card-text-align: {{ section.settings.card_content_alignment }};
+    --wmc-card-bg: {{ section.settings.card_bg_color }};
+    --wmc-card-border-color: {{ section.settings.card_border_color }};
+    --wmc-card-radius: {{ section.settings.card_radius }}px;
+    --wmc-eyebrow-color: {{ section.settings.eyebrow_color }};
+    --wmc-eyebrow-size-desktop: {{ section.settings.eyebrow_font_size_desktop }}px;
+    --wmc-eyebrow-size-tablet: {{ section.settings.eyebrow_font_size_tablet }}px;
+    --wmc-eyebrow-size-mobile: {{ section.settings.eyebrow_font_size_mobile }}px;
+    --wmc-heading-color: {{ section.settings.heading_color }};
+    --wmc-heading-size-desktop: {{ section.settings.heading_font_size_desktop }}px;
+    --wmc-heading-size-tablet: {{ section.settings.heading_font_size_tablet }}px;
+    --wmc-heading-size-mobile: {{ section.settings.heading_font_size_mobile }}px;
+    --wmc-quote-color: {{ section.settings.quote_color }};
+    --wmc-quote-size-desktop: {{ section.settings.quote_font_size_desktop }}px;
+    --wmc-quote-size-tablet: {{ section.settings.quote_font_size_tablet }}px;
+    --wmc-quote-size-mobile: {{ section.settings.quote_font_size_mobile }}px;
+    --wmc-quote-max-width: {{ section.settings.quote_max_width }}px;
+    --wmc-source-color: {{ section.settings.source_color }};
+    --wmc-link-color: {{ section.settings.link_color }};
+    --wmc-logo-color: {{ section.settings.logo_color }};
+    --wmc-logo-opacity: {{ section.settings.logo_opacity }};
+    --wmc-logo-top-spacing: {{ section.settings.logo_top_spacing }}px;
+    --wmc-logo-bottom-spacing: {{ section.settings.logo_bottom_spacing }}px;
+    --wmc-logo-image-max-width: {{ section.settings.logo_image_max_width }}px;
+    --wmc-logo-image-max-height: {{ section.settings.logo_image_max_height }}px;
+  "
+>
+  <div class="wondear-media-carousel__inner">
+    <div class="wondear-media-carousel__header">
+      {% if section.settings.eyebrow_text != blank %}
+        <p class="wondear-media-carousel__eyebrow">
+          {{ section.settings.eyebrow_text }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="wondear-media-carousel__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="wondear-media-carousel__slider-wrap">
+        {% if section.settings.show_arrows %}
+          <button
+            class="wondear-media-carousel__arrow wondear-media-carousel__arrow--prev"
+            type="button"
+            aria-label="Previous media item"
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        {% endif %}
+
+        <div class="wondear-media-carousel__viewport">
+          <div class="wondear-media-carousel__track">
+            {% for block in section.blocks %}
+              {% liquid
+                assign wmc_source_label = block.settings.source_label
+
+                if wmc_source_label == blank
+                  assign wmc_source_label = block.settings.logo_text
+                endif
+              %}
+
+              <article class="wondear-media-carousel__slide" {{ block.shopify_attributes }}>
+                <div class="wondear-media-carousel__card">
+                  <div class="wondear-media-carousel__logo">
+                    {% if block.settings.logo_image != blank %}
+                      {{
+                        block.settings.logo_image
+                        | image_url: width: 520
+                        | image_tag:
+                          class: 'wondear-media-carousel__logo-img',
+                          loading: 'lazy',
+                          alt: block.settings.logo_alt
+                      }}
+                    {% else %}
+                      {% assign logo_style = block.settings.logo_style %}
+
+                      <span
+                        class="
+                          wondear-media-carousel__logo-text
+                          wondear-media-carousel__logo--{{ logo_style }}
+                        "
+                        {% if block.settings.custom_logo_font_size > 0 %}
+                          style="--wmc-custom-logo-size: {{ block.settings.custom_logo_font_size }}px;"
+                        {% endif %}
+                      >
+                        {% if logo_style == 'cybernews' %}
+                          <span class="wondear-media-carousel__cyber-icon" aria-hidden="true">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </span>
+                        {% endif %}
+
+                        {% if block.settings.logo_subtext != blank %}
+                          <span class="wondear-media-carousel__logo-subtext">
+                            {{ block.settings.logo_subtext }}
+                          </span>
+                        {% endif %}
+
+                        {{ block.settings.logo_text }}
+                      </span>
+                    {% endif %}
+                  </div>
+
+                  {% if block.settings.quote_text != blank %}
+                    <p class="wondear-media-carousel__quote">
+                      {{ block.settings.quote_text }}
+                    </p>
+                  {% endif %}
+
+                  {% if wmc_source_label != blank %}
+                    <p class="wondear-media-carousel__source">
+                      {{ wmc_source_label }}
+                    </p>
+                  {% endif %}
+
+                  {% if block.settings.article_url != blank %}
+                    <a
+                      class="wondear-media-carousel__link"
+                      href="{{ block.settings.article_url }}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {{ block.settings.link_text | default: 'Read Feature' }}
+                      <span aria-hidden="true">→</span>
+                    </a>
+                  {% endif %}
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+
+        {% if section.settings.show_arrows %}
+          <button
+            class="wondear-media-carousel__arrow wondear-media-carousel__arrow--next"
+            type="button"
+            aria-label="Next media item"
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        {% endif %}
+
+        {% if section.settings.show_dots %}
+          <div class="wondear-media-carousel__dots" aria-label="Carousel pagination"></div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #wondear-media-carousel-{{ section.id }} {
+    --wmc-shared-container: 1440px;
+    --wmc-shared-heading-size: clamp(34px, 3.2vw, 52px);
+    --wmc-shared-heading-size-tablet: clamp(30px, 4vw, 42px);
+    --wmc-shared-heading-size-mobile: clamp(26px, 7vw, 34px);
+    --wmc-shared-eyebrow-size: 13px;
+    --wmc-shared-quote-size: 20px;
+    --wmc-shared-quote-size-mobile: 16px;
+    background: var(--wmc-bg);
+    padding-top: var(--wmc-padding-top);
+    padding-bottom: var(--wmc-padding-bottom);
+    overflow: hidden;
+    font-family: var(--font-body--family, var(--font-body-family, Arial, sans-serif));
+  }
+
+  #wondear-media-carousel-{{ section.id }} * {
+    box-sizing: border-box;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__inner {
+    max-width: var(--wmc-shared-container);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__header {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: var(--wmc-header-align);
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__eyebrow {
+    margin: 0;
+    font-size: min(var(--wmc-eyebrow-size-desktop), var(--wmc-shared-eyebrow-size));
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: var(--wmc-eyebrow-color);
+    text-transform: uppercase;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__heading {
+    margin: 14px 0 0;
+    font-size: var(--wmc-heading-size-desktop);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-family: var(--font-heading--family, var(--font-heading-family, inherit));
+    font-weight: 700;
+    color: var(--wmc-heading-color);
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__slider-wrap {
+    position: relative;
+    margin-top: var(--wmc-slider-margin-top);
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__track {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--wmc-card-gap);
+    align-items: stretch;
+    min-width: 100%;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__slide {
+    flex: 0 0 calc((100% - (var(--wmc-card-gap) * (var(--wmc-desktop-items) - 1))) / var(--wmc-desktop-items));
+    scroll-snap-align: start;
+    min-width: 0;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__card {
+    position: relative;
+    height: 100%;
+    min-height: 286px;
+    display: flex;
+    flex-direction: column;
+    align-items: var(--wmc-card-align-items);
+    justify-content: flex-start;
+    text-align: var(--wmc-card-text-align);
+    padding: 34px 30px 32px;
+    border-radius: var(--wmc-card-radius);
+    background: var(--wmc-card-bg);
+    border: 1px solid var(--wmc-card-border-color);
+    box-shadow: 0 18px 46px rgba(17, 17, 17, 0.04);
+    transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(17, 17, 17, 0.28);
+    box-shadow: 0 24px 60px rgba(17, 17, 17, 0.07);
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo {
+    width: 100%;
+    min-height: 48px;
+    margin-top: var(--wmc-logo-top-spacing);
+    margin-bottom: var(--wmc-logo-bottom-spacing);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wmc-logo-color);
+    opacity: var(--wmc-logo-opacity);
+    white-space: nowrap;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo-img {
+    display: block;
+    max-width: var(--wmc-logo-image-max-width);
+    max-height: var(--wmc-logo-image-max-height);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale(1) contrast(1.12);
+    opacity: 0.92;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo-text {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wmc-logo-color);
+    transform-origin: center;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--forbes {
+    font-size: 46px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -3px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--cybernews {
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -1px;
+    gap: 9px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__cyber-icon {
+    width: 26px;
+    height: 26px;
+    display: inline-grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__cyber-icon span {
+    display: block;
+    background: var(--wmc-logo-color);
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--elle {
+    font-size: 46px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: 4px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--bazaar {
+    position: relative;
+    font-size: 42px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -1.5px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo-subtext {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    line-height: 1;
+    letter-spacing: 0;
+    font-weight: 400;
+    color: var(--wmc-logo-color);
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--shape {
+    font-size: 44px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 3px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--allure {
+    font-size: 42px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--byrdie {
+    font-size: 38px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--vogue {
+    font-size: 46px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--wwd {
+    font-size: 42px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--happi {
+    font-size: 40px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--newbeauty {
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -1px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--custom {
+    font-size: var(--wmc-custom-logo-size, 38px);
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__quote {
+    margin: 0 auto;
+    max-width: var(--wmc-quote-max-width);
+    color: var(--wmc-quote-color);
+    font-size: min(var(--wmc-quote-size-desktop), var(--wmc-shared-quote-size));
+    line-height: 1.55;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__source {
+    margin: 22px 0 0;
+    color: var(--wmc-source-color);
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 18px;
+    color: var(--wmc-link-color);
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 3px;
+    transition: opacity 0.2s ease, gap 0.2s ease;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__link:hover {
+    opacity: 0.72;
+    gap: 9px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    border: 1px solid #d8d8d8;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #111111;
+    box-shadow: 0 10px 24px rgba(17, 17, 17, 0.06);
+    cursor: pointer;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+    pointer-events: auto;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow:hover {
+    background: #111111;
+    border-color: #111111;
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.04);
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow--prev {
+    left: -22px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow--next {
+    right: -22px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__dots {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__dot {
+    width: 20px;
+    height: 3px;
+    border-radius: 999px;
+    border: 0;
+    padding: 0;
+    background: #d6d6d6;
+    cursor: pointer;
+    transition: width 0.2s ease, background 0.2s ease;
+  }
+
+  #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__dot.is-active {
+    width: 34px;
+    background: #111111;
+  }
+
+  @media (max-width: 991px) {
+    #wondear-media-carousel-{{ section.id }} {
+      padding-top: calc(var(--wmc-padding-top) * 0.85);
+      padding-bottom: calc(var(--wmc-padding-bottom) * 0.85);
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__inner {
+      padding: 0 18px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__eyebrow {
+      font-size: min(var(--wmc-eyebrow-size-tablet), var(--wmc-shared-eyebrow-size));
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__heading {
+      font-size: var(--wmc-heading-size-tablet);
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__slider-wrap {
+      margin-top: calc(var(--wmc-slider-margin-top) * 0.84);
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__slide {
+      flex: 0 0 calc((100% - (var(--wmc-card-gap) * (var(--wmc-tablet-items) - 1))) / var(--wmc-tablet-items));
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__card {
+      min-height: 270px;
+      padding: 30px 24px 28px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__quote {
+      font-size: min(var(--wmc-quote-size-tablet), var(--wmc-shared-quote-size));
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--forbes,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--elle,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--bazaar,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--shape,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--allure,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--vogue,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--wwd,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--happi {
+      font-size: 38px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--byrdie,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--newbeauty {
+      font-size: 34px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--cybernews {
+      font-size: 24px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow--prev {
+      left: -8px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow--next {
+      right: -8px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    #wondear-media-carousel-{{ section.id }} {
+      padding-top: calc(var(--wmc-padding-top) * 0.72);
+      padding-bottom: calc(var(--wmc-padding-bottom) * 0.72);
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__inner {
+      padding: 0 14px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__eyebrow {
+      font-size: min(var(--wmc-eyebrow-size-mobile), 12px);
+      letter-spacing: 0.1em;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__heading {
+      margin-top: 12px;
+      font-size: var(--wmc-heading-size-mobile);
+      line-height: 1.14;
+      letter-spacing: -0.025em;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__slider-wrap {
+      margin-top: calc(var(--wmc-slider-margin-top) * 0.68);
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__slide {
+      flex: 0 0 calc((100% - (var(--wmc-card-gap) * (var(--wmc-mobile-items) - 1))) / var(--wmc-mobile-items));
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__card {
+      min-height: 254px;
+      padding: 26px 20px 24px;
+      border-radius: calc(var(--wmc-card-radius) * 0.85);
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo {
+      min-height: 42px;
+      margin-bottom: calc(var(--wmc-logo-bottom-spacing) * 0.78);
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo-img {
+      max-width: min(var(--wmc-logo-image-max-width), 156px);
+      max-height: min(var(--wmc-logo-image-max-height), 38px);
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__quote {
+      max-width: min(var(--wmc-quote-max-width), 270px);
+      font-size: min(var(--wmc-quote-size-mobile), var(--wmc-shared-quote-size-mobile));
+      line-height: 1.55;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__source {
+      margin-top: 18px;
+      font-size: 11px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__link {
+      margin-top: 14px;
+      font-size: 12px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--forbes,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--elle,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--bazaar,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--shape,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--allure,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--vogue,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--wwd,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--happi {
+      font-size: 34px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--byrdie,
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--newbeauty {
+      font-size: 30px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__logo--cybernews {
+      font-size: 21px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__cyber-icon {
+      width: 22px;
+      height: 22px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow {
+      width: 36px;
+      height: 36px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow--prev {
+      left: -5px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__arrow--next {
+      right: -5px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__dots {
+      margin-top: 22px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__dot {
+      width: 16px;
+    }
+
+    #wondear-media-carousel-{{ section.id }} .wondear-media-carousel__dot.is-active {
+      width: 28px;
+    }
+  }
+</style>
+
+<script>
+  function initWondearMediaCarousel{{ section.id | replace: '-', '_' }}() {
+    const carousel = document.querySelector('#wondear-media-carousel-{{ section.id }}');
+
+    if (!carousel) return;
+    if (carousel.dataset.initialized === 'true') return;
+
+    carousel.dataset.initialized = 'true';
+
+    const viewport = carousel.querySelector('.wondear-media-carousel__viewport');
+    const track = carousel.querySelector('.wondear-media-carousel__track');
+    const slides = Array.from(carousel.querySelectorAll('.wondear-media-carousel__slide'));
+    const prevBtn = carousel.querySelector('.wondear-media-carousel__arrow--prev');
+    const nextBtn = carousel.querySelector('.wondear-media-carousel__arrow--next');
+    const dotsWrap = carousel.querySelector('.wondear-media-carousel__dots');
+
+    if (!viewport || !track || !slides.length) return;
+
+    let autoplayTimer = null;
+    let scrollRaf = null;
+
+    const autoplay = carousel.dataset.autoplay === 'true';
+    const autoplaySpeed = Number(carousel.dataset.autoplaySpeed) || 3500;
+
+    function getGap() {
+      return parseFloat(window.getComputedStyle(track).gap) || 0;
+    }
+
+    function getStep() {
+      const slideWidth = slides[0].getBoundingClientRect().width;
+      return slideWidth + getGap();
+    }
+
+    function getMaxScrollLeft() {
+      return Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+    }
+
+    function getCurrentIndex() {
+      const step = getStep();
+      if (!step) return 0;
+      return Math.round(viewport.scrollLeft / step);
+    }
+
+    function getMaxIndex() {
+      const step = getStep();
+      if (!step) return 0;
+      return Math.ceil(getMaxScrollLeft() / step);
+    }
+
+    function updateDots(activeIndex) {
+      if (!dotsWrap) return;
+
+      const dots = dotsWrap.querySelectorAll('.wondear-media-carousel__dot');
+
+      dots.forEach(function(dot, index) {
+        dot.classList.toggle('is-active', index === activeIndex);
+      });
+    }
+
+    function scrollToIndex(index) {
+      const maxIndex = getMaxIndex();
+      const targetIndex = Math.max(0, Math.min(index, maxIndex));
+
+      viewport.scrollTo({
+        left: targetIndex * getStep(),
+        behavior: 'smooth'
+      });
+
+      updateDots(targetIndex);
+    }
+
+    function goNext() {
+      const currentIndex = getCurrentIndex();
+      const maxIndex = getMaxIndex();
+
+      if (currentIndex >= maxIndex) {
+        scrollToIndex(0);
+      } else {
+        scrollToIndex(currentIndex + 1);
+      }
+    }
+
+    function goPrev() {
+      const currentIndex = getCurrentIndex();
+      const maxIndex = getMaxIndex();
+
+      if (currentIndex <= 0) {
+        scrollToIndex(maxIndex);
+      } else {
+        scrollToIndex(currentIndex - 1);
+      }
+    }
+
+    function createDots() {
+      if (!dotsWrap) return;
+
+      dotsWrap.innerHTML = '';
+
+      const dotCount = getMaxIndex() + 1;
+
+      for (let index = 0; index < dotCount; index++) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'wondear-media-carousel__dot';
+        dot.setAttribute('aria-label', 'Go to media group ' + (index + 1));
+
+        dot.addEventListener('click', function() {
+          stopAutoplay();
+          scrollToIndex(index);
+          startAutoplay();
+        });
+
+        dotsWrap.appendChild(dot);
+      }
+
+      updateDots(getCurrentIndex());
+    }
+
+    function refreshDots() {
+      createDots();
+      updateDots(Math.min(getCurrentIndex(), getMaxIndex()));
+    }
+
+    function updateDotsByScroll() {
+      updateDots(Math.min(getCurrentIndex(), getMaxIndex()));
+    }
+
+    function startAutoplay() {
+      if (!autoplay) return;
+
+      stopAutoplay();
+
+      autoplayTimer = setInterval(function() {
+        goNext();
+      }, autoplaySpeed);
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        stopAutoplay();
+        goPrev();
+        startAutoplay();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        stopAutoplay();
+        goNext();
+        startAutoplay();
+      });
+    }
+
+    viewport.addEventListener('scroll', function() {
+      if (scrollRaf) {
+        window.cancelAnimationFrame(scrollRaf);
+      }
+
+      scrollRaf = window.requestAnimationFrame(updateDotsByScroll);
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+
+    carousel.addEventListener('touchstart', stopAutoplay, { passive: true });
+    carousel.addEventListener('touchend', startAutoplay);
+
+    window.addEventListener('resize', function() {
+      refreshDots();
+    });
+
+    createDots();
+    startAutoplay();
+  }
+
+  document.addEventListener('DOMContentLoaded', initWondearMediaCarousel{{ section.id | replace: '-', '_' }});
+  window.addEventListener('load', initWondearMediaCarousel{{ section.id | replace: '-', '_' }});
+
+  document.addEventListener('shopify:section:load', function(event) {
+    if (event.detail && event.detail.sectionId === '{{ section.id }}') {
+      const carousel = document.querySelector('#wondear-media-carousel-{{ section.id }}');
+      if (carousel) {
+        carousel.dataset.initialized = 'false';
+      }
+      initWondearMediaCarousel{{ section.id | replace: '-', '_' }}();
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Media recognition",
+  "tag": "section",
+  "class": "section-wondear-media-carousel",
+  "settings": [
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Section background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Seen in Leading Beauty & Wellness Media"
+    },
+    {
+      "type": "header",
+      "content": "Typography and position"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#777777"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size_desktop",
+      "label": "Eyebrow font size - desktop",
+      "min": 10,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size_tablet",
+      "label": "Eyebrow font size - tablet",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size_mobile",
+      "label": "Eyebrow font size - mobile",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "label": "Heading font size - desktop",
+      "min": 18,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_tablet",
+      "label": "Heading font size - tablet",
+      "min": 18,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "Heading font size - mobile",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "slider_margin_top",
+      "label": "Carousel top position",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "card_content_alignment",
+      "label": "Card content position",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#d8d8d8"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Quote text color",
+      "default": "#222222"
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size_desktop",
+      "label": "Quote font size - desktop",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size_tablet",
+      "label": "Quote font size - tablet",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size_mobile",
+      "label": "Quote font size - mobile",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "quote_max_width",
+      "label": "Quote text max width",
+      "min": 180,
+      "max": 560,
+      "step": 10,
+      "unit": "px",
+      "default": 340
+    },
+    {
+      "type": "color",
+      "id": "source_color",
+      "label": "Source text color",
+      "default": "#777777"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "logo_color",
+      "label": "Logo text color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "logo_opacity",
+      "label": "Logo opacity",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.9
+    },
+    {
+      "type": "range",
+      "id": "logo_top_spacing",
+      "label": "Logo top position",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "logo_bottom_spacing",
+      "label": "Logo bottom spacing",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "logo_image_max_width",
+      "label": "Logo image max width",
+      "min": 80,
+      "max": 360,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "logo_image_max_height",
+      "label": "Logo image max height",
+      "min": 24,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "header",
+      "content": "Carousel behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed",
+      "min": 2000,
+      "max": 8000,
+      "step": 500,
+      "unit": "ms",
+      "default": 3500
+    },
+    {
+      "type": "range",
+      "id": "desktop_items",
+      "label": "Desktop items per view",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "tablet_items",
+      "label": "Tablet items per view",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "mobile_items",
+      "label": "Mobile items per view",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.2
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Card gap",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "default": 76
+    }
+  ],
+  "blocks": [
+    {
+      "type": "media_item",
+      "name": "Media item",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote_text",
+          "label": "Editorial text",
+          "default": "Featured for its at-home red light therapy design and wellness-focused positioning."
+        },
+        {
+          "type": "text",
+          "id": "source_label",
+          "label": "Source / meta text",
+          "default": "Editorial Feature"
+        },
+        {
+          "type": "url",
+          "id": "article_url",
+          "label": "Article URL"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text",
+          "default": "Read Feature"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo_image",
+          "label": "Logo image"
+        },
+        {
+          "type": "text",
+          "id": "logo_alt",
+          "label": "Logo image alt text",
+          "default": "Media logo"
+        },
+        {
+          "type": "text",
+          "id": "logo_text",
+          "label": "Logo text",
+          "default": "Forbes"
+        },
+        {
+          "type": "select",
+          "id": "logo_style",
+          "label": "Logo text style",
+          "default": "forbes",
+          "options": [
+            {
+              "value": "forbes",
+              "label": "Forbes"
+            },
+            {
+              "value": "cybernews",
+              "label": "Cybernews"
+            },
+            {
+              "value": "elle",
+              "label": "ELLE"
+            },
+            {
+              "value": "bazaar",
+              "label": "Harper's BAZAAR"
+            },
+            {
+              "value": "shape",
+              "label": "SHAPE"
+            },
+            {
+              "value": "allure",
+              "label": "Allure"
+            },
+            {
+              "value": "byrdie",
+              "label": "Byrdie"
+            },
+            {
+              "value": "vogue",
+              "label": "Vogue"
+            },
+            {
+              "value": "wwd",
+              "label": "WWD"
+            },
+            {
+              "value": "happi",
+              "label": "HAPPI"
+            },
+            {
+              "value": "newbeauty",
+              "label": "NewBeauty"
+            },
+            {
+              "value": "custom",
+              "label": "Custom"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "logo_subtext",
+          "label": "Logo subtext"
+        },
+        {
+          "type": "range",
+          "id": "custom_logo_font_size",
+          "label": "Custom logo font size",
+          "min": 20,
+          "max": 80,
+          "step": 1,
+          "unit": "px",
+          "default": 38
+        }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Media recognition carousel",
+      "blocks": [
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Featured for its at-home red light therapy design and wellness-focused positioning.",
+            "source_label": "Featured in Forbes",
+            "link_text": "Read Feature",
+            "logo_text": "Forbes",
+            "logo_style": "forbes",
+            "logo_alt": "Forbes logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Recognized for bringing beauty technology into a more accessible daily routine.",
+            "source_label": "Featured in Cybernews",
+            "link_text": "Read Feature",
+            "logo_text": "cybernews",
+            "logo_style": "cybernews",
+            "logo_alt": "Cybernews logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Highlighted as part of the growing movement toward at-home beauty and wellness devices.",
+            "source_label": "Featured in ELLE",
+            "link_text": "Read Feature",
+            "logo_text": "ELLE",
+            "logo_style": "elle",
+            "logo_alt": "ELLE logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Selected for its elevated approach to full-body red light therapy and home wellness.",
+            "source_label": "Featured in Harper's BAZAAR",
+            "link_text": "Read Feature",
+            "logo_text": "BAZAAR",
+            "logo_style": "bazaar",
+            "logo_subtext": "Harper's",
+            "logo_alt": "Harper's BAZAAR logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Noted for supporting everyday recovery routines through light-based wellness technology.",
+            "source_label": "Featured in SHAPE",
+            "link_text": "Read Feature",
+            "logo_text": "SHAPE",
+            "logo_style": "shape",
+            "logo_alt": "SHAPE logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "A beauty-forward device concept designed for consistent at-home skincare rituals.",
+            "source_label": "Featured in Allure",
+            "link_text": "Read Feature",
+            "logo_text": "Allure",
+            "logo_style": "allure",
+            "logo_alt": "Allure logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Included among modern beauty technology designed for self-care routines at home.",
+            "source_label": "Featured in Byrdie",
+            "link_text": "Read Feature",
+            "logo_text": "Byrdie",
+            "logo_style": "byrdie",
+            "logo_alt": "Byrdie logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Positioned within the next wave of elevated beauty and wellness devices.",
+            "source_label": "Featured in Vogue",
+            "link_text": "Read Feature",
+            "logo_text": "VOGUE",
+            "logo_style": "vogue",
+            "logo_alt": "Vogue logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Recognized for beauty and wellness innovation with premium home-use appeal.",
+            "source_label": "Featured in WWD",
+            "link_text": "Read Feature",
+            "logo_text": "WWD",
+            "logo_style": "wwd",
+            "logo_alt": "WWD logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Featured as part of the evolving personal care technology category.",
+            "source_label": "Featured in HAPPI",
+            "link_text": "Read Feature",
+            "logo_text": "HAPPI",
+            "logo_style": "happi",
+            "logo_alt": "HAPPI logo"
+          }
+        },
+        {
+          "type": "media_item",
+          "settings": {
+            "quote_text": "Highlighted for bringing professional-inspired beauty technology into the home.",
+            "source_label": "Featured in NewBeauty",
+            "link_text": "Read Feature",
+            "logo_text": "NewBeauty",
+            "logo_style": "newbeauty",
+            "logo_alt": "NewBeauty logo"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

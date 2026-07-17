@@ -1,0 +1,732 @@
+{% comment %}
+  Section: We vs Others (Comparison Table)
+  ✅ Max width: 1200px
+  ✅ Left column fixed (features)
+  ✅ Right columns in Swiper (mobile/tablet swipe)
+  ✅ Desktop: if content fits, center whole table; if not, allow dragging
+  ✅ Typography configurable: font family / font size / color / alignment (position)
+  ✅ Uses CDN Swiper v11 + GSAP (loaded only if not already present)
+  ✅ Text transform: Title Case (capitalize)
+{% endcomment %}
+
+<section
+  id="we-vs-others-{{ section.id }}"
+  class="wvo"
+  style="
+    /* Layout */
+    --wvo-radius: {{ section.settings.radius }}px;
+    --wvo-row-h: {{ section.settings.row_h }}px;
+    --wvo-label-w: {{ section.settings.label_w }}px;
+    --wvo-label-w-m: {{ section.settings.label_w_m }}px;
+    --wvo-slide-w-m: {{ section.settings.slide_w_m }}px;
+    --wvo-slide-w-t: {{ section.settings.slide_w_t }}px;
+    --wvo-slide-w-d: {{ section.settings.slide_w_d }}px;
+
+    /* Colors */
+    --wvo-page-bg: {{ section.settings.page_bg }};
+    --wvo-card-bg: {{ section.settings.card_bg }};
+    --wvo-text: {{ section.settings.text_color }};
+    --wvo-muted: {{ section.settings.muted_color | color_modify: 'alpha', section.settings.muted_opacity | divided_by: 100.0 }};
+    --wvo-line: {{ section.settings.line_color | color_modify: 'alpha', section.settings.line_opacity | divided_by: 100.0 }};
+    --wvo-accent: {{ section.settings.accent_color }};
+    --wvo-we-bg: {{ section.settings.we_bg }};
+
+    /* Typography */
+    --wvo-font-family: {{ section.settings.font_family }};
+    --wvo-heading-color: {{ section.settings.heading_color }};
+    --wvo-heading-size-m: {{ section.settings.heading_size_m }}px;
+    --wvo-heading-size-d: {{ section.settings.heading_size_d }}px;
+    --wvo-heading-align: {{ section.settings.heading_align }};
+
+    --wvo-feature-color: {{ section.settings.feature_color }};
+    --wvo-feature-size-m: {{ section.settings.feature_size_m }}px;
+    --wvo-feature-size-d: {{ section.settings.feature_size_d }}px;
+
+    --wvo-cell-color: {{ section.settings.cell_color }};
+    --wvo-cell-size-m: {{ section.settings.cell_size_m }}px;
+    --wvo-cell-size-d: {{ section.settings.cell_size_d }}px;
+
+    /* Alignment (position) */
+    --wvo-feature-justify: {{ section.settings.feature_align_justify }};
+    --wvo-feature-text-align: {{ section.settings.feature_text_align }};
+
+    --wvo-cell-justify: {{ section.settings.cell_align_justify }};
+    --wvo-cell-text-align: {{ section.settings.cell_text_align }};
+  "
+  data-desktop-slides="{{ section.settings.desktop_slides }}"
+  data-slides-mobile="{{ section.settings.slides_mobile }}"
+  data-slides-tablet="{{ section.settings.slides_tablet }}"
+>
+
+  <style>
+    /* ===== Scoped Reset ===== */
+    #we-vs-others-{{ section.id }},
+    #we-vs-others-{{ section.id }} * ,
+    #we-vs-others-{{ section.id }} *::before,
+    #we-vs-others-{{ section.id }} *::after { box-sizing: border-box; }
+
+    #we-vs-others-{{ section.id }}{
+      padding: 40px 16px 20px;
+      background: var(--wvo-page-bg);
+      color: var(--wvo-text);
+      font-family: var(--wvo-font-family);
+    }
+
+    /* container max: 1200px */
+    #we-vs-others-{{ section.id }} .container{
+      max-width: 100%;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    #we-vs-others-{{ section.id }} .title{
+      margin: 0 0 14px;
+      letter-spacing: .1px;
+      color: var(--wvo-heading-color);
+      text-align: var(--wvo-heading-align);
+      font-weight: 700;
+      font-size: var(--wvo-heading-size-m);
+      line-height: 1.2;
+      text-transform: capitalize; /* ✅ Title Case */
+    }
+    @media (min-width: 768px){
+      #we-vs-others-{{ section.id }} .title{
+        font-size: var(--wvo-heading-size-d);
+      }
+    }
+
+    #we-vs-others-{{ section.id }} .shell{
+      background: var(--wvo-card-bg);
+      border-radius: 20px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.06);
+      overflow: hidden;
+      padding: 18px 10px 14px;
+    }
+
+    #we-vs-others-{{ section.id }} .table{
+      display:flex;
+      align-items: stretch;
+      position: relative;
+      isolation: isolate;
+    }
+
+    /* Left column */
+    #we-vs-others-{{ section.id }} .labels-col{
+      flex: none;
+      width: var(--wvo-label-w-m);
+      background: #fff;
+      left: 0;
+      z-index: 20;
+      border-right: 1px solid var(--wvo-line);
+      box-shadow: 10px 0 24px -18px rgba(0,0,0,.25);
+    }
+    @media(min-width: 768px){
+      #we-vs-others-{{ section.id }} .labels-col{
+        width: var(--wvo-label-w);
+        box-shadow: none;
+      }
+    }
+
+    #we-vs-others-{{ section.id }} .labels-head{
+      height: 112px;
+      display:flex;
+      align-items:flex-end;
+      padding: 0 14px 10px;
+    }
+    #we-vs-others-{{ section.id }} .labels-head span{
+      font-size: 12px;
+      color: var(--wvo-muted);
+      font-weight: 700;
+      text-transform: capitalize; /* ✅ Title Case */
+    }
+
+    #we-vs-others-{{ section.id }} .labels{ background:#fff; }
+
+    /* Row (alignment core) */
+    #we-vs-others-{{ section.id }} .row{
+      height: var(--wvo-row-h);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-bottom: 1px solid var(--wvo-line);
+      padding: 0 10px;
+    }
+
+    /* Feature label rows (configurable alignment) */
+    #we-vs-others-{{ section.id }} .labels .row{
+      justify-content: var(--wvo-feature-justify);
+      padding: 0 14px;
+      font-size: var(--wvo-feature-size-m);
+      font-weight: 650;
+      color: var(--wvo-feature-color);
+      line-height: 1.15;
+      white-space: normal;
+      text-align: var(--wvo-feature-text-align);
+      text-transform: capitalize; /* ✅ Title Case */
+    }
+    @media(min-width: 768px){
+      #we-vs-others-{{ section.id }} .labels .row{
+        font-size: var(--wvo-feature-size-d);
+      }
+    }
+
+    /* Right swiper area */
+    #we-vs-others-{{ section.id }} .right{
+      flex: 1;
+      min-width: 0;
+      padding-left: 8px;
+      z-index: 10;
+    }
+
+    #we-vs-others-{{ section.id }} .swiper{
+      width: 100%;
+      padding: 10px 0 18px;
+      overflow: visible;
+    }
+    #we-vs-others-{{ section.id }} .swiper-slide{
+      width: auto;
+      position: relative;
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 6px;
+    }
+
+    #we-vs-others-{{ section.id }} .col-inner{
+      width: var(--wvo-slide-w-m);
+    }
+    @media(min-width:640px){
+      #we-vs-others-{{ section.id }} .col-inner{ width: var(--wvo-slide-w-t); }
+    }
+    @media(min-width:1024px){
+      #we-vs-others-{{ section.id }} .col-inner{ width: var(--wvo-slide-w-d); }
+    }
+
+    #we-vs-others-{{ section.id }} .img-area{
+      height: 112px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      padding-bottom: 10px;
+    }
+
+    #we-vs-others-{{ section.id }} img{
+      display:block;
+      max-width: 100%;
+      height: auto;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    #we-vs-others-{{ section.id }} .img-we{
+      width: 92px;
+      filter: drop-shadow(0 18px 18px rgba(0,0,0,.12));
+      transition: transform .18s ease;
+    }
+    #we-vs-others-{{ section.id }} .img-we:hover{ transform: translateY(-4px); }
+
+    #we-vs-others-{{ section.id }} .img-other{
+      width: 70px;
+      opacity: .72;
+      filter: grayscale(1);
+    }
+
+    /* We background */
+    #we-vs-others-{{ section.id }} .we-bg{
+      position:absolute;
+      inset: 0;
+      z-index:-1;
+      background: var(--wvo-we-bg);
+      border-radius: var(--wvo-radius);
+      box-shadow: 0 14px 30px rgba(109,91,208,.12);
+      border: 1px solid rgba(109,91,208,.10);
+      transform: translateZ(0);
+    }
+
+    #we-vs-others-{{ section.id }} .cells{
+      width:100%;
+      padding: 0 4px;
+    }
+
+    /* Right rows alignment (configurable) */
+    #we-vs-others-{{ section.id }} .cells .row{
+      justify-content: var(--wvo-cell-justify);
+    }
+
+    #we-vs-others-{{ section.id }} .text{
+      font-size: var(--wvo-cell-size-m);
+      font-weight: 650;
+      color: var(--wvo-cell-color);
+      text-align: var(--wvo-cell-text-align);
+      line-height: 1.15;
+      padding: 0 6px;
+      word-break: break-word;
+      width: 100%;
+      text-transform: capitalize; /* ✅ Title Case */
+    }
+    @media(min-width: 768px){
+      #we-vs-others-{{ section.id }} .text{
+        font-size: var(--wvo-cell-size-d);
+      }
+    }
+
+    /* Icons */
+    #we-vs-others-{{ section.id }} .icon{
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin: 0 auto; /* keep centered even if row justify is flex-start/end */
+    }
+    #we-vs-others-{{ section.id }} .icon.check{
+      background: var(--wvo-accent);
+      box-shadow: 0 6px 14px rgba(109,91,208,.22);
+    }
+    #we-vs-others-{{ section.id }} .icon.cross{
+      background: rgba(0,0,0,.02);
+      border: 1px solid rgba(0,0,0,.18);
+    }
+    #we-vs-others-{{ section.id }} .icon svg{
+      width: 12px;
+      height: 12px;
+      display:block;
+    }
+
+    #we-vs-others-{{ section.id }} .hint{
+      margin: 10px 0 0;
+      font-size: 12px;
+      color: rgba(0,0,0,.45);
+      text-align:center;
+      display:none;
+      animation: wvoPulse 1.6s ease-in-out infinite;
+      text-transform: capitalize; /* ✅ optional */
+    }
+    @media(max-width: 767px){
+      #we-vs-others-{{ section.id }} .hint{ display:block; }
+    }
+    @keyframes wvoPulse{
+      0%,100%{ opacity:.45; }
+      50%{ opacity:.9; }
+    }
+
+    /* Desktop center whole table if fits */
+    @media(min-width:1024px){
+      #we-vs-others-{{ section.id }}.is-centered .table{ justify-content:center; }
+      #we-vs-others-{{ section.id }}.is-centered .right{
+        flex: 0 0 auto;
+        padding-left: 8px;
+      }
+      #we-vs-others-{{ section.id }}.is-centered .swiper{ width: auto; }
+      #we-vs-others-{{ section.id }}.is-centered .swiper-wrapper{ justify-content:flex-start; }
+    }
+  </style>
+
+  <div class="container">
+    {% if section.settings.heading != blank %}
+      <h2 class="title">{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+
+    <div class="shell">
+      <div class="table">
+        <div class="labels-col">
+          <div class="labels-head"><span>{{ section.settings.features_label | escape }}</span></div>
+          <div class="labels" id="wvo-labels-{{ section.id }}"></div>
+        </div>
+
+        <div class="right">
+          <div class="swiper" id="wvo-swiper-{{ section.id }}" aria-label="We vs Others slider">
+            <div class="swiper-wrapper" id="wvo-slides-{{ section.id }}"></div>
+          </div>
+        </div>
+      </div>
+
+      {% if section.settings.show_hint %}
+        <div class="hint">{{ section.settings.hint_text | escape }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script type="application/json" data-wvo-json>
+    {{ section.settings.data_json | strip }}
+  </script>
+
+<script>
+  (function(){
+    const sid = {{ section.id | json }};
+    const root = document.getElementById('we-vs-others-' + sid);
+    if (!root) return;
+
+    if (root.dataset.inited === 'true') return;
+    root.dataset.inited = 'true';
+
+    const labelsEl = document.getElementById('wvo-labels-' + sid);
+    const slidesEl = document.getElementById('wvo-slides-' + sid);
+    const swiperEl = document.getElementById('wvo-swiper-' + sid);
+
+    let swiper = null;
+    let resizeTimer = null;
+
+    const DEFAULT_DATA = {
+      features: [
+        "Number of LEDs",
+        "7 Simultaneous\nWavelengths",
+        "Treatment Time\n(longer means more light\nenergy)",
+        "Lightweight",
+        "Ultra Breathable\n& Comfortable",
+        "Enhanced Eye\nProtection",
+        "MagSafe Power\nCable",
+        "Modular Battery\n(easy to replace)",
+        "Money-Back\nGuarantee",
+        "Yellowing-\nResistant\nMaterial",
+        "Face Coverage",
+        "Proximity of\nMask to Face"
+      ],
+      featureTypes: ["text","bool","text","bool","bool","bool","bool","bool","text","bool","text","text"],
+      products: [
+        { name:"We", isWe:true, img:"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/3_png.png?v=1767078877", data:["360", true, "10 min", true, true, true, true, true, "100 Days", true, "Full face", "Hovers perfectly"] },
+        { name:"Other 1", isWe:false, img:"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/4_png_a4a24ba7-b93e-4b4f-b115-5e17640db489.png?v=1767078877", data:["132", false, "10 min", true, true, true, false, true, "45 Days", true, "Full face", ""] },
+        { name:"Other 2", isWe:false, img:"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/5_png.png?v=1767078877", data:["7", false, "A few seconds per\ntreatment area", true, false, false, false, true, "60 Days", false, "Limited", "Right on face"] },
+        { name:"Other 3", isWe:false, img:"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/6_png.png?v=1767078877", data:["160", false, "3 min", false, true, false, false, true, "30 Days", false, "Full face", "Sticks on face"] },
+        { name:"Other 4", isWe:false, img:"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/7_png.png?v=1767078877", data:["160", false, "3 min", false, false, true, false, false, "30 Days (if unopened)", true, "Full face", "Sticks on face"] },
+        { name:"Other 5", isWe:false, img:"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/9_png.png?v=1767078877", data:["132", false, "10 min", true, true, false, false, false, "60 Days", true, "Full face", "Sticks on face"] }
+      ]
+    };
+
+    function safeParseJSON(str){
+      if (!str) return null;
+      try { return JSON.parse(str); } catch(e){ return null; }
+    }
+
+    function truthy(v){
+      return v === true || v === 1 || v === "1" || v === "true" || v === "yes" || v === "TRUE" || v === "YES";
+    }
+
+    function checkIcon(){
+      return `
+        <div class="icon check">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+      `;
+    }
+    function crossIcon(){
+      return `
+        <div class="icon cross">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.38)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </div>
+      `;
+    }
+
+    function nl2br(s){
+      return String(s == null ? "" : s).replaceAll("\n", "<br>");
+    }
+
+    function render(d){
+      if (!labelsEl || !slidesEl) return;
+
+      const features = Array.isArray(d.features) ? d.features : [];
+      const featureTypes = Array.isArray(d.featureTypes) ? d.featureTypes : [];
+      const products = Array.isArray(d.products) ? d.products : [];
+      const rowCount = features.length;
+
+      labelsEl.innerHTML = features.map(f => `<div class="row">${nl2br(f)}</div>`).join("");
+
+      slidesEl.innerHTML = products.map((p) => {
+        const isWe = !!p.isWe;
+
+        const rowsHtml = Array.from({ length: rowCount }).map((_, i) => {
+          const type = featureTypes[i] || "text";
+          const val = (p.data || [])[i];
+          const content = (type === "bool")
+            ? (truthy(val) ? checkIcon() : crossIcon())
+            : `<div class="text">${nl2br(val)}</div>`;
+          return `<div class="row">${content}</div>`;
+        }).join("");
+
+        return `
+          <div class="swiper-slide ${isWe ? "is-we" : ""}">
+            ${isWe ? `<div class="we-bg"></div>` : ``}
+            <div class="col-inner">
+              <div class="img-area">
+                ${p.img ? `<img src="${p.img}" alt="${(p.name || "").replaceAll('"','&quot;')}" class="${isWe ? "img-we" : "img-other"}" loading="lazy">` : ``}
+              </div>
+              <div class="cells">${rowsHtml}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function updateCentering(){
+      if (window.innerWidth < 1024){
+        root.classList.remove('is-centered');
+        if (swiper) swiper.allowTouchMove = true;
+        return;
+      }
+      const container = root.querySelector('.container');
+      const table = root.querySelector('.table');
+      if (!container || !table) return;
+
+      requestAnimationFrame(() => {
+        const shouldCenter = table.scrollWidth <= container.clientWidth;
+        root.classList.toggle('is-centered', shouldCenter);
+        if (swiper) swiper.allowTouchMove = !shouldCenter;
+      });
+    }
+
+    function initSwiper(d){
+      if (!window.Swiper || !swiperEl) return;
+
+      const desktopSlides = Number(root.dataset.desktopSlides || 6);
+      const slidesMobile = Number(root.dataset.slidesMobile || 1.2);
+      const slidesTablet = Number(root.dataset.slidesTablet || 2.5);
+      const productCount = Array.isArray(d.products) ? d.products.length : 0;
+
+      swiper = new Swiper(swiperEl, {
+        slidesPerView: slidesMobile || 1.2,
+        spaceBetween: 0,
+        freeMode: true,
+        grabCursor: true,
+        breakpoints: {
+          640: { slidesPerView: slidesTablet || 2.5 },
+          1024: {
+            slidesPerView: Math.min(desktopSlides, productCount),
+            allowTouchMove: productCount > desktopSlides
+          }
+        }
+      });
+
+      updateCentering();
+
+      const imgs = root.querySelectorAll('img');
+      let pending = 0;
+      imgs.forEach(img => {
+        if (!img.complete){
+          pending++;
+          const done = () => {
+            pending--;
+            if (pending <= 0) updateCentering();
+          };
+          img.addEventListener('load', done, { once:true });
+          img.addEventListener('error', done, { once:true });
+        }
+      });
+    }
+
+    function runGsap(){
+      if (!window.gsap) return;
+      const tl = window.gsap.timeline({ defaults:{ ease:"power3.out" } });
+
+      tl.from(root.querySelectorAll(".we-bg"), { y: 28, opacity: 0, duration: 0.9 })
+        .from(root.querySelectorAll(".swiper-slide img"), { y: 24, opacity: 0, duration: 0.45, stagger: 0.06, ease:"power2.out" }, "-=0.45")
+        .from(root.querySelectorAll(".swiper-slide.is-we .icon.check"), { scale: 0, duration: 0.55, stagger: 0.08, ease:"back.out(2)" }, "-=0.25");
+    }
+
+    function onResize(){
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        updateCentering();
+        if (swiper && typeof swiper.update === 'function') swiper.update();
+      }, 120);
+    }
+
+    function boot(){
+      const jsonEl = root.querySelector('[data-wvo-json]');
+      const raw = jsonEl ? (jsonEl.textContent || '').trim() : '';
+      const parsed = safeParseJSON(raw);
+      const d = (parsed && typeof parsed === 'object') ? parsed : DEFAULT_DATA;
+
+      render(d);
+
+      // ✅ 不再加载任何 CDN。依赖 theme.liquid 全局注入的 Swiper/GSAP
+      // 如果库尚未就绪（例如 defer 造成抢跑），这里会自动降级：Swiper/GSAP 不执行但不报错
+      initSwiper(d);
+      runGsap();
+
+      window.addEventListener('resize', onResize);
+      updateCentering();
+    }
+
+    // ✅ 处理 defer 抢跑：等一等库（最多 ~2s），避免“去掉 CDN 后错乱”
+    function waitForLibsAndBoot(){
+      const start = Date.now();
+      (function tick(){
+        const okSwiper = !!window.Swiper;
+        const okGsap = !!window.gsap; // 没有 gsap 也能正常展示，只是没动效
+        if (okSwiper || (Date.now() - start) > 2000){
+          boot();
+          return;
+        }
+        setTimeout(tick, 50);
+      })();
+    }
+
+    waitForLibsAndBoot();
+
+    document.addEventListener('shopify:section:unload', function(e){
+      if (!e || !e.detail || e.detail.sectionId !== sid) return;
+      window.removeEventListener('resize', onResize);
+      if (swiper && typeof swiper.destroy === 'function') swiper.destroy(true, true);
+      swiper = null;
+    });
+  })();
+</script>
+
+  {% schema %}
+  {
+    "name": "We vs Others (Comparison)",
+    "disabled_on": { "groups": ["header", "footer", "aside"] },
+    "settings": [
+      { "type": "text", "id": "heading", "label": "Heading", "default": "We vs Others" },
+      { "type": "text", "id": "features_label", "label": "Left label header", "default": "Features" },
+
+      { "type": "header", "content": "Layout" },
+      { "type": "range", "id": "radius", "label": "We highlight radius", "min": 10, "max": 24, "step": 1, "default": 16 },
+      { "type": "range", "id": "row_h", "label": "Row height", "min": 48, "max": 72, "step": 1, "default": 58 },
+
+      { "type": "range", "id": "label_w", "label": "Left column width (desktop)", "min": 180, "max": 320, "step": 2, "default": 240 },
+      { "type": "range", "id": "label_w_m", "label": "Left column width (mobile)", "min": 120, "max": 240, "step": 2, "default": 168 },
+
+      { "type": "range", "id": "slide_w_m", "label": "Slide width (mobile)", "min": 140, "max": 240, "step": 2, "default": 170 },
+      { "type": "range", "id": "slide_w_t", "label": "Slide width (tablet)", "min": 150, "max": 260, "step": 2, "default": 180 },
+      { "type": "range", "id": "slide_w_d", "label": "Slide width (desktop)", "min": 150, "max": 280, "step": 2, "default": 190 },
+
+      { "type": "range", "id": "desktop_slides", "label": "Desktop slides per view", "min": 3, "max": 8, "step": 1, "default": 6 },
+      {
+        "type": "select",
+        "id": "slides_mobile",
+        "label": "Mobile slides per view",
+        "default": "1.2",
+        "options": [
+          { "value": "1.0", "label": "1.0" },
+          { "value": "1.1", "label": "1.1" },
+          { "value": "1.2", "label": "1.2" },
+          { "value": "1.3", "label": "1.3" },
+          { "value": "1.4", "label": "1.4" },
+          { "value": "1.5", "label": "1.5" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "slides_tablet",
+        "label": "Tablet slides per view",
+        "default": "2.5",
+        "options": [
+          { "value": "2.0", "label": "2.0" },
+          { "value": "2.2", "label": "2.2" },
+          { "value": "2.5", "label": "2.5" },
+          { "value": "3.0", "label": "3.0" },
+          { "value": "3.5", "label": "3.5" }
+        ]
+      },
+
+      { "type": "header", "content": "Colors" },
+      { "type": "color", "id": "page_bg", "label": "Section background", "default": "#FBF2EF" },
+      { "type": "color", "id": "card_bg", "label": "Card background", "default": "#FFFFFF" },
+      { "type": "color", "id": "text_color", "label": "Base text color", "default": "#111111" },
+
+      { "type": "color", "id": "muted_color", "label": "Muted base color", "default": "#111111" },
+      { "type": "range", "id": "muted_opacity", "label": "Muted opacity (%)", "min": 10, "max": 90, "step": 1, "default": 55 },
+
+      { "type": "color", "id": "line_color", "label": "Line base color", "default": "#000000" },
+      { "type": "range", "id": "line_opacity", "label": "Line opacity (%)", "min": 3, "max": 25, "step": 1, "default": 8 },
+
+      { "type": "color", "id": "accent_color", "label": "Accent (check icon)", "default": "#6D5BD0" },
+      { "type": "color", "id": "we_bg", "label": "We highlight bg", "default": "#F3F0FA" },
+
+      { "type": "header", "content": "Typography (size / color / position)" },
+
+      { "type": "text", "id": "font_family", "label": "Font family (CSS value)", "default": "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" },
+
+      { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#111111" },
+      { "type": "range", "id": "heading_size_m", "label": "Heading size (mobile)", "min": 14, "max": 50, "step": 1, "default": 18 },
+      { "type": "range", "id": "heading_size_d", "label": "Heading size (desktop)", "min": 16, "max": 100, "step": 1, "default": 20 },
+      {
+        "type": "select",
+        "id": "heading_align",
+        "label": "Heading position (alignment)",
+        "default": "left",
+        "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "right", "label": "Right" }
+        ]
+      },
+
+      { "type": "color", "id": "feature_color", "label": "Feature text color (left)", "default": "#111111" },
+      { "type": "range", "id": "feature_size_m", "label": "Feature font size (mobile)", "min": 10, "max": 18, "step": 1, "default": 12 },
+      { "type": "range", "id": "feature_size_d", "label": "Feature font size (desktop)", "min": 11, "max": 20, "step": 1, "default": 12 },
+      {
+        "type": "select",
+        "id": "feature_align_justify",
+        "label": "Feature position (flex justify)",
+        "default": "flex-start",
+        "options": [
+          { "value": "flex-start", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "flex-end", "label": "Right" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "feature_text_align",
+        "label": "Feature text-align",
+        "default": "left",
+        "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "right", "label": "Right" }
+        ]
+      },
+
+      { "type": "color", "id": "cell_color", "label": "Cell text color (right)", "default": "#111111" },
+      { "type": "range", "id": "cell_size_m", "label": "Cell font size (mobile)", "min": 10, "max": 18, "step": 1, "default": 12 },
+      { "type": "range", "id": "cell_size_d", "label": "Cell font size (desktop)", "min": 11, "max": 20, "step": 1, "default": 12 },
+      {
+        "type": "select",
+        "id": "cell_align_justify",
+        "label": "Cell position (flex justify)",
+        "default": "center",
+        "options": [
+          { "value": "flex-start", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "flex-end", "label": "Right" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "cell_text_align",
+        "label": "Cell text-align",
+        "default": "center",
+        "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "right", "label": "Right" }
+        ]
+      },
+
+      { "type": "header", "content": "Mobile hint" },
+      { "type": "checkbox", "id": "show_hint", "label": "Show mobile swipe hint", "default": true },
+      { "type": "text", "id": "hint_text", "label": "Hint text", "default": "← 左右滑动查看更多竞品 →" },
+
+      { "type": "header", "content": "Data" },
+      {
+        "type": "textarea",
+        "id": "data_json",
+        "label": "Data (JSON)",
+        "info": "结构：{features:[], featureTypes:[], products:[{name,isWe,img,data:[]}]}。新增行时即使没补齐也不会错位。",
+        "default": "{\"features\":[\"Number of LEDs\",\"7 Simultaneous\\nWavelengths\",\"Treatment Time\\n(longer means more light\\nenergy)\",\"Lightweight\",\"Ultra Breathable\\n& Comfortable\",\"Enhanced Eye\\nProtection\",\"MagSafe Power\\nCable\",\"Modular Battery\\n(easy to replace)\",\"Money-Back\\nGuarantee\",\"Yellowing-\\nResistant\\nMaterial\",\"Face Coverage\",\"Proximity of\\nMask to Face\"],\"featureTypes\":[\"text\",\"bool\",\"text\",\"bool\",\"bool\",\"bool\",\"bool\",\"bool\",\"text\",\"bool\",\"text\",\"text\"],\"products\":[{\"name\":\"We\",\"isWe\":true,\"img\":\"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/3_png.png?v=1767078877\",\"data\":[\"360\",true,\"10 min\",true,true,true,true,true,\"100 Days\",true,\"Full face\",\"Hovers perfectly\"]},{\"name\":\"Other 1\",\"isWe\":false,\"img\":\"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/4_png_a4a24ba7-b93e-4b4f-b115-5e17640db489.png?v=1767078877\",\"data\":[\"132\",false,\"10 min\",true,true,true,false,true,\"45 Days\",true,\"Full face\",\"\"]},{\"name\":\"Other 2\",\"isWe\":false,\"img\":\"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/5_png.png?v=1767078877\",\"data\":[\"7\",false,\"A few seconds per\\ntreatment area\",true,false,false,false,true,\"60 Days\",false,\"Limited\",\"Right on face\"]},{\"name\":\"Other 3\",\"isWe\":false,\"img\":\"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/6_png.png?v=1767078877\",\"data\":[\"160\",false,\"3 min\",false,true,false,false,true,\"30 Days\",false,\"Full face\",\"Sticks on face\"]},{\"name\":\"Other 4\",\"isWe\":false,\"img\":\"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/7_png.png?v=1767078877\",\"data\":[\"160\",false,\"3 min\",false,false,true,false,false,\"30 Days (if unopened)\",true,\"Full face\",\"Sticks on face\"]},{\"name\":\"Other 5\",\"isWe\":false,\"img\":\"https://cdn.shopify.com/s/files/1/0023/9681/5419/files/9_png.png?v=1767078877\",\"data\":[\"132\",false,\"10 min\",true,true,false,false,false,\"60 Days\",true,\"Full face\",\"Sticks on face\"]}]}"
+      }
+    ],
+    "presets": [
+      { "name": "We vs Others (Comparison)" }
+    ]
+  }
+  {% endschema %}
+</section>

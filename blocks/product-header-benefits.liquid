@@ -1,0 +1,568 @@
+<div
+  class="product-header-benefits spacing-style"
+  {{ block.shopify_attributes }}
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    --phb-background: {{ block.settings.background_color }};
+    --phb-divider: {{ block.settings.divider_color }};
+    --phb-text: {{ block.settings.text_color }};
+    --phb-icon: {{ block.settings.icon_color }};
+    --phb-font-size: {{ block.settings.font_size }}px;
+    --phb-font-size-mobile: {{ block.settings.font_size_mobile }}px;
+    --phb-font-weight: {{ block.settings.font_weight }};
+    --phb-icon-size: {{ block.settings.icon_size }}px;
+    --phb-icon-size-mobile: {{ block.settings.icon_size_mobile }}px;
+    --phb-row-height: {{ block.settings.row_height }}px;
+    --phb-row-height-mobile: {{ block.settings.row_height_mobile }}px;
+  "
+>
+  <div class="product-header-benefits__grid" role="list">
+    {% for i in (1..6) %}
+      {% liquid
+        assign label_key = 'label_' | append: i
+        assign icon_key = 'icon_' | append: i
+        assign benefit_label = block.settings[label_key]
+        assign benefit_icon = block.settings[icon_key]
+      %}
+
+      {% if benefit_label != blank %}
+        <div class="product-header-benefits__item" role="listitem">
+          <span class="product-header-benefits__icon" aria-hidden="true">
+            {% case benefit_icon %}
+              {% when 'joint_mobility' %}
+                <svg viewBox="0 0 32 32" focusable="false">
+                  <path d="M13.6 3.6C16.1 3 18.2 4.4 18 6.9L16.4 20.5C16.2 22 15 22.9 13.7 22.4L11.2 21.5C10.2 21.1 9.8 19.9 10.4 19L12.8 15.4L11.2 8.3C10.7 6 11.5 4.1 13.6 3.6Z" fill="currentColor"/>
+                  <path d="M18.2 22.6C20.8 22.8 22.1 24.4 21.5 26.4C20.9 28.5 18.7 29.2 16.4 28.1L13.1 26.6C11.8 26 11.6 24.3 12.8 23.5L14.5 22.3C15.4 21.8 16.4 22.5 18.2 22.6Z" fill="currentColor"/>
+                </svg>
+              {% when 'pain_relief' %}
+                <svg viewBox="0 0 32 32" focusable="false">
+                  <path d="M12.3 4.1C17.4 5.3 20.4 9.8 18.8 14.5C17.4 18.7 13.4 20.8 9 19.6C4.7 18.4 2.7 14.8 4.2 10.5C5.6 6.4 8.6 3.2 12.3 4.1Z" fill="currentColor"/>
+                  <path d="M22.5 11.7C27 12.9 29.3 16.5 28.2 20.5C27 24.7 23.3 27.1 19.2 25.9C14.8 24.7 12.8 21 14.1 16.9C15.4 12.9 18.3 10.6 22.5 11.7Z" fill="currentColor"/>
+                  <path d="M15.4 6.4L26 22.9" fill="none" stroke="var(--phb-background)" stroke-linecap="round" stroke-width="2.2"/>
+                </svg>
+              {% when 'better_sleep' %}
+                <svg viewBox="0 0 32 32" focusable="false">
+                  <path d="M19.9 28.2C12.7 28.2 6.9 22.4 6.9 15.2C6.9 10.2 9.7 5.8 13.8 3.7C13.2 5.1 12.9 6.7 12.9 8.4C12.9 15 18.2 20.3 24.8 20.3C26.1 20.3 27.3 20.1 28.4 19.7C26.7 24.7 23.7 28.2 19.9 28.2Z" fill="currentColor"/>
+                  <circle cx="23.9" cy="11" r="4.4" fill="currentColor"/>
+                </svg>
+              {% when 'energy_boost' %}
+                <svg viewBox="0 0 32 32" focusable="false">
+                  <path d="M9.8 27.9V12.8H5.3L12.8 3.5L20.4 12.8H15.8V27.9H9.8Z" fill="currentColor"/>
+                  <path d="M21.8 27.9V16.9H18.2L24.2 9.4L30.2 16.9H26.6V27.9H21.8Z" fill="currentColor"/>
+                </svg>
+              {% when 'longevity_support' %}
+                <svg viewBox="0 0 32 32" focusable="false">
+                  <path d="M16 4.2V27.8M4.2 16H27.8M7.7 7.7L24.3 24.3M24.3 7.7L7.7 24.3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="5.5"/>
+                  <circle cx="16" cy="16" r="5.1" fill="currentColor"/>
+                </svg>
+              {% else %}
+                <svg viewBox="0 0 32 32" focusable="false">
+                  <path d="M3.6 17.1C6.2 11 10.4 11 16 16.5C19.8 20.2 22.7 20.2 28.4 14.7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.4"/>
+                </svg>
+            {% endcase %}
+          </span>
+          <span class="product-header-benefits__label">{{ benefit_label }}</span>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .product-header-benefits {
+    width: 100%;
+  }
+
+  .product-header-benefits__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    background: var(--phb-background);
+    color: var(--phb-text);
+    overflow: hidden;
+  }
+
+  .product-header-benefits__item {
+    min-width: 0;
+    min-height: var(--phb-row-height);
+    padding: 14px clamp(22px, 4vw, 34px);
+    display: grid;
+    grid-template-columns: var(--phb-icon-size) minmax(0, 1fr);
+    align-items: center;
+    justify-content: start;
+    justify-items: start;
+    column-gap: 12px;
+    color: var(--phb-text);
+    box-sizing: border-box;
+  }
+
+  .product-header-benefits__item:nth-child(3n + 2),
+  .product-header-benefits__item:nth-child(3n + 3) {
+    border-left: 1px solid var(--phb-divider);
+  }
+
+  .product-header-benefits__item:nth-child(n + 4) {
+    border-top: 1px solid var(--phb-divider);
+  }
+
+  .product-header-benefits__icon {
+    width: var(--phb-icon-size);
+    height: var(--phb-icon-size);
+    flex: 0 0 var(--phb-icon-size);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--phb-icon);
+  }
+
+  .product-header-benefits__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .product-header-benefits__label {
+    min-width: 0;
+    color: var(--phb-text);
+    font-family: var(--font-body--family);
+    font-size: var(--phb-font-size);
+    font-weight: var(--phb-font-weight);
+    line-height: 1.18;
+    letter-spacing: 0;
+    text-align: left;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-header-benefits__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .product-header-benefits__item {
+      min-height: var(--phb-row-height-mobile);
+      padding: 12px;
+      grid-template-columns: var(--phb-icon-size-mobile) minmax(0, 1fr);
+      column-gap: 9px;
+      border-left: 0;
+      border-top: 0;
+    }
+
+    .product-header-benefits__item:nth-child(2n + 2) {
+      border-left: 1px solid var(--phb-divider);
+    }
+
+    .product-header-benefits__item:nth-child(n + 3) {
+      border-top: 1px solid var(--phb-divider);
+    }
+
+    .product-header-benefits__icon {
+      width: var(--phb-icon-size-mobile);
+      height: var(--phb-icon-size-mobile);
+      flex-basis: var(--phb-icon-size-mobile);
+    }
+
+    .product-header-benefits__label {
+      font-size: var(--phb-font-size-mobile);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product header benefits",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Benefit content"
+    },
+    {
+      "type": "select",
+      "id": "icon_1",
+      "label": "Icon 1",
+      "options": [
+        {
+          "value": "aging_defense",
+          "label": "Aging defense"
+        },
+        {
+          "value": "joint_mobility",
+          "label": "Joint mobility"
+        },
+        {
+          "value": "pain_relief",
+          "label": "Pain relief"
+        },
+        {
+          "value": "better_sleep",
+          "label": "Better sleep"
+        },
+        {
+          "value": "energy_boost",
+          "label": "Energy boost"
+        },
+        {
+          "value": "longevity_support",
+          "label": "Longevity support"
+        }
+      ],
+      "default": "aging_defense"
+    },
+    {
+      "type": "text",
+      "id": "label_1",
+      "label": "Label 1",
+      "default": "Aging Defense"
+    },
+    {
+      "type": "select",
+      "id": "icon_2",
+      "label": "Icon 2",
+      "options": [
+        {
+          "value": "aging_defense",
+          "label": "Aging defense"
+        },
+        {
+          "value": "joint_mobility",
+          "label": "Joint mobility"
+        },
+        {
+          "value": "pain_relief",
+          "label": "Pain relief"
+        },
+        {
+          "value": "better_sleep",
+          "label": "Better sleep"
+        },
+        {
+          "value": "energy_boost",
+          "label": "Energy boost"
+        },
+        {
+          "value": "longevity_support",
+          "label": "Longevity support"
+        }
+      ],
+      "default": "joint_mobility"
+    },
+    {
+      "type": "text",
+      "id": "label_2",
+      "label": "Label 2",
+      "default": "Joint Mobility"
+    },
+    {
+      "type": "select",
+      "id": "icon_3",
+      "label": "Icon 3",
+      "options": [
+        {
+          "value": "aging_defense",
+          "label": "Aging defense"
+        },
+        {
+          "value": "joint_mobility",
+          "label": "Joint mobility"
+        },
+        {
+          "value": "pain_relief",
+          "label": "Pain relief"
+        },
+        {
+          "value": "better_sleep",
+          "label": "Better sleep"
+        },
+        {
+          "value": "energy_boost",
+          "label": "Energy boost"
+        },
+        {
+          "value": "longevity_support",
+          "label": "Longevity support"
+        }
+      ],
+      "default": "pain_relief"
+    },
+    {
+      "type": "text",
+      "id": "label_3",
+      "label": "Label 3",
+      "default": "Pain Relief"
+    },
+    {
+      "type": "select",
+      "id": "icon_4",
+      "label": "Icon 4",
+      "options": [
+        {
+          "value": "aging_defense",
+          "label": "Aging defense"
+        },
+        {
+          "value": "joint_mobility",
+          "label": "Joint mobility"
+        },
+        {
+          "value": "pain_relief",
+          "label": "Pain relief"
+        },
+        {
+          "value": "better_sleep",
+          "label": "Better sleep"
+        },
+        {
+          "value": "energy_boost",
+          "label": "Energy boost"
+        },
+        {
+          "value": "longevity_support",
+          "label": "Longevity support"
+        }
+      ],
+      "default": "better_sleep"
+    },
+    {
+      "type": "text",
+      "id": "label_4",
+      "label": "Label 4",
+      "default": "Better Sleep"
+    },
+    {
+      "type": "select",
+      "id": "icon_5",
+      "label": "Icon 5",
+      "options": [
+        {
+          "value": "aging_defense",
+          "label": "Aging defense"
+        },
+        {
+          "value": "joint_mobility",
+          "label": "Joint mobility"
+        },
+        {
+          "value": "pain_relief",
+          "label": "Pain relief"
+        },
+        {
+          "value": "better_sleep",
+          "label": "Better sleep"
+        },
+        {
+          "value": "energy_boost",
+          "label": "Energy boost"
+        },
+        {
+          "value": "longevity_support",
+          "label": "Longevity support"
+        }
+      ],
+      "default": "energy_boost"
+    },
+    {
+      "type": "text",
+      "id": "label_5",
+      "label": "Label 5",
+      "default": "Energy Boost"
+    },
+    {
+      "type": "select",
+      "id": "icon_6",
+      "label": "Icon 6",
+      "options": [
+        {
+          "value": "aging_defense",
+          "label": "Aging defense"
+        },
+        {
+          "value": "joint_mobility",
+          "label": "Joint mobility"
+        },
+        {
+          "value": "pain_relief",
+          "label": "Pain relief"
+        },
+        {
+          "value": "better_sleep",
+          "label": "Better sleep"
+        },
+        {
+          "value": "energy_boost",
+          "label": "Energy boost"
+        },
+        {
+          "value": "longevity_support",
+          "label": "Longevity support"
+        }
+      ],
+      "default": "longevity_support"
+    },
+    {
+      "type": "text",
+      "id": "label_6",
+      "label": "Label 6",
+      "default": "Longevity Support"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#fbf7ef"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider",
+      "default": "#ded8cd"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Desktop font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Mobile font size",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Desktop icon size",
+      "min": 18,
+      "max": 38,
+      "step": 1,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Mobile icon size",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "row_height",
+      "label": "Desktop row height",
+      "min": 48,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 68
+    },
+    {
+      "type": "range",
+      "id": "row_height_mobile",
+      "label": "Mobile row height",
+      "min": 44,
+      "max": 88,
+      "step": 1,
+      "unit": "px",
+      "default": 62
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product header benefits",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

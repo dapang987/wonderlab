@@ -1,0 +1,1566 @@
+{% comment %}
+  Luminous Hero Mega
+  Save as: sections/luminous-hero-mega.liquid
+{% endcomment %}
+
+<section
+  id="ll-hero-{{ section.id }}"
+  class="ll-hero-section"
+  data-section-id="{{ section.id }}"
+  data-load-swiper="{{ section.settings.load_swiper }}"
+  data-load-gsap="{{ section.settings.load_gsap }}"
+  data-autoplay="{{ section.settings.enable_autoplay }}"
+  data-autoplay-delay="{{ section.settings.autoplay_delay | times: 1000 }}"
+>
+  <div class="ll-page">
+    <section class="ll-hero" id="llHero-{{ section.id }}">
+      <header class="ll-topbar">
+        <div class="ll-topbar-inner">
+          <a href="{{ routes.root_url }}" class="ll-brand" aria-label="{{ section.settings.brand_name | escape }}">
+            <span class="ll-brand-mark" aria-hidden="true">
+              {% if section.settings.brand_logo != blank %}
+                {{
+                  section.settings.brand_logo
+                  | image_url: width: 120
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'll-brand-logo-img',
+                    widths: '60, 90, 120',
+                    sizes: '60px'
+                }}
+              {% else %}
+                <svg viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="14" cy="28" r="10" fill="#F5F3EF"></circle>
+                  <circle cx="26" cy="14" r="10" fill="#F5F3EF"></circle>
+                  <circle cx="38" cy="28" r="10" fill="#F5F3EF"></circle>
+                  <circle cx="14" cy="14" r="10" fill="#F5F3EF" opacity="0.92"></circle>
+                </svg>
+              {% endif %}
+            </span>
+            <span class="ll-brand-name">{{ section.settings.brand_name }}</span>
+          </a>
+
+          <nav class="ll-desktop-nav" aria-label="Main navigation">
+            <div class="ll-nav-item" data-mega-trigger="technology">
+              <button class="ll-nav-button" type="button">{{ section.settings.tech_label }}</button>
+            </div>
+
+            <div class="ll-nav-item">
+              <a href="{{ section.settings.company_link | default: '#' }}" class="ll-nav-link">{{ section.settings.company_label }}</a>
+            </div>
+
+            <div class="ll-nav-item">
+              <a href="{{ section.settings.commercial_link | default: '#' }}" class="ll-nav-link">{{ section.settings.commercial_label }}</a>
+            </div>
+
+            <div class="ll-nav-item">
+              <a href="{{ section.settings.blog_link | default: '#' }}" class="ll-nav-link">{{ section.settings.blog_label }}</a>
+            </div>
+
+            <div class="ll-nav-item" data-mega-trigger="shop">
+              <button class="ll-nav-button shop" type="button">{{ section.settings.shop_label }}</button>
+            </div>
+          </nav>
+
+          <div class="ll-nav-right">
+            <button class="ll-mobile-toggle" id="llMobileToggle-{{ section.id }}" type="button" aria-label="Open menu" aria-expanded="false">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M4 12h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                <path d="M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+            </button>
+
+            <button class="ll-lang" type="button" aria-label="Change language">
+              <span>{{ section.settings.language_label }}</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+
+            <a href="{{ routes.cart_url }}" class="ll-cart" aria-label="Cart">
+              <span class="ll-cart-text">{{ section.settings.cart_label }}</span>
+              <span class="ll-cart-bag" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M8 8V6.5C8 4.57 9.57 3 11.5 3H12.5C14.43 3 16 4.57 16 6.5V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M5 8.5H19L18 20H6L5 8.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div class="ll-mobile-panel" id="llMobilePanel-{{ section.id }}">
+          <div class="ll-mobile-panel-inner">
+            <button class="ll-mobile-subtoggle" type="button" data-mobile-subtoggle="technology">
+              <span>{{ section.settings.tech_label }}</span>
+              <span>+</span>
+            </button>
+            <div class="ll-mobile-subpanel" data-mobile-subpanel="technology">
+              {% if section.settings.tech_menu != blank %}
+                {% for link in section.settings.tech_menu.links %}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                {% endfor %}
+              {% else %}
+                <a href="#">Light Science</a>
+                <a href="#">Clinical Validation</a>
+                <a href="#">Wavelengths</a>
+                <a href="#">Safety Standards</a>
+              {% endif %}
+            </div>
+
+            <a href="{{ section.settings.company_link | default: '#' }}" class="ll-mobile-link">{{ section.settings.company_label }}</a>
+            <a href="{{ section.settings.commercial_link | default: '#' }}" class="ll-mobile-link">{{ section.settings.commercial_label }}</a>
+            <a href="{{ section.settings.blog_link | default: '#' }}" class="ll-mobile-link">{{ section.settings.blog_label }}</a>
+
+            <button class="ll-mobile-subtoggle" type="button" data-mobile-subtoggle="shop">
+              <span>{{ section.settings.shop_label }}</span>
+              <span>+</span>
+            </button>
+            <div class="ll-mobile-subpanel" data-mobile-subpanel="shop">
+              {% if section.settings.shop_menu != blank %}
+                {% for link in section.settings.shop_menu.links %}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                {% endfor %}
+              {% else %}
+                <a href="#">Face Devices</a>
+                <a href="#">Full Body</a>
+                <a href="#">Recovery</a>
+                <a href="#">Best Sellers</a>
+                <a href="#">Bundles</a>
+                <a href="#">Accessories</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="ll-mega" id="llMegaTechnology-{{ section.id }}" data-mega-panel="technology" aria-hidden="true">
+          <div class="ll-mega-panel">
+            <div class="ll-mega-inner">
+              <div class="ll-mega-content">
+                <div class="ll-mega-col">
+                  <div class="ll-mega-kicker">{{ section.settings.tech_kicker_1 }}</div>
+                  {% if section.settings.tech_menu != blank %}
+                    {% for link in section.settings.tech_menu.links %}
+                      <a href="{{ link.url }}" class="ll-mega-link">{{ link.title }}</a>
+                    {% endfor %}
+                  {% else %}
+                    <a href="#" class="ll-mega-link">Light Science</a>
+                    <a href="#" class="ll-mega-link">Clinical Validation</a>
+                    <a href="#" class="ll-mega-link">Wavelengths</a>
+                    <a href="#" class="ll-mega-link">Safety Standards</a>
+                  {% endif %}
+                </div>
+
+                <div class="ll-mega-col">
+                  <div class="ll-mega-kicker">{{ section.settings.tech_kicker_2 }}</div>
+                  <div class="ll-mega-desc">{{ section.settings.tech_description }}</div>
+                  <a href="{{ section.settings.tech_cta_link | default: '#' }}" class="ll-mega-cta">
+                    {{ section.settings.tech_cta_text }}
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 10L10 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                      <path d="M4 2H10V8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              <div class="ll-mega-visual">
+                {% if section.settings.tech_image != blank %}
+                  {{
+                    section.settings.tech_image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'll-mega-image',
+                      widths: '600, 900, 1200',
+                      sizes: '(max-width: 920px) 100vw, 420px'
+                  }}
+                {% else %}
+                  <img loading="lazy" src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=900&q=80" alt="Technology preview" width="900" height="600">
+                {% endif %}
+                <div class="ll-mega-visual-copy">
+                  <div class="ll-mega-visual-title">{{ section.settings.tech_visual_title }}</div>
+                  <div class="ll-mega-visual-text">{{ section.settings.tech_visual_text }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ll-mega" id="llMegaShop-{{ section.id }}" data-mega-panel="shop" aria-hidden="true">
+          <div class="ll-mega-panel">
+            <div class="ll-mega-inner">
+              <div class="ll-mega-content">
+                <div class="ll-mega-col">
+                  <div class="ll-mega-kicker">{{ section.settings.shop_kicker_1 }}</div>
+                  {% if section.settings.shop_menu != blank %}
+                    {% for link in section.settings.shop_menu.links %}
+                      {% if forloop.index <= 3 %}
+                        <a href="{{ link.url }}" class="ll-mega-link">{{ link.title }}</a>
+                      {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    <a href="#" class="ll-mega-link">Face Devices</a>
+                    <a href="#" class="ll-mega-link">Full Body</a>
+                    <a href="#" class="ll-mega-link">Recovery</a>
+                  {% endif %}
+                </div>
+
+                <div class="ll-mega-col">
+                  <div class="ll-mega-kicker">{{ section.settings.shop_kicker_2 }}</div>
+                  {% if section.settings.shop_menu != blank %}
+                    {% for link in section.settings.shop_menu.links %}
+                      {% if forloop.index > 3 %}
+                        <a href="{{ link.url }}" class="ll-mega-link">{{ link.title }}</a>
+                      {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    <a href="#" class="ll-mega-link">Best Sellers</a>
+                    <a href="#" class="ll-mega-link">Bundles</a>
+                    <a href="#" class="ll-mega-link">Accessories</a>
+                  {% endif %}
+                  <div class="ll-mega-desc">{{ section.settings.shop_description }}</div>
+                </div>
+              </div>
+
+              <div class="ll-mega-visual">
+                {% if section.settings.shop_image != blank %}
+                  {{
+                    section.settings.shop_image
+                    | image_url: width: 1200
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'll-mega-image',
+                      widths: '600, 900, 1200',
+                      sizes: '(max-width: 920px) 100vw, 420px'
+                  }}
+                {% else %}
+                  <img loading="lazy" src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80" alt="Shop preview" width="900" height="600">
+                {% endif %}
+                <div class="ll-mega-visual-copy">
+                  <div class="ll-mega-visual-title">{{ section.settings.shop_visual_title }}</div>
+                  <div class="ll-mega-visual-text">{{ section.settings.shop_visual_text }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="swiper ll-swiper" id="llSwiper-{{ section.id }}">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == 'slide' %}
+              <div class="swiper-slide ll-slide" {{ block.shopify_attributes }}>
+                <div class="ll-slide-media">
+                  {% if block.settings.image != blank %}
+                    {{
+                      block.settings.image
+                      | image_url: width: 2200
+                      | image_tag:
+                        loading: 'lazy',
+                        class: 'll-slide-image',
+                        widths: '900, 1200, 1600, 2200',
+                        sizes: '100vw'
+                    }}
+                  {% else %}
+                    <img loading="lazy"
+                      class="ll-slide-image"
+                      src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1800&q=80"
+                      alt="Hero image"
+                      width="1800"
+                      height="1200"
+                    />
+                  {% endif %}
+                  <div class="ll-slide-overlay"></div>
+                  <div class="ll-slide-gradient"></div>
+                </div>
+
+                <div class="ll-slide-content">
+                  <div class="ll-copy">
+                    {% if block.settings.eyebrow != blank %}
+                      <p class="ll-eyebrow">{{ block.settings.eyebrow }}</p>
+                    {% endif %}
+                    {% if block.settings.title != blank %}
+                      <h2 class="ll-title">{{ block.settings.title }}</h2>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="ll-controls">
+        <div class="ll-controls-inner">
+          <button class="ll-nav-arrow ll-prev" type="button" aria-label="Previous slide">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M14.5 5L8 12L14.5 19" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+          <div class="swiper-pagination ll-pagination"></div>
+          <button class="ll-nav-arrow ll-next" type="button" aria-label="Next slide">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M9.5 5L16 12L9.5 19" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    #ll-hero-{{ section.id }} {
+      --page-bg: {{ section.settings.page_bg }};
+      --hero-radius: {{ section.settings.hero_radius }}px;
+      --hero-max-width: {{ section.settings.hero_max_width }}px;
+      --hero-height: {{ section.settings.hero_height }}vh;
+      --text-primary: {{ section.settings.text_primary }};
+      --text-soft: {{ section.settings.text_soft }};
+      --text-muted: {{ section.settings.text_muted }};
+      --border-soft: rgba(255, 255, 255, 0.25);
+      --border-softer: rgba(255, 255, 255, 0.14);
+      --nav-pill-bg: rgba(255, 255, 255, 0.05);
+      --nav-pill-hover: rgba(255, 255, 255, 0.1);
+      --mega-bg: rgba(18, 11, 10, 0.58);
+      --mega-border: rgba(255, 255, 255, 0.1);
+      --mega-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+      --transition-fast: 0.28s ease;
+      --transition-med: 0.45s ease;
+      background: var(--page-bg);
+    }
+
+    #ll-hero-{{ section.id }} * { box-sizing: border-box; }
+    #ll-hero-{{ section.id }} a { color: inherit; text-decoration: none; }
+    #ll-hero-{{ section.id }} button { font: inherit; }
+    #ll-hero-{{ section.id }} .ll-page { padding: 18px; }
+
+    #ll-hero-{{ section.id }} .ll-hero {
+      position: relative;
+      max-width: var(--hero-max-width);
+      min-height: min(var(--hero-height), 980px);
+      margin: 0 auto;
+      border-radius: var(--hero-radius);
+      overflow: hidden;
+      background: #0f0c0a;
+      box-shadow: 0 30px 90px rgba(79, 48, 28, 0.16);
+      isolation: isolate;
+    }
+
+    #ll-hero-{{ section.id }} .ll-swiper,
+    #ll-hero-{{ section.id }} .ll-swiper .swiper-wrapper,
+    #ll-hero-{{ section.id }} .ll-swiper .swiper-slide {
+      width: 100%;
+      height: 100%;
+    }
+
+    #ll-hero-{{ section.id }} .ll-slide { position: relative; overflow: hidden; }
+    #ll-hero-{{ section.id }} .ll-slide-media,
+    #ll-hero-{{ section.id }} .ll-slide-image,
+    #ll-hero-{{ section.id }} .ll-slide-overlay,
+    #ll-hero-{{ section.id }} .ll-slide-gradient {
+      position: absolute; inset: 0;
+    }
+
+    #ll-hero-{{ section.id }} .ll-slide-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.04);
+      transform-origin: center center;
+      filter: saturate(1.06) contrast(1.02);
+      will-change: transform;
+    }
+
+    #ll-hero-{{ section.id }} .ll-slide-overlay {
+      background:
+        linear-gradient(to bottom, rgba(8, 7, 7, 0.18) 0%, rgba(8, 7, 7, 0.02) 24%, rgba(8, 7, 7, 0.1) 52%, rgba(8, 7, 7, 0.42) 100%);
+      z-index: 1;
+    }
+
+    #ll-hero-{{ section.id }} .ll-slide-gradient {
+      background:
+        radial-gradient(circle at 70% 28%, rgba(176, 6, 27, 0.4), transparent 26%),
+        radial-gradient(circle at 74% 56%, rgba(255, 84, 27, 0.24), transparent 28%),
+        radial-gradient(circle at 22% 46%, rgba(32, 11, 0, 0.26), transparent 34%);
+      mix-blend-mode: screen;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    #ll-hero-{{ section.id }} .ll-topbar {
+      position: absolute;
+      inset: 0 0 auto 0;
+      z-index: 30;
+      padding: 26px 24px 0;
+      pointer-events: none;
+    }
+
+    #ll-hero-{{ section.id }} .ll-topbar-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+      pointer-events: auto;
+    }
+
+    #ll-hero-{{ section.id }} .ll-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      width: fit-content;
+    }
+
+    #ll-hero-{{ section.id }} .ll-brand-mark {
+      width: 20px;
+      height: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    #ll-hero-{{ section.id }} .ll-brand-mark svg,
+    #ll-hero-{{ section.id }} .ll-brand-logo-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #ll-hero-{{ section.id }} .ll-brand-name {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    #ll-hero-{{ section.id }} .ll-desktop-nav {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      justify-self: center;
+      flex-wrap: nowrap;
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-item {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-link,
+    #ll-hero-{{ section.id }} .ll-nav-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 12px;
+      border: 0;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      transition:
+        opacity var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast),
+        background var(--transition-fast),
+        border-color var(--transition-fast);
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-link:hover,
+    #ll-hero-{{ section.id }} .ll-nav-button:hover {
+      opacity: 1;
+      color: #fffdf9;
+      transform: translateY(-1px);
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-link.shop,
+    #ll-hero-{{ section.id }} .ll-nav-button.shop {
+      min-height: 42px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--nav-pill-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-link.shop:hover,
+    #ll-hero-{{ section.id }} .ll-nav-button.shop:hover {
+      background: var(--nav-pill-hover);
+      border-color: rgba(255,255,255,0.42);
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-right {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+      justify-self: end;
+    }
+
+    #ll-hero-{{ section.id }} .ll-lang {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      opacity: 0.95;
+      cursor: pointer;
+      transition: opacity var(--transition-fast);
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+
+    #ll-hero-{{ section.id }} .ll-lang:hover { opacity: 1; }
+
+    #ll-hero-{{ section.id }} .ll-cart {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    #ll-hero-{{ section.id }} .ll-cart-bag {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      transition:
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    #ll-hero-{{ section.id }} .ll-cart:hover .ll-cart-bag {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.4);
+      transform: translateY(-1px);
+    }
+
+    #ll-hero-{{ section.id }} .ll-cart-bag svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mobile-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--border-soft);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-primary);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mobile-toggle svg { width: 19px; height: 19px; }
+
+    #ll-hero-{{ section.id }} .ll-mobile-panel {
+      position: absolute;
+      top: 86px;
+      left: 14px;
+      right: 14px;
+      z-index: 45;
+      border-radius: 24px;
+      background: rgba(13, 10, 10, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: var(--mega-shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      overflow: hidden;
+      display: none;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mobile-panel-inner {
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mobile-link,
+    #ll-hero-{{ section.id }} .ll-mobile-subtoggle {
+      min-height: 48px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 14px;
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mobile-subtoggle {
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mobile-subpanel {
+      display: none;
+      padding: 6px 4px 8px 10px;
+      gap: 6px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mobile-subpanel a {
+      display: block;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(980px, calc(100vw - 80px));
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-panel {
+      background: var(--mega-bg);
+      border: 1px solid var(--mega-border);
+      border-radius: 28px;
+      box-shadow: var(--mega-shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      overflow: hidden;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-inner {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 0;
+      min-height: 330px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-content {
+      padding: 28px 28px 26px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px 28px;
+      align-content: start;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-col {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-kicker {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-link {
+      display: block;
+      font-size: 18px;
+      line-height: 1.25;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      transition:
+        color var(--transition-fast),
+        transform var(--transition-fast),
+        opacity var(--transition-fast);
+      opacity: 0.95;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-link:hover {
+      color: #fff;
+      transform: translateX(4px);
+      opacity: 1;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-soft);
+      max-width: 270px;
+      margin-top: 6px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-cta {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      padding: 0;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-visual {
+      position: relative;
+      min-height: 100%;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(12, 10, 10, 0.22), rgba(12, 10, 10, 0.05)),
+        radial-gradient(circle at 68% 32%, rgba(174, 10, 24, 0.28), transparent 28%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-visual img,
+    #ll-hero-{{ section.id }} .ll-mega-image {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-visual-copy {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      z-index: 2;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-visual-title {
+      font-size: 24px;
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-mega-visual-text {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text-soft);
+      max-width: 260px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-slide-content {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 160px 32px 54px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-copy {
+      width: 100%;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    #ll-hero-{{ section.id }} .ll-eyebrow {
+      margin: 0 0 14px;
+      font-size: clamp(15px, 1.3vw, 18px);
+      line-height: 1.35;
+      color: var(--text-soft);
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+
+    #ll-hero-{{ section.id }} .ll-title {
+      margin: 0;
+      font-size: clamp(50px, 6vw, 84px);
+      line-height: 0.98;
+      font-weight: 600;
+      letter-spacing: -0.06em;
+      color: #fff8f2;
+      text-wrap: balance;
+    }
+
+    #ll-hero-{{ section.id }} .ll-controls {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 26px;
+      z-index: 25;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    #ll-hero-{{ section.id }} .ll-controls-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      pointer-events: auto;
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-arrow {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition:
+        transform var(--transition-fast),
+        background var(--transition-fast),
+        border-color var(--transition-fast);
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-arrow:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    #ll-hero-{{ section.id }} .ll-nav-arrow svg { width: 18px; height: 18px; }
+
+    #ll-hero-{{ section.id }} .ll-pagination {
+      position: static !important;
+      width: auto !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #ll-hero-{{ section.id }} .ll-pagination .swiper-pagination-bullet {
+      margin: 0 !important;
+      width: 10px;
+      height: 10px;
+      background: rgba(255,255,255,0.26);
+      opacity: 1;
+      transition:
+        width var(--transition-fast),
+        border-radius var(--transition-fast),
+        background var(--transition-fast);
+    }
+
+    #ll-hero-{{ section.id }} .ll-pagination .swiper-pagination-bullet-active {
+      width: 30px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+    }
+
+    @media (max-width: 1180px) {
+      #ll-hero-{{ section.id }} .ll-topbar-inner { grid-template-columns: auto 1fr auto; }
+      #ll-hero-{{ section.id }} .ll-desktop-nav { gap: 2px; }
+      #ll-hero-{{ section.id }} .ll-nav-link,
+      #ll-hero-{{ section.id }} .ll-nav-button { font-size: 15px; padding: 0 10px; }
+      #ll-hero-{{ section.id }} .ll-mega { width: min(920px, calc(100vw - 48px)); }
+      #ll-hero-{{ section.id }} .ll-mega-inner { grid-template-columns: 1fr 0.8fr; }
+      #ll-hero-{{ section.id }} .ll-title { font-size: clamp(44px, 5vw, 72px); }
+    }
+
+    @media (max-width: 920px) {
+      #ll-hero-{{ section.id }} .ll-page { padding: 12px; }
+      #ll-hero-{{ section.id }} .ll-hero { min-height: 82vh; }
+      #ll-hero-{{ section.id }} .ll-topbar { padding: 18px 16px 0; }
+      #ll-hero-{{ section.id }} .ll-topbar-inner { grid-template-columns: auto 1fr auto; }
+      #ll-hero-{{ section.id }} .ll-desktop-nav,
+      #ll-hero-{{ section.id }} .ll-nav-right .ll-lang,
+      #ll-hero-{{ section.id }} .ll-nav-right .ll-cart-text { display: none; }
+      #ll-hero-{{ section.id }} .ll-mobile-toggle { display: inline-flex; }
+      #ll-hero-{{ section.id }} .ll-nav-right { gap: 10px; }
+      #ll-hero-{{ section.id }} .ll-cart { gap: 0; }
+      #ll-hero-{{ section.id }} .ll-mobile-panel.is-open { display: block; }
+      #ll-hero-{{ section.id }} .ll-slide-content { padding: 130px 20px 48px; }
+      #ll-hero-{{ section.id }} .ll-copy { max-width: 720px; }
+      #ll-hero-{{ section.id }} .ll-eyebrow { margin-bottom: 10px; }
+      #ll-hero-{{ section.id }} .ll-title { font-size: clamp(38px, 10vw, 60px); }
+      #ll-hero-{{ section.id }} .ll-controls { bottom: 18px; }
+      #ll-hero-{{ section.id }} .ll-mega { display: none !important; }
+    }
+
+    @media (max-width: 640px) {
+      #ll-hero-{{ section.id }} .ll-brand-name { font-size: 15px; }
+      #ll-hero-{{ section.id }} .ll-brand-mark { width: 16px; height: 12px; }
+      #ll-hero-{{ section.id }} .ll-mobile-panel { top: 72px; left: 10px; right: 10px; }
+      #ll-hero-{{ section.id }} .ll-slide-image { object-position: center center; }
+      #ll-hero-{{ section.id }} .ll-slide-overlay {
+        background:
+          linear-gradient(to bottom, rgba(8,7,7,0.24) 0%, rgba(8,7,7,0.06) 26%, rgba(8,7,7,0.16) 56%, rgba(8,7,7,0.5) 100%);
+      }
+      #ll-hero-{{ section.id }} .ll-slide-content { padding: 118px 18px 64px; }
+      #ll-hero-{{ section.id }} .ll-eyebrow { font-size: 14px; }
+      #ll-hero-{{ section.id }} .ll-title { font-size: clamp(34px, 11.6vw, 48px); line-height: 1.02; }
+      #ll-hero-{{ section.id }} .ll-controls-inner { gap: 10px; }
+      #ll-hero-{{ section.id }} .ll-nav-arrow { width: 38px; height: 38px; }
+      #ll-hero-{{ section.id }} .ll-pagination .swiper-pagination-bullet { width: 9px; height: 9px; }
+      #ll-hero-{{ section.id }} .ll-pagination .swiper-pagination-bullet-active { width: 26px; }
+    }
+  </style>
+
+  <script>
+    (() => {
+      const sectionEl = document.getElementById('ll-hero-{{ section.id }}');
+      if (!sectionEl || sectionEl.dataset.initialized === 'true') return;
+
+      const needSwiper = sectionEl.dataset.loadSwiper === 'true';
+      const needGsap = sectionEl.dataset.loadGsap === 'true';
+
+      function waitForLibraries(callback, maxTries = 120) {
+        let tries = 0;
+        const timer = setInterval(() => {
+          tries += 1;
+          const swiperReady = window.Swiper || !needSwiper;
+          const gsapReady = window.gsap || !needGsap;
+          if (swiperReady && gsapReady) {
+            clearInterval(timer);
+            callback();
+          } else if (tries >= maxTries) {
+            clearInterval(timer);
+          }
+        }, 150);
+      }
+
+      function initHero() {
+        const gsap = window.gsap;
+        const ScrollTrigger = window.ScrollTrigger;
+        if (gsap && ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+        const hero = sectionEl.querySelector('#llHero-{{ section.id }}');
+        const mobileToggle = sectionEl.querySelector('#llMobileToggle-{{ section.id }}');
+        const mobilePanel = sectionEl.querySelector('#llMobilePanel-{{ section.id }}');
+        const desktopTriggers = hero.querySelectorAll('[data-mega-trigger]');
+        const megaPanels = hero.querySelectorAll('[data-mega-panel]');
+        let activeMega = null;
+        let megaHideTimer = null;
+
+        function getPanelByName(name) {
+          return hero.querySelector('[data-mega-panel="' + name + '"]');
+        }
+
+        function closeAllMegas(force = false) {
+          megaPanels.forEach((panel) => {
+            panel.setAttribute('aria-hidden', 'true');
+            if (!gsap) {
+              panel.style.pointerEvents = 'none';
+              panel.style.visibility = 'hidden';
+              panel.style.opacity = '0';
+              return;
+            }
+
+            if (force) {
+              panel.style.pointerEvents = 'none';
+              panel.style.visibility = 'hidden';
+              panel.style.opacity = '0';
+              gsap.set(panel, { clearProps: 'transform' });
+            } else {
+              gsap.to(panel, {
+                opacity: 0,
+                y: -8,
+                duration: 0.28,
+                ease: 'power2.out',
+                onStart: () => { panel.style.pointerEvents = 'none'; },
+                onComplete: () => { panel.style.visibility = 'hidden'; }
+              });
+            }
+          });
+          activeMega = null;
+        }
+
+        function openMega(name) {
+          const panel = getPanelByName(name);
+          if (!panel || activeMega === name) return;
+
+          clearTimeout(megaHideTimer);
+          closeAllMegas(true);
+
+          activeMega = name;
+          panel.style.visibility = 'visible';
+          panel.style.pointerEvents = 'auto';
+          panel.setAttribute('aria-hidden', 'false');
+
+          if (!gsap) {
+            panel.style.opacity = '1';
+            return;
+          }
+
+          const contentCols = panel.querySelectorAll('.ll-mega-col');
+          const visual = panel.querySelector('.ll-mega-visual');
+          const allItems = panel.querySelectorAll('.ll-mega-link, .ll-mega-desc, .ll-mega-cta, .ll-mega-visual-copy');
+
+          gsap.set(panel, { opacity: 0, y: -10 });
+          gsap.set(contentCols, { opacity: 0, y: 14 });
+          gsap.set(visual, { opacity: 0, scale: 1.04 });
+          gsap.set(allItems, { opacity: 0, y: 10 });
+
+          const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+          tl.to(panel, { opacity: 1, y: 0, duration: 0.42 })
+            .to(contentCols, { opacity: 1, y: 0, duration: 0.48, stagger: 0.06 }, '-=0.22')
+            .to(visual, { opacity: 1, scale: 1, duration: 0.52 }, '-=0.34')
+            .to(allItems, { opacity: 1, y: 0, duration: 0.4, stagger: 0.03 }, '-=0.34');
+        }
+
+        function delayedCloseMega() {
+          clearTimeout(megaHideTimer);
+          megaHideTimer = setTimeout(() => closeAllMegas(), 120);
+        }
+
+        if (window.matchMedia('(min-width: 921px)').matches) {
+          desktopTriggers.forEach((trigger) => {
+            const name = trigger.getAttribute('data-mega-trigger');
+            const panel = getPanelByName(name);
+
+            trigger.addEventListener('mouseenter', () => openMega(name));
+            trigger.addEventListener('mouseleave', delayedCloseMega);
+
+            if (panel) {
+              panel.addEventListener('mouseenter', () => clearTimeout(megaHideTimer));
+              panel.addEventListener('mouseleave', delayedCloseMega);
+            }
+          });
+        } else {
+          closeAllMegas(true);
+        }
+
+        document.addEventListener('click', (e) => {
+          const inMega = e.target.closest('.ll-mega');
+          const inTrigger = e.target.closest('[data-mega-trigger]');
+          const inMobilePanel = e.target.closest('.ll-mobile-panel');
+          const inMobileToggle = e.target.closest('#llMobileToggle-{{ section.id }}');
+
+          if (!inMega && !inTrigger) closeAllMegas();
+          if (!inMobilePanel && !inMobileToggle && mobilePanel.classList.contains('is-open')) {
+            mobilePanel.classList.remove('is-open');
+            mobileToggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        if (mobileToggle && mobilePanel) {
+          mobileToggle.addEventListener('click', () => {
+            const isOpen = mobilePanel.classList.toggle('is-open');
+            mobileToggle.setAttribute('aria-expanded', String(isOpen));
+
+            if (isOpen && gsap) {
+              gsap.fromTo(
+                mobilePanel,
+                { opacity: 0, y: -10 },
+                { opacity: 1, y: 0, duration: 0.34, ease: 'power3.out' }
+              );
+            }
+          });
+        }
+
+        hero.querySelectorAll('[data-mobile-subtoggle]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const name = btn.getAttribute('data-mobile-subtoggle');
+            const panel = hero.querySelector('[data-mobile-subpanel="' + name + '"]');
+            const plus = btn.querySelector('span:last-child');
+            const isOpen = panel.style.display === 'grid';
+
+            if (!gsap) {
+              panel.style.display = isOpen ? 'none' : 'grid';
+              plus.textContent = isOpen ? '+' : '–';
+              return;
+            }
+
+            if (isOpen) {
+              gsap.to(panel, {
+                height: 0,
+                opacity: 0,
+                duration: 0.28,
+                ease: 'power2.out',
+                onComplete: () => {
+                  panel.style.display = 'none';
+                  panel.style.height = '';
+                }
+              });
+              plus.textContent = '+';
+            } else {
+              panel.style.display = 'grid';
+              const targetHeight = panel.scrollHeight;
+              gsap.fromTo(
+                panel,
+                { height: 0, opacity: 0 },
+                {
+                  height: targetHeight,
+                  opacity: 1,
+                  duration: 0.34,
+                  ease: 'power3.out',
+                  onComplete: () => { panel.style.height = ''; }
+                }
+              );
+              plus.textContent = '–';
+            }
+          });
+        });
+
+        if (window.Swiper) {
+          const autoplayEnabled = sectionEl.dataset.autoplay === 'true';
+          const autoplayDelay = parseInt(sectionEl.dataset.autoplayDelay || '5200', 10);
+
+          const swiper = new Swiper('#llSwiper-{{ section.id }}', {
+            slidesPerView: 1,
+            loop: true,
+            speed: 1200,
+            effect: 'slide',
+            grabCursor: true,
+            allowTouchMove: true,
+            pagination: {
+              el: sectionEl.querySelector('.ll-pagination'),
+              clickable: true
+            },
+            navigation: {
+              nextEl: sectionEl.querySelector('.ll-next'),
+              prevEl: sectionEl.querySelector('.ll-prev')
+            },
+            autoplay: autoplayEnabled ? {
+              delay: autoplayDelay,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: false
+            } : false,
+            on: {
+              init() {
+                animateInitialHero();
+                animateActiveSlide(this.slides[this.activeIndex], true);
+              },
+              slideChangeTransitionStart() {
+                resetInactiveSlides();
+              },
+              slideChangeTransitionEnd() {
+                animateActiveSlide(this.slides[this.activeIndex], false);
+              }
+            }
+          });
+        }
+
+        function resetInactiveSlides() {
+          hero.querySelectorAll('.swiper-slide').forEach((slide) => {
+            const eyebrow = slide.querySelector('.ll-eyebrow');
+            const title = slide.querySelector('.ll-title');
+            const image = slide.querySelector('.ll-slide-image');
+            if (!gsap) return;
+            gsap.set([eyebrow, title], { opacity: 0, y: 18 });
+            gsap.set(image, { scale: 1.05 });
+          });
+        }
+
+        function animateActiveSlide(slide, isInit) {
+          if (!gsap || !slide) return;
+          const eyebrow = slide.querySelector('.ll-eyebrow');
+          const title = slide.querySelector('.ll-title');
+          const image = slide.querySelector('.ll-slide-image');
+
+          const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+          tl.to(image, { scale: 1, duration: isInit ? 1.6 : 1.2, ease: 'power2.out' }, 0)
+            .to(eyebrow, { opacity: 1, y: 0, duration: isInit ? 0.9 : 0.72 }, isInit ? 0.28 : 0.12)
+            .to(title, { opacity: 1, y: 0, duration: isInit ? 1 : 0.82 }, isInit ? 0.4 : 0.22);
+        }
+
+        function animateInitialHero() {
+          if (!gsap) return;
+          const navItems = hero.querySelectorAll('.ll-brand, .ll-desktop-nav .ll-nav-item, .ll-nav-right > *');
+          gsap.fromTo(navItems, { opacity: 0, y: -14 }, {
+            opacity: 1,
+            y: 0,
+            stagger: 0.05,
+            duration: 0.8,
+            ease: 'power3.out'
+          });
+
+          gsap.fromTo(hero, { opacity: 0, y: 24 }, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'power3.out'
+          });
+        }
+
+        if (gsap && ScrollTrigger) {
+          gsap.to(hero.querySelectorAll('.ll-slide-image'), {
+            yPercent: -5,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: hero,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 1.1
+            }
+          });
+
+          gsap.to(hero.querySelectorAll('.ll-copy'), {
+            y: -18,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: hero,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 1.05
+            }
+          });
+        }
+
+        if (gsap) {
+          hero.querySelectorAll('.ll-nav-link, .ll-nav-button, .ll-lang, .ll-cart').forEach((item) => {
+            item.addEventListener('mouseenter', () => {
+              gsap.to(item, { y: -1, duration: 0.22, ease: 'power2.out' });
+            });
+            item.addEventListener('mouseleave', () => {
+              gsap.to(item, { y: 0, duration: 0.22, ease: 'power2.out' });
+            });
+          });
+
+          hero.querySelectorAll('.ll-mega-link').forEach((link) => {
+            link.addEventListener('mouseenter', () => {
+              gsap.to(link, { x: 4, duration: 0.22, ease: 'power2.out' });
+            });
+            link.addEventListener('mouseleave', () => {
+              gsap.to(link, { x: 0, duration: 0.22, ease: 'power2.out' });
+            });
+          });
+        }
+
+        sectionEl.dataset.initialized = 'true';
+      }
+
+      waitForLibraries(initHero);
+    })();
+  </script>
+
+  {% if section.settings.load_swiper %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+  {% endif %}
+
+  {% if section.settings.load_gsap %}
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Luminous hero mega",
+  "tag": "section",
+  "class": "section-luminous-hero-mega",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "load_swiper",
+      "label": "Load Swiper CDN",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "load_gsap",
+      "label": "Load GSAP CDN",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay delay (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "color",
+      "id": "page_bg",
+      "label": "Page background",
+      "default": "#ece7e0"
+    },
+    {
+      "type": "range",
+      "id": "hero_radius",
+      "label": "Hero radius",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "hero_max_width",
+      "label": "Hero max width",
+      "min": 1200,
+      "max": 2200,
+      "step": 20,
+      "default": 1860
+    },
+    {
+      "type": "range",
+      "id": "hero_height",
+      "label": "Hero height (vh)",
+      "min": 60,
+      "max": 100,
+      "step": 2,
+      "default": 92
+    },
+    {
+      "type": "color",
+      "id": "text_primary",
+      "label": "Primary text color",
+      "default": "#f7f2eb"
+    },
+    {
+      "type": "color",
+      "id": "text_soft",
+      "label": "Soft text color",
+      "default": "#d8d1c8"
+    },
+    {
+      "type": "color",
+      "id": "text_muted",
+      "label": "Muted text color",
+      "default": "#a8a19a"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Brand logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "luminous labs"
+    },
+    {
+      "type": "text",
+      "id": "tech_label",
+      "label": "Technology label",
+      "default": "Technology"
+    },
+    {
+      "type": "text",
+      "id": "company_label",
+      "label": "Company label",
+      "default": "Company"
+    },
+    {
+      "type": "url",
+      "id": "company_link",
+      "label": "Company link"
+    },
+    {
+      "type": "text",
+      "id": "commercial_label",
+      "label": "Commercial label",
+      "default": "Commercial"
+    },
+    {
+      "type": "url",
+      "id": "commercial_link",
+      "label": "Commercial link"
+    },
+    {
+      "type": "text",
+      "id": "blog_label",
+      "label": "Blog label",
+      "default": "Blog"
+    },
+    {
+      "type": "url",
+      "id": "blog_link",
+      "label": "Blog link"
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop label",
+      "default": "Shop"
+    },
+    {
+      "type": "text",
+      "id": "language_label",
+      "label": "Language label",
+      "default": "EN"
+    },
+    {
+      "type": "text",
+      "id": "cart_label",
+      "label": "Cart label",
+      "default": "Cart"
+    },
+    {
+      "type": "link_list",
+      "id": "tech_menu",
+      "label": "Technology mega menu"
+    },
+    {
+      "type": "text",
+      "id": "tech_kicker_1",
+      "label": "Technology kicker 1",
+      "default": "Explore"
+    },
+    {
+      "type": "text",
+      "id": "tech_kicker_2",
+      "label": "Technology kicker 2",
+      "default": "Why it matters"
+    },
+    {
+      "type": "textarea",
+      "id": "tech_description",
+      "label": "Technology description",
+      "default": "Understand the photobiomodulation principles behind our approach to recovery, skin vitality, and long-term wellness."
+    },
+    {
+      "type": "text",
+      "id": "tech_cta_text",
+      "label": "Technology CTA text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "tech_cta_link",
+      "label": "Technology CTA link"
+    },
+    {
+      "type": "image_picker",
+      "id": "tech_image",
+      "label": "Technology image"
+    },
+    {
+      "type": "text",
+      "id": "tech_visual_title",
+      "label": "Technology visual title",
+      "default": "Science, refined."
+    },
+    {
+      "type": "textarea",
+      "id": "tech_visual_text",
+      "label": "Technology visual text",
+      "default": "Evidence-led wellness technology designed for consistency, safety, and elegant daily use."
+    },
+    {
+      "type": "link_list",
+      "id": "shop_menu",
+      "label": "Shop mega menu"
+    },
+    {
+      "type": "text",
+      "id": "shop_kicker_1",
+      "label": "Shop kicker 1",
+      "default": "Categories"
+    },
+    {
+      "type": "text",
+      "id": "shop_kicker_2",
+      "label": "Shop kicker 2",
+      "default": "Shop more"
+    },
+    {
+      "type": "textarea",
+      "id": "shop_description",
+      "label": "Shop description",
+      "default": "Curated systems for glow, recovery, longevity, and elevated daily rituals."
+    },
+    {
+      "type": "image_picker",
+      "id": "shop_image",
+      "label": "Shop image"
+    },
+    {
+      "type": "text",
+      "id": "shop_visual_title",
+      "label": "Shop visual title",
+      "default": "Wellness, shoppable."
+    },
+    {
+      "type": "textarea",
+      "id": "shop_visual_text",
+      "label": "Shop visual text",
+      "default": "Discover refined light therapy formats made for home rituals and long-view performance."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Hero slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Red Light Therapy: proven, safe, and non-invasive"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Your cells, supercharged"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luminous hero mega",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Red Light Therapy: proven, safe, and non-invasive",
+            "title": "Your cells, supercharged"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Precision wellness for modern living",
+            "title": "Light that works deeper"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Designed for recovery, longevity, and glow",
+            "title": "Elevate your daily ritual"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

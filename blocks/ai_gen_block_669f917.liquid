@@ -1,0 +1,728 @@
+{% doc %}
+  @prompt
+    视频展示模块, 左右排版，左边视频，右边文字, 显示视频封面
+{% enddoc %}
+
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-video-showcase-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-video-showcase__container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    padding: {{ block.settings.padding }}px;
+    {% if block.settings.desktop_min_height > 0 %}
+      min-height: {{ block.settings.desktop_min_height }}px;
+    {% endif %}
+  }
+
+  .ai-video-showcase__content-{{ ai_gen_id }} {
+    display: flex;
+    {% if block.settings.layout == 'video-left' %}
+      flex-direction: row;
+    {% else %}
+      flex-direction: row-reverse;
+    {% endif %}
+    gap: {{ block.settings.gap }}px;
+    align-items: center;
+  }
+
+  .ai-video-showcase__video-column-{{ ai_gen_id }} {
+    flex: 0 0 {{ block.settings.video_width }}%;
+  }
+
+  .ai-video-showcase__text-column-{{ ai_gen_id }} {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ai-video-showcase__header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+  }
+
+  .ai-video-showcase__title-{{ ai_gen_id }} {
+    color: {{ block.settings.title_color }};
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+  }
+
+  .ai-video-showcase__description-{{ ai_gen_id }} {
+    color: {{ block.settings.description_color }};
+    font-size: {{ block.settings.description_size }}px;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .ai-video-showcase__video-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 100 / {{ block.settings.video_height_ratio }};
+    background-color: #000000;
+    border-radius: {{ block.settings.video_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-video-showcase__video-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    z-index: 1;
+  }
+
+  .ai-video-showcase__video--native-{{ ai_gen_id }} {
+    object-fit: cover;
+    background-color: #000000;
+  }
+
+  .ai-video-showcase__cover-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-video-showcase__cover-{{ ai_gen_id }}.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ai-video-showcase__cover-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    z-index: 2;
+  }
+
+  .ai-video-showcase__placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;
+  }
+
+  .ai-video-showcase__placeholder-{{ ai_gen_id }} svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.3;
+  }
+
+  .ai-video-showcase__placeholder-text-{{ ai_gen_id }} {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #666666;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .ai-video-showcase__play-button-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background-color: {{ block.settings.play_button_color }};
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.9;
+    z-index: 3;
+  }
+
+  .ai-video-showcase__play-button-{{ ai_gen_id }}:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+
+  .ai-video-showcase__play-button-{{ ai_gen_id }}.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ai-video-showcase__play-icon-{{ ai_gen_id }} {
+    width: 32px;
+    height: 32px;
+    margin-left: 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-video-showcase-{{ ai_gen_id }} {
+      width: 100%;
+    }
+
+    .ai-video-showcase__content-{{ ai_gen_id }} {
+      flex-direction: column;
+    }
+
+    .ai-video-showcase__video-column-{{ ai_gen_id }} {
+      flex: 0 0 100%;
+      width: 100%;
+    }
+
+    .ai-video-showcase__container-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding | times: 0.6 }}px;
+      {% if block.settings.mobile_min_height > 0 %}
+        min-height: {{ block.settings.mobile_min_height }}px;
+      {% else %}
+        min-height: auto;
+      {% endif %}
+    }
+
+    .ai-video-showcase__video-wrapper-{{ ai_gen_id }} {
+      aspect-ratio: 100 / {{ block.settings.mobile_video_height_ratio }};
+    }
+
+    .ai-video-showcase__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.7 }}px;
+    }
+
+    .ai-video-showcase__description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size | times: 0.9 }}px;
+    }
+
+    .ai-video-showcase__play-button-{{ ai_gen_id }} {
+      width: 60px;
+      height: 60px;
+    }
+
+    .ai-video-showcase__play-icon-{{ ai_gen_id }} {
+      width: 24px;
+      height: 24px;
+    }
+  }
+{% endstyle %}
+
+<video preload="none"-showcase-{{ ai_gen_id }}
+  class="ai-video-showcase-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-video-showcase__container-{{ ai_gen_id }}">
+    <div class="ai-video-showcase__content-{{ ai_gen_id }}">
+      <div class="ai-video-showcase__video-column-{{ ai_gen_id }}">
+        <div class="ai-video-showcase__video-wrapper-{{ ai_gen_id }}">
+
+          {% assign has_shopify_video = false %}
+          {% assign has_external_video = false %}
+
+          {% if block.settings.shopify_video != blank %}
+            {% assign has_shopify_video = true %}
+          {% elsif block.settings.video_url != blank %}
+            {% assign has_external_video = true %}
+          {% endif %}
+
+          {% if has_shopify_video %}
+            {% assign native_video_class = 'ai-video-showcase__video-' | append: ai_gen_id | append: ' ai-video-showcase__video--native-' | append: ai_gen_id %}
+
+            {{
+              block.settings.shopify_video
+              | video_tag:
+                image_size: '1200x',
+                autoplay: block.settings.autoplay,
+                loop: block.settings.loop_video,
+                muted: block.settings.autoplay,
+                controls: block.settings.show_controls,
+                playsinline: true,
+                preload: 'metadata',
+                class: native_video_class
+            }}
+
+            {% unless block.settings.autoplay %}
+              {% if block.settings.cover_image != blank %}
+                <img
+                  src="{{ block.settings.cover_image | image_url: width: 1200 }}"
+                  alt="{{ block.settings.cover_image.alt | escape }}"
+                  class="ai-video-showcase__cover-{{ ai_gen_id }}"
+                  width="{{ block.settings.cover_image.width }}"
+                  height="{{ block.settings.cover_image.height }}"
+                  loading="lazy"
+                >
+              {% endif %}
+
+              <button
+                class="ai-video-showcase__play-button-{{ ai_gen_id }}"
+                aria-label="播放视频"
+                type="button"
+              >
+                <svg
+                  class="ai-video-showcase__play-icon-{{ ai_gen_id }}"
+                  viewBox="0 0 24 24"
+                  fill="{{ block.settings.play_icon_color }}"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </button>
+            {% endunless %}
+
+          {% elsif has_external_video %}
+            {% assign video_id = '' %}
+            {% assign video_type = '' %}
+
+            {% if block.settings.video_url contains 'youtube.com' or block.settings.video_url contains 'youtu.be' %}
+              {% assign video_type = 'youtube' %}
+
+              {% if block.settings.video_url contains 'youtu.be/' %}
+                {% assign video_id = block.settings.video_url | split: 'youtu.be/' | last | split: '?' | first %}
+              {% elsif block.settings.video_url contains 'watch?v=' %}
+                {% assign video_id = block.settings.video_url | split: 'watch?v=' | last | split: '&' | first %}
+              {% elsif block.settings.video_url contains 'embed/' %}
+                {% assign video_id = block.settings.video_url | split: 'embed/' | last | split: '?' | first %}
+              {% endif %}
+
+            {% elsif block.settings.video_url contains 'vimeo.com' %}
+              {% assign video_type = 'vimeo' %}
+              {% assign video_id = block.settings.video_url | split: 'vimeo.com/' | last | split: '?' | first | split: '/' | first %}
+            {% endif %}
+
+            {% if video_id != blank %}
+              <iframe
+                class="ai-video-showcase__video-{{ ai_gen_id }} lazyVdHide"
+                data-video-id="{{ video_id }}"
+                data-video-type="{{ video_type }}"
+                {% if block.settings.autoplay %}
+                  {% if video_type == 'youtube' %}
+                    data-src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&mute=1&loop={% if block.settings.loop_video %}1{% else %}0{% endif %}&playlist={{ video_id }}&playsinline=1"
+                  {% elsif video_type == 'vimeo' %}
+                    data-src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1&muted=1&loop={% if block.settings.loop_video %}1{% else %}0{% endif %}"
+                  {% endif %}
+                {% else %}
+                  data-src=""
+                {% endif %}
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+
+              {% unless block.settings.autoplay %}
+                {% if block.settings.cover_image != blank %}
+                  <img
+                    src="{{ block.settings.cover_image | image_url: width: 1200 }}"
+                    alt="{{ block.settings.cover_image.alt | escape }}"
+                    class="ai-video-showcase__cover-{{ ai_gen_id }}"
+                    width="{{ block.settings.cover_image.width }}"
+                    height="{{ block.settings.cover_image.height }}"
+                    loading="lazy"
+                  >
+                {% elsif video_type == 'youtube' %}
+                  <div class="ai-video-showcase__cover-placeholder-{{ ai_gen_id }}">
+                    <img
+                      src="https://img.youtube.com/vi/{{ video_id }}/maxresdefault.jpg"
+                      alt="视频封面"
+                      class="ai-video-showcase__cover-{{ ai_gen_id }}"
+                      width="1280"
+                      height="720"
+                      loading="lazy"
+                    >
+                  </div>
+                {% endif %}
+
+                <button
+                  class="ai-video-showcase__play-button-{{ ai_gen_id }}"
+                  aria-label="播放视频"
+                  type="button"
+                >
+                  <svg
+                    class="ai-video-showcase__play-icon-{{ ai_gen_id }}"
+                    viewBox="0 0 24 24"
+                    fill="{{ block.settings.play_icon_color }}"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+              {% endunless %}
+
+            {% else %}
+              <div class="ai-video-showcase__placeholder-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+                </svg>
+                <div class="ai-video-showcase__placeholder-text-{{ ai_gen_id }}">
+                  请上传 Shopify 视频，或输入有效的 YouTube / Vimeo 视频链接
+                </div>
+              </div>
+            {% endif %}
+
+          {% else %}
+            <div class="ai-video-showcase__placeholder-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+              </svg>
+              <div class="ai-video-showcase__placeholder-text-{{ ai_gen_id }}">
+                下一步，上传视频或添加 YouTube / Vimeo 视频链接
+              </div>
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <div class="ai-video-showcase__text-column-{{ ai_gen_id }}">
+        {% if block.settings.title != blank or block.settings.description != blank %}
+          <div class="ai-video-showcase__header-{{ ai_gen_id }}">
+            {% if block.settings.title != blank %}
+              <h2 class="ai-video-showcase__title-{{ ai_gen_id }}">
+                {{ block.settings.title }}
+              </h2>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <div class="ai-video-showcase__description-{{ ai_gen_id }}">
+                {{ block.settings.description }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</video-showcase-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class VideoShowcase{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.playButton = this.querySelector('.ai-video-showcase__play-button-{{ ai_gen_id }}');
+        this.iframe = this.querySelector('iframe.ai-video-showcase__video-{{ ai_gen_id }}');
+        this.nativeVideo = this.querySelector('video.ai-video-showcase__video-{{ ai_gen_id }}');
+        this.cover = this.querySelector('.ai-video-showcase__cover-{{ ai_gen_id }}');
+
+        if (this.playButton) {
+          this.setupPlayButton();
+        }
+      }
+
+      setupPlayButton() {
+        this.playButton.addEventListener('click', () => {
+          if (this.nativeVideo) {
+            this.nativeVideo.play();
+          }
+
+          if (this.iframe) {
+            const videoId = this.iframe.dataset.videoId;
+            const videoType = this.iframe.dataset.videoType;
+
+            if (videoType === 'youtube') {
+              this.iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&playsinline=1`;
+            } else if (videoType === 'vimeo') {
+              this.iframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=0`;
+            }
+          }
+
+          if (this.cover) {
+            this.cover.classList.add('hidden');
+          }
+
+          this.playButton.classList.add('hidden');
+        });
+      }
+    }
+
+    if (!customElements.get('video-showcase-{{ ai_gen_id }}')) {
+      customElements.define('video-showcase-{{ ai_gen_id }}', VideoShowcase{{ ai_gen_id }});
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "视频展示",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "内容"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "标题",
+      "default": "视频展示"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "描述",
+      "default": "<p>观看我们的精彩视频内容，了解更多产品信息和使用方法。</p>"
+    },
+    {
+      "type": "video",
+      "id": "shopify_video",
+      "label": "上传视频"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "外部视频链接",
+      "info": "可选：支持 YouTube 或 Vimeo。若已上传 Shopify 视频，则优先显示上传视频。"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "封面图片",
+      "info": "关闭自动播放时显示。开启自动播放时不会显示封面，避免遮挡视频。"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "自动播放",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_video",
+      "label": "循环播放",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "显示视频控制条",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "布局"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "布局方式",
+      "options": [
+        {
+          "value": "video-left",
+          "label": "视频在左"
+        },
+        {
+          "value": "video-right",
+          "label": "视频在右"
+        }
+      ],
+      "default": "video-left"
+    },
+    {
+      "type": "range",
+      "id": "video_width",
+      "label": "视频宽度",
+      "min": 40,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "间距",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "桌面宽度",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "内边距",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_min_height",
+      "label": "桌面端模块最小高度",
+      "min": 0,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 0,
+      "info": "设置为 0 时高度由内容自动撑开。"
+    },
+    {
+      "type": "range",
+      "id": "mobile_min_height",
+      "label": "移动端模块最小高度",
+      "min": 0,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 0,
+      "info": "设置为 0 时高度由内容自动撑开。"
+    },
+    {
+      "type": "range",
+      "id": "video_height_ratio",
+      "label": "桌面端视频高度比例",
+      "min": 45,
+      "max": 130,
+      "step": 5,
+      "unit": "%",
+      "default": 70,
+      "info": "数值越大，视频区域越高。56 为接近 16:9，70 更高，100 为正方形。"
+    },
+    {
+      "type": "range",
+      "id": "mobile_video_height_ratio",
+      "label": "移动端视频高度比例",
+      "min": 45,
+      "max": 140,
+      "step": 5,
+      "unit": "%",
+      "default": 75,
+      "info": "数值越大，移动端视频区域越高。"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "文本对齐",
+      "options": [
+        {
+          "value": "left",
+          "label": "左对齐"
+        },
+        {
+          "value": "center",
+          "label": "居中"
+        },
+        {
+          "value": "right",
+          "label": "右对齐"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "颜色"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景颜色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "标题颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "描述颜色",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "play_button_color",
+      "label": "播放按钮颜色",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "play_icon_color",
+      "label": "播放图标颜色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "样式"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "容器圆角",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "video_border_radius",
+      "label": "视频圆角",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "标题大小",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "描述大小",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "视频展示"
+    }
+  ]
+}
+{% endschema %}
